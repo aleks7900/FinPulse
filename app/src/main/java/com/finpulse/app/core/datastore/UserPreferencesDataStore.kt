@@ -14,6 +14,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 
 data class UserPreferences(
     val baseCurrencyCode: String = "USD",
+    val selectedLanguage: String = "SYSTEM",
     val isBiometricEnabled: Boolean = false,
     val isPinEnabled: Boolean = false,
     val pinHash: String = "",
@@ -30,6 +31,7 @@ class UserPreferencesDataStore(private val context: Context) {
 
     private object PreferencesKeys {
         val BASE_CURRENCY = stringPreferencesKey("base_currency")
+        val SELECTED_LANGUAGE = stringPreferencesKey("selected_language")
         val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
         val PIN_ENABLED = booleanPreferencesKey("pin_enabled")
         val PIN_HASH = stringPreferencesKey("pin_hash")
@@ -51,6 +53,7 @@ class UserPreferencesDataStore(private val context: Context) {
         }
         UserPreferences(
             baseCurrencyCode = preferences[PreferencesKeys.BASE_CURRENCY] ?: "USD",
+            selectedLanguage = preferences[PreferencesKeys.SELECTED_LANGUAGE] ?: "SYSTEM",
             isBiometricEnabled = preferences[PreferencesKeys.BIOMETRIC_ENABLED] ?: false,
             isPinEnabled = preferences[PreferencesKeys.PIN_ENABLED] ?: false,
             pinHash = preferences[PreferencesKeys.PIN_HASH] ?: "",
@@ -62,6 +65,12 @@ class UserPreferencesDataStore(private val context: Context) {
             lastUsedCategoryId = preferences[PreferencesKeys.LAST_USED_CATEGORY_ID],
             lastUsedTransactionType = preferences[PreferencesKeys.LAST_USED_TX_TYPE] ?: "EXPENSE"
         )
+    }
+
+    suspend fun setSelectedLanguage(code: String) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.SELECTED_LANGUAGE] = code
+        }
     }
 
     suspend fun setBaseCurrency(currencyCode: String) {

@@ -47,14 +47,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.AmberWarning
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.ui.BudgetProgressBar
 import com.finpulse.app.core.ui.CategoryIconBadge
+import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Budget
 import com.finpulse.app.domain.model.BudgetPeriod
 import com.finpulse.app.domain.model.BudgetStatus
@@ -75,7 +78,7 @@ fun BudgetsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Budget Control",
+                        text = stringResource(R.string.budgets_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -91,7 +94,7 @@ fun BudgetsScreen(
                 containerColor = EmeraldPrimary,
                 contentColor = Color.Black
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Budget")
+                Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.budget_add_dialog_title))
             }
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -112,7 +115,7 @@ fun BudgetsScreen(
                 ) {
                     Column(modifier = Modifier.padding(18.dp)) {
                         Text(
-                            text = "MONTHLY BUDGET CONSUMPTION",
+                            text = stringResource(R.string.budget_total_spent).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -147,7 +150,7 @@ fun BudgetsScreen(
                         Spacer(modifier = Modifier.height(6.dp))
 
                         Text(
-                            text = "${(totalPercentage * 100).toInt()}% consumed overall",
+                            text = stringResource(R.string.analytics_consumed_overall, (totalPercentage * 100).toInt()),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -166,14 +169,14 @@ fun BudgetsScreen(
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "No Budgets Configured",
+                                text = stringResource(R.string.budget_empty_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "Create category budgets to prevent spending overruns.",
+                                text = stringResource(R.string.budget_empty_desc),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -244,7 +247,7 @@ fun BudgetDetailCard(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "${status.budget.periodType.displayName} Budget",
+                        text = "${status.budget.periodType.getLocalizedName()} ${stringResource(R.string.nav_budgets)}",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -259,7 +262,7 @@ fun BudgetDetailCard(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = if (hideBalances) "•••• left" else "${status.remainingAmount.formatted()} left",
+                        text = if (hideBalances) "••••" else stringResource(R.string.debt_card_balance_left, status.remainingAmount.formatted()),
                         style = MaterialTheme.typography.labelSmall,
                         color = if (status.isExceeded) CrimsonExpense else EmeraldPrimary,
                         fontWeight = FontWeight.Medium
@@ -279,7 +282,7 @@ fun BudgetDetailCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "${(status.percentageConsumed * 100).toInt()}% consumed",
+                    text = stringResource(R.string.analytics_consumed_percent, (status.percentageConsumed * 100).toInt()),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -288,11 +291,11 @@ fun BudgetDetailCard(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(imageVector = Icons.Default.Warning, contentDescription = null, tint = CrimsonExpense, modifier = Modifier.size(14.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Exceeded", style = MaterialTheme.typography.labelSmall, color = CrimsonExpense, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.budget_exceeded), style = MaterialTheme.typography.labelSmall, color = CrimsonExpense, fontWeight = FontWeight.Bold)
                     }
                 } else if (status.projectedSpend > status.budget.limitAmount) {
                     Text(
-                        text = "Projected: ${status.projectedSpend.formatted()}",
+                        text = stringResource(R.string.budget_projected, status.projectedSpend.formatted()),
                         style = MaterialTheme.typography.labelSmall,
                         color = AmberWarning,
                         fontWeight = FontWeight.Medium
@@ -321,7 +324,7 @@ fun AddEditBudgetDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(if (editingBudget != null) "Edit Budget" else "Set Category Budget", fontWeight = FontWeight.Bold)
+            Text(if (editingBudget != null) stringResource(R.string.action_edit) else stringResource(R.string.budget_add_dialog_title), fontWeight = FontWeight.Bold)
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -329,7 +332,7 @@ fun AddEditBudgetDialog(
                 OutlinedTextField(
                     value = limitText,
                     onValueChange = { limitText = it; isError = false },
-                    label = { Text("Budget Limit ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.budget_limit_hint)} ($baseCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     isError = isError,
                     singleLine = true,
@@ -352,7 +355,7 @@ fun AddEditBudgetDialog(
                             contentColor = if (isSel) Color.Black else MaterialTheme.colorScheme.onSurface
                         ) {
                             Text(
-                                text = p.displayName,
+                                text = p.getLocalizedName(),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(vertical = 8.dp),
@@ -377,17 +380,17 @@ fun AddEditBudgetDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Save", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
             Row {
                 if (editingBudget != null) {
                     IconButton(onClick = onDelete) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete", tint = CrimsonExpense)
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.action_delete), tint = CrimsonExpense)
                     }
                 }
-                TextButton(onClick = onDismiss) { Text("Cancel") }
+                TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
             }
         }
     )

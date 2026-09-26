@@ -41,10 +41,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.ui.CategoryIconBadge
+import com.finpulse.app.core.ui.getDisplayName
+import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Category
 import com.finpulse.app.domain.model.CategoryType
 import com.finpulse.app.domain.repository.CategoryRepository
@@ -68,14 +72,14 @@ fun CategoriesScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Categories",
+                        text = stringResource(R.string.categories_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -89,7 +93,7 @@ fun CategoriesScreen(
                 containerColor = EmeraldPrimary,
                 contentColor = Color.Black
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Category")
+                Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.category_add_title))
             }
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -118,14 +122,14 @@ fun CategoriesScreen(
                         Spacer(modifier = Modifier.width(14.dp))
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = cat.name,
+                                text = cat.getDisplayName(),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
-                                text = "${cat.type.displayName}${if (cat.isDefault) " • Default" else " • Custom"}",
+                                text = "${cat.type.getLocalizedName()} • ${if (cat.isDefault) stringResource(R.string.category_default_label) else stringResource(R.string.category_custom_label)}",
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -172,13 +176,13 @@ fun AddCategoryDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Create Custom Category", fontWeight = FontWeight.Bold) },
+        title = { Text(stringResource(R.string.category_create_custom), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it; isError = false },
-                    label = { Text("Category Name") },
+                    label = { Text(stringResource(R.string.category_name_hint)) },
                     isError = isError,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -196,7 +200,7 @@ fun AddCategoryDialog(
                             contentColor = if (isSel) Color.Black else MaterialTheme.colorScheme.onSurface
                         ) {
                             Text(
-                                text = t.displayName,
+                                text = t.getLocalizedName(),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(vertical = 8.dp),
@@ -218,11 +222,11 @@ fun AddCategoryDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Create", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_create), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 }

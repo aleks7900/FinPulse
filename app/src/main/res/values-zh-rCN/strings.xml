@@ -1,0 +1,588 @@
+<resources>
+    <string name="app_name">FinPulse</string>
+    <string name="shortcut_quick_add_short">快速记账</string>
+    <string name="shortcut_quick_add_long">快速记录一笔交易</string>
+
+    <!-- Language Names -->
+    <string name="lang_system">跟随系统</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ru">Русский</string>
+    <string name="lang_es">Español</string>
+    <string name="lang_pt_br">Português (Brasil)</string>
+    <string name="lang_de">Deutsch</string>
+    <string name="lang_fr">Français</string>
+    <string name="lang_it">Italiano</string>
+    <string name="lang_pl">Polski</string>
+    <string name="lang_tr">Türkçe</string>
+    <string name="lang_ja">日本語</string>
+    <string name="lang_ko">한국어</string>
+    <string name="lang_zh_cn">简体中文</string>
+    <string name="select_language">选择语言</string>
+    <string name="language_title">语言设置</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">总览</string>
+    <string name="nav_transactions">明细</string>
+    <string name="nav_budgets">预算</string>
+    <string name="nav_analytics">分析</string>
+    <string name="nav_more">更多</string>
+
+    <!-- Common Actions & Buttons -->
+    <string name="action_save">保存</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_delete">删除</string>
+    <string name="action_edit">编辑</string>
+    <string name="action_add">添加</string>
+    <string name="action_done">完成</string>
+    <string name="action_close">关闭</string>
+    <string name="action_confirm">确认</string>
+    <string name="action_dismiss">忽略</string>
+    <string name="action_apply">应用</string>
+    <string name="action_search">搜索</string>
+    <string name="action_filter">筛选</string>
+    <string name="action_export">导出</string>
+    <string name="action_import">导入</string>
+    <string name="action_view_all">查看全部</string>
+    <string name="action_back">返回</string>
+    <string name="action_continue">继续</string>
+    <string name="action_skip">跳过</string>
+    <string name="action_create">新建</string>
+    <string name="action_save_add_another">保存并再记一笔</string>
+    <string name="action_reset">重置</string>
+    <string name="action_refresh">刷新</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">资产总览</string>
+    <string name="dashboard_net_worth">净资产</string>
+    <string name="dashboard_assets">总资产</string>
+    <string name="dashboard_liabilities">总负债</string>
+    <string name="dashboard_total_balance">账户总余额</string>
+    <string name="dashboard_cash_flow">现金流</string>
+    <string name="dashboard_monthly_income">本月收入</string>
+    <string name="dashboard_monthly_expense">本月支出</string>
+    <string name="dashboard_monthly_net">净现金流</string>
+    <string name="dashboard_spending_trends">支出趋势</string>
+    <string name="dashboard_recent_transactions">最近交易</string>
+    <string name="dashboard_financial_health">财务健康指数</string>
+    <string name="dashboard_health_score">健康评分: %1$d/100</string>
+    <string name="dashboard_quick_actions">快捷操作</string>
+    <string name="dashboard_accounts_overview">资产账户</string>
+    <string name="dashboard_no_transactions">暂无交易记录</string>
+
+    <!-- Transactions -->
+    <string name="transactions_title">账目明细</string>
+    <string name="tx_search_hint">搜索账目、商户、备注…</string>
+    <string name="tx_type_income">收入</string>
+    <string name="tx_type_expense">支出</string>
+    <string name="tx_type_transfer">转账</string>
+    <string name="tx_type_refund">退款</string>
+    <string name="tx_needs_review">待确认</string>
+    <string name="tx_confirmed">已确认</string>
+    <string name="tx_empty_title">未找到相关交易</string>
+    <string name="tx_empty_desc">点击 + 记录第一笔账目</string>
+    <string name="tx_date_range">时间范围</string>
+    <string name="tx_filter_all">全部</string>
+    <string name="tx_filter_income">收入</string>
+    <string name="tx_filter_expense">支出</string>
+    <string name="tx_filter_transfer">转账</string>
+    <string name="tx_details_title">账目详情</string>
+    <string name="tx_amount">金额</string>
+    <string name="tx_category">分类</string>
+    <string name="tx_account">支出账户</string>
+    <string name="tx_dest_account">转入账户</string>
+    <string name="tx_merchant">商户 / 交易对象</string>
+    <string name="tx_date">日期与时间</string>
+    <string name="tx_notes">备注</string>
+    <string name="tx_tags">标签</string>
+    <string name="tx_saved_success">交易保存成功</string>
+    <string name="tx_deleted_success">交易已删除</string>
+    <string name="tx_default_title">交易</string>
+
+    <!-- Quick Add -->
+    <string name="quick_add_title">快速记账</string>
+    <string name="quick_add_expense">支出</string>
+    <string name="quick_add_income">收入</string>
+    <string name="quick_add_transfer">转账</string>
+    <string name="quick_add_amount_hint">0.00</string>
+    <string name="quick_add_select_account">选择账户</string>
+    <string name="quick_add_select_category">选择分类</string>
+    <string name="quick_add_note_hint">添加备注（可选）</string>
+    <string name="quick_add_merchant_hint">商户或收款方（如星巴克）</string>
+    <string name="quick_add_date_today">今天</string>
+    <string name="quick_add_date_yesterday">昨天</string>
+    <string name="quick_add_date_custom">选择日期</string>
+    <string name="quick_add_saved_snackbar">已记录账目</string>
+    <string name="quick_add_edit_action">编辑</string>
+
+    <!-- Budgets -->
+    <string name="budgets_title">预算规划</string>
+    <string name="budget_total_budgeted">总预算</string>
+    <string name="budget_total_spent">已支出</string>
+    <string name="budget_remaining">剩余预算</string>
+    <string name="budget_exceeded">已超支</string>
+    <string name="budget_on_track">正常</string>
+    <string name="budget_warning">接近限额</string>
+    <string name="budget_projected">预计月末支出: %1$s</string>
+    <string name="budget_add_dialog_title">创建预算</string>
+    <string name="budget_name_hint">预算名称</string>
+    <string name="budget_limit_hint">月度支出限额</string>
+    <string name="budget_period">周期</string>
+    <string name="budget_empty_title">暂无启用中的预算</string>
+    <string name="budget_empty_desc">设定支出限额，培养健康的消费习惯</string>
+    <string name="budget_status_exceeded_desc">超支 %1$s</string>
+    <string name="budget_status_warning_desc">剩余 %1$s</string>
+
+    <!-- Analytics -->
+    <string name="analytics_title">财务统计与分析</string>
+    <string name="analytics_income_vs_expense">收支对比</string>
+    <string name="analytics_spending_by_category">分类支出排行</string>
+    <string name="analytics_net_worth_trend">净资产走势</string>
+    <string name="analytics_cash_flow_title">现金流分析</string>
+    <string name="analytics_monthly_spending">月度支出趋势</string>
+    <string name="analytics_savings_rate">储蓄率: %1$s%%</string>
+    <string name="analytics_forecast">月末预测</string>
+    <string name="analytics_period_7d">近7天</string>
+    <string name="analytics_period_30d">近30天</string>
+    <string name="analytics_period_month">本月</string>
+    <string name="analytics_period_quarter">本季度</string>
+    <string name="analytics_period_year">本年度</string>
+    <string name="analytics_empty_title">暂无分析数据</string>
+
+    <!-- Accounts -->
+    <string name="accounts_title">账户与资产</string>
+    <string name="account_total_assets">总资产</string>
+    <string name="account_total_liabilities">总负债</string>
+    <string name="account_add_dialog_title">添加账户</string>
+    <string name="account_name_hint">账户名称（如 工资卡）</string>
+    <string name="account_type">账户类型</string>
+    <string name="account_starting_balance_hint">当前余额</string>
+    <string name="account_credit_limit_hint">信用额度（可选）</string>
+    <string name="account_institution_hint">开户机构 / 银行（可选）</string>
+    <string name="account_available_balance">可用额度</string>
+    <string name="account_current_balance">账面余额</string>
+    <string name="account_empty_title">尚未添加账户</string>
+    <string name="account_empty_desc">添加借记卡、储蓄账户、信用卡或现金</string>
+    <string name="account_archive">归档账户</string>
+    <string name="account_delete">删除账户</string>
+
+    <!-- Recurring & Subscriptions -->
+    <string name="recurring_title">周期账目与订阅</string>
+    <string name="recurring_upcoming_title">近期应缴</string>
+    <string name="recurring_upcoming_subtitle">未来30天支出预测</string>
+    <string name="recurring_active_rules">执行中的周期扣款</string>
+    <string name="recurring_monthly_commitment">月度固定支出</string>
+    <string name="recurring_annual_commitment">折合年支出: %1$s/年</string>
+    <string name="recurring_add_title">新建周期账目</string>
+    <string name="recurring_bill_name_hint">服务名称或账单项</string>
+    <string name="recurring_frequency">扣款周期</string>
+    <string name="recurring_next_due">下次应缴日</string>
+    <string name="recurring_mark_paid">标记为已支付</string>
+    <string name="recurring_skip">跳过本期</string>
+    <string name="recurring_pause">暂停</string>
+    <string name="recurring_resume">恢复</string>
+    <string name="recurring_cancel">取消订阅</string>
+    <string name="recurring_empty_title">暂无周期记账项目</string>
+    <string name="recurring_empty_desc">集中管理视频会员、房租、社保与薪酬发放</string>
+    <string name="recurring_is_subscription">线上数字订阅服务</string>
+    <string name="recurring_variable_amount">每期扣款金额浮动</string>
+
+    <!-- Financial Goals -->
+    <string name="goals_title">心愿与储蓄目标</string>
+    <string name="goals_total_target">目标总额</string>
+    <string name="goals_total_saved">已积攒金额</string>
+    <string name="goals_add_title">新建财务目标</string>
+    <string name="goal_name_hint">目标名称（如 应急储备金）</string>
+    <string name="goal_target_amount_hint">目标金额</string>
+    <string name="goal_current_amount_hint">当前已存金额</string>
+    <string name="goal_target_date">期望达成日期</string>
+    <string name="goal_progress">完成进度: %1$d%%</string>
+    <string name="goal_remaining">还需积攒: %1$s</string>
+    <string name="goal_suggested_monthly">月度建议储蓄: %1$s/月</string>
+    <string name="goal_completed">目标已达成！</string>
+    <string name="goal_empty_title">暂无储蓄目标</string>
+    <string name="goal_empty_desc">设定旅行、应急资金或大件采购的攒钱计划</string>
+
+    <!-- Investments & Assets -->
+    <string name="investments_title">投资与持仓资产</string>
+    <string name="investments_total_portfolio">投资组合总值</string>
+    <string name="investments_total_gain_loss">累计收益</string>
+    <string name="investments_add_title">添加持仓标的</string>
+    <string name="asset_name_hint">标的名称（如 沪深300 ETF）</string>
+    <string name="asset_symbol_hint">代码 / 代码（如 510300）</string>
+    <string name="asset_class">资产类别</string>
+    <string name="asset_quantity_hint">持仓份额 / 股数</string>
+    <string name="asset_purchase_price_hint">平均买入成本</string>
+    <string name="asset_current_price_hint">当前最新市价</string>
+    <string name="asset_empty_title">暂无投资持仓</string>
+    <string name="asset_empty_desc">追踪股票、公募基金、加密资产、房产与债券</string>
+
+    <!-- Debt & Liabilities -->
+    <string name="debt_title">借款与债务管理</string>
+    <string name="debt_total_debt">剩余待还本金</string>
+    <string name="debt_total_paid_off">已还本金总额</string>
+    <string name="debt_add_title">添加贷款项目</string>
+    <string name="debt_name_hint">债务名称（如 住房按揭贷款）</string>
+    <string name="debt_type">贷款类别</string>
+    <string name="debt_principal_hint">初始借款本金</string>
+    <string name="debt_remaining_hint">剩余未还本金</string>
+    <string name="debt_interest_rate_hint">年化借款利率 (%%)</string>
+    <string name="debt_minimum_payment_hint">月度最低还款额</string>
+    <string name="debt_estimated_payoff">预计结清周期: 约 %1$d 个月</string>
+    <string name="debt_empty_title">暂无未结借贷</string>
+    <string name="debt_empty_desc">集中跟进房贷、消费贷、信用卡分期等各类负债</string>
+
+    <!-- Categories Screen -->
+    <string name="categories_title">收支分类</string>
+    <string name="categories_expense_tab">支出分类</string>
+    <string name="categories_income_tab">收入分类</string>
+    <string name="category_add_title">添加新分类</string>
+    <string name="category_name_hint">分类名称</string>
+    <string name="category_type_expense">支出</string>
+    <string name="category_type_income">收入</string>
+    <string name="category_empty">暂无可用分类</string>
+
+    <!-- Default Predefined Categories -->
+    <string name="cat_food">餐饮美食</string>
+    <string name="cat_groceries">日用百货</string>
+    <string name="cat_housing">房租物业</string>
+    <string name="cat_transport">交通出行</string>
+    <string name="cat_fuel">汽车加油</string>
+    <string name="cat_shopping">服饰购物</string>
+    <string name="cat_entertainment">休闲娱乐</string>
+    <string name="cat_health">医疗保健</string>
+    <string name="cat_education">教育培训</string>
+    <string name="cat_fitness">运动健身</string>
+    <string name="cat_subscriptions">连续订阅</string>
+    <string name="cat_gifts">礼金红包</string>
+    <string name="cat_salary">工资收入</string>
+    <string name="cat_freelance">兼职劳务</string>
+    <string name="cat_invest_return">理财分红</string>
+    <string name="cat_other_income">其他收入</string>
+    <string name="cat_uncategorized">未分类</string>
+
+    <!-- Enum Display Strings -->
+    <string name="acc_type_cash">现金</string>
+    <string name="acc_type_bank">银行借记卡</string>
+    <string name="acc_type_credit_card">信用卡</string>
+    <string name="acc_type_savings">储蓄存折</string>
+    <string name="acc_type_investment">证券交易账户</string>
+    <string name="acc_type_wallet">电子钱包 / 余额</string>
+    <string name="acc_type_loan">贷款账户</string>
+    <string name="acc_type_other">其他账户</string>
+
+    <string name="period_weekly">按周</string>
+    <string name="period_monthly">按月</string>
+    <string name="period_custom">自定义周期</string>
+
+    <string name="freq_daily">每天</string>
+    <string name="freq_weekly">每周</string>
+    <string name="freq_biweekly">每两周</string>
+    <string name="freq_monthly">每月</string>
+    <string name="freq_quarterly">每季度</string>
+    <string name="freq_yearly">每年</string>
+    <string name="freq_custom">自定义频次</string>
+
+    <string name="unit_days">天</string>
+    <string name="unit_weeks">周</string>
+    <string name="unit_months">个月</string>
+    <string name="unit_years">年</string>
+
+    <string name="occ_upcoming">即将到期</string>
+    <string name="occ_overdue">已逾期</string>
+    <string name="occ_generated">已记账</string>
+    <string name="occ_paid">已支付</string>
+    <string name="occ_skipped">已跳过</string>
+
+    <string name="asset_stock">A股/港美股</string>
+    <string name="asset_etf">交易型开放式指数基金 (ETF)</string>
+    <string name="asset_crypto">加密货币</string>
+    <string name="asset_bond">国债 / 债券</string>
+    <string name="asset_real_estate">房产物业</string>
+    <string name="asset_commodity">贵金属 / 大宗商品</string>
+    <string name="asset_cash">现金等价物</string>
+    <string name="asset_other">其他类别资产</string>
+
+    <string name="debt_credit_card">信用卡账单欠款</string>
+    <string name="debt_personal_loan">个人消费贷款</string>
+    <string name="debt_mortgage">房屋按揭贷款</string>
+    <string name="debt_student_loan">助学贷款</string>
+    <string name="debt_auto_loan">汽车金融贷款</string>
+    <string name="debt_other">其他款项负债</string>
+
+    <string name="dup_new">新增交易</string>
+    <string name="dup_exact">完全重复</string>
+    <string name="dup_potential">疑似重复</string>
+
+    <string name="amount_mode_single">单金额列（正负区分）</string>
+    <string name="amount_mode_separate">借贷分列（支出与收入独立）</string>
+
+    <!-- More / Hub Screen -->
+    <string name="more_title">更多与设置</string>
+    <string name="more_section_financial_tools">财务工具</string>
+    <string name="more_section_data_security">数据与安全</string>
+    <string name="more_section_preferences">偏好设置</string>
+    <string name="more_security_title">安全与隐私</string>
+    <string name="more_security_desc">PIN码、指纹面容与防截屏保护</string>
+    <string name="more_language_title">界面语言</string>
+    <string name="more_currency_title">主结算货币</string>
+    <string name="more_dark_mode_title">深色模式</string>
+    <string name="more_export_title">数据备份与导出</string>
+    <string name="more_rules_title">智能分类规则</string>
+    <string name="more_rules_desc">设定账目自动匹配分类规则</string>
+    <string name="more_csv_title">导入银行流水 CSV</string>
+    <string name="more_csv_desc">从对账单文件批量导入交易明细</string>
+    <string name="more_insights_title">财务洞察分析</string>
+    <string name="more_insights_desc">支出异常预警与消费建议</string>
+
+    <!-- Security & Privacy -->
+    <string name="security_title">安全与隐私</string>
+    <string name="security_biometric">生物识别认证</string>
+    <string name="security_biometric_desc">使用指纹或面容快速解锁应用</string>
+    <string name="security_pin">PIN 密码保护</string>
+    <string name="security_pin_desc">打开应用时验证 4 位数字密码</string>
+    <string name="security_hide_balances">隐藏资产金额</string>
+    <string name="security_hide_balances_desc">在主界面将敏感金额显示为点状掩码</string>
+    <string name="security_screenshot_protection">防截屏防录屏保护</string>
+    <string name="security_screenshot_protection_desc">阻止系统截屏及多任务后台画面预览</string>
+    <string name="security_enter_pin">请输入 4 位数字 PIN 码</string>
+    <string name="security_confirm_pin">请再次确认 PIN 码</string>
+    <string name="security_pin_mismatch">两次输入的密码不一致，请重试</string>
+    <string name="security_pin_set_success">安全设置已成功生效</string>
+
+    <!-- Categorization Rules & Smart Engine -->
+    <string name="rules_title">智能分类规则</string>
+    <string name="rules_tab_rules">规则库 (%1$d)</string>
+    <string name="rules_tab_review">待核对 (%1$d)</string>
+    <string name="rules_create_title">新建智能规则</string>
+    <string name="rule_name_hint">规则名称（如 咖啡馆）</string>
+    <string name="rule_pattern_hint">交易附言包含的关键字</string>
+    <string name="rule_match_type">匹配规则</string>
+    <string name="rule_target_category">目标归属分类</string>
+    <string name="rule_apply_existing">同时对已有历史账目生效</string>
+    <string name="rule_conflict_warning">与已有更高优先级的规则发生重叠</string>
+    <string name="rules_review_title">等待人工核对的账目</string>
+    <string name="rules_review_empty">全部账目均已完成分类并确认！</string>
+    <string name="rules_confirm_all">一键确认全部推荐</string>
+    <string name="rules_empty_title">暂无生效中的分类规则</string>
+
+    <!-- CSV Import Wizard -->
+    <string name="csv_import_title">银行对账单 CSV 导入</string>
+    <string name="csv_step_select_file">1. 选择文件</string>
+    <string name="csv_step_mapping">2. 列名映射</string>
+    <string name="csv_step_preview">3. 逐行校验</string>
+    <string name="csv_step_summary">4. 导入总结</string>
+    <string name="csv_select_file_btn">选择 CSV 数据文件</string>
+    <string name="csv_destination_account">导入目标银行账户</string>
+    <string name="csv_has_header">首行包含表头标题</string>
+    <string name="csv_date_format">日期解析格式</string>
+    <string name="csv_preview_valid_count">%1$d 笔账目可正常导入</string>
+    <string name="csv_preview_duplicate_count">%1$d 笔疑似重复账目</string>
+    <string name="csv_preview_invalid_count">%1$d 行数据格式异常</string>
+    <string name="csv_confirm_import_btn">立即导入 %1$d 笔账目</string>
+    <string name="csv_summary_success">银行对账单导入成功</string>
+    <string name="csv_summary_imported">实际导入成功: %1$d 笔</string>
+    <string name="csv_summary_skipped">跳过重复账目: %1$d 笔</string>
+
+    <!-- Insights -->
+    <string name="insights_title">财务洞察</string>
+    <string name="insights_empty_title">暂无消费洞察</string>
+    <string name="insights_empty_desc">随着记账数据的增加，系统将为您生成专属的财务分析与省钱建议</string>
+
+    <!-- Search & Filter -->
+    <string name="search_title">明细检索</string>
+    <string name="search_hint">输入商户名、金额或标签搜索…</string>
+    <string name="search_results_count">共找到 %1$d 条相关结果</string>
+    <string name="search_no_results">没有符合当前搜索条件的账目</string>
+
+    <!-- Data Export -->
+    <string name="export_title">数据导出</string>
+    <string name="export_format_csv">导出为 CSV 表格（适用于 Excel）</string>
+    <string name="export_format_json">导出为 JSON 备份（完整全量数据）</string>
+    <string name="export_btn">生成导出文件</string>
+    <string name="export_success">备份文件已成功保存</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_step_format">第 %1$d 步（共 4 步）</string>
+    <string name="onboarding_skip">跳过向导</string>
+    <string name="onboarding_welcome_title">欢迎使用 FinPulse</string>
+    <string name="onboarding_welcome_subtitle">智能掌控收支、科学规划预算，打造清晰安全的财务数字看板。</string>
+    <string name="onboarding_currency_title">选择主结算货币</string>
+    <string name="onboarding_currency_subtitle">全应用的总资产、净资产和预算统计将以该币种进行折算。</string>
+    <string name="onboarding_account_title">添加您的主力账户</string>
+    <string name="onboarding_account_subtitle">从添加您常用的银行借记卡或日常零钱钱包开始。</string>
+    <string name="onboarding_budget_title">设定月度预算</string>
+    <string name="onboarding_budget_subtitle">合理规划每月开销上限，帮助您建立稳健的储蓄计划。</string>
+    <string name="onboarding_finish_btn">开启智能记账</string>
+
+    <!-- Dates -->
+    <string name="date_today">今天</string>
+    <string name="date_yesterday">昨天</string>
+    <string name="date_this_week">本周</string>
+    <string name="date_this_month">本月</string>
+    <string name="date_last_30_days">最近30天</string>
+    <string name="date_custom">自定义周期</string>
+
+    <!-- Notifications -->
+    <string name="notif_channel_recurring_name">周期扣款与账单提醒</string>
+    <string name="notif_channel_recurring_desc">即将来临的信用卡账单、续费订阅及固定缴费提醒</string>
+    <string name="notif_bill_upcoming_title">待缴账单提醒: %1$s</string>
+    <string name="notif_bill_due_today">%1$s 应于今日完成支付！</string>
+    <string name="notif_bill_due_tomorrow">%1$s 将于明日到期。</string>
+    <string name="notif_bill_due_in_days">%1$s 距离缴费日还有 %2$d 天。</string>
+
+    <!-- Accessibility / Content Descriptions -->
+    <string name="cd_back">返回上一页</string>
+    <string name="cd_close">关闭弹窗</string>
+    <string name="cd_delete">删除此项</string>
+    <string name="cd_edit">编辑此项</string>
+    <string name="cd_add">新建条目</string>
+    <string name="cd_search">搜索</string>
+    <string name="cd_filter">筛选列表</string>
+    <string name="cd_category_icon">分类图标</string>
+    <string name="cd_account_icon">账户图标</string>
+    <string name="cd_expand">展开区域</string>
+    <string name="cd_collapse">收起区域</string>
+
+    <!-- Plurals -->
+    <plurals name="plural_transactions">
+        <item quantity="other">%d 笔交易</item>
+    </plurals>
+
+    <plurals name="plural_accounts">
+        <item quantity="other">%d 个账户</item>
+    </plurals>
+
+    <plurals name="plural_days">
+        <item quantity="other">%d 天</item>
+    </plurals>
+
+    <plurals name="plural_months">
+        <item quantity="other">%d 个月</item>
+    </plurals>
+
+    <plurals name="plural_rules">
+        <item quantity="other">%d 条规则</item>
+    </plurals>
+
+    <plurals name="plural_bills_due">
+        <item quantity="other">%d 笔待缴账单</item>
+    </plurals>
+
+    <plurals name="plural_items_selected">
+        <item quantity="other">已选中 %d 项</item>
+    </plurals>
+
+    <plurals name="plural_rows_imported">
+        <item quantity="other">已导入 %d 行数据</item>
+    </plurals>
+
+    <!-- Filter & Sort -->
+    <string name="sort_by">排序方式</string>
+    <string name="sort_newest">最新优先</string>
+    <string name="sort_oldest">最早优先</string>
+    <string name="sort_highest">金额最高</string>
+    <string name="sort_lowest">金额最低</string>
+    <string name="tx_filter_sort_title">筛选与排序明细</string>
+    <string name="action_duplicate">复制</string>
+    <string name="tx_record_title">记一笔账</string>
+    <string name="tx_review_banner">%1$d 笔交易需要确认分类</string>
+    <string name="tx_review_queue_action">待审核队列 →</string>
+
+    <!-- Quick Add Extras -->
+    <string name="quick_add_transfer_to">转入账户：</string>
+    <string name="quick_add_smart_suggestion">智能建议：</string>
+    <string name="quick_add_applied">已应用 ✓</string>
+    <string name="quick_add_tap_apply">点击应用</string>
+    <string name="quick_add_add_another">再记一笔</string>
+    <string name="quick_add_update">更新</string>
+    <string name="quick_add_hide_details">隐藏备注和标签</string>
+    <string name="quick_add_show_details">+ 添加备注、交易方或标签</string>
+
+    <!-- Time Periods -->
+    <string name="period_week">本周</string>
+    <string name="period_month">本月</string>
+    <string name="period_three_months">近3个月</string>
+    <string name="period_six_months">近6个月</string>
+    <string name="period_year">本年</string>
+    <string name="period_all_time">全部时间</string>
+
+    <!-- Recurring Tabs & Windows -->
+    <string name="recurring_tab_upcoming">待处理账单</string>
+    <string name="recurring_tab_rules">周期规则</string>
+    <string name="recurring_tab_subscriptions">订阅管理</string>
+    <string name="recurring_window_7d">未来7天</string>
+    <string name="recurring_window_30d">未来30天</string>
+
+    <!-- Debt Strategies & Metrics -->
+    <string name="debt_strategy_snowball_title">滚雪球法</string>
+    <string name="debt_strategy_snowball_sub">优先偿还最小本金</string>
+    <string name="debt_strategy_avalanche_title">雪崩法</string>
+    <string name="debt_strategy_avalanche_sub">优先偿还最高利率</string>
+    <string name="debt_freedom_title">预计结清期</string>
+    <string name="debt_free_celebration">无债一身轻！</string>
+    <string name="debt_min_payment_label">最低月还款额</string>
+    <string name="debt_card_balance_left">剩余 %1$s</string>
+
+    <!-- Accounts Extras -->
+    <string name="accounts_transfer_title">账户间转账</string>
+    <string name="accounts_transfer_action">转账</string>
+    <string name="accounts_transfer_cannot">无法转账</string>
+    <string name="accounts_transfer_cannot_desc">您需要至少两个有效账户才能进行账户间资金互转。</string>
+    <string name="accounts_active_tracked">已追踪 %1$d 个有效账户</string>
+
+    <!-- Analytics & Budgets Extras -->
+    <string name="analytics_avg_daily">日均支出</string>
+    <string name="analytics_largest_expense">最大单笔支出</string>
+    <string name="analytics_top_merchants">主要消费商户</string>
+    <string name="analytics_consumed_overall">累计已消耗 %1$d%%</string>
+    <string name="analytics_consumed_percent">已消耗 %1$d%%</string>
+
+    <!-- Goals Extras -->
+    <string name="goals_contribute_title">目标存入</string>
+    <string name="goals_contribute_btn">存入</string>
+
+    <!-- Extra Screen Strings -->
+    <string name="total_income">总收入</string>
+    <string name="total_expenses">总支出</string>
+    <string name="analytics_savings_rate_title">储蓄率</string>
+    <string name="account_archived_label">已归档</string>
+    <string name="account_limit_label">额度：%1$s</string>
+    <string name="account_edit_dialog_title">编辑账户</string>
+    <string name="goal_edit_title">编辑目标</string>
+    <string name="goal_target_format">目标 %1$s</string>
+    <string name="goal_achieved_percent">已达成 %1$d%%</string>
+    <string name="goal_add_funds">+ 追加资金</string>
+    <string name="goal_deposit_title">存入 %1$s</string>
+    <string name="goal_deposit_remaining">距离目标还差：%1$s</string>
+    <string name="debt_paid_off_percent">已还清 %1$d%%</string>
+    <string name="debt_record_payment">记录还款</string>
+    <string name="debt_edit_title">编辑债务</string>
+    <string name="debt_payment_title">记录 %1$s 还款</string>
+    <string name="debt_remaining_balance_label">剩余欠款：%1$s</string>
+    <string name="debt_confirm_payment_btn">确认还款</string>
+    <string name="category_custom_label">自定义</string>
+    <string name="category_default_label">默认</string>
+    <string name="category_create_custom">创建自定义分类</string>
+
+    <!-- Final Screen Refinements -->
+    <string name="investments_total_invested">累计投资</string>
+    <string name="investments_edit_title">编辑资产</string>
+    <string name="investments_units">%1$s 单位</string>
+    <string name="rules_screen_title">智能分类与规则</string>
+    <string name="rules_review_queue_clear">审核队列已清空</string>
+    <string name="rules_review_queue_clear_desc">所有交易均已确认。新导入的未分类流水将显示在此处。</string>
+    <string name="rules_transactions_need_review">%1$d 笔交易待审核</string>
+    <string name="rules_one_tap_hint">一键确认或纠正分类</string>
+    <string name="search_empty_hint">输入搜索词以在所有账户中查找流水记录</string>
+    <string name="export_screen_title">数据备份与导出</string>
+    <string name="export_csv_title">导出 CSV 账本</string>
+    <string name="export_csv_desc">符合 RFC-4180 标准的表格导出，兼容 Google 表格、Excel 和会计软件。</string>
+    <string name="export_csv_btn">导出交易记录 CSV</string>
+    <string name="export_json_title">完整 JSON 数据库备份</string>
+    <string name="export_json_desc">生成账户、交易、预算、理财目标和债务偿还计划的加密备份快照。</string>
+    <string name="export_json_btn">导出 JSON 数据库</string>
+    <string name="security_pin_active">PIN 码保护已生效</string>
+    <string name="security_pin_configure_title">设置安全 PIN 码</string>
+    <string name="security_pin_min_digits">PIN 码至少需要 4 位数字</string>
+    <string name="security_pin_save_btn">保存 PIN 码</string>
+</resources>

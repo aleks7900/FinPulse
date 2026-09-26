@@ -88,15 +88,15 @@ class RecurringCheckWorker(
         )
 
         val dueText = when (daysUntilDue) {
-            0L -> "is due today!"
-            1L -> "is due tomorrow."
-            else -> "is due in $daysUntilDue days."
+            0L -> appContext.getString(com.finpulse.app.R.string.notif_bill_due_today, amountFormatted)
+            1L -> appContext.getString(com.finpulse.app.R.string.notif_bill_due_tomorrow, amountFormatted)
+            else -> appContext.getString(com.finpulse.app.R.string.notif_bill_due_in_days, amountFormatted, daysUntilDue.toInt())
         }
 
         val notification = NotificationCompat.Builder(appContext, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setContentTitle("Upcoming Bill: $title")
-            .setContentText("$amountFormatted $dueText")
+            .setContentTitle(appContext.getString(com.finpulse.app.R.string.notif_bill_upcoming_title, title))
+            .setContentText(dueText)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -113,10 +113,10 @@ class RecurringCheckWorker(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Recurring Bills & Subscriptions",
+                appContext.getString(com.finpulse.app.R.string.notif_channel_recurring_name),
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = "Reminders for upcoming bills, subscriptions, and recurring payments"
+                description = appContext.getString(com.finpulse.app.R.string.notif_channel_recurring_desc)
             }
             val manager = appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)

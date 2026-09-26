@@ -43,21 +43,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.ui.BudgetProgressBar
+import com.finpulse.app.core.ui.DateFormatterUtils
 import com.finpulse.app.domain.model.FinancialGoal
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-
-private val DateFormatter = DateTimeFormatter.ofPattern("MMM yyyy")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,14 +76,14 @@ fun GoalsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Financial Goals",
+                        text = stringResource(R.string.goals_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -98,7 +97,7 @@ fun GoalsScreen(
                 containerColor = EmeraldPrimary,
                 contentColor = Color.Black
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Goal")
+                Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.goals_add_title))
             }
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -119,7 +118,7 @@ fun GoalsScreen(
                 ) {
                     Column(modifier = Modifier.padding(18.dp)) {
                         Text(
-                            text = "TOTAL SAVED ACROSS GOALS",
+                            text = stringResource(R.string.goals_total_saved).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -137,7 +136,7 @@ fun GoalsScreen(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = if (uiState.hideBalances) "/ ••••••" else "target ${uiState.totalTarget.formatted()}",
+                                text = if (uiState.hideBalances) "/ ••••••" else stringResource(R.string.goal_target_format, uiState.totalTarget.formatted()),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -164,14 +163,14 @@ fun GoalsScreen(
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "No Goals Set Yet",
+                                text = stringResource(R.string.goal_empty_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "Set savings milestones (e.g. Emergency Fund, Vacation, Car).",
+                                text = stringResource(R.string.goal_empty_desc),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -225,9 +224,7 @@ fun GoalCard(
     onContribute: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val deadlineFormatted = Instant.ofEpochMilli(goal.targetDate)
-        .atZone(ZoneId.systemDefault())
-        .format(DateFormatter)
+    val deadlineFormatted = DateFormatterUtils.formatMonthYear(goal.targetDate)
     val suggestedMonthly = goal.calculateSuggestedMonthlyContribution()
 
     Surface(
@@ -260,7 +257,7 @@ fun GoalCard(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "Target: $deadlineFormatted",
+                        text = "${stringResource(R.string.goal_target_date)}: $deadlineFormatted",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -275,7 +272,7 @@ fun GoalCard(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "${(goal.progressPercentage * 100).toInt()}% achieved",
+                        text = stringResource(R.string.goal_achieved_percent, (goal.progressPercentage * 100).toInt()),
                         style = MaterialTheme.typography.labelSmall,
                         color = EmeraldPrimary,
                         fontWeight = FontWeight.Medium
@@ -293,7 +290,7 @@ fun GoalCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = if (goal.isCompleted) "Completed! 🎉" else "Suggested: ${suggestedMonthly.formatted()}/mo",
+                    text = if (goal.isCompleted) stringResource(R.string.goal_completed) else stringResource(R.string.goal_suggested_monthly, suggestedMonthly.formatted()),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -303,7 +300,7 @@ fun GoalCard(
                         onClick = onContribute,
                         shape = RoundedCornerShape(10.dp)
                     ) {
-                        Text("+ Add Funds", style = MaterialTheme.typography.labelSmall, color = EmeraldPrimary)
+                        Text(stringResource(R.string.goal_add_funds), style = MaterialTheme.typography.labelSmall, color = EmeraldPrimary)
                     }
                 }
             }
@@ -326,13 +323,13 @@ fun AddEditGoalDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (editingGoal != null) "Edit Goal" else "New Savings Goal", fontWeight = FontWeight.Bold) },
+        title = { Text(if (editingGoal != null) stringResource(R.string.goal_edit_title) else stringResource(R.string.goals_add_title), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it; isError = false },
-                    label = { Text("Goal Name (e.g. Vacation, House)") },
+                    label = { Text(stringResource(R.string.goal_name_hint)) },
                     isError = isError,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -341,7 +338,7 @@ fun AddEditGoalDialog(
                 OutlinedTextField(
                     value = targetText,
                     onValueChange = { targetText = it },
-                    label = { Text("Target Amount ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.goal_target_amount_hint)} ($baseCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -350,7 +347,7 @@ fun AddEditGoalDialog(
                 OutlinedTextField(
                     value = currentText,
                     onValueChange = { currentText = it },
-                    label = { Text("Initial Amount Saved ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.goal_current_amount_hint)} ($baseCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -373,17 +370,17 @@ fun AddEditGoalDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Save", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
             Row {
                 if (editingGoal != null) {
                     IconButton(onClick = onDelete) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete", tint = CrimsonExpense)
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.action_delete), tint = CrimsonExpense)
                     }
                 }
-                TextButton(onClick = onDismiss) { Text("Cancel") }
+                TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
             }
         }
     )
@@ -401,14 +398,14 @@ fun ContributeGoalDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Deposit to ${goal.title}", fontWeight = FontWeight.Bold) },
+        title = { Text(stringResource(R.string.goal_deposit_title, goal.title), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Remaining to goal: ${goal.remainingAmount.formatted()}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(R.string.goal_deposit_remaining, goal.remainingAmount.formatted()), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 OutlinedTextField(
                     value = amountText,
                     onValueChange = { amountText = it; isError = false },
-                    label = { Text("Deposit Amount ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.tx_amount)} ($baseCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     isError = isError,
                     singleLine = true,
@@ -428,11 +425,11 @@ fun ContributeGoalDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Deposit", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.goals_contribute_btn), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 }

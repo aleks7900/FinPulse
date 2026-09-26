@@ -53,6 +53,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,9 +63,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.TransferBlue
+import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.AccountType
 
@@ -86,19 +90,19 @@ fun AccountsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Accounts Portfolio",
+                        text = stringResource(R.string.accounts_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 actions = {
                     IconButton(onClick = { onShowTransferDialog(true) }) {
-                        Icon(imageVector = Icons.Default.SwapHoriz, contentDescription = "Transfer Funds", tint = EmeraldPrimary)
+                        Icon(imageVector = Icons.Default.SwapHoriz, contentDescription = stringResource(R.string.accounts_transfer_title), tint = EmeraldPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -112,7 +116,7 @@ fun AccountsScreen(
                 containerColor = EmeraldPrimary,
                 contentColor = Color.Black
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Account")
+                Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.account_add_dialog_title))
             }
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -133,7 +137,7 @@ fun AccountsScreen(
                 ) {
                     Column(modifier = Modifier.padding(18.dp)) {
                         Text(
-                            text = "AGGREGATED BALANCE",
+                            text = stringResource(R.string.dashboard_total_balance).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -147,7 +151,7 @@ fun AccountsScreen(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "${uiState.accounts.count { !it.isArchived }} active accounts tracked",
+                            text = stringResource(R.string.accounts_active_tracked, uiState.accounts.count { !it.isArchived }),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -246,8 +250,10 @@ fun AccountCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(2.dp))
+                val typeName = account.type.getLocalizedName()
+                val archivedSuffix = if (account.isArchived) " • " + stringResource(R.string.account_archived_label) else ""
                 Text(
-                    text = "${account.institution ?: account.type.displayName}${if (account.isArchived) " • Archived" else ""}",
+                    text = "${account.institution ?: typeName}$archivedSuffix",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -265,7 +271,7 @@ fun AccountCard(
                 account.creditLimit?.let { limit ->
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "Limit: ${limit.formatted()}",
+                        text = stringResource(R.string.account_limit_label, limit.formatted()),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -292,14 +298,17 @@ fun AddEditAccountDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(if (editingAccount != null) "Edit Account" else "Create Account", fontWeight = FontWeight.Bold)
+            Text(
+                text = if (editingAccount != null) stringResource(R.string.account_edit_dialog_title) else stringResource(R.string.account_add_dialog_title),
+                fontWeight = FontWeight.Bold
+            )
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it; isError = false },
-                    label = { Text("Account Name (e.g. Main Checking)") },
+                    label = { Text(stringResource(R.string.account_name_hint)) },
                     isError = isError,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -308,7 +317,7 @@ fun AddEditAccountDialog(
                 OutlinedTextField(
                     value = institution,
                     onValueChange = { institution = it },
-                    label = { Text("Institution / Bank (optional)") },
+                    label = { Text(stringResource(R.string.account_institution_hint)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -316,7 +325,7 @@ fun AddEditAccountDialog(
                 OutlinedTextField(
                     value = balanceText,
                     onValueChange = { balanceText = it },
-                    label = { Text("Current Balance ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.account_starting_balance_hint)} ($baseCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -342,17 +351,17 @@ fun AddEditAccountDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Save", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
             Row {
                 if (editingAccount != null) {
                     IconButton(onClick = onDelete) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete", tint = CrimsonExpense)
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.action_delete), tint = CrimsonExpense)
                     }
                 }
-                TextButton(onClick = onDismiss) { Text("Cancel") }
+                TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
             }
         }
     )
@@ -368,9 +377,9 @@ fun TransferFundsDialog(
     if (accounts.size < 2) {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text("Cannot Transfer") },
-            text = { Text("You need at least 2 active accounts to transfer funds.") },
-            confirmButton = { Button(onClick = onDismiss) { Text("OK") } }
+            title = { Text(stringResource(R.string.accounts_transfer_cannot)) },
+            text = { Text(stringResource(R.string.accounts_transfer_cannot_desc)) },
+            confirmButton = { Button(onClick = onDismiss) { Text(stringResource(R.string.action_done)) } }
         )
         return
     }
@@ -383,13 +392,13 @@ fun TransferFundsDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Transfer Between Accounts", fontWeight = FontWeight.Bold) },
+        title = { Text(stringResource(R.string.accounts_transfer_title), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedTextField(
                     value = amountText,
                     onValueChange = { amountText = it; isError = false },
-                    label = { Text("Amount to Transfer ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.tx_amount)} ($baseCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     isError = isError,
                     singleLine = true,
@@ -399,7 +408,7 @@ fun TransferFundsDialog(
                 OutlinedTextField(
                     value = note,
                     onValueChange = { note = it },
-                    label = { Text("Note / Description (optional)") },
+                    label = { Text(stringResource(R.string.quick_add_note_hint)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -418,11 +427,11 @@ fun TransferFundsDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Transfer", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.accounts_transfer_action), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 }

@@ -73,18 +73,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.AmberWarning
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.PurpleAccent
 import com.finpulse.app.core.designsystem.TransferBlue
 import com.finpulse.app.core.ui.CategoryIconBadge
+import com.finpulse.app.core.ui.DateFormatterUtils
+import com.finpulse.app.core.ui.getDisplayName
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.CategorizationConfidence
 import com.finpulse.app.domain.model.CategorizationRule
@@ -93,11 +97,6 @@ import com.finpulse.app.domain.model.MatchType
 import com.finpulse.app.domain.model.Transaction
 import com.finpulse.app.domain.model.TransactionType
 import com.finpulse.app.domain.usecase.categorization.ReviewQueueItem
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-
-private val DateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -156,14 +155,14 @@ fun CategorizationRulesScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Smart Categorization & Rules",
+                        text = stringResource(R.string.rules_screen_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -180,7 +179,7 @@ fun CategorizationRulesScreen(
                     contentColor = Color.White,
                     shape = CircleShape
                 ) {
-                    Icon(Icons.Default.Add, contentDescription = "Add Rule")
+                    Icon(Icons.Default.Add, contentDescription = stringResource(R.string.rules_create_title))
                 }
             }
         }
@@ -205,7 +204,7 @@ fun CategorizationRulesScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
                             ) {
-                                Text(tab.label)
+                                Text(if (tab == CategorizationTab.REVIEW_QUEUE) stringResource(R.string.rules_tab_review, uiState.reviewQueue.size).replace(Regex(""" \(\d+\)"""), "") else stringResource(R.string.rules_tab_rules, uiState.rules.size).replace(Regex(""" \(\d+\)"""), ""))
                                 if (tab == CategorizationTab.REVIEW_QUEUE && uiState.reviewQueue.isNotEmpty()) {
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Badge(
@@ -331,13 +330,13 @@ private fun ReviewQueueTabContent(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Review Queue Clear",
+                    text = stringResource(R.string.rules_review_queue_clear),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "All transactions have been confirmed. New unclassified or low-confidence imports will appear here.",
+                    text = stringResource(R.string.rules_review_queue_clear_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
@@ -359,13 +358,13 @@ private fun ReviewQueueTabContent(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "${queue.size} transactions need review",
+                        text = stringResource(R.string.rules_transactions_need_review, queue.size),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = "1-tap confirm or correct",
+                        text = stringResource(R.string.rules_one_tap_hint),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -403,9 +402,7 @@ private fun ReviewQueueItemCard(
     val currentCat = categoryMap[tx.categoryId]
     val account = accountMap[tx.sourceAccountId]
 
-    val dateStr = Instant.ofEpochMilli(tx.timestamp)
-        .atZone(ZoneId.systemDefault())
-        .format(DateFormatter)
+    val dateStr = DateFormatterUtils.formatDate(tx.timestamp)
 
     val confidenceColor = when (suggestion.confidence) {
         CategorizationConfidence.EXACT_RULE -> EmeraldPrimary
@@ -419,7 +416,7 @@ private fun ReviewQueueItemCard(
         CategorizationConfidence.HIGH -> "${(suggestion.confidenceScore * 100).toInt()}% Confident"
         CategorizationConfidence.MEDIUM -> "Keyword Match"
         CategorizationConfidence.LOW -> "Low Confidence"
-        CategorizationConfidence.NONE -> "Uncategorized"
+        CategorizationConfidence.NONE -> stringResource(R.string.cat_uncategorized)
     }
 
     Surface(
@@ -437,7 +434,7 @@ private fun ReviewQueueItemCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = tx.merchant?.takeIf { it.isNotBlank() } ?: tx.description.ifBlank { "Transaction" },
+                        text = tx.merchant?.takeIf { it.isNotBlank() } ?: tx.description.ifBlank { stringResource(R.string.tx_default_title) },
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
@@ -497,7 +494,7 @@ private fun ReviewQueueItemCard(
                         Spacer(modifier = Modifier.width(8.dp))
                         Column {
                             Text(
-                                text = suggestedCat?.name ?: currentCat?.name ?: "Uncategorized",
+                                text = suggestedCat?.getDisplayName() ?: currentCat?.getDisplayName() ?: stringResource(R.string.cat_uncategorized),
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.SemiBold
                             )
@@ -548,7 +545,7 @@ private fun ReviewQueueItemCard(
                     ) {
                         Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Confirm")
+                        Text(stringResource(R.string.action_confirm))
                     }
                 }
 
@@ -558,7 +555,7 @@ private fun ReviewQueueItemCard(
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Change")
+                    Text(stringResource(R.string.action_edit))
                 }
 
                 // Create Rule from this merchant
@@ -568,7 +565,7 @@ private fun ReviewQueueItemCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.AutoAwesome,
-                        contentDescription = "Create Rule",
+                        contentDescription = stringResource(R.string.rules_create_title),
                         tint = PurpleAccent
                     )
                 }
@@ -615,7 +612,7 @@ private fun RulesTabContent(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "No Categorization Rules",
+                    text = stringResource(R.string.rules_empty_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -743,7 +740,7 @@ private fun RuleCard(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = cat.name,
+                        text = cat.getDisplayName(),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -1218,7 +1215,7 @@ private fun ChangeCategoryPickerModal(
                             CategoryIconBadge(cat.icon, cat.colorHex, size = 28.dp, iconSize = 16.dp)
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
-                                text = cat.name,
+                                text = cat.getDisplayName(),
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = if (cat.id == transaction.categoryId) FontWeight.Bold else FontWeight.Normal
                             )
@@ -1230,7 +1227,7 @@ private fun ChangeCategoryPickerModal(
         confirmButton = {},
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.action_cancel))
             }
         }
     )

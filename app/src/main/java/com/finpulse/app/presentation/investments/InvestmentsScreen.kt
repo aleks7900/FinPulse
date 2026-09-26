@@ -42,11 +42,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.EmeraldPrimary
+import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.AssetClass
 import com.finpulse.app.domain.model.InvestmentAsset
 
@@ -66,14 +69,14 @@ fun InvestmentsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Investment Portfolio",
+                        text = stringResource(R.string.investments_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -87,7 +90,7 @@ fun InvestmentsScreen(
                 containerColor = EmeraldPrimary,
                 contentColor = Color.Black
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Asset")
+                Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.investments_add_title))
             }
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -108,7 +111,7 @@ fun InvestmentsScreen(
                 ) {
                     Column(modifier = Modifier.padding(18.dp)) {
                         Text(
-                            text = "PORTFOLIO VALUATION",
+                            text = stringResource(R.string.investments_total_portfolio).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -128,11 +131,11 @@ fun InvestmentsScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column {
-                                Text("Total Invested", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(stringResource(R.string.investments_total_invested), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Text(if (uiState.hideBalances) "••••" else uiState.totalInvested.formatted(), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
                             }
                             Column(horizontalAlignment = Alignment.End) {
-                                Text("Total Gain / Loss", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(stringResource(R.string.investments_total_gain_loss), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 val isPos = uiState.totalProfitLoss.isPositive
                                 val sign = if (isPos) "+" else ""
                                 Text(
@@ -158,14 +161,14 @@ fun InvestmentsScreen(
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "No Assets Tracked",
+                                text = stringResource(R.string.asset_empty_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "Add stocks, ETFs, crypto holdings, and commodities.",
+                                text = stringResource(R.string.asset_empty_desc),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -230,7 +233,7 @@ fun AssetCard(
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = "${asset.name} • ${asset.quantity} units",
+                    text = "${asset.name} • ${stringResource(R.string.investments_units, asset.quantity.toString())} • ${asset.assetClass.getLocalizedName()}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -273,13 +276,13 @@ fun AddEditAssetDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (editingAsset != null) "Edit Asset" else "Add Asset", fontWeight = FontWeight.Bold) },
+        title = { Text(stringResource(if (editingAsset != null) R.string.investments_edit_title else R.string.investments_add_title), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedTextField(
                     value = symbol,
                     onValueChange = { symbol = it; isError = false },
-                    label = { Text("Ticker Symbol (e.g. AAPL, BTC, VOO)") },
+                    label = { Text(stringResource(R.string.asset_symbol_hint)) },
                     isError = isError,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -288,7 +291,7 @@ fun AddEditAssetDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Asset Name (e.g. Apple Inc)") },
+                    label = { Text(stringResource(R.string.asset_name_hint)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -296,7 +299,7 @@ fun AddEditAssetDialog(
                 OutlinedTextField(
                     value = quantityText,
                     onValueChange = { quantityText = it },
-                    label = { Text("Quantity Held") },
+                    label = { Text(stringResource(R.string.asset_quantity_hint)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -305,7 +308,7 @@ fun AddEditAssetDialog(
                 OutlinedTextField(
                     value = purchasePriceText,
                     onValueChange = { purchasePriceText = it },
-                    label = { Text("Avg Purchase Price ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.asset_purchase_price_hint)} ($baseCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -314,7 +317,7 @@ fun AddEditAssetDialog(
                 OutlinedTextField(
                     value = currentPriceText,
                     onValueChange = { currentPriceText = it },
-                    label = { Text("Current Market Price ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.asset_current_price_hint)} ($baseCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -343,17 +346,17 @@ fun AddEditAssetDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Save", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
             Row {
                 if (editingAsset != null) {
                     IconButton(onClick = onDelete) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete", tint = CrimsonExpense)
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.action_delete), tint = CrimsonExpense)
                     }
                 }
-                TextButton(onClick = onDismiss) { Text("Cancel") }
+                TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
             }
         }
     )

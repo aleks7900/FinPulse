@@ -40,10 +40,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.datastore.UserPreferencesDataStore
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import kotlinx.coroutines.launch
@@ -67,14 +69,14 @@ fun SecurityScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Security & Privacy",
+                        text = stringResource(R.string.security_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -99,8 +101,8 @@ fun SecurityScreen(
                 Column(modifier = Modifier.padding(16.dp)) {
                     // Biometrics Switch
                     SecurityRow(
-                        title = "Biometric Authentication",
-                        subtitle = "Unlock FinPulse using fingerprint or face scan",
+                        title = stringResource(R.string.security_biometric),
+                        subtitle = stringResource(R.string.security_biometric_desc),
                         checked = userPrefs.isBiometricEnabled,
                         onCheckedChange = { scope.launch { userPreferencesDataStore.setBiometricEnabled(it) } }
                     )
@@ -109,8 +111,8 @@ fun SecurityScreen(
 
                     // PIN Switch
                     SecurityRow(
-                        title = "App PIN Code",
-                        subtitle = if (userPrefs.isPinEnabled) "PIN protection is active" else "Protect app with 4-digit code",
+                        title = stringResource(R.string.security_pin),
+                        subtitle = if (userPrefs.isPinEnabled) stringResource(R.string.security_pin_active) else stringResource(R.string.security_pin_desc),
                         checked = userPrefs.isPinEnabled,
                         onCheckedChange = { checked ->
                             if (checked) {
@@ -125,8 +127,8 @@ fun SecurityScreen(
 
                     // Screenshot Protection (FLAG_SECURE)
                     SecurityRow(
-                        title = "Screenshot Protection",
-                        subtitle = "Prevents screenshots and hides app previews in Android recent apps",
+                        title = stringResource(R.string.security_screenshot_protection),
+                        subtitle = stringResource(R.string.security_screenshot_protection_desc),
                         checked = userPrefs.enableScreenshotProtection,
                         onCheckedChange = { scope.launch { userPreferencesDataStore.setScreenshotProtection(it) } }
                     )
@@ -135,8 +137,8 @@ fun SecurityScreen(
 
                     // Hide Balances
                     SecurityRow(
-                        title = "Privacy Mode (Hide Balances)",
-                        subtitle = "Mask amounts with dots across dashboard and lists",
+                        title = stringResource(R.string.security_hide_balances),
+                        subtitle = stringResource(R.string.security_hide_balances_desc),
                         checked = userPrefs.hideBalances,
                         onCheckedChange = { scope.launch { userPreferencesDataStore.setHideBalances(it) } }
                     )
@@ -191,15 +193,18 @@ fun SetPinDialog(
     var confirmPin by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
+    val pinMinDigitsMsg = stringResource(R.string.security_pin_min_digits)
+    val pinMismatchMsg = stringResource(R.string.security_pin_mismatch)
+
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Configure Security PIN", fontWeight = FontWeight.Bold) },
+        title = { Text(stringResource(R.string.security_pin_configure_title), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedTextField(
                     value = pin,
                     onValueChange = { if (it.length <= 6) pin = it },
-                    label = { Text("Enter PIN (4-6 digits)") },
+                    label = { Text(stringResource(R.string.security_enter_pin)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                     visualTransformation = PasswordVisualTransformation(),
                     singleLine = true,
@@ -209,7 +214,7 @@ fun SetPinDialog(
                 OutlinedTextField(
                     value = confirmPin,
                     onValueChange = { if (it.length <= 6) confirmPin = it },
-                    label = { Text("Confirm PIN") },
+                    label = { Text(stringResource(R.string.security_confirm_pin)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                     visualTransformation = PasswordVisualTransformation(),
                     singleLine = true,
@@ -225,22 +230,22 @@ fun SetPinDialog(
             Button(
                 onClick = {
                     if (pin.length < 4) {
-                        errorMessage = "PIN must be at least 4 digits"
+                        errorMessage = pinMinDigitsMsg
                         return@Button
                     }
                     if (pin != confirmPin) {
-                        errorMessage = "PINs do not match"
+                        errorMessage = pinMismatchMsg
                         return@Button
                     }
                     onPinSet(pin)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Save PIN", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.security_pin_save_btn), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 }

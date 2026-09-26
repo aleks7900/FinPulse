@@ -24,18 +24,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.model.TimePeriod
 import com.finpulse.app.core.ui.CategoryIconBadge
 import com.finpulse.app.core.ui.DonutChart
 import com.finpulse.app.core.ui.DonutSegment
+import com.finpulse.app.core.ui.getDisplayName
 import com.finpulse.app.presentation.dashboard.TimeRangeSelector
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +55,7 @@ fun AnalyticsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Financial Analytics",
+                        text = stringResource(R.string.analytics_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -87,7 +91,7 @@ fun AnalyticsScreen(
                 ) {
                     Column(modifier = Modifier.padding(18.dp)) {
                         Text(
-                            text = "NET CASH FLOW",
+                            text = stringResource(R.string.dashboard_monthly_net).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -107,11 +111,11 @@ fun AnalyticsScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column {
-                                Text("Total Income", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(stringResource(R.string.total_income), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Text(if (uiState.hideBalances) "••••" else uiState.totalIncome.formatted(), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = EmeraldPrimary)
                             }
                             Column(horizontalAlignment = Alignment.End) {
-                                Text("Total Expenses", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(stringResource(R.string.total_expenses), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Text(if (uiState.hideBalances) "••••" else uiState.totalExpenses.formatted(), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = CrimsonExpense)
                             }
                         }
@@ -132,7 +136,7 @@ fun AnalyticsScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "EXPENSES BY CATEGORY",
+                                text = stringResource(R.string.analytics_spending_by_category).uppercase(),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -142,7 +146,7 @@ fun AnalyticsScreen(
 
                             val segments = uiState.categoryBreakdown.map {
                                 DonutSegment(
-                                    label = it.category.name,
+                                    label = it.category.getDisplayName(),
                                     value = it.totalAmount.amountMinor.toDouble(),
                                     color = Color(it.category.colorHex)
                                 )
@@ -150,7 +154,7 @@ fun AnalyticsScreen(
 
                             DonutChart(
                                 segments = segments,
-                                centerTitle = "Total Spent",
+                                centerTitle = stringResource(R.string.budget_total_spent),
                                 centerValue = if (uiState.hideBalances) "••••" else uiState.totalExpenses.formatted(),
                                 modifier = Modifier.size(200.dp)
                             )
@@ -172,7 +176,7 @@ fun AnalyticsScreen(
                                         )
                                         Spacer(modifier = Modifier.width(10.dp))
                                         Text(
-                                            text = item.category.name,
+                                            text = item.category.getDisplayName(),
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = MaterialTheme.colorScheme.onSurface,
                                             modifier = Modifier.weight(1f)
@@ -204,17 +208,17 @@ fun AnalyticsScreen(
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     StatCard(
-                        title = "Avg. Daily Spend",
+                        title = stringResource(R.string.analytics_avg_daily),
                         value = if (uiState.hideBalances) "••••" else uiState.averageDailyExpense.formatted(),
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
-                        title = "Largest Expense",
+                        title = stringResource(R.string.analytics_largest_expense),
                         value = if (uiState.hideBalances) "••••" else uiState.largestExpense.formatted(),
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
-                        title = "Savings Rate",
+                        title = stringResource(R.string.analytics_savings_rate_title),
                         value = "${"%.1f".format(uiState.savingsRate)}%",
                         modifier = Modifier.weight(1f)
                     )
@@ -225,7 +229,7 @@ fun AnalyticsScreen(
             if (uiState.topMerchants.isNotEmpty()) {
                 item {
                     Text(
-                        text = "Top Spending Merchants",
+                        text = stringResource(R.string.analytics_top_merchants),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -251,7 +255,7 @@ fun AnalyticsScreen(
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
-                                    text = "${merchant.transactionCount} transactions",
+                                    text = pluralStringResource(R.plurals.plural_transactions, merchant.transactionCount, merchant.transactionCount),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )

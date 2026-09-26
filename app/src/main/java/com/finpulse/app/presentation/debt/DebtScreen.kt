@@ -46,13 +46,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.DebtOrange
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.ui.BudgetProgressBar
+import com.finpulse.app.core.ui.getLocalizedName
+import com.finpulse.app.core.ui.getLocalizedSubtitle
+import com.finpulse.app.core.ui.getLocalizedTitle
 import com.finpulse.app.domain.engine.DebtStrategy
 import com.finpulse.app.domain.model.Debt
 import com.finpulse.app.domain.model.DebtType
@@ -76,14 +82,14 @@ fun DebtScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Debt Payoff Planner",
+                        text = stringResource(R.string.debt_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -97,7 +103,7 @@ fun DebtScreen(
                 containerColor = EmeraldPrimary,
                 contentColor = Color.Black
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Debt")
+                Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.debt_add_title))
             }
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -116,15 +122,15 @@ fun DebtScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     StrategyChip(
-                        title = "Snowball Strategy",
-                        subtitle = "Lowest Balance First",
+                        title = DebtStrategy.SNOWBALL.getLocalizedTitle(),
+                        subtitle = DebtStrategy.SNOWBALL.getLocalizedSubtitle(),
                         selected = uiState.selectedStrategy == DebtStrategy.SNOWBALL,
                         onClick = { onStrategyChange(DebtStrategy.SNOWBALL) },
                         modifier = Modifier.weight(1f)
                     )
                     StrategyChip(
-                        title = "Avalanche Strategy",
-                        subtitle = "Highest Interest First",
+                        title = DebtStrategy.AVALANCHE.getLocalizedTitle(),
+                        subtitle = DebtStrategy.AVALANCHE.getLocalizedSubtitle(),
                         selected = uiState.selectedStrategy == DebtStrategy.AVALANCHE,
                         onClick = { onStrategyChange(DebtStrategy.AVALANCHE) },
                         modifier = Modifier.weight(1f)
@@ -141,7 +147,7 @@ fun DebtScreen(
                 ) {
                     Column(modifier = Modifier.padding(18.dp)) {
                         Text(
-                            text = "TOTAL OUTSTANDING LIABILITIES",
+                            text = stringResource(R.string.debt_total_debt).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -161,14 +167,14 @@ fun DebtScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column {
-                                Text("Min. Monthly Payment", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(stringResource(R.string.debt_min_payment_label), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Text(if (uiState.hideBalances) "••••" else uiState.payoffPlan.totalMonthlyMinimum.formatted(), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
                             }
                             Column(horizontalAlignment = Alignment.End) {
-                                Text("Estimated Freedom", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(stringResource(R.string.debt_freedom_title), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 val months = uiState.payoffPlan.estimatedMonthsToFree
                                 Text(
-                                    text = if (months > 0) "$months months" else "Debt-Free!",
+                                    text = if (months > 0) pluralStringResource(R.plurals.plural_months, months, months) else stringResource(R.string.debt_free_celebration),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = EmeraldPrimary
@@ -190,14 +196,14 @@ fun DebtScreen(
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "Zero Debt Tracked",
+                                text = stringResource(R.string.debt_empty_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "Track credit cards, personal loans, mortgages, and auto financing.",
+                                text = stringResource(R.string.debt_empty_desc),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -303,7 +309,7 @@ fun DebtCard(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "${debt.type.displayName} • ${debt.interestRatePercent}% APR",
+                        text = "${debt.type.getLocalizedName()} • ${debt.interestRatePercent}% APR",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -335,7 +341,7 @@ fun DebtCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "${(debt.payoffProgressPercentage * 100).toInt()}% paid off",
+                    text = stringResource(R.string.debt_paid_off_percent, (debt.payoffProgressPercentage * 100).toInt()),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -345,7 +351,7 @@ fun DebtCard(
                         onClick = onPay,
                         shape = RoundedCornerShape(10.dp)
                     ) {
-                        Text("Record Payment", style = MaterialTheme.typography.labelSmall, color = EmeraldPrimary)
+                        Text(stringResource(R.string.debt_record_payment), style = MaterialTheme.typography.labelSmall, color = EmeraldPrimary)
                     }
                 }
             }
@@ -371,13 +377,13 @@ fun AddEditDebtDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (editingDebt != null) "Edit Debt" else "Add Debt / Loan", fontWeight = FontWeight.Bold) },
+        title = { Text(stringResource(if (editingDebt != null) R.string.debt_edit_title else R.string.debt_add_title), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it; isError = false },
-                    label = { Text("Debt Name (e.g. Visa Card)") },
+                    label = { Text(stringResource(R.string.debt_name_hint)) },
                     isError = isError,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -386,7 +392,7 @@ fun AddEditDebtDialog(
                 OutlinedTextField(
                     value = totalText,
                     onValueChange = { totalText = it },
-                    label = { Text("Original Principal ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.debt_principal_hint)} ($baseCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -395,7 +401,7 @@ fun AddEditDebtDialog(
                 OutlinedTextField(
                     value = remainingText,
                     onValueChange = { remainingText = it },
-                    label = { Text("Current Balance Remaining ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.debt_remaining_hint)} ($baseCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -405,7 +411,7 @@ fun AddEditDebtDialog(
                     OutlinedTextField(
                         value = rateText,
                         onValueChange = { rateText = it },
-                        label = { Text("APR %") },
+                        label = { Text(stringResource(R.string.debt_interest_rate_hint)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         singleLine = true,
                         modifier = Modifier.weight(1f)
@@ -413,7 +419,7 @@ fun AddEditDebtDialog(
                     OutlinedTextField(
                         value = minPaymentText,
                         onValueChange = { minPaymentText = it },
-                        label = { Text("Min. Payment") },
+                        label = { Text(stringResource(R.string.debt_minimum_payment_hint)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         singleLine = true,
                         modifier = Modifier.weight(1.5f)
@@ -444,17 +450,17 @@ fun AddEditDebtDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Save", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
             Row {
                 if (editingDebt != null) {
                     IconButton(onClick = onDelete) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete", tint = CrimsonExpense)
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.action_delete), tint = CrimsonExpense)
                     }
                 }
-                TextButton(onClick = onDismiss) { Text("Cancel") }
+                TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
             }
         }
     )
@@ -472,14 +478,14 @@ fun MakePaymentDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Record Payment for ${debt.name}", fontWeight = FontWeight.Bold) },
+        title = { Text(stringResource(R.string.debt_payment_title, debt.name), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Remaining balance: ${debt.remainingBalance.formatted()}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(R.string.debt_remaining_balance_label, debt.remainingBalance.formatted()), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 OutlinedTextField(
                     value = amountText,
                     onValueChange = { amountText = it; isError = false },
-                    label = { Text("Payment Amount ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.tx_amount)} ($baseCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     isError = isError,
                     singleLine = true,
@@ -499,11 +505,11 @@ fun MakePaymentDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Confirm Payment", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.debt_confirm_payment_btn), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 }

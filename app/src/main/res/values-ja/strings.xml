@@ -1,0 +1,588 @@
+<resources>
+    <string name="app_name">FinPulse</string>
+    <string name="shortcut_quick_add_short">クイック入力</string>
+    <string name="shortcut_quick_add_long">取引をすばやく記録</string>
+
+    <!-- Language Names -->
+    <string name="lang_system">システム標準</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ru">Русский</string>
+    <string name="lang_es">Español</string>
+    <string name="lang_pt_br">Português (Brasil)</string>
+    <string name="lang_de">Deutsch</string>
+    <string name="lang_fr">Français</string>
+    <string name="lang_it">Italiano</string>
+    <string name="lang_pl">Polski</string>
+    <string name="lang_tr">Türkçe</string>
+    <string name="lang_ja">日本語</string>
+    <string name="lang_ko">한국어</string>
+    <string name="lang_zh_cn">简体中文</string>
+    <string name="select_language">言語を選択</string>
+    <string name="language_title">言語</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">ホーム</string>
+    <string name="nav_transactions">取引明細</string>
+    <string name="nav_budgets">予算管理</string>
+    <string name="nav_analytics">分析レポート</string>
+    <string name="nav_more">その他</string>
+
+    <!-- Common Actions & Buttons -->
+    <string name="action_save">保存</string>
+    <string name="action_cancel">キャンセル</string>
+    <string name="action_delete">削除</string>
+    <string name="action_edit">編集</string>
+    <string name="action_add">追加</string>
+    <string name="action_done">完了</string>
+    <string name="action_close">閉じる</string>
+    <string name="action_confirm">確定</string>
+    <string name="action_dismiss">閉じる</string>
+    <string name="action_apply">適用</string>
+    <string name="action_search">検索</string>
+    <string name="action_filter">絞り込み</string>
+    <string name="action_export">エクスポート</string>
+    <string name="action_import">インポート</string>
+    <string name="action_view_all">すべて表示</string>
+    <string name="action_back">戻る</string>
+    <string name="action_continue">次へ</string>
+    <string name="action_skip">スキップ</string>
+    <string name="action_create">作成</string>
+    <string name="action_save_add_another">保存して続けて登録</string>
+    <string name="action_reset">リセット</string>
+    <string name="action_refresh">更新</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">資産概要</string>
+    <string name="dashboard_net_worth">純資産</string>
+    <string name="dashboard_assets">総資産</string>
+    <string name="dashboard_liabilities">負債合計</string>
+    <string name="dashboard_total_balance">総口座残高</string>
+    <string name="dashboard_cash_flow">収支バランス</string>
+    <string name="dashboard_monthly_income">今月の収入</string>
+    <string name="dashboard_monthly_expense">今月の支出</string>
+    <string name="dashboard_monthly_net">収支差額</string>
+    <string name="dashboard_spending_trends">支出推移</string>
+    <string name="dashboard_recent_transactions">最近の取引</string>
+    <string name="dashboard_financial_health">財務健全度</string>
+    <string name="dashboard_health_score">スコア: %1$d/100</string>
+    <string name="dashboard_quick_actions">クイック操作</string>
+    <string name="dashboard_accounts_overview">口座一覧</string>
+    <string name="dashboard_no_transactions">取引履歴がまだありません</string>
+
+    <!-- Transactions -->
+    <string name="transactions_title">取引明細</string>
+    <string name="tx_search_hint">取引、店舗名、メモを検索…</string>
+    <string name="tx_type_income">収入</string>
+    <string name="tx_type_expense">支出</string>
+    <string name="tx_type_transfer">口座間振替</string>
+    <string name="tx_type_refund">返金・払戻</string>
+    <string name="tx_needs_review">要確認</string>
+    <string name="tx_confirmed">確認済み</string>
+    <string name="tx_empty_title">該当する取引がありません</string>
+    <string name="tx_empty_desc">+ ボタンをタップして取引を登録してください</string>
+    <string name="tx_date_range">期間指定</string>
+    <string name="tx_filter_all">すべて</string>
+    <string name="tx_filter_income">収入</string>
+    <string name="tx_filter_expense">支出</string>
+    <string name="tx_filter_transfer">振替</string>
+    <string name="tx_details_title">取引の詳細</string>
+    <string name="tx_amount">金額</string>
+    <string name="tx_category">カテゴリー</string>
+    <string name="tx_account">出金口座</string>
+    <string name="tx_dest_account">入金先口座</string>
+    <string name="tx_merchant">店舗 / 支払先</string>
+    <string name="tx_date">日時</string>
+    <string name="tx_notes">メモ</string>
+    <string name="tx_tags">タグ</string>
+    <string name="tx_saved_success">取引を保存しました</string>
+    <string name="tx_deleted_success">取引を削除しました</string>
+    <string name="tx_default_title">取引</string>
+
+    <!-- Quick Add -->
+    <string name="quick_add_title">取引のクイック登録</string>
+    <string name="quick_add_expense">支出</string>
+    <string name="quick_add_income">収入</string>
+    <string name="quick_add_transfer">振替</string>
+    <string name="quick_add_amount_hint">0</string>
+    <string name="quick_add_select_account">口座を選択</string>
+    <string name="quick_add_select_category">カテゴリーを選択</string>
+    <string name="quick_add_note_hint">メモを入力（任意）</string>
+    <string name="quick_add_merchant_hint">店舗名または支払先</string>
+    <string name="quick_add_date_today">今日</string>
+    <string name="quick_add_date_yesterday">昨日</string>
+    <string name="quick_add_date_custom">日付を選択</string>
+    <string name="quick_add_saved_snackbar">取引を登録しました</string>
+    <string name="quick_add_edit_action">編集</string>
+
+    <!-- Budgets -->
+    <string name="budgets_title">予算管理</string>
+    <string name="budget_total_budgeted">設定予算合計</string>
+    <string name="budget_total_spent">支出総額</string>
+    <string name="budget_remaining">残額</string>
+    <string name="budget_exceeded">予算超過</string>
+    <string name="budget_on_track">順調</string>
+    <string name="budget_warning">上限間近</string>
+    <string name="budget_projected">着地予測: %1$s</string>
+    <string name="budget_add_dialog_title">予算を作成</string>
+    <string name="budget_name_hint">予算名</string>
+    <string name="budget_limit_hint">月間支出上限額</string>
+    <string name="budget_period">対象期間</string>
+    <string name="budget_empty_title">有効な予算がありません</string>
+    <string name="budget_empty_desc">支出上限を設定して無駄遣いをコントロールしましょう</string>
+    <string name="budget_status_exceeded_desc">%1$s の予算オーバー</string>
+    <string name="budget_status_warning_desc">残り %1$s</string>
+
+    <!-- Analytics -->
+    <string name="analytics_title">家計・資産分析</string>
+    <string name="analytics_income_vs_expense">収支比較</string>
+    <string name="analytics_spending_by_category">カテゴリー別支出</string>
+    <string name="analytics_net_worth_trend">純資産推移</string>
+    <string name="analytics_cash_flow_title">収支フロー分析</string>
+    <string name="analytics_monthly_spending">月間支出推移</string>
+    <string name="analytics_savings_rate">貯蓄率: %1$s%%</string>
+    <string name="analytics_forecast">月末予測</string>
+    <string name="analytics_period_7d">7日間</string>
+    <string name="analytics_period_30d">30日間</string>
+    <string name="analytics_period_month">今月</string>
+    <string name="analytics_period_quarter">四半期</string>
+    <string name="analytics_period_year">今年</string>
+    <string name="analytics_empty_title">分析データがありません</string>
+
+    <!-- Accounts -->
+    <string name="accounts_title">口座・資産ポートフォリオ</string>
+    <string name="account_total_assets">資産合計</string>
+    <string name="account_total_liabilities">負債合計</string>
+    <string name="account_add_dialog_title">口座を追加</string>
+    <string name="account_name_hint">口座名（例: メイン給与口座）</string>
+    <string name="account_type">口座種別</string>
+    <string name="account_starting_balance_hint">現在残高</string>
+    <string name="account_credit_limit_hint">利用限度額（任意）</string>
+    <string name="account_institution_hint">金融機関名（任意）</string>
+    <string name="account_available_balance">利用可能額</string>
+    <string name="account_current_balance">口座残高</string>
+    <string name="account_empty_title">登録口座がありません</string>
+    <string name="account_empty_desc">銀行口座、普通預金、クレジットカードを追加しましょう</string>
+    <string name="account_archive">口座をアーカイブ</string>
+    <string name="account_delete">口座を削除</string>
+
+    <!-- Recurring & Subscriptions -->
+    <string name="recurring_title">定期支払・サブスク管理</string>
+    <string name="recurring_upcoming_title">支払予定</string>
+    <string name="recurring_upcoming_subtitle">今後30日間の支払予定</string>
+    <string name="recurring_active_rules">有効な契約</string>
+    <string name="recurring_monthly_commitment">月額固定費</string>
+    <string name="recurring_annual_commitment">年間換算額: %1$s/年</string>
+    <string name="recurring_add_title">定期支払を新規登録</string>
+    <string name="recurring_bill_name_hint">サービス名または請求名</string>
+    <string name="recurring_frequency">支払周期</string>
+    <string name="recurring_next_due">次回引落日</string>
+    <string name="recurring_mark_paid">支払済みにする</string>
+    <string name="recurring_skip">今回スキップ</string>
+    <string name="recurring_pause">一時停止</string>
+    <string name="recurring_resume">再開</string>
+    <string name="recurring_cancel">契約解除</string>
+    <string name="recurring_empty_title">定期支払が登録されていません</string>
+    <string name="recurring_empty_desc">サブスク、家賃、保険料、給与などを一括管理</string>
+    <string name="recurring_is_subscription">デジタルサブスクリプション</string>
+    <string name="recurring_variable_amount">請求金額が毎月変動する</string>
+
+    <!-- Financial Goals -->
+    <string name="goals_title">貯蓄目標</string>
+    <string name="goals_total_target">目標総額</string>
+    <string name="goals_total_saved">現在の積立総額</string>
+    <string name="goals_add_title">目標を新規設定</string>
+    <string name="goal_name_hint">目標名（例: 緊急予備資金）</string>
+    <string name="goal_target_amount_hint">目標金額</string>
+    <string name="goal_current_amount_hint">現在の積立額</string>
+    <string name="goal_target_date">目標達成日</string>
+    <string name="goal_progress">進捗率: %1$d%%</string>
+    <string name="goal_remaining">残り必要額: %1$s</string>
+    <string name="goal_suggested_monthly">月間目安積立額: %1$s/月</string>
+    <string name="goal_completed">目標達成！</string>
+    <string name="goal_empty_title">貯蓄目標が設定されていません</string>
+    <string name="goal_empty_desc">旅行やマイホーム資金、緊急予備資金などの目標を立てましょう</string>
+
+    <!-- Investments & Assets -->
+    <string name="investments_title">投資・保有資産</string>
+    <string name="investments_total_portfolio">ポートフォリオ評価額</string>
+    <string name="investments_total_gain_loss">評価損益合計</string>
+    <string name="investments_add_title">投資資産を追加</string>
+    <string name="asset_name_hint">銘柄・資産名（例: S&amp;P 500 インデックス）</string>
+    <string name="asset_symbol_hint">ティッカー / コード（例: 2558）</string>
+    <string name="asset_class">アセットクラス</string>
+    <string name="asset_quantity_hint">保有数量 / 口数</string>
+    <string name="asset_purchase_price_hint">平均取得単価</string>
+    <string name="asset_current_price_hint">現在値（市場価格）</string>
+    <string name="asset_empty_title">投資資産が登録されていません</string>
+    <string name="asset_empty_desc">株式、投資信託、暗号資産、不動産、債券を管理</string>
+
+    <!-- Debt & Liabilities -->
+    <string name="debt_title">借入金・負債管理</string>
+    <string name="debt_total_debt">負債残高合計</string>
+    <string name="debt_total_paid_off">返済済み元金</string>
+    <string name="debt_add_title">ローン・負債を追加</string>
+    <string name="debt_name_hint">ローン名（例: 住宅ローン）</string>
+    <string name="debt_type">借入種別</string>
+    <string name="debt_principal_hint">当初借入元金</string>
+    <string name="debt_remaining_hint">借入残高</string>
+    <string name="debt_interest_rate_hint">年利（%%）</string>
+    <string name="debt_minimum_payment_hint">毎月返済額</string>
+    <string name="debt_estimated_payoff">完済予定: 約 %1$d ヶ月後</string>
+    <string name="debt_empty_title">負債データはありません</string>
+    <string name="debt_empty_desc">住宅ローン、教育ローン、各種割賦返済を一元管理</string>
+
+    <!-- Categories Screen -->
+    <string name="categories_title">カテゴリー</string>
+    <string name="categories_expense_tab">支出カテゴリー</string>
+    <string name="categories_income_tab">収入カテゴリー</string>
+    <string name="category_add_title">新規カテゴリー</string>
+    <string name="category_name_hint">カテゴリー名</string>
+    <string name="category_type_expense">支出</string>
+    <string name="category_type_income">収入</string>
+    <string name="category_empty">カテゴリーがありません</string>
+
+    <!-- Default Predefined Categories -->
+    <string name="cat_food">食費・外食</string>
+    <string name="cat_groceries">食料品・日用品</string>
+    <string name="cat_housing">住居・家賃</string>
+    <string name="cat_transport">交通・移動費</string>
+    <string name="cat_fuel">ガソリン・給油</string>
+    <string name="cat_shopping">衣服・買い物</string>
+    <string name="cat_entertainment">趣味・レジャー</string>
+    <string name="cat_health">医療・ヘルスケア</string>
+    <string name="cat_education">教育・書籍</string>
+    <string name="cat_fitness">スポーツ・ジム</string>
+    <string name="cat_subscriptions">サブスクリプション</string>
+    <string name="cat_gifts">ギフト・寄付</string>
+    <string name="cat_salary">給与・賞与</string>
+    <string name="cat_freelance">事業・副業収入</string>
+    <string name="cat_invest_return">配当・運用益</string>
+    <string name="cat_other_income">その他の収入</string>
+    <string name="cat_uncategorized">未分類</string>
+
+    <!-- Enum Display Strings -->
+    <string name="acc_type_cash">現金</string>
+    <string name="acc_type_bank">普通預金口座</string>
+    <string name="acc_type_credit_card">クレジットカード</string>
+    <string name="acc_type_savings">定期・貯蓄預金</string>
+    <string name="acc_type_investment">証券口座</string>
+    <string name="acc_type_wallet">電子マネー / コード決済</string>
+    <string name="acc_type_loan">ローン口座</string>
+    <string name="acc_type_other">その他の口座</string>
+
+    <string name="period_weekly">毎週</string>
+    <string name="period_monthly">毎月</string>
+    <string name="period_custom">カスタム期間</string>
+
+    <string name="freq_daily">毎日</string>
+    <string name="freq_weekly">毎週</string>
+    <string name="freq_biweekly">2週間ごと</string>
+    <string name="freq_monthly">毎月</string>
+    <string name="freq_quarterly">3ヶ月ごと（四半期）</string>
+    <string name="freq_yearly">年1回</string>
+    <string name="freq_custom">カスタム間隔</string>
+
+    <string name="unit_days">日</string>
+    <string name="unit_weeks">週</string>
+    <string name="unit_months">ヶ月</string>
+    <string name="unit_years">年</string>
+
+    <string name="occ_upcoming">予定</string>
+    <string name="occ_overdue">期限超過</string>
+    <string name="occ_generated">生成済み</string>
+    <string name="occ_paid">支払済み</string>
+    <string name="occ_skipped">スキップ</string>
+
+    <string name="asset_stock">株式</string>
+    <string name="asset_etf">上場投資信託 (ETF)</string>
+    <string name="asset_crypto">暗号資産</string>
+    <string name="asset_bond">債券</string>
+    <string name="asset_real_estate">不動産</string>
+    <string name="asset_commodity">コモディティ（貴金属等）</string>
+    <string name="asset_cash">現金同等物</string>
+    <string name="asset_other">その他の資産</string>
+
+    <string name="debt_credit_card">カードリボ・分割残債</string>
+    <string name="debt_personal_loan">個人ローン / カードローン</string>
+    <string name="debt_mortgage">住宅ローン</string>
+    <string name="debt_student_loan">奨学金・教育ローン</string>
+    <string name="debt_auto_loan">自動車ローン</string>
+    <string name="debt_other">その他の負債</string>
+
+    <string name="dup_new">新規取引</string>
+    <string name="dup_exact">完全重複</string>
+    <string name="dup_potential">重複の可能性あり</string>
+
+    <string name="amount_mode_single">金額1列（正負で判別）</string>
+    <string name="amount_mode_separate">出金・入金の独立列</string>
+
+    <!-- More / Hub Screen -->
+    <string name="more_title">設定・その他</string>
+    <string name="more_section_financial_tools">機能・ツール</string>
+    <string name="more_section_data_security">データとセキュリティ</string>
+    <string name="more_section_preferences">アプリ設定</string>
+    <string name="more_security_title">セキュリティとプライバシー</string>
+    <string name="more_security_desc">PINコード、生体認証、画面保護</string>
+    <string name="more_language_title">表示言語</string>
+    <string name="more_currency_title">基準通貨</string>
+    <string name="more_dark_mode_title">ダークテーマ</string>
+    <string name="more_export_title">データバックアップと書き出し</string>
+    <string name="more_rules_title">自動分類ルール</string>
+    <string name="more_rules_desc">取引カテゴリーの自動仕分け設定</string>
+    <string name="more_csv_title">銀行明細CSVインポート</string>
+    <string name="more_csv_desc">銀行やカードのCSV明細を取り込む</string>
+    <string name="more_insights_title">家計インサイト</string>
+    <string name="more_insights_desc">支出傾向の分析と節約アドバイス</string>
+
+    <!-- Security & Privacy -->
+    <string name="security_title">セキュリティ設定</string>
+    <string name="security_biometric">生体認証ログイン</string>
+    <string name="security_biometric_desc">指紋認証または顔認証でロック解除</string>
+    <string name="security_pin">PINコード設定</string>
+    <string name="security_pin_desc">起動時に4桁の暗証番号を要求</string>
+    <string name="security_hide_balances">残高の非表示</string>
+    <string name="security_hide_balances_desc">プライバシー保護のため金額を伏字表示</string>
+    <string name="security_screenshot_protection">画面キャプチャ防止</string>
+    <string name="security_screenshot_protection_desc">スクショやタスク一覧での情報流出を防止</string>
+    <string name="security_enter_pin">4桁のPINを入力</string>
+    <string name="security_confirm_pin">PINを再入力</string>
+    <string name="security_pin_mismatch">PINが一致しません。もう一度お試しください。</string>
+    <string name="security_pin_set_success">セキュリティ設定を更新しました</string>
+
+    <!-- Categorization Rules & Smart Engine -->
+    <string name="rules_title">自動仕分けルール</string>
+    <string name="rules_tab_rules">ルール一覧 (%1$d)</string>
+    <string name="rules_tab_review">確認待ち (%1$d)</string>
+    <string name="rules_create_title">スマート仕分けルールの作成</string>
+    <string name="rule_name_hint">ルール名（例: カフェ）</string>
+    <string name="rule_pattern_hint">明細に含まれるキーワード</string>
+    <string name="rule_match_type">一致条件</string>
+    <string name="rule_target_category">自動設定するカテゴリー</string>
+    <string name="rule_apply_existing">過去の既存取引にも適用する</string>
+    <string name="rule_conflict_warning">優先順位の高い既存ルールとの競合があります</string>
+    <string name="rules_review_title">カテゴリー確認待ちの取引</string>
+    <string name="rules_review_empty">すべての取引の分類が完了しています！</string>
+    <string name="rules_confirm_all">すべての候補を一括確定</string>
+    <string name="rules_empty_title">ルールが登録されていません</string>
+
+    <!-- CSV Import Wizard -->
+    <string name="csv_import_title">銀行明細CSVインポート</string>
+    <string name="csv_step_select_file">1. ファイル選択</string>
+    <string name="csv_step_mapping">2. 列のマッピング</string>
+    <string name="csv_step_preview">3. データの確認</string>
+    <string name="csv_step_summary">4. 取り込み結果</string>
+    <string name="csv_select_file_btn">CSVファイルを選択</string>
+    <string name="csv_destination_account">登録先の口座</string>
+    <string name="csv_has_header">1行目をヘッダーとして扱う</string>
+    <string name="csv_date_format">日付形式</string>
+    <string name="csv_preview_valid_count">%1$d 件 取り込み準備完了</string>
+    <string name="csv_preview_duplicate_count">%1$d 件 重複の可能性</string>
+    <string name="csv_preview_invalid_count">%1$d 件 無効な行</string>
+    <string name="csv_confirm_import_btn">%1$d 件の取引を取り込む</string>
+    <string name="csv_summary_success">明細の取り込みが完了しました</string>
+    <string name="csv_summary_imported">取り込み成功: %1$d 件</string>
+    <string name="csv_summary_skipped">スキップされた重複: %1$d 件</string>
+
+    <!-- Insights -->
+    <string name="insights_title">家計インサイト</string>
+    <string name="insights_empty_title">現在インサイトはありません</string>
+    <string name="insights_empty_desc">取引データを記録していくと、支出の傾向や分析が表示されます</string>
+
+    <!-- Search & Filter -->
+    <string name="search_title">明細検索</string>
+    <string name="search_hint">店舗名、金額、タグで検索…</string>
+    <string name="search_results_count">%1$d 件見つかりました</string>
+    <string name="search_no_results">条件に一致する取引がありません</string>
+
+    <!-- Data Export -->
+    <string name="export_title">データエクスポート</string>
+    <string name="export_format_csv">CSV形式で出力（表計算ソフト用）</string>
+    <string name="export_format_json">JSON形式で出力（完全バックアップ）</string>
+    <string name="export_btn">エクスポートファイルを作成</string>
+    <string name="export_success">バックアップファイルを保存しました</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_step_format">ステップ %1$d / 4</string>
+    <string name="onboarding_skip">初期設定をスキップ</string>
+    <string name="onboarding_welcome_title">FinPulse へようこそ</string>
+    <string name="onboarding_welcome_subtitle">スマートな家計簿、予算管理、資産形成をひとつの安全なアプリで。</string>
+    <string name="onboarding_currency_title">基準通貨を選択</string>
+    <string name="onboarding_currency_subtitle">総資産、純資産、予算はこの通貨を基準に集計されます。</string>
+    <string name="onboarding_account_title">メイン口座を登録</string>
+    <string name="onboarding_account_subtitle">普段お使いの銀行口座やお手元の現金を登録しましょう。</string>
+    <string name="onboarding_budget_title">月間予算を設定</string>
+    <string name="onboarding_budget_subtitle">毎月の予算上限を設けることで、無理のない蓄財習慣が身につきます。</string>
+    <string name="onboarding_finish_btn">利用を開始する</string>
+
+    <!-- Dates -->
+    <string name="date_today">今日</string>
+    <string name="date_yesterday">昨日</string>
+    <string name="date_this_week">今週</string>
+    <string name="date_this_month">今月</string>
+    <string name="date_last_30_days">直近30日間</string>
+    <string name="date_custom">期間指定</string>
+
+    <!-- Notifications -->
+    <string name="notif_channel_recurring_name">定期支払・サブスク通知</string>
+    <string name="notif_channel_recurring_desc">サブスクや請求書の支払期日お知らせ通知</string>
+    <string name="notif_bill_upcoming_title">支払期日の通知: %1$s</string>
+    <string name="notif_bill_due_today">%1$s の支払期日は本日です！</string>
+    <string name="notif_bill_due_tomorrow">%1$s の支払期日は明日です。</string>
+    <string name="notif_bill_due_in_days">%1$s の支払期日まであと %2$d 日です。</string>
+
+    <!-- Accessibility / Content Descriptions -->
+    <string name="cd_back">前に戻る</string>
+    <string name="cd_close">閉じる</string>
+    <string name="cd_delete">削除</string>
+    <string name="cd_edit">編集</string>
+    <string name="cd_add">新規追加</string>
+    <string name="cd_search">検索</string>
+    <string name="cd_filter">リストを絞り込み</string>
+    <string name="cd_category_icon">カテゴリーアイコン</string>
+    <string name="cd_account_icon">口座アイコン</string>
+    <string name="cd_expand">展開</string>
+    <string name="cd_collapse">折りたたむ</string>
+
+    <!-- Plurals -->
+    <plurals name="plural_transactions">
+        <item quantity="other">%d件の取引</item>
+    </plurals>
+
+    <plurals name="plural_accounts">
+        <item quantity="other">%d件の口座</item>
+    </plurals>
+
+    <plurals name="plural_days">
+        <item quantity="other">%d日</item>
+    </plurals>
+
+    <plurals name="plural_months">
+        <item quantity="other">%dヶ月</item>
+    </plurals>
+
+    <plurals name="plural_rules">
+        <item quantity="other">%d件のルール</item>
+    </plurals>
+
+    <plurals name="plural_bills_due">
+        <item quantity="other">%d件の請求</item>
+    </plurals>
+
+    <plurals name="plural_items_selected">
+        <item quantity="other">%d件選択中</item>
+    </plurals>
+
+    <plurals name="plural_rows_imported">
+        <item quantity="other">%d行インポート完了</item>
+    </plurals>
+
+    <!-- Filter & Sort -->
+    <string name="sort_by">並び替え</string>
+    <string name="sort_newest">新しい順</string>
+    <string name="sort_oldest">古い順</string>
+    <string name="sort_highest">金額の高い順</string>
+    <string name="sort_lowest">金額の低い順</string>
+    <string name="tx_filter_sort_title">明細の絞り込みと並び替え</string>
+    <string name="action_duplicate">複製</string>
+    <string name="tx_record_title">取引を記録</string>
+    <string name="tx_review_banner">%1$d 件の取引でカテゴリ確認が必要です</string>
+    <string name="tx_review_queue_action">確認キュー →</string>
+
+    <!-- Quick Add Extras -->
+    <string name="quick_add_transfer_to">振替先口座:</string>
+    <string name="quick_add_smart_suggestion">スマート提案:</string>
+    <string name="quick_add_applied">適用済み ✓</string>
+    <string name="quick_add_tap_apply">タップして適用</string>
+    <string name="quick_add_add_another">続けて登録</string>
+    <string name="quick_add_update">更新</string>
+    <string name="quick_add_hide_details">メモとタグを非表示</string>
+    <string name="quick_add_show_details">+ メモ・支払先・タグを追加</string>
+
+    <!-- Time Periods -->
+    <string name="period_week">週間</string>
+    <string name="period_month">月間</string>
+    <string name="period_three_months">3か月</string>
+    <string name="period_six_months">6か月</string>
+    <string name="period_year">年間</string>
+    <string name="period_all_time">全期間</string>
+
+    <!-- Recurring Tabs & Windows -->
+    <string name="recurring_tab_upcoming">予定</string>
+    <string name="recurring_tab_rules">すべてのルール</string>
+    <string name="recurring_tab_subscriptions">サブスクリプション</string>
+    <string name="recurring_window_7d">今後7日間</string>
+    <string name="recurring_window_30d">今後30日間</string>
+
+    <!-- Debt Strategies & Metrics -->
+    <string name="debt_strategy_snowball_title">スノーボール方式</string>
+    <string name="debt_strategy_snowball_sub">残高の少ない順に返済</string>
+    <string name="debt_strategy_avalanche_title">アバランチ方式</string>
+    <string name="debt_strategy_avalanche_sub">金利の高い順に返済</string>
+    <string name="debt_freedom_title">完済予定時期</string>
+    <string name="debt_free_celebration">完済達成！</string>
+    <string name="debt_min_payment_label">最低返済月額</string>
+    <string name="debt_card_balance_left">残り %1$s</string>
+
+    <!-- Accounts Extras -->
+    <string name="accounts_transfer_title">口座間振替</string>
+    <string name="accounts_transfer_action">振替</string>
+    <string name="accounts_transfer_cannot">振替できません</string>
+    <string name="accounts_transfer_cannot_desc">口座間振替を行うには、有効な口座が2つ以上必要です。</string>
+    <string name="accounts_active_tracked">%1$d 件のアクティブ口座</string>
+
+    <!-- Analytics & Budgets Extras -->
+    <string name="analytics_avg_daily">1日平均支出</string>
+    <string name="analytics_largest_expense">最大支出</string>
+    <string name="analytics_top_merchants">主な利用先</string>
+    <string name="analytics_consumed_overall">全体の %1$d%% を消化</string>
+    <string name="analytics_consumed_percent">%1$d%% 消化</string>
+
+    <!-- Goals Extras -->
+    <string name="goals_contribute_title">目標への積立</string>
+    <string name="goals_contribute_btn">積立する</string>
+
+    <!-- Extra Screen Strings -->
+    <string name="total_income">総収入</string>
+    <string name="total_expenses">総支出</string>
+    <string name="analytics_savings_rate_title">貯蓄率</string>
+    <string name="account_archived_label">アーカイブ済み</string>
+    <string name="account_limit_label">利用限度額: %1$s</string>
+    <string name="account_edit_dialog_title">口座の編集</string>
+    <string name="goal_edit_title">目標の編集</string>
+    <string name="goal_target_format">目標 %1$s</string>
+    <string name="goal_achieved_percent">%1$d%% 達成</string>
+    <string name="goal_add_funds">+ 資金を追加</string>
+    <string name="goal_deposit_title">%1$s への入金</string>
+    <string name="goal_deposit_remaining">目標まで残り: %1$s</string>
+    <string name="debt_paid_off_percent">%1$d%% 返済済み</string>
+    <string name="debt_record_payment">返済を記録</string>
+    <string name="debt_edit_title">負債の編集</string>
+    <string name="debt_payment_title">%1$s の返済を記録</string>
+    <string name="debt_remaining_balance_label">残債: %1$s</string>
+    <string name="debt_confirm_payment_btn">返済を確定</string>
+    <string name="category_custom_label">カスタム</string>
+    <string name="category_default_label">デフォルト</string>
+    <string name="category_create_custom">カスタムカテゴリを作成</string>
+
+    <!-- Final Screen Refinements -->
+    <string name="investments_total_invested">投資総額</string>
+    <string name="investments_edit_title">資産を編集</string>
+    <string name="investments_units">%1$s 単位</string>
+    <string name="rules_screen_title">スマート分類と自動化ルール</string>
+    <string name="rules_review_queue_clear">確認待ちの取引はありません</string>
+    <string name="rules_review_queue_clear_desc">すべての取引が確認されました。新しい未分類のインポートはここに表示されます。</string>
+    <string name="rules_transactions_need_review">%1$d 件の取引が確認待ちです</string>
+    <string name="rules_one_tap_hint">ワンタップで確認または修正</string>
+    <string name="search_empty_hint">すべての口座から取引を検索するキーワードを入力</string>
+    <string name="export_screen_title">バックアップとデータエクスポート</string>
+    <string name="export_csv_title">CSV元帳をエクスポート</string>
+    <string name="export_csv_desc">GoogleスプレッドシートやExcel、会計ソフトと互換性のある標準RFC-4180形式です。</string>
+    <string name="export_csv_btn">取引データをCSVで出力</string>
+    <string name="export_json_title">完全なJSONデータベースバックアップ</string>
+    <string name="export_json_desc">口座、取引、予算、目標、負債返済計画の暗号化されたスナップショットを作成します。</string>
+    <string name="export_json_btn">JSONデータベースを出力</string>
+    <string name="security_pin_active">PIN保護が有効です</string>
+    <string name="security_pin_configure_title">セキュリティPINの設定</string>
+    <string name="security_pin_min_digits">PINは4桁以上である必要があります</string>
+    <string name="security_pin_save_btn">PINを保存</string>
+</resources>

@@ -1,0 +1,596 @@
+<resources>
+    <string name="app_name">FinPulse</string>
+    <string name="shortcut_quick_add_short">Hızlı Ekle</string>
+    <string name="shortcut_quick_add_long">Hızlı İşlem Ekle</string>
+
+    <!-- Language Names -->
+    <string name="lang_system">Sistem Varsayılanı</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ru">Русский</string>
+    <string name="lang_es">Español</string>
+    <string name="lang_pt_br">Português (Brasil)</string>
+    <string name="lang_de">Deutsch</string>
+    <string name="lang_fr">Français</string>
+    <string name="lang_it">Italiano</string>
+    <string name="lang_pl">Polski</string>
+    <string name="lang_tr">Türkçe</string>
+    <string name="lang_ja">日本語</string>
+    <string name="lang_ko">한국어</string>
+    <string name="lang_zh_cn">简体中文</string>
+    <string name="select_language">Dil Seçin</string>
+    <string name="language_title">Dil</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Genel Bakış</string>
+    <string name="nav_transactions">İşlemler</string>
+    <string name="nav_budgets">Bütçeler</string>
+    <string name="nav_analytics">Analiz</string>
+    <string name="nav_more">Daha Fazla</string>
+
+    <!-- Common Actions & Buttons -->
+    <string name="action_save">Kaydet</string>
+    <string name="action_cancel">İptal</string>
+    <string name="action_delete">Sil</string>
+    <string name="action_edit">Düzenle</string>
+    <string name="action_add">Ekle</string>
+    <string name="action_done">Bitti</string>
+    <string name="action_close">Kapat</string>
+    <string name="action_confirm">Onayla</string>
+    <string name="action_dismiss">Yoksay</string>
+    <string name="action_apply">Uygula</string>
+    <string name="action_search">Ara</string>
+    <string name="action_filter">Filtrele</string>
+    <string name="action_export">Dışa Aktar</string>
+    <string name="action_import">İçe Aktar</string>
+    <string name="action_view_all">Tümünü Gör</string>
+    <string name="action_back">Geri</string>
+    <string name="action_continue">Devam Et</string>
+    <string name="action_skip">Atla</string>
+    <string name="action_create">Oluştur</string>
+    <string name="action_save_add_another">Kaydet ve Başka Ekle</string>
+    <string name="action_reset">Sıfırla</string>
+    <string name="action_refresh">Yenile</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Finansal Özet</string>
+    <string name="dashboard_net_worth">Net Varlık</string>
+    <string name="dashboard_assets">Varlıklar</string>
+    <string name="dashboard_liabilities">Borçlar &amp; Yükümlülükler</string>
+    <string name="dashboard_total_balance">Toplam Bakiye</string>
+    <string name="dashboard_cash_flow">Nakit Akışı</string>
+    <string name="dashboard_monthly_income">Aylık Gelir</string>
+    <string name="dashboard_monthly_expense">Aylık Gider</string>
+    <string name="dashboard_monthly_net">Net Nakit Akışı</string>
+    <string name="dashboard_spending_trends">Harcama Eğilimleri</string>
+    <string name="dashboard_recent_transactions">Son İşlemler</string>
+    <string name="dashboard_financial_health">Finansal Sağlık</string>
+    <string name="dashboard_health_score">Sağlık Puanı: %1$d/100</string>
+    <string name="dashboard_quick_actions">Hızlı İşlemler</string>
+    <string name="dashboard_accounts_overview">Hesaplar</string>
+    <string name="dashboard_no_transactions">Henüz işlem kaydedilmedi</string>
+
+    <!-- Transactions -->
+    <string name="transactions_title">İşlemler</string>
+    <string name="tx_search_hint">İşlem, mağaza veya notlarda ara…</string>
+    <string name="tx_type_income">Gelir</string>
+    <string name="tx_type_expense">Gider</string>
+    <string name="tx_type_transfer">Transfer</string>
+    <string name="tx_type_refund">İade</string>
+    <string name="tx_needs_review">İnceleme Gerekli</string>
+    <string name="tx_confirmed">Onaylandı</string>
+    <string name="tx_empty_title">İşlem bulunamadı</string>
+    <string name="tx_empty_desc">İlk işleminizi eklemek için + düğmesine dokunun</string>
+    <string name="tx_date_range">Tarih Aralığı</string>
+    <string name="tx_filter_all">Tümü</string>
+    <string name="tx_filter_income">Gelirler</string>
+    <string name="tx_filter_expense">Giderler</string>
+    <string name="tx_filter_transfer">Transferler</string>
+    <string name="tx_details_title">İşlem Detayları</string>
+    <string name="tx_amount">Tutar</string>
+    <string name="tx_category">Kategori</string>
+    <string name="tx_account">Kaynak Hesap</string>
+    <string name="tx_dest_account">Hedef Hesap</string>
+    <string name="tx_merchant">İşyeri / Alıcı</string>
+    <string name="tx_date">Tarih ve Saat</string>
+    <string name="tx_notes">Notlar</string>
+    <string name="tx_tags">Etiketler</string>
+    <string name="tx_saved_success">İşlem başarıyla kaydedildi</string>
+    <string name="tx_deleted_success">İşlem silindi</string>
+    <string name="tx_default_title">İşlem</string>
+
+    <!-- Quick Add -->
+    <string name="quick_add_title">Hızlı İşlem Ekle</string>
+    <string name="quick_add_expense">Gider</string>
+    <string name="quick_add_income">Gelir</string>
+    <string name="quick_add_transfer">Transfer</string>
+    <string name="quick_add_amount_hint">0,00</string>
+    <string name="quick_add_select_account">Hesap Seçin</string>
+    <string name="quick_add_select_category">Kategori Seçin</string>
+    <string name="quick_add_note_hint">Not ekle (isteğe bağlı)</string>
+    <string name="quick_add_merchant_hint">İşyeri veya alıcı (örn. Starbucks)</string>
+    <string name="quick_add_date_today">Bugün</string>
+    <string name="quick_add_date_yesterday">Dün</string>
+    <string name="quick_add_date_custom">Farklı Tarih</string>
+    <string name="quick_add_saved_snackbar">İşlem kaydedildi</string>
+    <string name="quick_add_edit_action">Düzenle</string>
+
+    <!-- Budgets -->
+    <string name="budgets_title">Bütçeler</string>
+    <string name="budget_total_budgeted">Toplam Bütçe</string>
+    <string name="budget_total_spent">Toplam Harcanan</string>
+    <string name="budget_remaining">Kalan Bütçe</string>
+    <string name="budget_exceeded">Aşıldı</string>
+    <string name="budget_on_track">Hedefte</string>
+    <string name="budget_warning">Limite Yakın</string>
+    <string name="budget_projected">Tahmini Ay Sonu: %1$s</string>
+    <string name="budget_add_dialog_title">Bütçe Oluştur</string>
+    <string name="budget_name_hint">Bütçe Adı</string>
+    <string name="budget_limit_hint">Aylık Harcama Limiti</string>
+    <string name="budget_period">Dönem</string>
+    <string name="budget_empty_title">Aktif bütçe yok</string>
+    <string name="budget_empty_desc">Harcamalarınızı kontrol altına almak için limitler belirleyin</string>
+    <string name="budget_status_exceeded_desc">%1$s tutarında bütçe aşımı</string>
+    <string name="budget_status_warning_desc">%1$s kaldı</string>
+
+    <!-- Analytics -->
+    <string name="analytics_title">Finansal Analiz</string>
+    <string name="analytics_income_vs_expense">Gelir ve Gider Karşılaştırması</string>
+    <string name="analytics_spending_by_category">Kategoriye Göre Harcama</string>
+    <string name="analytics_net_worth_trend">Net Varlık Gelişimi</string>
+    <string name="analytics_cash_flow_title">Nakit Akışı Analizi</string>
+    <string name="analytics_monthly_spending">Aylık Harcamalar</string>
+    <string name="analytics_savings_rate">Tasarruf Oranı: %1$s%%</string>
+    <string name="analytics_forecast">Ay Sonu Harcama Tahmini</string>
+    <string name="analytics_period_7d">7 Gün</string>
+    <string name="analytics_period_30d">30 Gün</string>
+    <string name="analytics_period_month">Bu Ay</string>
+    <string name="analytics_period_quarter">Çeyrek</string>
+    <string name="analytics_period_year">Bu Yıl</string>
+    <string name="analytics_empty_title">Analiz için yeterli veri yok</string>
+
+    <!-- Accounts -->
+    <string name="accounts_title">Hesap Portföyü</string>
+    <string name="account_total_assets">Toplam Varlıklar</string>
+    <string name="account_total_liabilities">Toplam Yükümlülükler</string>
+    <string name="account_add_dialog_title">Hesap Ekle</string>
+    <string name="account_name_hint">Hesap Adı (örn. Maaş Hesabı)</string>
+    <string name="account_type">Hesap Türü</string>
+    <string name="account_starting_balance_hint">Güncel Bakiye</string>
+    <string name="account_credit_limit_hint">Kredi Limiti (isteğe bağlı)</string>
+    <string name="account_institution_hint">Banka / Kurum (isteğe bağlı)</string>
+    <string name="account_available_balance">Kullanılabilir Bakiye</string>
+    <string name="account_current_balance">Hesap Bakiyesi</string>
+    <string name="account_empty_title">Henüz hesap eklenmedi</string>
+    <string name="account_empty_desc">Vadesiz hesap, vadeli birikim veya kredi kartı ekleyin</string>
+    <string name="account_archive">Hesabı Arşivle</string>
+    <string name="account_delete">Hesabı Sil</string>
+
+    <!-- Recurring & Subscriptions -->
+    <string name="recurring_title">Düzenli Ödemeler &amp; Abonelikler</string>
+    <string name="recurring_upcoming_title">Yaklaşan Ödemeler</string>
+    <string name="recurring_upcoming_subtitle">Gelecek 30 günlük projeksiyon</string>
+    <string name="recurring_active_rules">Aktif Ödeme Planları</string>
+    <string name="recurring_monthly_commitment">Aylık Sabit Gider</string>
+    <string name="recurring_annual_commitment">Yıllık Toplam: %1$s/yıl</string>
+    <string name="recurring_add_title">Yeni Düzenli Ödeme</string>
+    <string name="recurring_bill_name_hint">Hizmet veya Fatura Adı</string>
+    <string name="recurring_frequency">Ödeme Sıklığı</string>
+    <string name="recurring_next_due">Sonraki Ödeme Tarihi</string>
+    <string name="recurring_mark_paid">Ödendi Olarak İşaretle</string>
+    <string name="recurring_skip">Bu Dönemi Atla</string>
+    <string name="recurring_pause">Duraklat</string>
+    <string name="recurring_resume">Devam Ettir</string>
+    <string name="recurring_cancel">Aboneliği İptal Et</string>
+    <string name="recurring_empty_title">Düzenli ödeme bulunmuyor</string>
+    <string name="recurring_empty_desc">Abonelikler, kira, faturalar ve maaşınızı takip edin</string>
+    <string name="recurring_is_subscription">Dijital abonelik</string>
+    <string name="recurring_variable_amount">Tutar her dönem değişebilir</string>
+
+    <!-- Financial Goals -->
+    <string name="goals_title">Finansal Hedefler</string>
+    <string name="goals_total_target">Toplam Hedef</string>
+    <string name="goals_total_saved">Biriktirilen Tutar</string>
+    <string name="goals_add_title">Yeni Finansal Hedef</string>
+    <string name="goal_name_hint">Hedef Adı (örn. Acil Durum Fonu)</string>
+    <string name="goal_target_amount_hint">Hedeflenen Tutar</string>
+    <string name="goal_current_amount_hint">Mevcut Birikim</string>
+    <string name="goal_target_date">Hedef Tarihi</string>
+    <string name="goal_progress">İlerleme: %1$d%%</string>
+    <string name="goal_remaining">Kalan: %1$s</string>
+    <string name="goal_suggested_monthly">Önerilen Aylık Birikim: %1$s/ay</string>
+    <string name="goal_completed">Hedefe Ulaşıldı!</string>
+    <string name="goal_empty_title">Henüz hedef belirlenmedi</string>
+    <string name="goal_empty_desc">Tatil, acil durum veya büyük harcamalar için hedefler oluşturun</string>
+
+    <!-- Investments & Assets -->
+    <string name="investments_title">Yatırımlar ve Varlıklar</string>
+    <string name="investments_total_portfolio">Portföy Değeri</string>
+    <string name="investments_total_gain_loss">Toplam Getiri / Zarar</string>
+    <string name="investments_add_title">Yatırım Varlığı Ekle</string>
+    <string name="asset_name_hint">Varlık Adı (örn. BIST 100 Endeks)</string>
+    <string name="asset_symbol_hint">Sembol / Hisse Kodu (örn. THYAO)</string>
+    <string name="asset_class">Varlık Sınıfı</string>
+    <string name="asset_quantity_hint">Adet / Lot Miktarı</string>
+    <string name="asset_purchase_price_hint">Birim Alış Maliyeti</string>
+    <string name="asset_current_price_hint">Güncel Piyasa Fiyatı</string>
+    <string name="asset_empty_title">Yatırım varlığı bulunmuyor</string>
+    <string name="asset_empty_desc">Hisse senetleri, fonlar, kripto paralar, gayrimenkul ve tahvilleri takip edin</string>
+
+    <!-- Debt & Liabilities -->
+    <string name="debt_title">Borçlar ve Krediler</string>
+    <string name="debt_total_debt">Kalan Toplam Borç</string>
+    <string name="debt_total_paid_off">Ödenen Ana Para</string>
+    <string name="debt_add_title">Kredi veya Borç Ekle</string>
+    <string name="debt_name_hint">Borç Adı (örn. Konut Kredisi)</string>
+    <string name="debt_type">Borç Türü</string>
+    <string name="debt_principal_hint">Çekilen Ana Para Tutarı</string>
+    <string name="debt_remaining_hint">Kalan Ana Para</string>
+    <string name="debt_interest_rate_hint">Yıllık Faiz Oranı (%%)</string>
+    <string name="debt_minimum_payment_hint">Aylık Asgari Taksit</string>
+    <string name="debt_estimated_payoff">Tahmini Kapanış: ~%1$d ay</string>
+    <string name="debt_empty_title">Aktif borç bulunmuyor</string>
+    <string name="debt_empty_desc">Konut, ihtiyaç kredileri ve kart taksitlerinizi tek yerden izleyin</string>
+
+    <!-- Categories Screen -->
+    <string name="categories_title">Kategoriler</string>
+    <string name="categories_expense_tab">Gider Kategorileri</string>
+    <string name="categories_income_tab">Gelir Kategorileri</string>
+    <string name="category_add_title">Yeni Kategori</string>
+    <string name="category_name_hint">Kategori Adı</string>
+    <string name="category_type_expense">Gider</string>
+    <string name="category_type_income">Gelir</string>
+    <string name="category_empty">Kategori bulunamadı</string>
+
+    <!-- Default Predefined Categories -->
+    <string name="cat_food">Yeme &amp; İçme</string>
+    <string name="cat_groceries">Market &amp; Gıda</string>
+    <string name="cat_housing">Kira &amp; Barınma</string>
+    <string name="cat_transport">Ulaşım &amp; Seyahat</string>
+    <string name="cat_fuel">Akaryakıt</string>
+    <string name="cat_shopping">Giyim &amp; Alışveriş</string>
+    <string name="cat_entertainment">Eğlence &amp; Hobi</string>
+    <string name="cat_health">Sağlık &amp; Eczane</string>
+    <string name="cat_education">Eğitim &amp; Kurslar</string>
+    <string name="cat_fitness">Spor &amp; Egzersiz</string>
+    <string name="cat_subscriptions">Abonelik &amp; Hizmetler</string>
+    <string name="cat_gifts">Hediye &amp; Bağış</string>
+    <string name="cat_salary">Maaş Geliri</string>
+    <string name="cat_freelance">Serbest Çalışma &amp; Danışmanlık</string>
+    <string name="cat_invest_return">Yatırım Gelirleri</string>
+    <string name="cat_other_income">Diğer Gelirler</string>
+    <string name="cat_uncategorized">Kategorisiz</string>
+
+    <!-- Enum Display Strings -->
+    <string name="acc_type_cash">Nakit</string>
+    <string name="acc_type_bank">Vadesiz Banka Hesabı</string>
+    <string name="acc_type_credit_card">Kredi Kartı</string>
+    <string name="acc_type_savings">Vadeli / Birikim Hesabı</string>
+    <string name="acc_type_investment">Yatırım / Borsa Hesabı</string>
+    <string name="acc_type_wallet">Dijital Cüzdan</string>
+    <string name="acc_type_loan">Kredi Hesabı</string>
+    <string name="acc_type_other">Diğer Hesap</string>
+
+    <string name="period_weekly">Haftalık</string>
+    <string name="period_monthly">Aylık</string>
+    <string name="period_custom">Özel</string>
+
+    <string name="freq_daily">Her Gün</string>
+    <string name="freq_weekly">Haftalık</string>
+    <string name="freq_biweekly">2 Haftada Bir</string>
+    <string name="freq_monthly">Aylık</string>
+    <string name="freq_quarterly">3 Ayda Bir</string>
+    <string name="freq_yearly">Yıllık</string>
+    <string name="freq_custom">Özel Aralık</string>
+
+    <string name="unit_days">Gün</string>
+    <string name="unit_weeks">Hafta</string>
+    <string name="unit_months">Ay</string>
+    <string name="unit_years">Yıl</string>
+
+    <string name="occ_upcoming">Yaklaşıyor</string>
+    <string name="occ_overdue">Gecikmiş</string>
+    <string name="occ_generated">Oluşturuldu</string>
+    <string name="occ_paid">Ödendi</string>
+    <string name="occ_skipped">Atlandı</string>
+
+    <string name="asset_stock">Hisse Senedi</string>
+    <string name="asset_etf">Yatırım Fonu (ETF)</string>
+    <string name="asset_crypto">Kripto Varlık</string>
+    <string name="asset_bond">Tahvil / Bono</string>
+    <string name="asset_real_estate">Gayrimenkul</string>
+    <string name="asset_commodity">Emtia</string>
+    <string name="asset_cash">Nakit Benzeri</string>
+    <string name="asset_other">Diğer Varlık</string>
+
+    <string name="debt_credit_card">Kredi Kartı Borcu</string>
+    <string name="debt_personal_loan">İhtiyaç Kredisi</string>
+    <string name="debt_mortgage">Konut Kredisi</string>
+    <string name="debt_student_loan">Öğrenim Kredisi</string>
+    <string name="debt_auto_loan">Taşıt Kredisi</string>
+    <string name="debt_other">Diğer Borç</string>
+
+    <string name="dup_new">Yeni İşlem</string>
+    <string name="dup_exact">Birebir Tekrar</string>
+    <string name="dup_potential">Olası Tekrar</string>
+
+    <string name="amount_mode_single">Tek Tutar Sütunu</string>
+    <string name="amount_mode_separate">Ayrı Borç / Alacak Sütunları</string>
+
+    <!-- More / Hub Screen -->
+    <string name="more_title">Ayarlar ve Diğer</string>
+    <string name="more_section_financial_tools">Finansal Araçlar</string>
+    <string name="more_section_data_security">Veri ve Güvenlik</string>
+    <string name="more_section_preferences">Tercihler</string>
+    <string name="more_security_title">Güvenlik ve Gizlilik</string>
+    <string name="more_security_desc">PIN kodu, biyometri ve ekran koruması</string>
+    <string name="more_language_title">Uygulama Dili</string>
+    <string name="more_currency_title">Ana Para Birimi</string>
+    <string name="more_dark_mode_title">Karanlık Tema</string>
+    <string name="more_export_title">Yedekleme ve Dışa Aktarma</string>
+    <string name="more_rules_title">Kategorilendirme Kuralları</string>
+    <string name="more_rules_desc">İşlemleri otomatik kategorilere ayırın</string>
+    <string name="more_csv_title">Banka Ekstresi İçe Aktar (CSV)</string>
+    <string name="more_csv_desc">Hesap hareketlerinizi CSV dosyasından aktarın</string>
+    <string name="more_insights_title">Finansal Tavsiyeler</string>
+    <string name="more_insights_desc">Harcama analizi ve tasarruf ipuçları</string>
+
+    <!-- Security & Privacy -->
+    <string name="security_title">Güvenlik ve Gizlilik</string>
+    <string name="security_biometric">Biyometrik Kimlik Doğrulama</string>
+    <string name="security_biometric_desc">Parmak izi veya yüz tanıma ile kilidi açın</string>
+    <string name="security_pin">PIN Kodu Koruması</string>
+    <string name="security_pin_desc">Açılışta 4 haneli PIN kodu sor</string>
+    <string name="security_hide_balances">Bakiyeleri Gizle</string>
+    <string name="security_hide_balances_desc">Gizlilik için tutarları noktalarla maskele</string>
+    <string name="security_screenshot_protection">Ekran Görüntüsü Koruması</string>
+    <string name="security_screenshot_protection_desc">Ekran görüntüsü alınmasını ve uygulama önizlemelerini engelle</string>
+    <string name="security_enter_pin">4 Haneli PIN Kodunu Girin</string>
+    <string name="security_confirm_pin">PIN Kodunu Onaylayın</string>
+    <string name="security_pin_mismatch">PIN kodları eşleşmiyor. Tekrar deneyin.</string>
+    <string name="security_pin_set_success">Güvenlik ayarları başarıyla güncellendi</string>
+
+    <!-- Categorization Rules & Smart Engine -->
+    <string name="rules_title">Kategorilendirme Kuralları</string>
+    <string name="rules_tab_rules">Kurallar (%1$d)</string>
+    <string name="rules_tab_review">İnceleme Listesi (%1$d)</string>
+    <string name="rules_create_title">Akıllı Kural Oluştur</string>
+    <string name="rule_name_hint">Kural Adı (örn. Kahveciler)</string>
+    <string name="rule_pattern_hint">İşlem açıklamasında aranacak metin</string>
+    <string name="rule_match_type">Eşleşme Türü</string>
+    <string name="rule_target_category">Hedef Kategori</string>
+    <string name="rule_apply_existing">Mevcut işlemlere de uygula</string>
+    <string name="rule_conflict_warning">Daha yüksek öncelikli bir kuralla çakışma tespit edildi</string>
+    <string name="rules_review_title">Onay Bekleyen İşlemler</string>
+    <string name="rules_review_empty">Tüm işlemler kategorilendirildi ve onaylandı!</string>
+    <string name="rules_confirm_all">Tüm Önerileri Onayla</string>
+    <string name="rules_empty_title">Kayıtlı kural bulunmuyor</string>
+
+    <!-- CSV Import Wizard -->
+    <string name="csv_import_title">Banka Ekstresi İçe Aktarma</string>
+    <string name="csv_step_select_file">1. Dosya Seçimi</string>
+    <string name="csv_step_mapping">2. Sütun Eşleme</string>
+    <string name="csv_step_preview">3. Satır İnceleme</string>
+    <string name="csv_step_summary">4. İçe Aktarım Özeti</string>
+    <string name="csv_select_file_btn">CSV Belgesi Seçin</string>
+    <string name="csv_destination_account">Aktarılacak Banka Hesabı</string>
+    <string name="csv_has_header">İlk satır başlıkları içeriyor</string>
+    <string name="csv_date_format">Tarih Formatı</string>
+    <string name="csv_preview_valid_count">%1$d İşlem Aktarıma Hazır</string>
+    <string name="csv_preview_duplicate_count">%1$d Olası Tekrar</string>
+    <string name="csv_preview_invalid_count">%1$d Hatalı Satır</string>
+    <string name="csv_confirm_import_btn">%1$d İşlemi İçe Aktar</string>
+    <string name="csv_summary_success">Hesap ekstresi başarıyla aktarıldı</string>
+    <string name="csv_summary_imported">İçe Aktarılan İşlem: %1$d</string>
+    <string name="csv_summary_skipped">Atlanan Tekrarlar: %1$d</string>
+
+    <!-- Insights -->
+    <string name="insights_title">Finansal Tavsiyeler</string>
+    <string name="insights_empty_title">Henüz tavsiye bulunmuyor</string>
+    <string name="insights_empty_desc">Harcamalarınızı kaydettikçe size özel tavsiyeler üretilecektir</string>
+
+    <!-- Search & Filter -->
+    <string name="search_title">İşlem Arama</string>
+    <string name="search_hint">İşyeri, tutar veya etiket ile ara…</string>
+    <string name="search_results_count">%1$d sonuç bulundu</string>
+    <string name="search_no_results">Arama kriterlerine uygun işlem bulunamadı</string>
+
+    <!-- Data Export -->
+    <string name="export_title">Veri Dışa Aktarma</string>
+    <string name="export_format_csv">CSV Olarak Aktar (Excel Tablosu)</string>
+    <string name="export_format_json">JSON Olarak Aktar (Tam Yedek)</string>
+    <string name="export_btn">Dışa Aktarma Dosyası Oluştur</string>
+    <string name="export_success">Yedekleme başarıyla kaydedildi</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_step_format">ADIM %1$d / 4</string>
+    <string name="onboarding_skip">Kurulumu Atla</string>
+    <string name="onboarding_welcome_title">FinPulse\'a Hoş Geldiniz</string>
+    <string name="onboarding_welcome_subtitle">Akıllı finansal takip, bütçe yönetimi ve varlık kontrolü tek bir güvenli yerde.</string>
+    <string name="onboarding_currency_title">Ana Para Biriminizi Seçin</string>
+    <string name="onboarding_currency_subtitle">Tüm bakiyeleriniz, net varlığınız ve bütçeleriniz bu para birimiyle hesaplanır.</string>
+    <string name="onboarding_account_title">Ana Hesabınızı Ekleyin</string>
+    <string name="onboarding_account_subtitle">Birincil banka vadesiz hesabınızı veya nakit bakiyenizi ekleyerek başlayın.</string>
+    <string name="onboarding_budget_title">Aylık Bütçe Belirleyin</string>
+    <string name="onboarding_budget_subtitle">Aylık harcama limiti belirlemek sağlıklı finansal alışkanlıklar kazandırır.</string>
+    <string name="onboarding_finish_btn">Başlayın</string>
+
+    <!-- Dates -->
+    <string name="date_today">Bugün</string>
+    <string name="date_yesterday">Dün</string>
+    <string name="date_this_week">Bu Hafta</string>
+    <string name="date_this_month">Bu Ay</string>
+    <string name="date_last_30_days">Son 30 Gün</string>
+    <string name="date_custom">Özel Aralık</string>
+
+    <!-- Notifications -->
+    <string name="notif_channel_recurring_name">Düzenli Faturalar &amp; Abonelikler</string>
+    <string name="notif_channel_recurring_desc">Yaklaşan faturalar, abonelikler ve ödeme hatırlatmaları</string>
+    <string name="notif_bill_upcoming_title">Yaklaşan Ödeme: %1$s</string>
+    <string name="notif_bill_due_today">%1$s ödemesinin son günü bugün!</string>
+    <string name="notif_bill_due_tomorrow">%1$s ödemesinin son günü yarın.</string>
+    <string name="notif_bill_due_in_days">%1$s ödemesine %2$d gün kaldı.</string>
+
+    <!-- Accessibility / Content Descriptions -->
+    <string name="cd_back">Geri git</string>
+    <string name="cd_close">Pencereyi kapat</string>
+    <string name="cd_delete">Öğeyi sil</string>
+    <string name="cd_edit">Öğeyi düzenle</string>
+    <string name="cd_add">Yeni öğe ekle</string>
+    <string name="cd_search">Ara</string>
+    <string name="cd_filter">Listeyi filtrele</string>
+    <string name="cd_category_icon">Kategori simgesi</string>
+    <string name="cd_account_icon">Hesap simgesi</string>
+    <string name="cd_expand">Bölümü genişlet</string>
+    <string name="cd_collapse">Bölümü daralt</string>
+
+    <!-- Plurals -->
+    <plurals name="plural_transactions">
+        <item quantity="one">%d işlem</item>
+        <item quantity="other">%d işlem</item>
+    </plurals>
+
+    <plurals name="plural_accounts">
+        <item quantity="one">%d hesap</item>
+        <item quantity="other">%d hesap</item>
+    </plurals>
+
+    <plurals name="plural_days">
+        <item quantity="one">%d gün</item>
+        <item quantity="other">%d gün</item>
+    </plurals>
+
+    <plurals name="plural_months">
+        <item quantity="one">%d ay</item>
+        <item quantity="other">%d ay</item>
+    </plurals>
+
+    <plurals name="plural_rules">
+        <item quantity="one">%d kural</item>
+        <item quantity="other">%d kural</item>
+    </plurals>
+
+    <plurals name="plural_bills_due">
+        <item quantity="one">%d ödenecek fatura</item>
+        <item quantity="other">%d ödenecek fatura</item>
+    </plurals>
+
+    <plurals name="plural_items_selected">
+        <item quantity="one">%d öğe seçildi</item>
+        <item quantity="other">%d öğe seçildi</item>
+    </plurals>
+
+    <plurals name="plural_rows_imported">
+        <item quantity="one">%d satır aktarıldı</item>
+        <item quantity="other">%d satır aktarıldı</item>
+    </plurals>
+
+    <!-- Filter & Sort -->
+    <string name="sort_by">Sıralama ölçütü</string>
+    <string name="sort_newest">En yeni</string>
+    <string name="sort_oldest">En eski</string>
+    <string name="sort_highest">En yüksek tutar</string>
+    <string name="sort_lowest">En düşük tutar</string>
+    <string name="tx_filter_sort_title">İşlemleri Filtrele ve Sırala</string>
+    <string name="action_duplicate">Çoğalt</string>
+    <string name="tx_record_title">İşlem Kaydet</string>
+    <string name="tx_review_banner">%1$d işlem kategori onayı bekliyor</string>
+    <string name="tx_review_queue_action">İnceleme Kuyruğu →</string>
+
+    <!-- Quick Add Extras -->
+    <string name="quick_add_transfer_to">Hedef Hesap:</string>
+    <string name="quick_add_smart_suggestion">Akıllı Öneri:</string>
+    <string name="quick_add_applied">Uygulandı ✓</string>
+    <string name="quick_add_tap_apply">Uygulamak için dokunun</string>
+    <string name="quick_add_add_another">Bir Tane Daha Ekle</string>
+    <string name="quick_add_update">Güncelle</string>
+    <string name="quick_add_hide_details">Notları ve etiketleri gizle</string>
+    <string name="quick_add_show_details">+ Not, alıcı veya etiket ekle</string>
+
+    <!-- Time Periods -->
+    <string name="period_week">Hafta</string>
+    <string name="period_month">Ay</string>
+    <string name="period_three_months">3 Ay</string>
+    <string name="period_six_months">6 Ay</string>
+    <string name="period_year">Yıl</string>
+    <string name="period_all_time">Tüm Zamanlar</string>
+
+    <!-- Recurring Tabs & Windows -->
+    <string name="recurring_tab_upcoming">Yaklaşanlar</string>
+    <string name="recurring_tab_rules">Tüm Kurallar</string>
+    <string name="recurring_tab_subscriptions">Abonelikler</string>
+    <string name="recurring_window_7d">Sonraki 7 Gün</string>
+    <string name="recurring_window_30d">Sonraki 30 Gün</string>
+
+    <!-- Debt Strategies & Metrics -->
+    <string name="debt_strategy_snowball_title">Kartopu Stratejisi</string>
+    <string name="debt_strategy_snowball_sub">Önce En Düşük Bakiye</string>
+    <string name="debt_strategy_avalanche_title">Çığ Stratejisi</string>
+    <string name="debt_strategy_avalanche_sub">Önce En Yüksek Faiz</string>
+    <string name="debt_freedom_title">Tahmini Borç Kapanışı</string>
+    <string name="debt_free_celebration">Borçsuz!</string>
+    <string name="debt_min_payment_label">Asgari Aylık Ödeme</string>
+    <string name="debt_card_balance_left">%1$s kaldı</string>
+
+    <!-- Accounts Extras -->
+    <string name="accounts_transfer_title">Hesaplar Arası Virman</string>
+    <string name="accounts_transfer_action">Transfer Et</string>
+    <string name="accounts_transfer_cannot">Transfer Yapılamaz</string>
+    <string name="accounts_transfer_cannot_desc">Bakiye aktarmak için en az 2 aktif hesabınız olmalıdır.</string>
+    <string name="accounts_active_tracked">%1$d aktif hesap izleniyor</string>
+
+    <!-- Analytics & Budgets Extras -->
+    <string name="analytics_avg_daily">Günlük Ortalama Harcama</string>
+    <string name="analytics_largest_expense">En Büyük Harcama</string>
+    <string name="analytics_top_merchants">En Çok Harcanan Yerler</string>
+    <string name="analytics_consumed_overall">toplam %1$d%% tüketildi</string>
+    <string name="analytics_consumed_percent">%1$d%% tüketildi</string>
+
+    <!-- Goals Extras -->
+    <string name="goals_contribute_title">Hedefe Katkı Yap</string>
+    <string name="goals_contribute_btn">Katkıda Bulun</string>
+
+    <!-- Extra Screen Strings -->
+    <string name="total_income">Toplam Gelir</string>
+    <string name="total_expenses">Toplam Gider</string>
+    <string name="analytics_savings_rate_title">Tasarruf Oranı</string>
+    <string name="account_archived_label">Arşivlendi</string>
+    <string name="account_limit_label">Limit: %1$s</string>
+    <string name="account_edit_dialog_title">Hesabı Düzenle</string>
+    <string name="goal_edit_title">Hedefi Düzenle</string>
+    <string name="goal_target_format">hedef %1$s</string>
+    <string name="goal_achieved_percent">%%%1$d tamamlandı</string>
+    <string name="goal_add_funds">+ Para Ekle</string>
+    <string name="goal_deposit_title">%1$s Hedefine Yatır</string>
+    <string name="goal_deposit_remaining">Hedefe kalan: %1$s</string>
+    <string name="debt_paid_off_percent">%%%1$d ödendi</string>
+    <string name="debt_record_payment">Ödeme Kaydet</string>
+    <string name="debt_edit_title">Borcu Düzenle</string>
+    <string name="debt_payment_title">%1$s İçin Ödeme Kaydet</string>
+    <string name="debt_remaining_balance_label">Kalan bakiye: %1$s</string>
+    <string name="debt_confirm_payment_btn">Ödemeyi Onayla</string>
+    <string name="category_custom_label">Özel</string>
+    <string name="category_default_label">Varsayılan</string>
+    <string name="category_create_custom">Özel Kategori Oluştur</string>
+
+    <!-- Final Screen Refinements -->
+    <string name="investments_total_invested">Toplam Yatırılan</string>
+    <string name="investments_edit_title">Varlığı Düzenle</string>
+    <string name="investments_units">%1$s birim</string>
+    <string name="rules_screen_title">Akıllı Kategorizasyon ve Kurallar</string>
+    <string name="rules_review_queue_clear">İnceleme Kuyruğu Temiz</string>
+    <string name="rules_review_queue_clear_desc">Tüm işlemler onaylandı. Sınıflandırılmamış yeni içe aktarımlar burada görünecektir.</string>
+    <string name="rules_transactions_need_review">%1$d işlem inceleme bekliyor</string>
+    <string name="rules_one_tap_hint">Tek dokunuşla onayla veya düzelt</string>
+    <string name="search_empty_hint">Tüm hesaplardaki işlemleri bulmak için bir arama terimi yazın</string>
+    <string name="export_screen_title">Veri Yedekleme ve Dışa Aktarma</string>
+    <string name="export_csv_title">CSV Defterini Dışa Aktar</string>
+    <string name="export_csv_desc">Google E-Tablolar, Excel ve muhasebe yazılımlarıyla uyumlu standart RFC-4180 formatı.</string>
+    <string name="export_csv_btn">İşlemleri CSV Olarak Aktar</string>
+    <string name="export_json_title">Tam JSON Veritabanı Yedeklemesi</string>
+    <string name="export_json_desc">Hesapların, işlemlerin, bütçelerin, hedeflerin ve borç ödeme planlarının şifrelenmiş anlık görüntüsü.</string>
+    <string name="export_json_btn">JSON Veritabanını Dışa Aktar</string>
+    <string name="security_pin_active">PIN koruması aktif</string>
+    <string name="security_pin_configure_title">Güvenlik PIN Kodunu Yapılandır</string>
+    <string name="security_pin_min_digits">PIN en az 4 haneli olmalıdır</string>
+    <string name="security_pin_save_btn">PIN\'i Kaydet</string>
+</resources>

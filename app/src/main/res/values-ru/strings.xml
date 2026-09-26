@@ -1,0 +1,612 @@
+<resources>
+    <string name="app_name">FinPulse</string>
+    <string name="shortcut_quick_add_short">Быстрое добавление</string>
+    <string name="shortcut_quick_add_long">Добавить операцию</string>
+
+    <!-- Language Names -->
+    <string name="lang_system">Системный по умолчанию</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ru">Русский</string>
+    <string name="lang_es">Español</string>
+    <string name="lang_pt_br">Português (Brasil)</string>
+    <string name="lang_de">Deutsch</string>
+    <string name="lang_fr">Français</string>
+    <string name="lang_it">Italiano</string>
+    <string name="lang_pl">Polski</string>
+    <string name="lang_tr">Türkçe</string>
+    <string name="lang_ja">日本語</string>
+    <string name="lang_ko">한국어</string>
+    <string name="lang_zh_cn">简体中文</string>
+    <string name="select_language">Выберите язык</string>
+    <string name="language_title">Язык</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Обзор</string>
+    <string name="nav_transactions">Операции</string>
+    <string name="nav_budgets">Бюджет</string>
+    <string name="nav_analytics">Аналитика</string>
+    <string name="nav_more">Ещё</string>
+
+    <!-- Common Actions & Buttons -->
+    <string name="action_save">Сохранить</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_edit">Редактировать</string>
+    <string name="action_add">Добавить</string>
+    <string name="action_done">Готово</string>
+    <string name="action_close">Закрыть</string>
+    <string name="action_confirm">Подтвердить</string>
+    <string name="action_dismiss">Отклонить</string>
+    <string name="action_apply">Применить</string>
+    <string name="action_search">Поиск</string>
+    <string name="action_filter">Фильтр</string>
+    <string name="action_export">Экспорт</string>
+    <string name="action_import">Импорт</string>
+    <string name="action_view_all">Показать все</string>
+    <string name="action_back">Назад</string>
+    <string name="action_continue">Продолжить</string>
+    <string name="action_skip">Пропустить</string>
+    <string name="action_create">Создать</string>
+    <string name="action_save_add_another">Сохранить и добавить ещё</string>
+    <string name="action_reset">Сбросить</string>
+    <string name="action_refresh">Обновить</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Обзор</string>
+    <string name="dashboard_net_worth">Чистый капитал</string>
+    <string name="dashboard_assets">Активы</string>
+    <string name="dashboard_liabilities">Обязательства</string>
+    <string name="dashboard_total_balance">Общий баланс</string>
+    <string name="dashboard_cash_flow">Денежный поток</string>
+    <string name="dashboard_monthly_income">Доходы за месяц</string>
+    <string name="dashboard_monthly_expense">Расходы за месяц</string>
+    <string name="dashboard_monthly_net">Чистый поток</string>
+    <string name="dashboard_spending_trends">Динамика расходов</string>
+    <string name="dashboard_recent_transactions">Последние операции</string>
+    <string name="dashboard_financial_health">Финансовое состояние</string>
+    <string name="dashboard_health_score">Индекс здоровья: %1$d/100</string>
+    <string name="dashboard_quick_actions">Быстрые действия</string>
+    <string name="dashboard_accounts_overview">Счета</string>
+    <string name="dashboard_no_transactions">Операции пока не зарегистрированы</string>
+
+    <!-- Transactions -->
+    <string name="transactions_title">Операции</string>
+    <string name="tx_search_hint">Поиск операций, получателей, заметок…</string>
+    <string name="tx_type_income">Доход</string>
+    <string name="tx_type_expense">Расход</string>
+    <string name="tx_type_transfer">Перевод</string>
+    <string name="tx_type_refund">Возврат</string>
+    <string name="tx_needs_review">Требует проверки</string>
+    <string name="tx_confirmed">Подтверждено</string>
+    <string name="tx_empty_title">Операций не найдено</string>
+    <string name="tx_empty_desc">Нажмите +, чтобы добавить первую операцию</string>
+    <string name="tx_date_range">Период дат</string>
+    <string name="tx_filter_all">Все</string>
+    <string name="tx_filter_income">Доходы</string>
+    <string name="tx_filter_expense">Расходы</string>
+    <string name="tx_filter_transfer">Переводы</string>
+    <string name="tx_details_title">Детали операции</string>
+    <string name="tx_amount">Сумма</string>
+    <string name="tx_category">Категория</string>
+    <string name="tx_account">Счёт списания</string>
+    <string name="tx_dest_account">Счёт зачисления</string>
+    <string name="tx_merchant">Получатель / Магазин</string>
+    <string name="tx_date">Дата и время</string>
+    <string name="tx_notes">Заметки</string>
+    <string name="tx_tags">Теги</string>
+    <string name="tx_saved_success">Операция успешно сохранена</string>
+    <string name="tx_deleted_success">Операция удалена</string>
+    <string name="tx_default_title">Операция</string>
+
+    <!-- Quick Add -->
+    <string name="quick_add_title">Быстрое добавление</string>
+    <string name="quick_add_expense">Расход</string>
+    <string name="quick_add_income">Доход</string>
+    <string name="quick_add_transfer">Перевод</string>
+    <string name="quick_add_amount_hint">0.00</string>
+    <string name="quick_add_select_account">Выберите счёт</string>
+    <string name="quick_add_select_category">Выберите категорию</string>
+    <string name="quick_add_note_hint">Заметка (необязательно)</string>
+    <string name="quick_add_merchant_hint">Магазин или контрагент</string>
+    <string name="quick_add_date_today">Сегодня</string>
+    <string name="quick_add_date_yesterday">Вчера</string>
+    <string name="quick_add_date_custom">Выбрать дату</string>
+    <string name="quick_add_saved_snackbar">Операция сохранена</string>
+    <string name="quick_add_edit_action">Изменить</string>
+
+    <!-- Budgets -->
+    <string name="budgets_title">Бюджеты</string>
+    <string name="budget_total_budgeted">Всего запланировано</string>
+    <string name="budget_total_spent">Всего израсходовано</string>
+    <string name="budget_remaining">Остаток</string>
+    <string name="budget_exceeded">Лимит превышен</string>
+    <string name="budget_on_track">В рамках нормы</string>
+    <string name="budget_warning">Близко к лимиту</string>
+    <string name="budget_projected">Прогноз расходов: %1$s</string>
+    <string name="budget_add_dialog_title">Создать бюджет</string>
+    <string name="budget_name_hint">Название бюджета</string>
+    <string name="budget_limit_hint">Месячный лимит расходов</string>
+    <string name="budget_period">Период</string>
+    <string name="budget_empty_title">Нет активных бюджетов</string>
+    <string name="budget_empty_desc">Установите лимиты для контроля расходов</string>
+    <string name="budget_status_exceeded_desc">Перерасход на %1$s</string>
+    <string name="budget_status_warning_desc">Осталось %1$s</string>
+
+    <!-- Analytics -->
+    <string name="analytics_title">Финансовая аналитика</string>
+    <string name="analytics_income_vs_expense">Доходы и расходы</string>
+    <string name="analytics_spending_by_category">Расходы по категориям</string>
+    <string name="analytics_net_worth_trend">Динамика капитала</string>
+    <string name="analytics_cash_flow_title">Анализ денежного потока</string>
+    <string name="analytics_monthly_spending">Ежемесячные траты</string>
+    <string name="analytics_savings_rate">Норма сбережений: %1$s%%</string>
+    <string name="analytics_forecast">Прогноз до конца месяца</string>
+    <string name="analytics_period_7d">7 дней</string>
+    <string name="analytics_period_30d">30 дней</string>
+    <string name="analytics_period_month">Этот месяц</string>
+    <string name="analytics_period_quarter">Квартал</string>
+    <string name="analytics_period_year">Этот год</string>
+    <string name="analytics_empty_title">Нет данных для аналитики</string>
+
+    <!-- Accounts -->
+    <string name="accounts_title">Портфель счетов</string>
+    <string name="account_total_assets">Всего активов</string>
+    <string name="account_total_liabilities">Всего задолженностей</string>
+    <string name="account_add_dialog_title">Добавить счёт</string>
+    <string name="account_name_hint">Название счёта (например, Зарплатный)</string>
+    <string name="account_type">Тип счёта</string>
+    <string name="account_starting_balance_hint">Текущий остаток</string>
+    <string name="account_credit_limit_hint">Кредитный лимит (при наличии)</string>
+    <string name="account_institution_hint">Банк / Организация</string>
+    <string name="account_available_balance">Доступный остаток</string>
+    <string name="account_current_balance">Текущий баланс</string>
+    <string name="account_empty_title">Счета ещё не добавлены</string>
+    <string name="account_empty_desc">Добавьте банковские карты, счета или наличные</string>
+    <string name="account_archive">Архивировать счёт</string>
+    <string name="account_delete">Удалить счёт</string>
+
+    <!-- Recurring & Subscriptions -->
+    <string name="recurring_title">Регулярные платежи и подписки</string>
+    <string name="recurring_upcoming_title">Предстоящие платежи</string>
+    <string name="recurring_upcoming_subtitle">Прогноз на ближайшие 30 дней</string>
+    <string name="recurring_active_rules">Активные платежи</string>
+    <string name="recurring_monthly_commitment">Ежемесячная нагрузка</string>
+    <string name="recurring_annual_commitment">В пересчёте на год: %1$s/год</string>
+    <string name="recurring_add_title">Новый регулярный платёж</string>
+    <string name="recurring_bill_name_hint">Название платежа или сервиса</string>
+    <string name="recurring_frequency">Периодичность списания</string>
+    <string name="recurring_next_due">Дата следующего платежа</string>
+    <string name="recurring_mark_paid">Отметить как оплаченный</string>
+    <string name="recurring_skip">Пропустить платёж</string>
+    <string name="recurring_pause">Приостановить</string>
+    <string name="recurring_resume">Возобновить</string>
+    <string name="recurring_cancel">Отменить подписку</string>
+    <string name="recurring_empty_title">Нет регулярных платежей</string>
+    <string name="recurring_empty_desc">Отслеживайте подписки, аренду, кредиты и зарплату</string>
+    <string name="recurring_is_subscription">Цифровая подписка</string>
+    <string name="recurring_variable_amount">Переменная сумма списания</string>
+
+    <!-- Financial Goals -->
+    <string name="goals_title">Финансовые цели</string>
+    <string name="goals_total_target">Общая сумма целей</string>
+    <string name="goals_total_saved">Накоплено всего</string>
+    <string name="goals_add_title">Новая финансовая цель</string>
+    <string name="goal_name_hint">Название цели (например, Подушка безопасности)</string>
+    <string name="goal_target_amount_hint">Целевая сумма</string>
+    <string name="goal_current_amount_hint">Уже накоплено</string>
+    <string name="goal_target_date">Срок накопления</string>
+    <string name="goal_progress">Прогресс: %1$d%%</string>
+    <string name="goal_remaining">Осталось накопить: %1$s</string>
+    <string name="goal_suggested_monthly">Рекомендуемый взнос: %1$s/мес</string>
+    <string name="goal_completed">Цель достигнута!</string>
+    <string name="goal_empty_title">Цели ещё не поставлены</string>
+    <string name="goal_empty_desc">Создайте цели для накоплений, отпуска или крупных покупок</string>
+
+    <!-- Investments & Assets -->
+    <string name="investments_title">Инвестиции и активы</string>
+    <string name="investments_total_portfolio">Стоимость портфеля</string>
+    <string name="investments_total_gain_loss">Доходность / Убыток</string>
+    <string name="investments_add_title">Добавить актив</string>
+    <string name="asset_name_hint">Наименование актива</string>
+    <string name="asset_symbol_hint">Тикер / Обозначение (например, IMOEX)</string>
+    <string name="asset_class">Класс активов</string>
+    <string name="asset_quantity_hint">Количество</string>
+    <string name="asset_purchase_price_hint">Цена покупки за единицу</string>
+    <string name="asset_current_price_hint">Текущая рыночная цена</string>
+    <string name="asset_empty_title">Инвестиционные активы отсутствуют</string>
+    <string name="asset_empty_desc">Учитывайте акции, облигации, фонды, недвижимость и металлы</string>
+
+    <!-- Debt & Liabilities -->
+    <string name="debt_title">Долги и кредиты</string>
+    <string name="debt_total_debt">Остаток задолженности</string>
+    <string name="debt_total_paid_off">Выплачено основного долга</string>
+    <string name="debt_add_title">Добавить кредит или долг</string>
+    <string name="debt_name_hint">Название обязательства (например, Ипотека)</string>
+    <string name="debt_type">Тип обязательства</string>
+    <string name="debt_principal_hint">Первоначальная сумма кредита</string>
+    <string name="debt_remaining_hint">Остаток долга</string>
+    <string name="debt_interest_rate_hint">Процентная ставка (%% годовых)</string>
+    <string name="debt_minimum_payment_hint">Ежемесячный платёж</string>
+    <string name="debt_estimated_payoff">Погашение ориентировочно через ~%1$d мес.</string>
+    <string name="debt_empty_title">Нет активных задолженностей</string>
+    <string name="debt_empty_desc">Контролируйте ипотеку, потребительские кредиты и рассрочки</string>
+
+    <!-- Categories Screen -->
+    <string name="categories_title">Категории</string>
+    <string name="categories_expense_tab">Категории расходов</string>
+    <string name="categories_income_tab">Категории доходов</string>
+    <string name="category_add_title">Новая категория</string>
+    <string name="category_name_hint">Название категории</string>
+    <string name="category_type_expense">Расход</string>
+    <string name="category_type_income">Доход</string>
+    <string name="category_empty">Категории не найдены</string>
+
+    <!-- Default Predefined Categories -->
+    <string name="cat_food">Кафе и рестораны</string>
+    <string name="cat_groceries">Продукты питания</string>
+    <string name="cat_housing">Жильё и коммуналка</string>
+    <string name="cat_transport">Транспорт</string>
+    <string name="cat_fuel">Топливо и АЗС</string>
+    <string name="cat_shopping">Покупки и одежда</string>
+    <string name="cat_entertainment">Развлечения и отдых</string>
+    <string name="cat_health">Здоровье и медицина</string>
+    <string name="cat_education">Образование</string>
+    <string name="cat_fitness">Спорт и фитнес</string>
+    <string name="cat_subscriptions">Подписки и сервисы</string>
+    <string name="cat_gifts">Подарки и благотворительность</string>
+    <string name="cat_salary">Заработная плата</string>
+    <string name="cat_freelance">Фриланс и подработка</string>
+    <string name="cat_invest_return">Инвестиционный доход</string>
+    <string name="cat_other_income">Прочие поступления</string>
+    <string name="cat_uncategorized">Без категории</string>
+
+    <!-- Enum Display Strings -->
+    <string name="acc_type_cash">Наличные</string>
+    <string name="acc_type_bank">Банковский счёт</string>
+    <string name="acc_type_credit_card">Кредитная карта</string>
+    <string name="acc_type_savings">Сберегательный счёт</string>
+    <string name="acc_type_investment">Брокерский счёт</string>
+    <string name="acc_type_wallet">Электронный кошелёк</string>
+    <string name="acc_type_loan">Кредит</string>
+    <string name="acc_type_other">Другой счёт</string>
+
+    <string name="period_weekly">Еженедельно</string>
+    <string name="period_monthly">Ежемесячно</string>
+    <string name="period_custom">Другой период</string>
+
+    <string name="freq_daily">Каждый день</string>
+    <string name="freq_weekly">Раз в неделю</string>
+    <string name="freq_biweekly">Каждые 2 недели</string>
+    <string name="freq_monthly">Раз в месяц</string>
+    <string name="freq_quarterly">Раз в квартал</string>
+    <string name="freq_yearly">Раз в год</string>
+    <string name="freq_custom">Особый интервал</string>
+
+    <string name="unit_days">Дни</string>
+    <string name="unit_weeks">Недели</string>
+    <string name="unit_months">Месяцы</string>
+    <string name="unit_years">Годы</string>
+
+    <string name="occ_upcoming">Ожидается</string>
+    <string name="occ_overdue">Просрочен</string>
+    <string name="occ_generated">Сформирован</string>
+    <string name="occ_paid">Оплачен</string>
+    <string name="occ_skipped">Пропущен</string>
+
+    <string name="asset_stock">Акции</string>
+    <string name="asset_etf">Биржевой фонд (ETF)</string>
+    <string name="asset_crypto">Криптовалюта</string>
+    <string name="asset_bond">Облигации</string>
+    <string name="asset_real_estate">Недвижимость</string>
+    <string name="asset_commodity">Товарные активы</string>
+    <string name="asset_cash">Денежный эквивалент</string>
+    <string name="asset_other">Другой актив</string>
+
+    <string name="debt_credit_card">Кредитная карта</string>
+    <string name="debt_personal_loan">Потребительский кредит</string>
+    <string name="debt_mortgage">Ипотечный кредит</string>
+    <string name="debt_student_loan">Кредит на образование</string>
+    <string name="debt_auto_loan">Автокредит</string>
+    <string name="debt_other">Прочая задолженность</string>
+
+    <string name="dup_new">Новая операция</string>
+    <string name="dup_exact">Полный дубликат</string>
+    <string name="dup_potential">Возможный дубликат</string>
+
+    <string name="amount_mode_single">Одна колонка суммы</string>
+    <string name="amount_mode_separate">Раздельные колонки приход/расход</string>
+
+    <!-- More / Hub Screen -->
+    <string name="more_title">Настройки и сервисы</string>
+    <string name="more_section_financial_tools">Финансовые инструменты</string>
+    <string name="more_section_data_security">Данные и безопасность</string>
+    <string name="more_section_preferences">Параметры приложения</string>
+    <string name="more_security_title">Безопасность и конфиденциальность</string>
+    <string name="more_security_desc">PIN-код, биометрия, защита экрана от снимков</string>
+    <string name="more_language_title">Язык приложения</string>
+    <string name="more_currency_title">Основная валюта</string>
+    <string name="more_dark_mode_title">Тёмная тема</string>
+    <string name="more_export_title">Резервная копия и экспорт</string>
+    <string name="more_rules_title">Правила категоризации</string>
+    <string name="more_rules_desc">Автоматическое распределение операций по правилам</string>
+    <string name="more_csv_title">Импорт банковской выписки CSV</string>
+    <string name="more_csv_desc">Загрузка операций из файлов банковских выписок</string>
+    <string name="more_insights_title">Финансовые инсайты</string>
+    <string name="more_insights_desc">Анализ отклонений в расходах и полезные советы</string>
+
+    <!-- Security & Privacy -->
+    <string name="security_title">Безопасность</string>
+    <string name="security_biometric">Биометрическая аутентификация</string>
+    <string name="security_biometric_desc">Вход по отпечатку пальца или распознаванию лица</string>
+    <string name="security_pin">Защита PIN-кодом</string>
+    <string name="security_pin_desc">Запрос 4-значного кода при входе в приложение</string>
+    <string name="security_hide_balances">Скрывать балансы</string>
+    <string name="security_hide_balances_desc">Маскировать денежные суммы точками</string>
+    <string name="security_screenshot_protection">Защита от скриншотов</string>
+    <string name="security_screenshot_protection_desc">Блокировать снимки экрана и отображение в переключателе задач</string>
+    <string name="security_enter_pin">Введите 4-значный PIN-код</string>
+    <string name="security_confirm_pin">Повторите PIN-код</string>
+    <string name="security_pin_mismatch">Коды не совпадают. Повторите попытку.</string>
+    <string name="security_pin_set_success">Параметры защиты успешно обновлены</string>
+
+    <!-- Categorization Rules & Smart Engine -->
+    <string name="rules_title">Правила категоризации</string>
+    <string name="rules_tab_rules">Правила (%1$d)</string>
+    <string name="rules_tab_review">Очередь проверки (%1$d)</string>
+    <string name="rules_create_title">Создать смарт-правило</string>
+    <string name="rule_name_hint">Название правила (например, Кофейни)</string>
+    <string name="rule_pattern_hint">Шаблон поиска в описании</string>
+    <string name="rule_match_type">Тип соответствия</string>
+    <string name="rule_target_category">Целевая категория</string>
+    <string name="rule_apply_existing">Применить к уже записанным операциям</string>
+    <string name="rule_conflict_warning">Обнаружен конфликт с правилом более высокого приоритета</string>
+    <string name="rules_review_title">Операции, требующие подтверждения</string>
+    <string name="rules_review_empty">Все операции категоризированы и подтверждены!</string>
+    <string name="rules_confirm_all">Подтвердить все предложения</string>
+    <string name="rules_empty_title">Нет настроенных правил</string>
+
+    <!-- CSV Import Wizard -->
+    <string name="csv_import_title">Импорт выписки CSV</string>
+    <string name="csv_step_select_file">1. Выбор файла</string>
+    <string name="csv_step_mapping">2. Настройка колонок</string>
+    <string name="csv_step_preview">3. Проверка строк</string>
+    <string name="csv_step_summary">4. Итоги импорта</string>
+    <string name="csv_select_file_btn">Выбрать CSV-документ</string>
+    <string name="csv_destination_account">Счёт для зачисления операций</string>
+    <string name="csv_has_header">Первая строка содержит заголовки</string>
+    <string name="csv_date_format">Формат даты</string>
+    <string name="csv_preview_valid_count">%1$d готово к импорту</string>
+    <string name="csv_preview_duplicate_count">%1$d вероятных дубликатов</string>
+    <string name="csv_preview_invalid_count">%1$d некорректных строк</string>
+    <string name="csv_confirm_import_btn">Импортировать %1$d операций</string>
+    <string name="csv_summary_success">Выписка успешно загружена</string>
+    <string name="csv_summary_imported">Импортировано операций: %1$d</string>
+    <string name="csv_summary_skipped">Пропущено дубликатов: %1$d</string>
+
+    <!-- Insights -->
+    <string name="insights_title">Финансовые инсайты</string>
+    <string name="insights_empty_title">Инсайты пока формируются</string>
+    <string name="insights_empty_desc">Советы появятся по мере накопления истории ваших расходов</string>
+
+    <!-- Search & Filter -->
+    <string name="search_title">Поиск по операциям</string>
+    <string name="search_hint">Поиск по контрагенту, сумме или тегу…</string>
+    <string name="search_results_count">Найдено результатов: %1$d</string>
+    <string name="search_no_results">По вашему запросу ничего не найдено</string>
+
+    <!-- Data Export -->
+    <string name="export_title">Экспорт данных</string>
+    <string name="export_format_csv">Экспорт в CSV (таблица Excel)</string>
+    <string name="export_format_json">Экспорт в JSON (полная резервная копия)</string>
+    <string name="export_btn">Сформировать файл</string>
+    <string name="export_success">Резервная копия сохранена</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_step_format">ШАГ %1$d ИЗ 4</string>
+    <string name="onboarding_skip">Пропустить настройку</string>
+    <string name="onboarding_welcome_title">Добро пожаловать в FinPulse</string>
+    <string name="onboarding_welcome_subtitle">Умный контроль финансов, бюджетирование и аналитика капитала в надёжном приложении.</string>
+    <string name="onboarding_currency_title">Выберите основную валюту</string>
+    <string name="onboarding_currency_subtitle">В этой валюте будут рассчитываться общий капитал, балансы и бюджеты.</string>
+    <string name="onboarding_account_title">Добавьте основной счёт</string>
+    <string name="onboarding_account_subtitle">Начните с указания вашей основной банковской карты или наличных.</string>
+    <string name="onboarding_budget_title">Задайте бюджет на месяц</string>
+    <string name="onboarding_budget_subtitle">Контроль ежемесячных трат помогает сформировать финансовую дисциплину.</string>
+    <string name="onboarding_finish_btn">Начать работу</string>
+
+    <!-- Dates -->
+    <string name="date_today">Сегодня</string>
+    <string name="date_yesterday">Вчера</string>
+    <string name="date_this_week">На этой неделе</string>
+    <string name="date_this_month">В этом месяце</string>
+    <string name="date_last_30_days">За 30 дней</string>
+    <string name="date_custom">Выбрать период</string>
+
+    <!-- Notifications -->
+    <string name="notif_channel_recurring_name">Регулярные платежи и счета</string>
+    <string name="notif_channel_recurring_desc">Напоминания о предстоящих счетах, подписках и платежах</string>
+    <string name="notif_bill_upcoming_title">Предстоящий счёт: %1$s</string>
+    <string name="notif_bill_due_today">%1$s к оплате сегодня!</string>
+    <string name="notif_bill_due_tomorrow">%1$s к оплате завтра.</string>
+    <string name="notif_bill_due_in_days">%1$s к оплате через %2$d дн.</string>
+
+    <!-- Accessibility / Content Descriptions -->
+    <string name="cd_back">Назад</string>
+    <string name="cd_close">Закрыть окно</string>
+    <string name="cd_delete">Удалить элемент</string>
+    <string name="cd_edit">Редактировать элемент</string>
+    <string name="cd_add">Добавить новый элемент</string>
+    <string name="cd_search">Поиск</string>
+    <string name="cd_filter">Фильтровать список</string>
+    <string name="cd_category_icon">Значок категории</string>
+    <string name="cd_account_icon">Значок счёта</string>
+    <string name="cd_expand">Развернуть</string>
+    <string name="cd_collapse">Свернуть</string>
+
+    <!-- Plurals -->
+    <plurals name="plural_transactions">
+        <item quantity="one">%d операция</item>
+        <item quantity="few">%d операции</item>
+        <item quantity="many">%d операций</item>
+        <item quantity="other">%d операции</item>
+    </plurals>
+
+    <plurals name="plural_accounts">
+        <item quantity="one">%d счёт</item>
+        <item quantity="few">%d счёта</item>
+        <item quantity="many">%d счетов</item>
+        <item quantity="other">%d счёта</item>
+    </plurals>
+
+    <plurals name="plural_days">
+        <item quantity="one">%d день</item>
+        <item quantity="few">%d дня</item>
+        <item quantity="many">%d дней</item>
+        <item quantity="other">%d дня</item>
+    </plurals>
+
+    <plurals name="plural_months">
+        <item quantity="one">%d месяц</item>
+        <item quantity="few">%d месяца</item>
+        <item quantity="many">%d месяцев</item>
+        <item quantity="other">%d месяца</item>
+    </plurals>
+
+    <plurals name="plural_rules">
+        <item quantity="one">%d правило</item>
+        <item quantity="few">%d правила</item>
+        <item quantity="many">%d правил</item>
+        <item quantity="other">%d правила</item>
+    </plurals>
+
+    <plurals name="plural_bills_due">
+        <item quantity="one">%d счёт к оплате</item>
+        <item quantity="few">%d счёта к оплате</item>
+        <item quantity="many">%d счетов к оплате</item>
+        <item quantity="other">%d счёта к оплате</item>
+    </plurals>
+
+    <plurals name="plural_items_selected">
+        <item quantity="one">%d элемент выбран</item>
+        <item quantity="few">%d элемента выбрано</item>
+        <item quantity="many">%d элементов выбрано</item>
+        <item quantity="other">%d элемента выбрано</item>
+    </plurals>
+
+    <plurals name="plural_rows_imported">
+        <item quantity="one">%d строка импортирована</item>
+        <item quantity="few">%d строки импортировано</item>
+        <item quantity="many">%d строк импортировано</item>
+        <item quantity="other">%d строки импортировано</item>
+    </plurals>
+
+    <!-- Filter & Sort -->
+    <string name="sort_by">Сортировка</string>
+    <string name="sort_newest">Сначала новые</string>
+    <string name="sort_oldest">Сначала старые</string>
+    <string name="sort_highest">По убыванию</string>
+    <string name="sort_lowest">По возрастанию</string>
+    <string name="tx_filter_sort_title">Фильтры и сортировка</string>
+    <string name="action_duplicate">Дублировать</string>
+    <string name="tx_record_title">Записать операцию</string>
+    <string name="tx_review_banner">%1$d операций требуют подтверждения категории</string>
+    <string name="tx_review_queue_action">На проверку →</string>
+
+    <!-- Quick Add Extras -->
+    <string name="quick_add_transfer_to">Перевод на:</string>
+    <string name="quick_add_smart_suggestion">Умная подсказка:</string>
+    <string name="quick_add_applied">Применено ✓</string>
+    <string name="quick_add_tap_apply">Нажмите для применения</string>
+    <string name="quick_add_add_another">Добавить еще</string>
+    <string name="quick_add_update">Обновить</string>
+    <string name="quick_add_hide_details">Скрыть заметки и теги</string>
+    <string name="quick_add_show_details">+ Добавить заметку, получателя или теги</string>
+
+    <!-- Time Periods -->
+    <string name="period_week">Неделя</string>
+    <string name="period_month">Месяц</string>
+    <string name="period_three_months">3 месяца</string>
+    <string name="period_six_months">6 месяцев</string>
+    <string name="period_year">Год</string>
+    <string name="period_all_time">За все время</string>
+
+    <!-- Recurring Tabs & Windows -->
+    <string name="recurring_tab_upcoming">Предстоящие</string>
+    <string name="recurring_tab_rules">Все правила</string>
+    <string name="recurring_tab_subscriptions">Подписки</string>
+    <string name="recurring_window_7d">Ближайшие 7 дней</string>
+    <string name="recurring_window_30d">Ближайшие 30 дней</string>
+
+    <!-- Debt Strategies & Metrics -->
+    <string name="debt_strategy_snowball_title">Метод снежного кома</string>
+    <string name="debt_strategy_snowball_sub">Сначала наименьший остаток</string>
+    <string name="debt_strategy_avalanche_title">Метод лавины</string>
+    <string name="debt_strategy_avalanche_sub">Сначала наивысшая ставка</string>
+    <string name="debt_freedom_title">Полное погашение</string>
+    <string name="debt_free_celebration">Долгов нет!</string>
+    <string name="debt_min_payment_label">Мин. ежемесячный платеж</string>
+    <string name="debt_card_balance_left">осталось %1$s</string>
+
+    <!-- Accounts Extras -->
+    <string name="accounts_transfer_title">Перевод между счетами</string>
+    <string name="accounts_transfer_action">Перевести</string>
+    <string name="accounts_transfer_cannot">Перевод невозможен</string>
+    <string name="accounts_transfer_cannot_desc">Для перевода средств необходимо минимум 2 активных счета.</string>
+    <string name="accounts_active_tracked">Отслеживается активных счетов: %1$d</string>
+
+    <!-- Analytics & Budgets Extras -->
+    <string name="analytics_avg_daily">Среднесуточный расход</string>
+    <string name="analytics_largest_expense">Крупнейший расход</string>
+    <string name="analytics_top_merchants">Основные контрагенты</string>
+    <string name="analytics_consumed_overall">израсходовано %1$d%% бюджета</string>
+    <string name="analytics_consumed_percent">израсходовано %1$d%%</string>
+
+    <!-- Goals Extras -->
+    <string name="goals_contribute_title">Пополнение цели</string>
+    <string name="goals_contribute_btn">Пополнить</string>
+
+    <!-- Extra Screen Strings -->
+    <string name="total_income">Общий доход</string>
+    <string name="total_expenses">Общие расходы</string>
+    <string name="analytics_savings_rate_title">Норма сбережений</string>
+    <string name="account_archived_label">В архиве</string>
+    <string name="account_limit_label">Лимит: %1$s</string>
+    <string name="account_edit_dialog_title">Редактировать счет</string>
+    <string name="goal_edit_title">Редактировать цель</string>
+    <string name="goal_target_format">цель %1$s</string>
+    <string name="goal_achieved_percent">%1$d%% достигнуто</string>
+    <string name="goal_add_funds">+ Пополнить</string>
+    <string name="goal_deposit_title">Пополнить «%1$s»</string>
+    <string name="goal_deposit_remaining">До цели осталось: %1$s</string>
+    <string name="debt_paid_off_percent">%1$d%% выплачено</string>
+    <string name="debt_record_payment">Внести платеж</string>
+    <string name="debt_edit_title">Редактировать долг</string>
+    <string name="debt_payment_title">Внести платеж по «%1$s»</string>
+    <string name="debt_remaining_balance_label">Остаток долга: %1$s</string>
+    <string name="debt_confirm_payment_btn">Подтвердить платеж</string>
+    <string name="category_custom_label">Пользовательская</string>
+    <string name="category_default_label">Стандартная</string>
+    <string name="category_create_custom">Создать категорию</string>
+
+    <!-- Final Screen Refinements -->
+    <string name="investments_total_invested">Всего инвестировано</string>
+    <string name="investments_edit_title">Редактировать актив</string>
+    <string name="investments_units">%1$s ед.</string>
+    <string name="rules_screen_title">Умная категоризация и правила</string>
+    <string name="rules_review_queue_clear">Очередь проверки пуста</string>
+    <string name="rules_review_queue_clear_desc">Все операции проверены и подтверждены. Новые неклассифицированные транзакции появятся здесь.</string>
+    <string name="rules_transactions_need_review">Операций требуют проверки: %1$d</string>
+    <string name="rules_one_tap_hint">Подтверждение или исправление в 1 касание</string>
+    <string name="search_empty_hint">Введите поисковый запрос для поиска по всем счетам</string>
+    <string name="export_screen_title">Резервное копирование и экспорт</string>
+    <string name="export_csv_title">Экспорт реестра CSV</string>
+    <string name="export_csv_desc">Стандартный экспорт в формате RFC-4180 для Google Таблиц, Excel и бухгалтерии.</string>
+    <string name="export_csv_btn">Экспортировать операции в CSV</string>
+    <string name="export_json_title">Полная резервная копия базы данных</string>
+    <string name="export_json_desc">Создание зашифрованного JSON-снимка счетов, транзакций, бюджетов, целей и планов выплат долгов.</string>
+    <string name="export_json_btn">Экспортировать базу данных в JSON</string>
+    <string name="security_pin_active">Защита PIN-кодом активна</string>
+    <string name="security_pin_configure_title">Настройка PIN-кода безопасности</string>
+    <string name="security_pin_min_digits">PIN-код должен содержать не менее 4 цифр</string>
+    <string name="security_pin_save_btn">Сохранить PIN-код</string>
+</resources>

@@ -201,13 +201,13 @@ fun DashboardScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Budget Performance",
+                            text = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.budgets_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "View All",
+                            text = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.action_view_all),
                             style = MaterialTheme.typography.labelMedium,
                             color = EmeraldPrimary,
                             modifier = Modifier.clickable(onClick = onNavigateToBudgets)
@@ -231,13 +231,13 @@ fun DashboardScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Recent Transactions",
+                        text = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.dashboard_recent_transactions),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = "Ledger",
+                        text = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.nav_transactions),
                         style = MaterialTheme.typography.labelMedium,
                         color = EmeraldPrimary,
                         modifier = Modifier.clickable(onClick = onNavigateToTransactions)
@@ -314,21 +314,21 @@ fun QuickActionBar(
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         QuickActionButton(
-            label = "Add Entry",
+            label = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.action_add),
             icon = Icons.Default.Add,
             accentColor = EmeraldPrimary,
             onClick = onAddTransaction,
             modifier = Modifier.weight(1f)
         )
         QuickActionButton(
-            label = "Accounts",
+            label = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.dashboard_accounts_overview),
             icon = Icons.Default.SwapHoriz,
             accentColor = MaterialTheme.colorScheme.secondary,
             onClick = onViewAccounts,
             modifier = Modifier.weight(1f)
         )
         QuickActionButton(
-            label = "Budgets",
+            label = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.nav_budgets),
             icon = Icons.Default.TrendingUp,
             accentColor = InvestmentPurple,
             onClick = onViewBudgets,
@@ -386,25 +386,25 @@ fun FinancialMetricsStrip(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         MetricTile(
-            title = "Savings",
+            title = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.goals_total_saved),
             value = if (hideBalances) "••••" else savings.formattedCompact(),
             color = TealSavings,
             modifier = Modifier.weight(1f)
         )
         MetricTile(
-            title = "Investments",
+            title = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.investments_title),
             value = if (hideBalances) "••••" else investments.formattedCompact(),
             color = InvestmentPurple,
             modifier = Modifier.weight(1f)
         )
         MetricTile(
-            title = "Debt",
+            title = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.debt_title),
             value = if (hideBalances) "••••" else debt.formattedCompact(),
             color = DebtOrange,
             modifier = Modifier.weight(1f)
         )
         MetricTile(
-            title = "Savings Rate",
+            title = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.analytics_savings_rate, "%.0f".format(savingsRate)),
             value = "${"%.0f".format(savingsRate)}%",
             color = EmeraldPrimary,
             modifier = Modifier.weight(1f)
@@ -554,12 +554,12 @@ fun BudgetProgressCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "${(status.percentageConsumed * 100).toInt()}% consumed",
+                    text = "${(status.percentageConsumed * 100).toInt()}%",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = if (hideBalances) "•••• left" else "${status.remainingAmount.formatted()} left",
+                    text = if (hideBalances) "••••" else if (status.isExceeded) androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.budget_exceeded) else "${status.remainingAmount.formatted()} (${androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.budget_remaining)})",
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Medium,
                     color = if (status.isExceeded) CrimsonExpense else EmeraldPrimary
@@ -584,14 +584,14 @@ fun EmptyTransactionsPrompt(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "No Transactions Recorded",
+                text = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.dashboard_no_transactions),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Add your first income or expense to generate live cash flow analytics.",
+                text = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.tx_empty_desc),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -600,7 +600,11 @@ fun EmptyTransactionsPrompt(
                 onClick = onAddTransaction,
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Record Transaction", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(
+                    text = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.shortcut_quick_add_short),
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
@@ -644,7 +648,7 @@ fun ReviewQueueBannerCard(
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "Review Queue",
+                        text = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.tx_needs_review),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -664,8 +668,13 @@ fun ReviewQueueBannerCard(
                     }
                 }
                 Spacer(modifier = Modifier.height(2.dp))
+                val pendingText = androidx.compose.ui.res.pluralStringResource(
+                    com.finpulse.app.R.plurals.plural_transactions,
+                    unreviewedCount,
+                    unreviewedCount
+                )
                 Text(
-                    text = "$unreviewedCount transactions need category confirmation or rule learning",
+                    text = "$pendingText • ${androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.tx_needs_review)}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -673,7 +682,7 @@ fun ReviewQueueBannerCard(
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
                 imageVector = Icons.Default.ArrowForward,
-                contentDescription = "Review",
+                contentDescription = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.action_search),
                 tint = AmberWarning,
                 modifier = Modifier.size(20.dp)
             )

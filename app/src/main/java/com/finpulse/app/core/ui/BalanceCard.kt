@@ -88,14 +88,14 @@ fun BalanceCard(
                 ) {
                     Column {
                         Text(
-                            text = "TOTAL NET WORTH",
+                            text = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.dashboard_net_worth).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "Available: " + if (hideBalances) "••••••" else availableBalance.formatted(),
+                            text = "${androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.account_available_balance)}: " + if (hideBalances) "••••••" else availableBalance.formatted(),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                         )
@@ -138,7 +138,7 @@ fun BalanceCard(
                 ) {
                     // Income Pill
                     CashFlowPill(
-                        label = "Income",
+                        label = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.tx_type_income),
                         amount = monthlyIncome,
                         isIncome = true,
                         hideBalances = hideBalances,
@@ -147,7 +147,7 @@ fun BalanceCard(
 
                     // Expense Pill
                     CashFlowPill(
-                        label = "Expenses",
+                        label = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.tx_type_expense),
                         amount = monthlyExpenses,
                         isIncome = false,
                         hideBalances = hideBalances,

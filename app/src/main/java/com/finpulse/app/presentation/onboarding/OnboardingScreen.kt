@@ -43,9 +43,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.datastore.UserPreferencesDataStore
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.model.CurrencyInfo
@@ -130,13 +132,13 @@ fun OnboardingScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "STEP ${step + 1} OF 4",
+                    text = stringResource(R.string.onboarding_step_format, step + 1),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
                     color = EmeraldPrimary
                 )
                 TextButton(onClick = { finishOnboarding() }) {
-                    Text("Skip Setup", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.onboarding_skip), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
 
@@ -186,7 +188,7 @@ fun OnboardingScreen(
                     .height(52.dp)
             ) {
                 Text(
-                    text = if (step == 3) "Launch FinPulse" else "Continue",
+                    text = if (step == 3) stringResource(R.string.onboarding_finish_btn) else stringResource(R.string.action_continue),
                     color = Color.Black,
                     fontWeight = FontWeight.Bold
                 )
@@ -211,14 +213,14 @@ fun WelcomeStep() {
         }
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            text = "Welcome to FinPulse",
+            text = stringResource(R.string.onboarding_welcome_title),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Institutional-grade financial monitor for multi-account cash flows, automated subscription tracking, budget caps, and debt amortization.",
+            text = stringResource(R.string.onboarding_welcome_subtitle),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -232,13 +234,13 @@ fun CurrencyStep(
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
-            text = "Select Base Currency",
+            text = stringResource(R.string.onboarding_currency_title),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Your portfolio totals and analytics will be denominated in this currency.",
+            text = stringResource(R.string.onboarding_currency_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -282,15 +284,23 @@ fun AccountStep(
     currency: String
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        Text("Create First Account", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+        Text(
+            text = stringResource(R.string.onboarding_account_title),
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold
+        )
         Spacer(modifier = Modifier.height(4.dp))
-        Text("Add your primary bank checking or cash wallet to begin tracking.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            text = stringResource(R.string.onboarding_account_subtitle),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         Spacer(modifier = Modifier.height(24.dp))
 
         OutlinedTextField(
             value = name,
             onValueChange = onNameChange,
-            label = { Text("Account Name") },
+            label = { Text(stringResource(R.string.account_name_hint)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
@@ -299,7 +309,7 @@ fun AccountStep(
         OutlinedTextField(
             value = balance,
             onValueChange = onBalanceChange,
-            label = { Text("Starting Balance ($currency)") },
+            label = { Text("${stringResource(R.string.account_starting_balance_hint)} ($currency)") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
@@ -314,15 +324,23 @@ fun BudgetStep(
     currency: String
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        Text("Initial Food & Dining Budget", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+        Text(
+            text = stringResource(R.string.onboarding_budget_title),
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold
+        )
         Spacer(modifier = Modifier.height(4.dp))
-        Text("Set an initial monthly budget cap for your dining & groceries.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            text = stringResource(R.string.onboarding_budget_subtitle),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         Spacer(modifier = Modifier.height(24.dp))
 
         OutlinedTextField(
             value = budget,
             onValueChange = onBudgetChange,
-            label = { Text("Monthly Budget Limit ($currency)") },
+            label = { Text("${stringResource(R.string.budget_limit_hint)} ($currency)") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             singleLine = true,
             modifier = Modifier.fillMaxWidth()

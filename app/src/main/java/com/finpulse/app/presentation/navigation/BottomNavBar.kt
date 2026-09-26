@@ -1,10 +1,10 @@
 package com.finpulse.app.presentation.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.PieChart
-import androidx.compose.material.icons.filled.ReceiptLong
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,19 +15,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 
 sealed class BottomNavItem(
     val screen: Screen,
-    val title: String,
+    val titleRes: Int,
     val icon: ImageVector
 ) {
-    data object Dashboard : BottomNavItem(Screen.Dashboard, "Dashboard", Icons.Default.Dashboard)
-    data object Transactions : BottomNavItem(Screen.Transactions, "Ledger", Icons.Default.ReceiptLong)
-    data object Budgets : BottomNavItem(Screen.Budgets, "Budgets", Icons.Default.PieChart)
-    data object Analytics : BottomNavItem(Screen.Analytics, "Analytics", Icons.Default.BarChart)
-    data object More : BottomNavItem(Screen.More, "Hub", Icons.Default.Widgets)
+    data object Dashboard : BottomNavItem(Screen.Dashboard, R.string.nav_dashboard, Icons.Default.Dashboard)
+    data object Transactions : BottomNavItem(Screen.Transactions, R.string.nav_transactions, Icons.AutoMirrored.Filled.ReceiptLong)
+    data object Budgets : BottomNavItem(Screen.Budgets, R.string.nav_budgets, Icons.Default.PieChart)
+    data object Analytics : BottomNavItem(Screen.Analytics, R.string.nav_analytics, Icons.Default.BarChart)
+    data object More : BottomNavItem(Screen.More, R.string.nav_more, Icons.Default.Widgets)
 
     companion object {
         val items = listOf(Dashboard, Transactions, Budgets, Analytics, More)
@@ -47,18 +49,19 @@ fun FinPulseBottomBar(
     ) {
         BottomNavItem.items.forEach { item ->
             val selected = currentRoute == item.screen.route
+            val itemTitle = stringResource(item.titleRes)
             NavigationBarItem(
                 selected = selected,
                 onClick = { onNavigate(item.screen) },
                 icon = {
                     Icon(
                         imageVector = item.icon,
-                        contentDescription = item.title
+                        contentDescription = itemTitle
                     )
                 },
                 label = {
                     Text(
-                        text = item.title,
+                        text = itemTitle,
                         style = MaterialTheme.typography.labelSmall
                     )
                 },

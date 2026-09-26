@@ -28,7 +28,8 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-private val TimeFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy • HH:mm")
+import androidx.compose.ui.res.stringResource
+import com.finpulse.app.R
 
 @Composable
 fun TransactionItem(
@@ -54,9 +55,7 @@ fun TransactionItem(
         else -> "-"
     }
 
-    val formattedDate = Instant.ofEpochMilli(transaction.timestamp)
-        .atZone(ZoneId.systemDefault())
-        .format(TimeFormatter)
+    val formattedDate = DateFormatterUtils.formatDateTime(transaction.timestamp)
 
     Surface(
         modifier = modifier
@@ -79,11 +78,11 @@ fun TransactionItem(
 
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    val fallbackTitle = category?.getDisplayName() ?: stringResource(R.string.tx_default_title)
                     Text(
                         text = transaction.merchant?.takeIf { it.isNotBlank() }
                             ?: transaction.description.takeIf { it.isNotBlank() }
-                            ?: category?.name
-                            ?: "Transaction",
+                            ?: fallbackTitle,
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
@@ -97,7 +96,7 @@ fun TransactionItem(
                             color = com.finpulse.app.core.designsystem.AmberWarning.copy(alpha = 0.2f)
                         ) {
                             Text(
-                                text = "Needs Review",
+                                text = stringResource(R.string.tx_needs_review),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.SemiBold,
                                 color = com.finpulse.app.core.designsystem.AmberWarning,

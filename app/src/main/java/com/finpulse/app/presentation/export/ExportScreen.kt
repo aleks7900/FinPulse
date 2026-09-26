@@ -37,8 +37,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.SapphireAccent
 import com.finpulse.app.domain.repository.AccountRepository
@@ -61,6 +63,7 @@ fun ExportScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val exportSuccessMsg = stringResource(R.string.export_success)
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -68,14 +71,14 @@ fun ExportScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Backup & Data Export",
+                        text = stringResource(R.string.export_screen_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -103,11 +106,11 @@ fun ExportScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(imageVector = Icons.Default.TableChart, contentDescription = null, tint = EmeraldPrimary, modifier = Modifier.size(24.dp))
                         Spacer(modifier = Modifier.width(10.dp))
-                        Text("Export CSV Ledger", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.export_csv_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Standard RFC-4180 spreadsheet export compatible with Google Sheets, Excel, and accounting software.",
+                        text = stringResource(R.string.export_csv_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -120,14 +123,14 @@ fun ExportScreen(
                                 val catMap = categoryRepository.getAllCategoriesFlow().first().associateBy { it.id }
 
                                 val csv = generateCsv(txList, accMap, catMap)
-                                snackbarHostState.showSnackbar("CSV generated successfully (${txList.size} records)")
+                                snackbarHostState.showSnackbar(exportSuccessMsg)
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
                     ) {
                         Icon(imageVector = Icons.Default.Download, contentDescription = null, tint = Color.Black)
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Export Transactions CSV", color = Color.Black, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.export_csv_btn), color = Color.Black, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -142,11 +145,11 @@ fun ExportScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(imageVector = Icons.Default.DataObject, contentDescription = null, tint = SapphireAccent, modifier = Modifier.size(24.dp))
                         Spacer(modifier = Modifier.width(10.dp))
-                        Text("Full Database Backup", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.export_json_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Create an encrypted JSON snapshot of accounts, transactions, budgets, goals, and debt payoff plans.",
+                        text = stringResource(R.string.export_json_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -154,14 +157,14 @@ fun ExportScreen(
                     Button(
                         onClick = {
                             scope.launch {
-                                snackbarHostState.showSnackbar("Full JSON database snapshot ready")
+                                snackbarHostState.showSnackbar(exportSuccessMsg)
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = SapphireAccent)
                     ) {
                         Icon(imageVector = Icons.Default.Download, contentDescription = null, tint = Color.White)
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Create Backup", color = Color.White, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.export_json_btn), color = Color.White, fontWeight = FontWeight.Bold)
                     }
                 }
             }

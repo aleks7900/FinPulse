@@ -53,16 +53,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.TransferBlue
 import com.finpulse.app.core.model.CurrencyInfo
 import com.finpulse.app.core.ui.CategoryIconBadge
+import com.finpulse.app.core.ui.getDisplayName
+import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.Category
 import com.finpulse.app.domain.model.Transaction
@@ -132,7 +136,7 @@ fun QuickAddBottomSheet(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "Transfer to:",
+                        text = stringResource(R.string.quick_add_transfer_to),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -234,14 +238,14 @@ fun QuickAddBottomSheet(
                         Column(modifier = Modifier.weight(1f)) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(
-                                    text = "Smart Suggestion:",
+                                    text = stringResource(R.string.quick_add_smart_suggestion),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = EmeraldPrimary,
                                     fontWeight = FontWeight.Bold
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = uiState.suggestedCategory.name,
+                                    text = uiState.suggestedCategory.getDisplayName(),
                                     style = MaterialTheme.typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSurface
@@ -259,14 +263,14 @@ fun QuickAddBottomSheet(
                         }
                         if (uiState.selectedCategoryId == uiState.suggestedCategory.id) {
                             Text(
-                                text = "Applied ✓",
+                                text = stringResource(R.string.quick_add_applied),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = EmeraldPrimary
                             )
                         } else {
                             Text(
-                                text = "Tap to apply",
+                                text = stringResource(R.string.quick_add_tap_apply),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = EmeraldPrimary
                             )
@@ -305,7 +309,7 @@ fun QuickAddBottomSheet(
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = category.name,
+                                    text = category.getDisplayName(),
                                     style = MaterialTheme.typography.labelMedium,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                                     color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
@@ -354,6 +358,11 @@ fun QuickAddBottomSheet(
             ) {
                 QuickAddDateChoice.values().forEach { choice ->
                     val isSelected = uiState.dateChoice == choice
+                    val dateLabel = when (choice) {
+                        QuickAddDateChoice.TODAY -> stringResource(R.string.quick_add_date_today)
+                        QuickAddDateChoice.YESTERDAY -> stringResource(R.string.quick_add_date_yesterday)
+                        QuickAddDateChoice.CUSTOM -> stringResource(R.string.quick_add_date_custom)
+                    }
                     Surface(
                         modifier = Modifier
                             .weight(1f)
@@ -363,7 +372,7 @@ fun QuickAddBottomSheet(
                         contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
                     ) {
                         Text(
-                            text = choice.label,
+                            text = dateLabel,
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                             textAlign = TextAlign.Center,
@@ -385,7 +394,7 @@ fun QuickAddBottomSheet(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = if (showDetails) "Hide notes & tags" else "+ Add note, payee or tags",
+                    text = if (showDetails) stringResource(R.string.quick_add_hide_details) else stringResource(R.string.quick_add_show_details),
                     style = MaterialTheme.typography.labelSmall,
                     color = EmeraldPrimary
                 )
@@ -402,14 +411,14 @@ fun QuickAddBottomSheet(
                     OutlinedTextField(
                         value = uiState.merchant,
                         onValueChange = onMerchantTextChange,
-                        label = { Text("Merchant / Payee") },
+                        label = { Text(stringResource(R.string.tx_merchant)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = uiState.description,
                         onValueChange = onDescriptionTextChange,
-                        label = { Text("Note / Description") },
+                        label = { Text(stringResource(R.string.tx_notes)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -448,7 +457,7 @@ fun QuickAddBottomSheet(
                     ) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp), tint = EmeraldPrimary)
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Add Another", color = EmeraldPrimary, fontWeight = FontWeight.SemiBold)
+                        Text(stringResource(R.string.quick_add_add_another), color = EmeraldPrimary, fontWeight = FontWeight.SemiBold)
                     }
                 }
 
@@ -468,7 +477,7 @@ fun QuickAddBottomSheet(
                     Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = Color.Black, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = if (uiState.isEditing) "Update" else "Save",
+                        text = if (uiState.isEditing) stringResource(R.string.quick_add_update) else stringResource(R.string.action_save),
                         color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
@@ -505,7 +514,7 @@ fun TypeSegmentedControl(
                     contentColor = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
                 ) {
                     Text(
-                        text = type.displayName,
+                        text = type.getLocalizedName(),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
@@ -544,7 +553,7 @@ fun AccountPickerPill(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = currentAccount?.name ?: "Account",
+                    text = currentAccount?.name ?: stringResource(R.string.tx_account),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface

@@ -82,16 +82,19 @@ import com.finpulse.app.domain.model.Category
 import com.finpulse.app.domain.model.CustomIntervalUnit
 import com.finpulse.app.domain.model.OccurrenceStatus
 import com.finpulse.app.domain.model.PaymentFrequency
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
+import com.finpulse.app.R
+import com.finpulse.app.core.ui.DateFormatterUtils
+import com.finpulse.app.core.ui.getDisplayName
+import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.RecurringOccurrence
 import com.finpulse.app.domain.model.RecurringTransaction
 import com.finpulse.app.domain.model.TransactionType
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-
-private val DateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -137,14 +140,14 @@ fun RecurringScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Bills & Subscriptions",
+                        text = stringResource(R.string.recurring_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -158,7 +161,7 @@ fun RecurringScreen(
                 containerColor = EmeraldPrimary,
                 contentColor = Color.Black
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Rule")
+                Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.recurring_add_title))
             }
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -180,7 +183,7 @@ fun RecurringScreen(
                         onClick = { onTabSelected(tab) },
                         text = {
                             Text(
-                                text = tab.label,
+                                text = tab.getLocalizedName(),
                                 fontWeight = if (uiState.selectedTab == tab) FontWeight.Bold else FontWeight.Normal,
                                 color = if (uiState.selectedTab == tab) EmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -310,7 +313,7 @@ fun UpcomingSection(
                     contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
                 ) {
                     Text(
-                        text = "Next $days Days",
+                        text = if (days == 7) stringResource(R.string.recurring_window_7d) else stringResource(R.string.recurring_window_30d),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                         textAlign = TextAlign.Center,
@@ -338,14 +341,14 @@ fun UpcomingSection(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = "No Upcoming Bills or Income",
+                        text = stringResource(R.string.recurring_empty_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "All scheduled items for the next $windowDays days are settled.",
+                        text = stringResource(R.string.recurring_empty_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -399,11 +402,11 @@ fun UpcomingOccurrenceCard(
     val today = LocalDate.now(zone)
     val daysDiff = ChronoUnit.DAYS.between(today, dueLocalDate)
 
+    val formattedDate = DateFormatterUtils.formatDate(occurrence.dueDate)
     val dueText = when {
-        daysDiff < 0 -> "Overdue by ${-daysDiff}d (${dueLocalDate.format(DateFormatter)})"
-        daysDiff == 0L -> "Due Today"
-        daysDiff == 1L -> "Due Tomorrow"
-        else -> "Due in ${daysDiff}d (${dueLocalDate.format(DateFormatter)})"
+        daysDiff < 0 -> "${occurrence.status.getLocalizedName()} ($formattedDate)"
+        daysDiff == 0L -> "${stringResource(R.string.date_today)} • $formattedDate"
+        else -> "${occurrence.status.getLocalizedName()} • $formattedDate"
     }
 
     val statusColor = when (occurrence.status) {
@@ -507,7 +510,7 @@ fun UpcomingOccurrenceCard(
                         color = statusColor.copy(alpha = 0.15f)
                     ) {
                         Text(
-                            text = occurrence.status.displayName,
+                            text = occurrence.status.getLocalizedName(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.SemiBold,
                             color = statusColor,
@@ -528,7 +531,7 @@ fun UpcomingOccurrenceCard(
                     TextButton(onClick = onEditClick) {
                         Icon(imageVector = Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(14.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Edit", style = MaterialTheme.typography.labelSmall)
+                        Text(stringResource(R.string.action_edit), style = MaterialTheme.typography.labelSmall)
                     }
 
                     Spacer(modifier = Modifier.width(4.dp))
@@ -536,7 +539,7 @@ fun UpcomingOccurrenceCard(
                     TextButton(onClick = onSkipClick) {
                         Icon(imageVector = Icons.Default.SkipNext, contentDescription = null, modifier = Modifier.size(14.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Skip", style = MaterialTheme.typography.labelSmall)
+                        Text(stringResource(R.string.action_skip), style = MaterialTheme.typography.labelSmall)
                     }
 
                     Spacer(modifier = Modifier.width(6.dp))
@@ -549,7 +552,7 @@ fun UpcomingOccurrenceCard(
                     ) {
                         Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = Color.Black, modifier = Modifier.size(14.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Mark Paid", color = Color.Black, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.recurring_mark_paid), color = Color.Black, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -663,9 +666,7 @@ fun RuleItemCard(
     onToggle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val nextDateFormatted = Instant.ofEpochMilli(rule.nextDueDate)
-        .atZone(ZoneId.systemDefault())
-        .format(DateFormatter)
+    val nextDateFormatted = DateFormatterUtils.formatDate(rule.nextDueDate)
 
     Surface(
         modifier = modifier
@@ -699,7 +700,7 @@ fun RuleItemCard(
                         Spacer(modifier = Modifier.width(6.dp))
                         Surface(shape = RoundedCornerShape(6.dp), color = AmberWarning.copy(alpha = 0.2f)) {
                             Text(
-                                text = "Paused",
+                                text = stringResource(R.string.recurring_pause),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = AmberWarning,
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
@@ -709,7 +710,7 @@ fun RuleItemCard(
                 }
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = "${rule.frequency.displayName} • Next: $nextDateFormatted • ${account?.name ?: "Account"}",
+                    text = "${rule.frequency.getLocalizedName()} • $nextDateFormatted • ${account?.name ?: "Account"}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -893,7 +894,7 @@ fun AddEditRecurringRuleDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = if (editingRecurring != null) "Edit Recurring Rule" else "New Recurring Rule",
+                text = if (editingRecurring != null) stringResource(R.string.action_edit) else stringResource(R.string.recurring_add_title),
                 fontWeight = FontWeight.Bold
             )
         },
@@ -920,7 +921,7 @@ fun AddEditRecurringRuleDialog(
                             contentColor = if (isSel) Color.Black else MaterialTheme.colorScheme.onSurface
                         ) {
                             Text(
-                                text = t.displayName,
+                                text = t.getLocalizedName(),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(vertical = 8.dp),
@@ -934,7 +935,7 @@ fun AddEditRecurringRuleDialog(
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it; isError = false },
-                    label = { Text("Title (e.g. Rent, Salary, Netflix, Electricity)") },
+                    label = { Text(stringResource(R.string.recurring_bill_name_hint)) },
                     singleLine = true,
                     isError = isError && title.isBlank(),
                     modifier = Modifier.fillMaxWidth()
@@ -944,7 +945,7 @@ fun AddEditRecurringRuleDialog(
                 OutlinedTextField(
                     value = amountText,
                     onValueChange = { amountText = it; isError = false },
-                    label = { Text("Amount ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.tx_amount)} ($baseCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     isError = isError && (amountText.toDoubleOrNull() == null || amountText.toDouble() <= 0.0),
@@ -957,11 +958,11 @@ fun AddEditRecurringRuleDialog(
                         checked = isVariableAmount,
                         onCheckedChange = { isVariableAmount = it }
                     )
-                    Text("Variable amount (bill varies each cycle)", style = MaterialTheme.typography.bodySmall)
+                    Text(stringResource(R.string.recurring_variable_amount), style = MaterialTheme.typography.bodySmall)
                 }
 
                 // Frequency Switcher
-                Text("Frequency", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(R.string.recurring_frequency), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 val freqScroll = rememberScrollState()
                 Row(
                     modifier = Modifier
@@ -978,7 +979,7 @@ fun AddEditRecurringRuleDialog(
                             contentColor = if (isSel) Color.Black else MaterialTheme.colorScheme.onSurface
                         ) {
                             Text(
-                                text = f.displayName,
+                                text = f.getLocalizedName(),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.SemiBold,
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
@@ -993,7 +994,7 @@ fun AddEditRecurringRuleDialog(
                         checked = isSubscription,
                         onCheckedChange = { isSubscription = it }
                     )
-                    Text("Track as subscription service", style = MaterialTheme.typography.bodySmall)
+                    Text(stringResource(R.string.recurring_is_subscription), style = MaterialTheme.typography.bodySmall)
                 }
             }
         },
@@ -1028,17 +1029,17 @@ fun AddEditRecurringRuleDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Save Rule", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (editingRecurring != null) {
                     IconButton(onClick = onDelete) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete", tint = CrimsonExpense)
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.action_delete), tint = CrimsonExpense)
                     }
                 }
-                TextButton(onClick = onDismiss) { Text("Cancel") }
+                TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
             }
         }
     )
@@ -1089,11 +1090,11 @@ fun ConfirmPaymentDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Record Payment", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.debt_record_payment), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 }
@@ -1150,11 +1151,11 @@ fun EditOccurrenceDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Update Occurrence", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.quick_add_update), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 }

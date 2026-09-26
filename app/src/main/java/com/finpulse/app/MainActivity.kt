@@ -9,9 +9,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.lifecycleScope
 import com.finpulse.app.core.designsystem.FinPulseTheme
+import com.finpulse.app.core.locale.AppLanguage
+import com.finpulse.app.core.locale.AppLocaleManager
 import com.finpulse.app.presentation.navigation.FinPulseApp
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -25,6 +30,14 @@ class MainActivity : ComponentActivity() {
 
         val app = application as FinPulseApplication
         val container = app.container
+
+        lifecycleScope.launch {
+            val prefs = container.userPreferencesDataStore.userPreferencesFlow.first()
+            if (prefs.selectedLanguage != "SYSTEM") {
+                val lang = AppLanguage.fromCode(prefs.selectedLanguage)
+                AppLocaleManager.setLocale(this@MainActivity, lang)
+            }
+        }
 
         setContent {
             val userPrefs by container.userPreferencesDataStore.userPreferencesFlow.collectAsState(

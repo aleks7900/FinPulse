@@ -2,4 +2,595 @@
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Quick Add</string>
     <string name="shortcut_quick_add_long">Quick Add Transaction</string>
+
+    <!-- Language Names -->
+    <string name="lang_system">System Default</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ru">Русский</string>
+    <string name="lang_es">Español</string>
+    <string name="lang_pt_br">Português (Brasil)</string>
+    <string name="lang_de">Deutsch</string>
+    <string name="lang_fr">Français</string>
+    <string name="lang_it">Italiano</string>
+    <string name="lang_pl">Polski</string>
+    <string name="lang_tr">Türkçe</string>
+    <string name="lang_ja">日本語</string>
+    <string name="lang_ko">한국어</string>
+    <string name="lang_zh_cn">简体中文</string>
+    <string name="select_language">Select Language</string>
+    <string name="language_title">Language</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_transactions">Transactions</string>
+    <string name="nav_budgets">Budgets</string>
+    <string name="nav_analytics">Analytics</string>
+    <string name="nav_more">More</string>
+
+    <!-- Common Actions & Buttons -->
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_add">Add</string>
+    <string name="action_done">Done</string>
+    <string name="action_close">Close</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="action_dismiss">Dismiss</string>
+    <string name="action_apply">Apply</string>
+    <string name="action_search">Search</string>
+    <string name="action_filter">Filter</string>
+    <string name="action_export">Export</string>
+    <string name="action_import">Import</string>
+    <string name="action_view_all">View All</string>
+    <string name="action_back">Back</string>
+    <string name="action_continue">Continue</string>
+    <string name="action_skip">Skip</string>
+    <string name="action_create">Create</string>
+    <string name="action_save_add_another">Save &amp; Add Another</string>
+    <string name="action_reset">Reset</string>
+    <string name="action_refresh">Refresh</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="dashboard_net_worth">Net Worth</string>
+    <string name="dashboard_assets">Assets</string>
+    <string name="dashboard_liabilities">Liabilities</string>
+    <string name="dashboard_total_balance">Total Balance</string>
+    <string name="dashboard_cash_flow">Cash Flow</string>
+    <string name="dashboard_monthly_income">Monthly Income</string>
+    <string name="dashboard_monthly_expense">Monthly Expenses</string>
+    <string name="dashboard_monthly_net">Net Cash Flow</string>
+    <string name="dashboard_spending_trends">Spending Trends</string>
+    <string name="dashboard_recent_transactions">Recent Transactions</string>
+    <string name="dashboard_financial_health">Financial Health</string>
+    <string name="dashboard_health_score">Health Score: %1$d/100</string>
+    <string name="dashboard_quick_actions">Quick Actions</string>
+    <string name="dashboard_accounts_overview">Accounts</string>
+    <string name="dashboard_no_transactions">No transactions recorded yet</string>
+
+    <!-- Transactions -->
+    <string name="transactions_title">Transactions</string>
+    <string name="tx_search_hint">Search transactions, merchants, notes…</string>
+    <string name="tx_type_income">Income</string>
+    <string name="tx_type_expense">Expense</string>
+    <string name="tx_type_transfer">Transfer</string>
+    <string name="tx_type_refund">Refund</string>
+    <string name="tx_needs_review">Needs Review</string>
+    <string name="tx_confirmed">Confirmed</string>
+    <string name="tx_empty_title">No transactions found</string>
+    <string name="tx_empty_desc">Tap + to add your first transaction</string>
+    <string name="tx_date_range">Date Range</string>
+    <string name="tx_filter_all">All</string>
+    <string name="tx_filter_income">Income</string>
+    <string name="tx_filter_expense">Expenses</string>
+    <string name="tx_filter_transfer">Transfers</string>
+    <string name="tx_details_title">Transaction Details</string>
+    <string name="tx_amount">Amount</string>
+    <string name="tx_category">Category</string>
+    <string name="tx_account">Account</string>
+    <string name="tx_dest_account">To Account</string>
+    <string name="tx_merchant">Merchant / Payee</string>
+    <string name="tx_date">Date &amp; Time</string>
+    <string name="tx_notes">Notes</string>
+    <string name="tx_tags">Tags</string>
+    <string name="tx_saved_success">Transaction saved successfully</string>
+    <string name="tx_deleted_success">Transaction deleted</string>
+    <string name="tx_default_title">Transaction</string>
+
+    <!-- Quick Add -->
+    <string name="quick_add_title">Quick Add Transaction</string>
+    <string name="quick_add_expense">Expense</string>
+    <string name="quick_add_income">Income</string>
+    <string name="quick_add_transfer">Transfer</string>
+    <string name="quick_add_amount_hint">0.00</string>
+    <string name="quick_add_select_account">Select Account</string>
+    <string name="quick_add_select_category">Select Category</string>
+    <string name="quick_add_note_hint">Add a note (optional)</string>
+    <string name="quick_add_merchant_hint">Merchant or payee (e.g. Starbucks)</string>
+    <string name="quick_add_date_today">Today</string>
+    <string name="quick_add_date_yesterday">Yesterday</string>
+    <string name="quick_add_date_custom">Custom</string>
+    <string name="quick_add_saved_snackbar">Transaction recorded</string>
+    <string name="quick_add_edit_action">Edit</string>
+
+    <!-- Budgets -->
+    <string name="budgets_title">Budgets</string>
+    <string name="budget_total_budgeted">Total Budgeted</string>
+    <string name="budget_total_spent">Total Spent</string>
+    <string name="budget_remaining">Remaining</string>
+    <string name="budget_exceeded">Exceeded</string>
+    <string name="budget_on_track">On Track</string>
+    <string name="budget_warning">Near Limit</string>
+    <string name="budget_projected">Projected Spend: %1$s</string>
+    <string name="budget_add_dialog_title">Create Budget</string>
+    <string name="budget_name_hint">Budget Name</string>
+    <string name="budget_limit_hint">Monthly Spending Limit</string>
+    <string name="budget_period">Period</string>
+    <string name="budget_empty_title">No active budgets</string>
+    <string name="budget_empty_desc">Set up spending limits to control expenses</string>
+    <string name="budget_status_exceeded_desc">Over budget by %1$s</string>
+    <string name="budget_status_warning_desc">%1$s remaining</string>
+
+    <!-- Analytics -->
+    <string name="analytics_title">Financial Analytics</string>
+    <string name="analytics_income_vs_expense">Income vs Expenses</string>
+    <string name="analytics_spending_by_category">Spending by Category</string>
+    <string name="analytics_net_worth_trend">Net Worth Trend</string>
+    <string name="analytics_cash_flow_title">Cash Flow Analysis</string>
+    <string name="analytics_monthly_spending">Monthly Spending</string>
+    <string name="analytics_savings_rate">Savings Rate: %1$s%%</string>
+    <string name="analytics_forecast">End of Month Forecast</string>
+    <string name="analytics_period_7d">7 Days</string>
+    <string name="analytics_period_30d">30 Days</string>
+    <string name="analytics_period_month">This Month</string>
+    <string name="analytics_period_quarter">Quarter</string>
+    <string name="analytics_period_year">This Year</string>
+    <string name="analytics_empty_title">No analytics data available</string>
+
+    <!-- Accounts -->
+    <string name="accounts_title">Accounts Portfolio</string>
+    <string name="account_total_assets">Total Assets</string>
+    <string name="account_total_liabilities">Total Liabilities</string>
+    <string name="account_add_dialog_title">Add Account</string>
+    <string name="account_name_hint">Account Name (e.g. Checking)</string>
+    <string name="account_type">Account Type</string>
+    <string name="account_starting_balance_hint">Current Balance</string>
+    <string name="account_credit_limit_hint">Credit Limit (optional)</string>
+    <string name="account_institution_hint">Bank / Institution (optional)</string>
+    <string name="account_available_balance">Available Balance</string>
+    <string name="account_current_balance">Current Balance</string>
+    <string name="account_empty_title">No accounts yet</string>
+    <string name="account_empty_desc">Add checking, savings, or credit card accounts</string>
+    <string name="account_archive">Archive Account</string>
+    <string name="account_delete">Delete Account</string>
+
+    <!-- Recurring & Subscriptions -->
+    <string name="recurring_title">Recurring Bills &amp; Subscriptions</string>
+    <string name="recurring_upcoming_title">Upcoming Due Dates</string>
+    <string name="recurring_upcoming_subtitle">Next 30 days projection</string>
+    <string name="recurring_active_rules">Active Rules</string>
+    <string name="recurring_monthly_commitment">Monthly Commitment</string>
+    <string name="recurring_annual_commitment">Annualized Total: %1$s/yr</string>
+    <string name="recurring_add_title">New Recurring Bill</string>
+    <string name="recurring_bill_name_hint">Subscription / Bill Name</string>
+    <string name="recurring_frequency">Billing Frequency</string>
+    <string name="recurring_next_due">Next Due Date</string>
+    <string name="recurring_mark_paid">Mark as Paid</string>
+    <string name="recurring_skip">Skip Occurrence</string>
+    <string name="recurring_pause">Pause</string>
+    <string name="recurring_resume">Resume</string>
+    <string name="recurring_cancel">Cancel Subscription</string>
+    <string name="recurring_empty_title">No recurring payments</string>
+    <string name="recurring_empty_desc">Track subscriptions, rent, insurance, and salary</string>
+    <string name="recurring_is_subscription">This is a digital subscription</string>
+    <string name="recurring_variable_amount">Amount varies each cycle</string>
+
+    <!-- Financial Goals -->
+    <string name="goals_title">Financial Goals</string>
+    <string name="goals_total_target">Total Target</string>
+    <string name="goals_total_saved">Total Saved</string>
+    <string name="goals_add_title">New Financial Goal</string>
+    <string name="goal_name_hint">Goal Name (e.g. Emergency Fund)</string>
+    <string name="goal_target_amount_hint">Target Amount</string>
+    <string name="goal_current_amount_hint">Current Amount Saved</string>
+    <string name="goal_target_date">Target Date</string>
+    <string name="goal_progress">Progress: %1$d%%</string>
+    <string name="goal_remaining">Remaining: %1$s</string>
+    <string name="goal_suggested_monthly">Suggested Monthly: %1$s/mo</string>
+    <string name="goal_completed">Goal Achieved!</string>
+    <string name="goal_empty_title">No financial goals set</string>
+    <string name="goal_empty_desc">Create goals for vacations, emergency funds, or purchases</string>
+
+    <!-- Investments & Assets -->
+    <string name="investments_title">Investments &amp; Assets</string>
+    <string name="investments_total_portfolio">Portfolio Value</string>
+    <string name="investments_total_gain_loss">Total Return</string>
+    <string name="investments_add_title">Add Investment Asset</string>
+    <string name="asset_name_hint">Asset Name (e.g. S&amp;P 500 Index)</string>
+    <string name="asset_symbol_hint">Symbol / Ticker (e.g. VOO)</string>
+    <string name="asset_class">Asset Class</string>
+    <string name="asset_quantity_hint">Quantity / Shares</string>
+    <string name="asset_purchase_price_hint">Purchase Price per Unit</string>
+    <string name="asset_current_price_hint">Current Market Price</string>
+    <string name="asset_empty_title">No investment assets</string>
+    <string name="asset_empty_desc">Track stocks, ETFs, crypto, real estate, and bonds</string>
+
+    <!-- Debt & Liabilities -->
+    <string name="debt_title">Debts &amp; Loans</string>
+    <string name="debt_total_debt">Total Outstanding Debt</string>
+    <string name="debt_total_paid_off">Total Principal Paid</string>
+    <string name="debt_add_title">Add Loan or Debt</string>
+    <string name="debt_name_hint">Debt Name (e.g. Mortgage, Student Loan)</string>
+    <string name="debt_type">Debt Type</string>
+    <string name="debt_principal_hint">Total Original Principal</string>
+    <string name="debt_remaining_hint">Remaining Balance</string>
+    <string name="debt_interest_rate_hint">Annual Interest Rate (%%)</string>
+    <string name="debt_minimum_payment_hint">Minimum Monthly Payment</string>
+    <string name="debt_estimated_payoff">Payoff in ~%1$d months</string>
+    <string name="debt_empty_title">No active debts</string>
+    <string name="debt_empty_desc">Track mortgages, student loans, and credit balances</string>
+
+    <!-- Categories Screen -->
+    <string name="categories_title">Categories</string>
+    <string name="categories_expense_tab">Expense Categories</string>
+    <string name="categories_income_tab">Income Categories</string>
+    <string name="category_add_title">New Category</string>
+    <string name="category_name_hint">Category Name</string>
+    <string name="category_type_expense">Expense</string>
+    <string name="category_type_income">Income</string>
+    <string name="category_empty">No categories available</string>
+
+    <!-- Default Predefined Categories -->
+    <string name="cat_food">Food &amp; Dining</string>
+    <string name="cat_groceries">Groceries</string>
+    <string name="cat_housing">Housing &amp; Rent</string>
+    <string name="cat_transport">Transportation</string>
+    <string name="cat_fuel">Fuel &amp; Gas</string>
+    <string name="cat_shopping">Shopping</string>
+    <string name="cat_entertainment">Entertainment</string>
+    <string name="cat_health">Health &amp; Medical</string>
+    <string name="cat_education">Education</string>
+    <string name="cat_fitness">Fitness &amp; Sports</string>
+    <string name="cat_subscriptions">Subscriptions</string>
+    <string name="cat_gifts">Gifts &amp; Donations</string>
+    <string name="cat_salary">Salary</string>
+    <string name="cat_freelance">Freelance &amp; Consulting</string>
+    <string name="cat_invest_return">Investment Return</string>
+    <string name="cat_other_income">Other Income</string>
+    <string name="cat_uncategorized">Uncategorized</string>
+
+    <!-- Enum Display Strings -->
+    <string name="acc_type_cash">Cash</string>
+    <string name="acc_type_bank">Bank Account</string>
+    <string name="acc_type_credit_card">Credit Card</string>
+    <string name="acc_type_savings">Savings Account</string>
+    <string name="acc_type_investment">Investment Account</string>
+    <string name="acc_type_wallet">Digital Wallet</string>
+    <string name="acc_type_loan">Loan</string>
+    <string name="acc_type_other">Other</string>
+
+    <string name="period_weekly">Weekly</string>
+    <string name="period_monthly">Monthly</string>
+    <string name="period_custom">Custom</string>
+
+    <string name="freq_daily">Daily</string>
+    <string name="freq_weekly">Weekly</string>
+    <string name="freq_biweekly">Every 2 Weeks</string>
+    <string name="freq_monthly">Monthly</string>
+    <string name="freq_quarterly">Quarterly</string>
+    <string name="freq_yearly">Yearly</string>
+    <string name="freq_custom">Custom</string>
+
+    <string name="unit_days">Days</string>
+    <string name="unit_weeks">Weeks</string>
+    <string name="unit_months">Months</string>
+    <string name="unit_years">Years</string>
+
+    <string name="occ_upcoming">Upcoming</string>
+    <string name="occ_overdue">Overdue</string>
+    <string name="occ_generated">Generated</string>
+    <string name="occ_paid">Paid</string>
+    <string name="occ_skipped">Skipped</string>
+
+    <string name="asset_stock">Stock</string>
+    <string name="asset_etf">ETF</string>
+    <string name="asset_crypto">Cryptocurrency</string>
+    <string name="asset_bond">Bond</string>
+    <string name="asset_real_estate">Real Estate</string>
+    <string name="asset_commodity">Commodity</string>
+    <string name="asset_cash">Cash Equivalent</string>
+    <string name="asset_other">Other Asset</string>
+
+    <string name="debt_credit_card">Credit Card</string>
+    <string name="debt_personal_loan">Personal Loan</string>
+    <string name="debt_mortgage">Mortgage</string>
+    <string name="debt_student_loan">Student Loan</string>
+    <string name="debt_auto_loan">Auto Loan</string>
+    <string name="debt_other">Other Debt</string>
+
+    <string name="dup_new">New</string>
+    <string name="dup_exact">Exact Duplicate</string>
+    <string name="dup_potential">Potential Duplicate</string>
+
+    <string name="amount_mode_single">Single Amount Column</string>
+    <string name="amount_mode_separate">Separate Debit / Credit Columns</string>
+
+    <!-- More / Hub Screen -->
+    <string name="more_title">More &amp; Settings</string>
+    <string name="more_section_financial_tools">Financial Tools</string>
+    <string name="more_section_data_security">Data &amp; Security</string>
+    <string name="more_section_preferences">Preferences</string>
+    <string name="more_security_title">Security &amp; Privacy</string>
+    <string name="more_security_desc">PIN code, biometric lock, screenshot shield</string>
+    <string name="more_language_title">Language</string>
+    <string name="more_currency_title">Base Currency</string>
+    <string name="more_dark_mode_title">Dark Theme</string>
+    <string name="more_export_title">Data Backup &amp; Export</string>
+    <string name="more_rules_title">Categorization Rules</string>
+    <string name="more_rules_desc">Automate transaction categorization</string>
+    <string name="more_csv_title">Bank CSV Import</string>
+    <string name="more_csv_desc">Import bank statements &amp; CSV files</string>
+    <string name="more_insights_title">Financial Insights</string>
+    <string name="more_insights_desc">Spending anomalies and budgeting tips</string>
+
+    <!-- Security & Privacy -->
+    <string name="security_title">Security &amp; Privacy</string>
+    <string name="security_biometric">Biometric Authentication</string>
+    <string name="security_biometric_desc">Unlock app with fingerprint or face recognition</string>
+    <string name="security_pin">PIN Code Protection</string>
+    <string name="security_pin_desc">Require 4-digit PIN on app launch</string>
+    <string name="security_hide_balances">Hide Account Balances</string>
+    <string name="security_hide_balances_desc">Mask amounts with dots for privacy</string>
+    <string name="security_screenshot_protection">Screenshot Shield</string>
+    <string name="security_screenshot_protection_desc">Block screenshots and app task switcher previews</string>
+    <string name="security_enter_pin">Enter 4-Digit PIN</string>
+    <string name="security_confirm_pin">Confirm PIN</string>
+    <string name="security_pin_mismatch">PINs do not match. Try again.</string>
+    <string name="security_pin_set_success">PIN protection updated successfully</string>
+
+    <!-- Categorization Rules & Smart Engine -->
+    <string name="rules_title">Categorization Rules</string>
+    <string name="rules_tab_rules">Rules (%1$d)</string>
+    <string name="rules_tab_review">Review Queue (%1$d)</string>
+    <string name="rules_create_title">Create Smart Rule</string>
+    <string name="rule_name_hint">Rule Name (e.g. Coffee Shops)</string>
+    <string name="rule_pattern_hint">Pattern to match</string>
+    <string name="rule_match_type">Match Type</string>
+    <string name="rule_target_category">Target Category</string>
+    <string name="rule_apply_existing">Apply rule to existing transactions</string>
+    <string name="rule_conflict_warning">Conflict detected with existing higher priority rule</string>
+    <string name="rules_review_title">Transactions Needing Review</string>
+    <string name="rules_review_empty">All transactions are categorized and confirmed!</string>
+    <string name="rules_confirm_all">Confirm All Suggestions</string>
+    <string name="rules_empty_title">No categorization rules</string>
+
+    <!-- CSV Import Wizard -->
+    <string name="csv_import_title">Bank Statement CSV Import</string>
+    <string name="csv_step_select_file">1. Select File</string>
+    <string name="csv_step_mapping">2. Column Mapping</string>
+    <string name="csv_step_preview">3. Review Rows</string>
+    <string name="csv_step_summary">4. Import Summary</string>
+    <string name="csv_select_file_btn">Choose CSV Document</string>
+    <string name="csv_destination_account">Destination Bank Account</string>
+    <string name="csv_has_header">First row is column header</string>
+    <string name="csv_date_format">Date Format</string>
+    <string name="csv_preview_valid_count">%1$d Ready to Import</string>
+    <string name="csv_preview_duplicate_count">%1$d Potential Duplicates</string>
+    <string name="csv_preview_invalid_count">%1$d Invalid Rows</string>
+    <string name="csv_confirm_import_btn">Import %1$d Transactions</string>
+    <string name="csv_summary_success">Bank statement successfully imported</string>
+    <string name="csv_summary_imported">Transactions Imported: %1$d</string>
+    <string name="csv_summary_skipped">Duplicates Skipped: %1$d</string>
+
+    <!-- Insights -->
+    <string name="insights_title">Financial Insights</string>
+    <string name="insights_empty_title">No insights yet</string>
+    <string name="insights_empty_desc">Insights appear as you record more spending habits</string>
+
+    <!-- Search & Filter -->
+    <string name="search_title">Search Ledger</string>
+    <string name="search_hint">Search by payee, amount, or tag…</string>
+    <string name="search_results_count">%1$d results found</string>
+    <string name="search_no_results">No transactions match your search</string>
+
+    <!-- Data Export -->
+    <string name="export_title">Data Export</string>
+    <string name="export_format_csv">Export as CSV (Spreadsheet)</string>
+    <string name="export_format_json">Export as JSON (Full Backup)</string>
+    <string name="export_btn">Generate Export File</string>
+    <string name="export_success">Export saved successfully</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_step_format">STEP %1$d OF 4</string>
+    <string name="onboarding_skip">Skip Setup</string>
+    <string name="onboarding_welcome_title">Welcome to FinPulse</string>
+    <string name="onboarding_welcome_subtitle">Smart financial monitoring, budgeting, and asset tracking in one secure place.</string>
+    <string name="onboarding_currency_title">Select Base Currency</string>
+    <string name="onboarding_currency_subtitle">All summaries, net worth, and budgets will calculate in this currency.</string>
+    <string name="onboarding_account_title">Add Your Main Account</string>
+    <string name="onboarding_account_subtitle">Start by recording your primary bank checking or cash account.</string>
+    <string name="onboarding_budget_title">Set a Monthly Budget</string>
+    <string name="onboarding_budget_subtitle">Establish a monthly spending limit to build healthy financial habits.</string>
+    <string name="onboarding_finish_btn">Get Started</string>
+
+    <!-- Dates -->
+    <string name="date_today">Today</string>
+    <string name="date_yesterday">Yesterday</string>
+    <string name="date_this_week">This Week</string>
+    <string name="date_this_month">This Month</string>
+    <string name="date_last_30_days">Last 30 Days</string>
+    <string name="date_custom">Custom Range</string>
+
+    <!-- Notifications -->
+    <string name="notif_channel_recurring_name">Recurring Bills &amp; Subscriptions</string>
+    <string name="notif_channel_recurring_desc">Reminders for upcoming bills, subscriptions, and recurring payments</string>
+    <string name="notif_bill_upcoming_title">Upcoming Bill: %1$s</string>
+    <string name="notif_bill_due_today">%1$s is due today!</string>
+    <string name="notif_bill_due_tomorrow">%1$s is due tomorrow.</string>
+    <string name="notif_bill_due_in_days">%1$s is due in %2$d days.</string>
+
+    <!-- Accessibility / Content Descriptions -->
+    <string name="cd_back">Navigate back</string>
+    <string name="cd_close">Close dialog</string>
+    <string name="cd_delete">Delete item</string>
+    <string name="cd_edit">Edit item</string>
+    <string name="cd_add">Add new item</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_filter">Filter list</string>
+    <string name="cd_category_icon">Category icon</string>
+    <string name="cd_account_icon">Account icon</string>
+    <string name="cd_expand">Expand section</string>
+    <string name="cd_collapse">Collapse section</string>
+
+    <!-- Plurals -->
+    <plurals name="plural_transactions">
+        <item quantity="one">%d transaction</item>
+        <item quantity="other">%d transactions</item>
+    </plurals>
+
+    <plurals name="plural_accounts">
+        <item quantity="one">%d account</item>
+        <item quantity="other">%d accounts</item>
+    </plurals>
+
+    <plurals name="plural_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+
+    <plurals name="plural_months">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+
+    <plurals name="plural_rules">
+        <item quantity="one">%d rule</item>
+        <item quantity="other">%d rules</item>
+    </plurals>
+
+    <plurals name="plural_bills_due">
+        <item quantity="one">%d bill due</item>
+        <item quantity="other">%d bills due</item>
+    </plurals>
+
+    <plurals name="plural_items_selected">
+        <item quantity="one">%d item selected</item>
+        <item quantity="other">%d items selected</item>
+    </plurals>
+
+    <plurals name="plural_rows_imported">
+        <item quantity="one">%d row imported</item>
+        <item quantity="other">%d rows imported</item>
+    </plurals>
+
+    <!-- Filter & Sort -->
+    <string name="sort_by">Sort By</string>
+    <string name="sort_newest">Newest</string>
+    <string name="sort_oldest">Oldest</string>
+    <string name="sort_highest">Highest</string>
+    <string name="sort_lowest">Lowest</string>
+    <string name="tx_filter_sort_title">Filter &amp; Sort Ledger</string>
+    <string name="action_duplicate">Duplicate</string>
+    <string name="tx_record_title">Record Transaction</string>
+    <string name="tx_review_banner">%1$d transactions need category review</string>
+    <string name="tx_review_queue_action">Review Queue →</string>
+
+    <!-- Quick Add Extras -->
+    <string name="quick_add_transfer_to">Transfer to:</string>
+    <string name="quick_add_smart_suggestion">Smart Suggestion:</string>
+    <string name="quick_add_applied">Applied ✓</string>
+    <string name="quick_add_tap_apply">Tap to apply</string>
+    <string name="quick_add_add_another">Add Another</string>
+    <string name="quick_add_update">Update</string>
+    <string name="quick_add_hide_details">Hide notes &amp; tags</string>
+    <string name="quick_add_show_details">+ Add note, payee or tags</string>
+
+    <!-- Time Periods -->
+    <string name="period_week">Week</string>
+    <string name="period_month">Month</string>
+    <string name="period_three_months">3 Months</string>
+    <string name="period_six_months">6 Months</string>
+    <string name="period_year">Year</string>
+    <string name="period_all_time">All Time</string>
+
+    <!-- Recurring Tabs & Windows -->
+    <string name="recurring_tab_upcoming">Upcoming</string>
+    <string name="recurring_tab_rules">All Rules</string>
+    <string name="recurring_tab_subscriptions">Subscriptions</string>
+    <string name="recurring_window_7d">Next 7 Days</string>
+    <string name="recurring_window_30d">Next 30 Days</string>
+
+    <!-- Debt Strategies & Metrics -->
+    <string name="debt_strategy_snowball_title">Snowball Strategy</string>
+    <string name="debt_strategy_snowball_sub">Lowest Balance First</string>
+    <string name="debt_strategy_avalanche_title">Avalanche Strategy</string>
+    <string name="debt_strategy_avalanche_sub">Highest Interest First</string>
+    <string name="debt_freedom_title">Estimated Freedom</string>
+    <string name="debt_free_celebration">Debt-Free!</string>
+    <string name="debt_min_payment_label">Min. Monthly Payment</string>
+    <string name="debt_card_balance_left">%1$s left</string>
+
+    <!-- Accounts Extras -->
+    <string name="accounts_transfer_title">Transfer Between Accounts</string>
+    <string name="accounts_transfer_action">Transfer</string>
+    <string name="accounts_transfer_cannot">Cannot Transfer</string>
+    <string name="accounts_transfer_cannot_desc">You need at least 2 active accounts to transfer funds.</string>
+    <string name="accounts_active_tracked">%1$d active accounts tracked</string>
+
+    <!-- Analytics & Budgets Extras -->
+    <string name="analytics_avg_daily">Avg. Daily Spend</string>
+    <string name="analytics_largest_expense">Largest Expense</string>
+    <string name="analytics_top_merchants">Top Spending Merchants</string>
+    <string name="analytics_consumed_overall">%1$d%% consumed overall</string>
+    <string name="analytics_consumed_percent">%1$d%% consumed</string>
+
+    <!-- Goals Extras -->
+    <string name="goals_contribute_title">Contribute to Goal</string>
+    <string name="goals_contribute_btn">Contribute</string>
+
+    <!-- Extra Screen Strings -->
+    <string name="total_income">Total Income</string>
+    <string name="total_expenses">Total Expenses</string>
+    <string name="analytics_savings_rate_title">Savings Rate</string>
+    <string name="account_archived_label">Archived</string>
+    <string name="account_limit_label">Limit: %1$s</string>
+    <string name="account_edit_dialog_title">Edit Account</string>
+    <string name="goal_edit_title">Edit Goal</string>
+    <string name="goal_target_format">target %1$s</string>
+    <string name="goal_achieved_percent">%1$d%% achieved</string>
+    <string name="goal_add_funds">+ Add Funds</string>
+    <string name="goal_deposit_title">Deposit to %1$s</string>
+    <string name="goal_deposit_remaining">Remaining to goal: %1$s</string>
+    <string name="debt_paid_off_percent">%1$d%% paid off</string>
+    <string name="debt_record_payment">Record Payment</string>
+    <string name="debt_edit_title">Edit Debt</string>
+    <string name="debt_payment_title">Record Payment for %1$s</string>
+    <string name="debt_remaining_balance_label">Remaining balance: %1$s</string>
+    <string name="debt_confirm_payment_btn">Confirm Payment</string>
+    <string name="category_custom_label">Custom</string>
+    <string name="category_default_label">Default</string>
+    <string name="category_create_custom">Create Custom Category</string>
+
+    <!-- Final Screen Refinements -->
+    <string name="investments_total_invested">Total Invested</string>
+    <string name="investments_edit_title">Edit Asset</string>
+    <string name="investments_units">%1$s units</string>
+    <string name="rules_screen_title">Smart Categorization &amp; Rules</string>
+    <string name="rules_review_queue_clear">Review Queue Clear</string>
+    <string name="rules_review_queue_clear_desc">All transactions have been confirmed. New unclassified or low-confidence imports will appear here.</string>
+    <string name="rules_transactions_need_review">%1$d transactions need review</string>
+    <string name="rules_one_tap_hint">1-tap confirm or correct</string>
+    <string name="search_empty_hint">Type a search term to find transactions across all accounts</string>
+    <string name="export_screen_title">Backup &amp; Data Export</string>
+    <string name="export_csv_title">Export CSV Ledger</string>
+    <string name="export_csv_desc">Standard RFC-4180 spreadsheet export compatible with Google Sheets, Excel, and accounting software.</string>
+    <string name="export_csv_btn">Export Transactions CSV</string>
+    <string name="export_json_title">Full Database Backup</string>
+    <string name="export_json_desc">Create an encrypted JSON snapshot of accounts, transactions, budgets, goals, and debt payoff plans.</string>
+    <string name="export_json_btn">Export JSON Database</string>
+    <string name="security_pin_active">PIN protection is active</string>
+    <string name="security_pin_configure_title">Configure Security PIN</string>
+    <string name="security_pin_min_digits">PIN must be at least 4 digits</string>
+    <string name="security_pin_save_btn">Save PIN</string>
 </resources>

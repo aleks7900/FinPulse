@@ -1,0 +1,596 @@
+<resources>
+    <string name="app_name">FinPulse</string>
+    <string name="shortcut_quick_add_short">Añadir rápido</string>
+    <string name="shortcut_quick_add_long">Añadir transacción rápida</string>
+
+    <!-- Language Names -->
+    <string name="lang_system">Predeterminado del sistema</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ru">Русский</string>
+    <string name="lang_es">Español</string>
+    <string name="lang_pt_br">Português (Brasil)</string>
+    <string name="lang_de">Deutsch</string>
+    <string name="lang_fr">Français</string>
+    <string name="lang_it">Italiano</string>
+    <string name="lang_pl">Polski</string>
+    <string name="lang_tr">Türkçe</string>
+    <string name="lang_ja">日本語</string>
+    <string name="lang_ko">한국어</string>
+    <string name="lang_zh_cn">简体中文</string>
+    <string name="select_language">Seleccionar idioma</string>
+    <string name="language_title">Idioma</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Panel</string>
+    <string name="nav_transactions">Transacciones</string>
+    <string name="nav_budgets">Presupuestos</string>
+    <string name="nav_analytics">Análisis</string>
+    <string name="nav_more">Más</string>
+
+    <!-- Common Actions & Buttons -->
+    <string name="action_save">Guardar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="action_edit">Editar</string>
+    <string name="action_add">Añadir</string>
+    <string name="action_done">Listo</string>
+    <string name="action_close">Cerrar</string>
+    <string name="action_confirm">Confirmar</string>
+    <string name="action_dismiss">Descartar</string>
+    <string name="action_apply">Aplicar</string>
+    <string name="action_search">Buscar</string>
+    <string name="action_filter">Filtrar</string>
+    <string name="action_export">Exportar</string>
+    <string name="action_import">Importar</string>
+    <string name="action_view_all">Ver todo</string>
+    <string name="action_back">Volver</string>
+    <string name="action_continue">Continuar</string>
+    <string name="action_skip">Omitir</string>
+    <string name="action_create">Crear</string>
+    <string name="action_save_add_another">Guardar y añadir otro</string>
+    <string name="action_reset">Restablecer</string>
+    <string name="action_refresh">Actualizar</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Panel principal</string>
+    <string name="dashboard_net_worth">Patrimonio neto</string>
+    <string name="dashboard_assets">Activos</string>
+    <string name="dashboard_liabilities">Pasivos</string>
+    <string name="dashboard_total_balance">Saldo total</string>
+    <string name="dashboard_cash_flow">Flujo de caja</string>
+    <string name="dashboard_monthly_income">Ingresos mensuales</string>
+    <string name="dashboard_monthly_expense">Gastos mensuales</string>
+    <string name="dashboard_monthly_net">Flujo neto</string>
+    <string name="dashboard_spending_trends">Tendencias de gasto</string>
+    <string name="dashboard_recent_transactions">Transacciones recientes</string>
+    <string name="dashboard_financial_health">Salud financiera</string>
+    <string name="dashboard_health_score">Puntuación: %1$d/100</string>
+    <string name="dashboard_quick_actions">Acciones rápidas</string>
+    <string name="dashboard_accounts_overview">Cuentas</string>
+    <string name="dashboard_no_transactions">Aún no hay transacciones registradas</string>
+
+    <!-- Transactions -->
+    <string name="transactions_title">Transacciones</string>
+    <string name="tx_search_hint">Buscar transacciones, comercios, notas…</string>
+    <string name="tx_type_income">Ingreso</string>
+    <string name="tx_type_expense">Gasto</string>
+    <string name="tx_type_transfer">Transferencia</string>
+    <string name="tx_type_refund">Reembolso</string>
+    <string name="tx_needs_review">Requiere revisión</string>
+    <string name="tx_confirmed">Confirmado</string>
+    <string name="tx_empty_title">No se encontraron transacciones</string>
+    <string name="tx_empty_desc">Toca + para añadir tu primera transacción</string>
+    <string name="tx_date_range">Rango de fechas</string>
+    <string name="tx_filter_all">Todas</string>
+    <string name="tx_filter_income">Ingresos</string>
+    <string name="tx_filter_expense">Gastos</string>
+    <string name="tx_filter_transfer">Transferencias</string>
+    <string name="tx_details_title">Detalles de la transacción</string>
+    <string name="tx_amount">Importe</string>
+    <string name="tx_category">Categoría</string>
+    <string name="tx_account">Cuenta de origen</string>
+    <string name="tx_dest_account">Cuenta de destino</string>
+    <string name="tx_merchant">Comercio / Pagador</string>
+    <string name="tx_date">Fecha y hora</string>
+    <string name="tx_notes">Notas</string>
+    <string name="tx_tags">Etiquetas</string>
+    <string name="tx_saved_success">Transacción guardada correctamente</string>
+    <string name="tx_deleted_success">Transacción eliminada</string>
+    <string name="tx_default_title">Transacción</string>
+
+    <!-- Quick Add -->
+    <string name="quick_add_title">Añadir transacción</string>
+    <string name="quick_add_expense">Gasto</string>
+    <string name="quick_add_income">Ingreso</string>
+    <string name="quick_add_transfer">Transferencia</string>
+    <string name="quick_add_amount_hint">0.00</string>
+    <string name="quick_add_select_account">Seleccionar cuenta</string>
+    <string name="quick_add_select_category">Seleccionar categoría</string>
+    <string name="quick_add_note_hint">Añadir nota (opcional)</string>
+    <string name="quick_add_merchant_hint">Comercio o beneficiario</string>
+    <string name="quick_add_date_today">Hoy</string>
+    <string name="quick_add_date_yesterday">Ayer</string>
+    <string name="quick_add_date_custom">Personalizada</string>
+    <string name="quick_add_saved_snackbar">Transacción guardada</string>
+    <string name="quick_add_edit_action">Editar</string>
+
+    <!-- Budgets -->
+    <string name="budgets_title">Presupuestos</string>
+    <string name="budget_total_budgeted">Total presupuestado</string>
+    <string name="budget_total_spent">Total gastado</string>
+    <string name="budget_remaining">Restante</string>
+    <string name="budget_exceeded">Excedido</string>
+    <string name="budget_on_track">Dentro del límite</string>
+    <string name="budget_warning">Cerca del límite</string>
+    <string name="budget_projected">Gasto proyectado: %1$s</string>
+    <string name="budget_add_dialog_title">Crear presupuesto</string>
+    <string name="budget_name_hint">Nombre del presupuesto</string>
+    <string name="budget_limit_hint">Límite mensual de gasto</string>
+    <string name="budget_period">Periodo</string>
+    <string name="budget_empty_title">Sin presupuestos activos</string>
+    <string name="budget_empty_desc">Establece límites para mantener tus gastos bajo control</string>
+    <string name="budget_status_exceeded_desc">Presupuesto excedido en %1$s</string>
+    <string name="budget_status_warning_desc">Quedan %1$s</string>
+
+    <!-- Analytics -->
+    <string name="analytics_title">Análisis financiero</string>
+    <string name="analytics_income_vs_expense">Ingresos vs Gastos</string>
+    <string name="analytics_spending_by_category">Gastos por categoría</string>
+    <string name="analytics_net_worth_trend">Evolución del patrimonio</string>
+    <string name="analytics_cash_flow_title">Análisis de flujo de caja</string>
+    <string name="analytics_monthly_spending">Gastos mensuales</string>
+    <string name="analytics_savings_rate">Tasa de ahorro: %1$s%%</string>
+    <string name="analytics_forecast">Proyección de fin de mes</string>
+    <string name="analytics_period_7d">7 días</string>
+    <string name="analytics_period_30d">30 días</string>
+    <string name="analytics_period_month">Este mes</string>
+    <string name="analytics_period_quarter">Trimestre</string>
+    <string name="analytics_period_year">Este año</string>
+    <string name="analytics_empty_title">No hay datos de análisis disponibles</string>
+
+    <!-- Accounts -->
+    <string name="accounts_title">Cartera de cuentas</string>
+    <string name="account_total_assets">Activos totales</string>
+    <string name="account_total_liabilities">Pasivos totales</string>
+    <string name="account_add_dialog_title">Añadir cuenta</string>
+    <string name="account_name_hint">Nombre de la cuenta (ej. Nómina)</string>
+    <string name="account_type">Tipo de cuenta</string>
+    <string name="account_starting_balance_hint">Saldo actual</string>
+    <string name="account_credit_limit_hint">Límite de crédito (opcional)</string>
+    <string name="account_institution_hint">Banco / Entidad (opcional)</string>
+    <string name="account_available_balance">Saldo disponible</string>
+    <string name="account_current_balance">Saldo contable</string>
+    <string name="account_empty_title">Aún no hay cuentas</string>
+    <string name="account_empty_desc">Añade cuentas corrientes, de ahorro o tarjetas</string>
+    <string name="account_archive">Archivar cuenta</string>
+    <string name="account_delete">Eliminar cuenta</string>
+
+    <!-- Recurring & Subscriptions -->
+    <string name="recurring_title">Pagos periódicos y suscripciones</string>
+    <string name="recurring_upcoming_title">Próximos vencimientos</string>
+    <string name="recurring_upcoming_subtitle">Previsión para los próximos 30 días</string>
+    <string name="recurring_active_rules">Reglas activas</string>
+    <string name="recurring_monthly_commitment">Compromiso mensual</string>
+    <string name="recurring_annual_commitment">Coste anualizado: %1$s/año</string>
+    <string name="recurring_add_title">Nuevo pago periódico</string>
+    <string name="recurring_bill_name_hint">Nombre del servicio o recibo</string>
+    <string name="recurring_frequency">Periodicidad de pago</string>
+    <string name="recurring_next_due">Próximo vencimiento</string>
+    <string name="recurring_mark_paid">Marcar como pagado</string>
+    <string name="recurring_skip">Omitir vencimiento</string>
+    <string name="recurring_pause">Pausar</string>
+    <string name="recurring_resume">Reanudar</string>
+    <string name="recurring_cancel">Cancelar suscripción</string>
+    <string name="recurring_empty_title">Sin pagos periódicos</string>
+    <string name="recurring_empty_desc">Controla suscripciones, alquiler, nómina y seguros</string>
+    <string name="recurring_is_subscription">Suscripción digital</string>
+    <string name="recurring_variable_amount">El importe varía en cada cobro</string>
+
+    <!-- Financial Goals -->
+    <string name="goals_title">Metas de ahorro</string>
+    <string name="goals_total_target">Objetivo total</string>
+    <string name="goals_total_saved">Ahorro acumulado</string>
+    <string name="goals_add_title">Nueva meta financiera</string>
+    <string name="goal_name_hint">Nombre de la meta (ej. Fondo de emergencia)</string>
+    <string name="goal_target_amount_hint">Importe objetivo</string>
+    <string name="goal_current_amount_hint">Ahorrado actualmente</string>
+    <string name="goal_target_date">Fecha objetivo</string>
+    <string name="goal_progress">Progreso: %1$d%%</string>
+    <string name="goal_remaining">Faltan: %1$s</string>
+    <string name="goal_suggested_monthly">Aporte sugerido: %1$s/mes</string>
+    <string name="goal_completed">¡Meta alcanzada!</string>
+    <string name="goal_empty_title">Sin metas financieras</string>
+    <string name="goal_empty_desc">Crea metas para viajes, fondos de emergencia o compras</string>
+
+    <!-- Investments & Assets -->
+    <string name="investments_title">Inversiones y activos</string>
+    <string name="investments_total_portfolio">Valor de la cartera</string>
+    <string name="investments_total_gain_loss">Rentabilidad total</string>
+    <string name="investments_add_title">Añadir activo de inversión</string>
+    <string name="asset_name_hint">Nombre del activo (ej. Índice S&amp;P 500)</string>
+    <string name="asset_symbol_hint">Símbolo / Ticker (ej. VOO)</string>
+    <string name="asset_class">Clase de activo</string>
+    <string name="asset_quantity_hint">Cantidad / Títulos</string>
+    <string name="asset_purchase_price_hint">Precio de compra unitario</string>
+    <string name="asset_current_price_hint">Cotización de mercado actual</string>
+    <string name="asset_empty_title">Sin activos de inversión</string>
+    <string name="asset_empty_desc">Controla acciones, fondos cotizados, criptomonedas y bienes raíces</string>
+
+    <!-- Debt & Liabilities -->
+    <string name="debt_title">Deudas y préstamos</string>
+    <string name="debt_total_debt">Deuda viva total</string>
+    <string name="debt_total_paid_off">Principal amortizado</string>
+    <string name="debt_add_title">Añadir préstamo o deuda</string>
+    <string name="debt_name_hint">Nombre de la deuda (ej. Hipoteca)</string>
+    <string name="debt_type">Tipo de deuda</string>
+    <string name="debt_principal_hint">Importe inicial prestado</string>
+    <string name="debt_remaining_hint">Saldo pendiente</string>
+    <string name="debt_interest_rate_hint">Tipo de interés anual (%%)</string>
+    <string name="debt_minimum_payment_hint">Cuota mensual mínima</string>
+    <string name="debt_estimated_payoff">Liquidación estimada en ~%1$d meses</string>
+    <string name="debt_empty_title">Sin deudas activas</string>
+    <string name="debt_empty_desc">Haz seguimiento de hipotecas, préstamos personales y créditos</string>
+
+    <!-- Categories Screen -->
+    <string name="categories_title">Categorías</string>
+    <string name="categories_expense_tab">Categorías de gasto</string>
+    <string name="categories_income_tab">Categorías de ingreso</string>
+    <string name="category_add_title">Nueva categoría</string>
+    <string name="category_name_hint">Nombre de la categoría</string>
+    <string name="category_type_expense">Gasto</string>
+    <string name="category_type_income">Ingreso</string>
+    <string name="category_empty">No hay categorías disponibles</string>
+
+    <!-- Default Predefined Categories -->
+    <string name="cat_food">Restaurantes y comidas</string>
+    <string name="cat_groceries">Alimentación y supermercado</string>
+    <string name="cat_housing">Vivienda y alquiler</string>
+    <string name="cat_transport">Transporte y movilidad</string>
+    <string name="cat_fuel">Combustible</string>
+    <string name="cat_shopping">Compras y ropa</string>
+    <string name="cat_entertainment">Ocio y entretenimiento</string>
+    <string name="cat_health">Salud y farmacia</string>
+    <string name="cat_education">Educación y formación</string>
+    <string name="cat_fitness">Deporte y bienestar</string>
+    <string name="cat_subscriptions">Suscripciones y servicios</string>
+    <string name="cat_gifts">Regalos y donaciones</string>
+    <string name="cat_salary">Nómina y sueldos</string>
+    <string name="cat_freelance">Ingresos profesionales</string>
+    <string name="cat_invest_return">Rendimientos de capital</string>
+    <string name="cat_other_income">Otros ingresos</string>
+    <string name="cat_uncategorized">Sin categorizar</string>
+
+    <!-- Enum Display Strings -->
+    <string name="acc_type_cash">Efectivo</string>
+    <string name="acc_type_bank">Cuenta bancaria</string>
+    <string name="acc_type_credit_card">Tarjeta de crédito</string>
+    <string name="acc_type_savings">Cuenta de ahorro</string>
+    <string name="acc_type_investment">Cuenta de inversión</string>
+    <string name="acc_type_wallet">Billetera virtual</string>
+    <string name="acc_type_loan">Préstamo</string>
+    <string name="acc_type_other">Otra cuenta</string>
+
+    <string name="period_weekly">Semanal</string>
+    <string name="period_monthly">Mensual</string>
+    <string name="period_custom">Personalizado</string>
+
+    <string name="freq_daily">Diaria</string>
+    <string name="freq_weekly">Semanal</string>
+    <string name="freq_biweekly">Quincenal</string>
+    <string name="freq_monthly">Mensual</string>
+    <string name="freq_quarterly">Trimestral</string>
+    <string name="freq_yearly">Anual</string>
+    <string name="freq_custom">Personalizada</string>
+
+    <string name="unit_days">Días</string>
+    <string name="unit_weeks">Semanas</string>
+    <string name="unit_months">Meses</string>
+    <string name="unit_years">Años</string>
+
+    <string name="occ_upcoming">Próximo</string>
+    <string name="occ_overdue">Vencido</string>
+    <string name="occ_generated">Generado</string>
+    <string name="occ_paid">Pagado</string>
+    <string name="occ_skipped">Omitido</string>
+
+    <string name="asset_stock">Acción</string>
+    <string name="asset_etf">Fondo indexado (ETF)</string>
+    <string name="asset_crypto">Criptomoneda</string>
+    <string name="asset_bond">Bono / Renta fija</string>
+    <string name="asset_real_estate">Bienes inmuebles</string>
+    <string name="asset_commodity">Materias primas</string>
+    <string name="asset_cash">Equivalente de efectivo</string>
+    <string name="asset_other">Otro activo</string>
+
+    <string name="debt_credit_card">Tarjeta de crédito</string>
+    <string name="debt_personal_loan">Préstamo personal</string>
+    <string name="debt_mortgage">Hipoteca</string>
+    <string name="debt_student_loan">Préstamo de estudios</string>
+    <string name="debt_auto_loan">Préstamo vehículo</string>
+    <string name="debt_other">Otra deuda</string>
+
+    <string name="dup_new">Nueva transacción</string>
+    <string name="dup_exact">Duplicado exacto</string>
+    <string name="dup_potential">Posible duplicado</string>
+
+    <string name="amount_mode_single">Columna única de importe</string>
+    <string name="amount_mode_separate">Columnas de débito y crédito separadas</string>
+
+    <!-- More / Hub Screen -->
+    <string name="more_title">Más y ajustes</string>
+    <string name="more_section_financial_tools">Herramientas financieras</string>
+    <string name="more_section_data_security">Datos y seguridad</string>
+    <string name="more_section_preferences">Preferencias</string>
+    <string name="more_security_title">Seguridad y privacidad</string>
+    <string name="more_security_desc">PIN, biometría y bloqueo de capturas</string>
+    <string name="more_language_title">Idioma</string>
+    <string name="more_currency_title">Moneda principal</string>
+    <string name="more_dark_mode_title">Tema oscuro</string>
+    <string name="more_export_title">Copia de seguridad y exportación</string>
+    <string name="more_rules_title">Reglas de categorización</string>
+    <string name="more_rules_desc">Clasificación automática de transacciones</string>
+    <string name="more_csv_title">Importación de extractos bancarios</string>
+    <string name="more_csv_desc">Cargar movimientos desde archivos CSV</string>
+    <string name="more_insights_title">Diagnóstico financiero</string>
+    <string name="more_insights_desc">Análisis de patrones de gasto y recomendaciones</string>
+
+    <!-- Security & Privacy -->
+    <string name="security_title">Seguridad y privacidad</string>
+    <string name="security_biometric">Autenticación biométrica</string>
+    <string name="security_biometric_desc">Desbloquear con huella o reconocimiento facial</string>
+    <string name="security_pin">Protección con código PIN</string>
+    <string name="security_pin_desc">Solicitar PIN de 4 dígitos al abrir</string>
+    <string name="security_hide_balances">Ocultar saldos</string>
+    <string name="security_hide_balances_desc">Ocultar importes con puntos por privacidad</string>
+    <string name="security_screenshot_protection">Protección de pantalla</string>
+    <string name="security_screenshot_protection_desc">Bloquear capturas y vista previa en el selector de apps</string>
+    <string name="security_enter_pin">Introduce PIN de 4 dígitos</string>
+    <string name="security_confirm_pin">Confirma tu PIN</string>
+    <string name="security_pin_mismatch">Los códigos PIN no coinciden. Inténtalo de nuevo.</string>
+    <string name="security_pin_set_success">Configuración de seguridad actualizada</string>
+
+    <!-- Categorization Rules & Smart Engine -->
+    <string name="rules_title">Reglas de categorización</string>
+    <string name="rules_tab_rules">Reglas (%1$d)</string>
+    <string name="rules_tab_review">Pendientes (%1$d)</string>
+    <string name="rules_create_title">Crear regla inteligente</string>
+    <string name="rule_name_hint">Nombre de la regla (ej. Cafeterías)</string>
+    <string name="rule_pattern_hint">Patrón de texto en el concepto</string>
+    <string name="rule_match_type">Tipo de coincidencia</string>
+    <string name="rule_target_category">Categoría de destino</string>
+    <string name="rule_apply_existing">Aplicar a movimientos existentes</string>
+    <string name="rule_conflict_warning">Conflicto con una regla de mayor prioridad</string>
+    <string name="rules_review_title">Transacciones pendientes de revisión</string>
+    <string name="rules_review_empty">¡Todas las transacciones están categorizadas!</string>
+    <string name="rules_confirm_all">Confirmar todas las sugerencias</string>
+    <string name="rules_empty_title">Sin reglas configuradas</string>
+
+    <!-- CSV Import Wizard -->
+    <string name="csv_import_title">Importar extracto bancario CSV</string>
+    <string name="csv_step_select_file">1. Seleccionar archivo</string>
+    <string name="csv_step_mapping">2. Mapeo de columnas</string>
+    <string name="csv_step_preview">3. Revisar filas</string>
+    <string name="csv_step_summary">4. Resumen final</string>
+    <string name="csv_select_file_btn">Elegir documento CSV</string>
+    <string name="csv_destination_account">Cuenta bancaria de destino</string>
+    <string name="csv_has_header">La primera fila contiene encabezados</string>
+    <string name="csv_date_format">Formato de fecha</string>
+    <string name="csv_preview_valid_count">%1$d listas para importar</string>
+    <string name="csv_preview_duplicate_count">%1$d posibles duplicados</string>
+    <string name="csv_preview_invalid_count">%1$d filas erróneas</string>
+    <string name="csv_confirm_import_btn">Importar %1$d transacciones</string>
+    <string name="csv_summary_success">Extracto bancario importado con éxito</string>
+    <string name="csv_summary_imported">Transacciones importadas: %1$d</string>
+    <string name="csv_summary_skipped">Duplicados descartados: %1$d</string>
+
+    <!-- Insights -->
+    <string name="insights_title">Diagnóstico financiero</string>
+    <string name="insights_empty_title">Aún no hay diagnósticos</string>
+    <string name="insights_empty_desc">Las sugerencias aparecerán a medida que registres más gastos</string>
+
+    <!-- Search & Filter -->
+    <string name="search_title">Búsqueda en extracto</string>
+    <string name="search_hint">Buscar por comercio, importe o etiqueta…</string>
+    <string name="search_results_count">%1$d resultados encontrados</string>
+    <string name="search_no_results">Ninguna transacción coincide con la búsqueda</string>
+
+    <!-- Data Export -->
+    <string name="export_title">Exportación de datos</string>
+    <string name="export_format_csv">Exportar en CSV (Hoja de cálculo)</string>
+    <string name="export_format_json">Exportar en JSON (Copia de seguridad total)</string>
+    <string name="export_btn">Generar archivo de exportación</string>
+    <string name="export_success">Archivo guardado correctamente</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_step_format">PASO %1$d DE 4</string>
+    <string name="onboarding_skip">Omitir configuración</string>
+    <string name="onboarding_welcome_title">Te damos la bienvenida a FinPulse</string>
+    <string name="onboarding_welcome_subtitle">Control financiero inteligente, presupuestos y seguimiento de patrimonio de forma segura.</string>
+    <string name="onboarding_currency_title">Elige tu moneda base</string>
+    <string name="onboarding_currency_subtitle">Tus saldos, patrimonio neto y presupuestos se calcularán en esta divisa.</string>
+    <string name="onboarding_account_title">Añade tu cuenta principal</string>
+    <string name="onboarding_account_subtitle">Comienza registrando tu cuenta corriente bancaria o saldo en efectivo.</string>
+    <string name="onboarding_budget_title">Establece un presupuesto mensual</string>
+    <string name="onboarding_budget_subtitle">Fijar un límite mensual te ayuda a crear hábitos de ahorro sólidos.</string>
+    <string name="onboarding_finish_btn">Empezar ahora</string>
+
+    <!-- Dates -->
+    <string name="date_today">Hoy</string>
+    <string name="date_yesterday">Ayer</string>
+    <string name="date_this_week">Esta semana</string>
+    <string name="date_this_month">Este mes</string>
+    <string name="date_last_30_days">Últimos 30 días</string>
+    <string name="date_custom">Periodo personalizado</string>
+
+    <!-- Notifications -->
+    <string name="notif_channel_recurring_name">Recibos periódicos y suscripciones</string>
+    <string name="notif_channel_recurring_desc">Recordatorios de facturas, suscripciones y pagos recurrentes</string>
+    <string name="notif_bill_upcoming_title">Próximo vencimiento: %1$s</string>
+    <string name="notif_bill_due_today">¡%1$s vence hoy!</string>
+    <string name="notif_bill_due_tomorrow">%1$s vence mañana.</string>
+    <string name="notif_bill_due_in_days">%1$s vence en %2$d días.</string>
+
+    <!-- Accessibility / Content Descriptions -->
+    <string name="cd_back">Atrás</string>
+    <string name="cd_close">Cerrar diálogo</string>
+    <string name="cd_delete">Eliminar elemento</string>
+    <string name="cd_edit">Editar elemento</string>
+    <string name="cd_add">Añadir nuevo elemento</string>
+    <string name="cd_search">Buscar</string>
+    <string name="cd_filter">Filtrar lista</string>
+    <string name="cd_category_icon">Icono de categoría</string>
+    <string name="cd_account_icon">Icono de cuenta</string>
+    <string name="cd_expand">Desplegar sección</string>
+    <string name="cd_collapse">Plegar sección</string>
+
+    <!-- Plurals -->
+    <plurals name="plural_transactions">
+        <item quantity="one">%d transacción</item>
+        <item quantity="other">%d transacciones</item>
+    </plurals>
+
+    <plurals name="plural_accounts">
+        <item quantity="one">%d cuenta</item>
+        <item quantity="other">%d cuentas</item>
+    </plurals>
+
+    <plurals name="plural_days">
+        <item quantity="one">%d día</item>
+        <item quantity="other">%d días</item>
+    </plurals>
+
+    <plurals name="plural_months">
+        <item quantity="one">%d mes</item>
+        <item quantity="other">%d meses</item>
+    </plurals>
+
+    <plurals name="plural_rules">
+        <item quantity="one">%d regla</item>
+        <item quantity="other">%d reglas</item>
+    </plurals>
+
+    <plurals name="plural_bills_due">
+        <item quantity="one">%d recibo pendiente</item>
+        <item quantity="other">%d recibos pendientes</item>
+    </plurals>
+
+    <plurals name="plural_items_selected">
+        <item quantity="one">%d elemento seleccionado</item>
+        <item quantity="other">%d elementos seleccionados</item>
+    </plurals>
+
+    <plurals name="plural_rows_imported">
+        <item quantity="one">%d fila importada</item>
+        <item quantity="other">%d filas importadas</item>
+    </plurals>
+
+    <!-- Filter & Sort -->
+    <string name="sort_by">Ordenar por</string>
+    <string name="sort_newest">Más recientes</string>
+    <string name="sort_oldest">Más antiguos</string>
+    <string name="sort_highest">Mayor importe</string>
+    <string name="sort_lowest">Menor importe</string>
+    <string name="tx_filter_sort_title">Filtrar y ordenar</string>
+    <string name="action_duplicate">Duplicar</string>
+    <string name="tx_record_title">Registrar transacción</string>
+    <string name="tx_review_banner">%1$d transacciones requieren revisión de categoría</string>
+    <string name="tx_review_queue_action">Cola de revisión →</string>
+
+    <!-- Quick Add Extras -->
+    <string name="quick_add_transfer_to">Transferir a:</string>
+    <string name="quick_add_smart_suggestion">Sugerencia inteligente:</string>
+    <string name="quick_add_applied">Aplicado ✓</string>
+    <string name="quick_add_tap_apply">Toca para aplicar</string>
+    <string name="quick_add_add_another">Añadir otra</string>
+    <string name="quick_add_update">Actualizar</string>
+    <string name="quick_add_hide_details">Ocultar notas y etiquetas</string>
+    <string name="quick_add_show_details">+ Añadir nota, beneficiario o etiquetas</string>
+
+    <!-- Time Periods -->
+    <string name="period_week">Semana</string>
+    <string name="period_month">Mes</string>
+    <string name="period_three_months">3 meses</string>
+    <string name="period_six_months">6 meses</string>
+    <string name="period_year">Año</string>
+    <string name="period_all_time">Todo el historial</string>
+
+    <!-- Recurring Tabs & Windows -->
+    <string name="recurring_tab_upcoming">Próximos</string>
+    <string name="recurring_tab_rules">Todas las reglas</string>
+    <string name="recurring_tab_subscriptions">Suscripciones</string>
+    <string name="recurring_window_7d">Próximos 7 días</string>
+    <string name="recurring_window_30d">Próximos 30 días</string>
+
+    <!-- Debt Strategies & Metrics -->
+    <string name="debt_strategy_snowball_title">Método bola de nieve</string>
+    <string name="debt_strategy_snowball_sub">Menor saldo primero</string>
+    <string name="debt_strategy_avalanche_title">Método avalancha</string>
+    <string name="debt_strategy_avalanche_sub">Mayor interés primero</string>
+    <string name="debt_freedom_title">Liquidación estimada</string>
+    <string name="debt_free_celebration">¡Libre de deudas!</string>
+    <string name="debt_min_payment_label">Pago mínimo mensual</string>
+    <string name="debt_card_balance_left">%1$s restante</string>
+
+    <!-- Accounts Extras -->
+    <string name="accounts_transfer_title">Transferencia entre cuentas</string>
+    <string name="accounts_transfer_action">Transferir</string>
+    <string name="accounts_transfer_cannot">No se puede transferir</string>
+    <string name="accounts_transfer_cannot_desc">Necesitas al menos 2 cuentas activas para transferir fondos.</string>
+    <string name="accounts_active_tracked">%1$d cuentas activas monitoreadas</string>
+
+    <!-- Analytics & Budgets Extras -->
+    <string name="analytics_avg_daily">Gasto medio diario</string>
+    <string name="analytics_largest_expense">Mayor gasto</string>
+    <string name="analytics_top_merchants">Principales comercios</string>
+    <string name="analytics_consumed_overall">%1$d%% consumido en total</string>
+    <string name="analytics_consumed_percent">%1$d%% consumido</string>
+
+    <!-- Goals Extras -->
+    <string name="goals_contribute_title">Aportar a la meta</string>
+    <string name="goals_contribute_btn">Aportar</string>
+
+    <!-- Extra Screen Strings -->
+    <string name="total_income">Ingresos totales</string>
+    <string name="total_expenses">Gastos totales</string>
+    <string name="analytics_savings_rate_title">Tasa de ahorro</string>
+    <string name="account_archived_label">Archivado</string>
+    <string name="account_limit_label">Límite: %1$s</string>
+    <string name="account_edit_dialog_title">Editar cuenta</string>
+    <string name="goal_edit_title">Editar meta</string>
+    <string name="goal_target_format">meta %1$s</string>
+    <string name="goal_achieved_percent">%1$d%% alcanzado</string>
+    <string name="goal_add_funds">+ Aportar fondos</string>
+    <string name="goal_deposit_title">Aportar a %1$s</string>
+    <string name="goal_deposit_remaining">Restante para la meta: %1$s</string>
+    <string name="debt_paid_off_percent">%1$d%% amortizado</string>
+    <string name="debt_record_payment">Registrar pago</string>
+    <string name="debt_edit_title">Editar deuda</string>
+    <string name="debt_payment_title">Registrar pago para %1$s</string>
+    <string name="debt_remaining_balance_label">Saldo pendiente: %1$s</string>
+    <string name="debt_confirm_payment_btn">Confirmar pago</string>
+    <string name="category_custom_label">Personalizada</string>
+    <string name="category_default_label">Predeterminada</string>
+    <string name="category_create_custom">Crear categoría personalizada</string>
+
+    <!-- Final Screen Refinements -->
+    <string name="investments_total_invested">Total invertido</string>
+    <string name="investments_edit_title">Editar activo</string>
+    <string name="investments_units">%1$s unidades</string>
+    <string name="rules_screen_title">Categorización inteligente y reglas</string>
+    <string name="rules_review_queue_clear">Cola de revisión limpia</string>
+    <string name="rules_review_queue_clear_desc">Todas las transacciones están confirmadas. Nuevas importaciones pendientes aparecerán aquí.</string>
+    <string name="rules_transactions_need_review">%1$d transacciones necesitan revisión</string>
+    <string name="rules_one_tap_hint">Confirmar o corregir en 1 toque</string>
+    <string name="search_empty_hint">Escribe un término de búsqueda para buscar transacciones en todas las cuentas</string>
+    <string name="export_screen_title">Copia de seguridad y exportación</string>
+    <string name="export_csv_title">Exportar libro mayor en CSV</string>
+    <string name="export_csv_desc">Exportación en hoja de cálculo RFC-4180 compatible con Google Sheets, Excel y contabilidad.</string>
+    <string name="export_csv_btn">Exportar transacciones en CSV</string>
+    <string name="export_json_title">Copia de seguridad JSON completa</string>
+    <string name="export_json_desc">Crea una instantánea cifrada de cuentas, transacciones, presupuestos, metas y amortización de deudas.</string>
+    <string name="export_json_btn">Exportar base de datos JSON</string>
+    <string name="security_pin_active">La protección por PIN está activa</string>
+    <string name="security_pin_configure_title">Configurar PIN de seguridad</string>
+    <string name="security_pin_min_digits">El PIN debe tener al menos 4 dígitos</string>
+    <string name="security_pin_save_btn">Guardar PIN</string>
+</resources>

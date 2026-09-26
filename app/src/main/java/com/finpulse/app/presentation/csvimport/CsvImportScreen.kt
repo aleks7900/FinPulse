@@ -89,15 +89,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.AmberWarning
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.PurpleAccent
 import com.finpulse.app.core.designsystem.SapphireAccent
+import com.finpulse.app.core.ui.DateFormatterUtils
+import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.AmountMode
 import com.finpulse.app.domain.model.CsvColumnMapping
 import com.finpulse.app.domain.model.CsvFormatConfig
@@ -143,16 +147,16 @@ fun CsvImportScreen(
                 title = {
                     Column {
                         Text(
-                            text = "Bank Statement Import",
+                            text = stringResource(R.string.csv_import_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = when (uiState.currentStep) {
-                                ImportStep.SELECT_FILE -> "Step 1 of 4 • Select CSV File"
-                                ImportStep.MAPPING_CONFIG -> "Step 2 of 4 • Map Columns"
-                                ImportStep.PREVIEW_REVIEW -> "Step 3 of 4 • Review & Exclude"
-                                ImportStep.IMPORT_SUMMARY -> "Step 4 of 4 • Import Summary"
+                                ImportStep.SELECT_FILE -> stringResource(R.string.csv_step_select_file)
+                                ImportStep.MAPPING_CONFIG -> stringResource(R.string.csv_step_mapping)
+                                ImportStep.PREVIEW_REVIEW -> stringResource(R.string.csv_step_preview)
+                                ImportStep.IMPORT_SUMMARY -> stringResource(R.string.csv_step_summary)
                             },
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -172,7 +176,7 @@ fun CsvImportScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.cd_back)
                         )
                     }
                 },
@@ -181,7 +185,7 @@ fun CsvImportScreen(
                         IconButton(onClick = { viewModel.reset() }) {
                             Icon(
                                 imageVector = Icons.Default.Refresh,
-                                contentDescription = "Reset"
+                                contentDescription = stringResource(R.string.action_reset)
                             )
                         }
                     }
@@ -292,7 +296,7 @@ fun CsvImportScreen(
                         .padding(16.dp),
                     action = {
                         TextButton(onClick = viewModel::onClearError) {
-                            Text("DISMISS", color = Color.White)
+                            Text(stringResource(R.string.action_dismiss), color = Color.White)
                         }
                     },
                     containerColor = CrimsonExpense
@@ -317,10 +321,10 @@ fun CsvImportScreen(
 @Composable
 private fun ImportStepperHeader(currentStep: ImportStep) {
     val steps = listOf(
-        ImportStep.SELECT_FILE to "File",
-        ImportStep.MAPPING_CONFIG to "Mapping",
-        ImportStep.PREVIEW_REVIEW to "Review",
-        ImportStep.IMPORT_SUMMARY to "Done"
+        ImportStep.SELECT_FILE to stringResource(R.string.csv_step_select_file).replace(Regex("^\\d+\\.\\s*"), ""),
+        ImportStep.MAPPING_CONFIG to stringResource(R.string.csv_step_mapping).replace(Regex("^\\d+\\.\\s*"), ""),
+        ImportStep.PREVIEW_REVIEW to stringResource(R.string.csv_step_preview).replace(Regex("^\\d+\\.\\s*"), ""),
+        ImportStep.IMPORT_SUMMARY to stringResource(R.string.csv_step_summary).replace(Regex("^\\d+\\.\\s*"), "")
     )
 
     Row(
@@ -461,7 +465,7 @@ private fun SelectFileView(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Choose CSV Document",
+                        text = stringResource(R.string.csv_select_file_btn),
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -735,7 +739,7 @@ private fun MappingConfigView(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = "Destination Account",
+                    text = stringResource(R.string.csv_destination_account),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold
                 )
@@ -809,7 +813,7 @@ private fun MappingConfigView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {
-                        Text("Header Row", fontWeight = FontWeight.Medium)
+                        Text(stringResource(R.string.csv_has_header), fontWeight = FontWeight.Medium)
                         Text("First line contains column names", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     Switch(
@@ -857,7 +861,7 @@ private fun MappingConfigView(
 
                 // Date format
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Date Format", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.csv_date_format), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
                     OutlinedTextField(
                         value = formatConfig.dateFormat,
                         onValueChange = { onFormatConfigChange(formatConfig.copy(dateFormat = it)) },
@@ -888,7 +892,7 @@ private fun MappingConfigView(
                         FilterChip(
                             selected = formatConfig.amountMode == AmountMode.SINGLE_AMOUNT,
                             onClick = { onFormatConfigChange(formatConfig.copy(amountMode = AmountMode.SINGLE_AMOUNT)) },
-                            label = { Text("Single Amount Column") },
+                            label = { Text(AmountMode.SINGLE_AMOUNT.getLocalizedName()) },
                             colors = FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = EmeraldPrimary.copy(alpha = 0.2f),
                                 selectedLabelColor = EmeraldPrimary
@@ -897,7 +901,7 @@ private fun MappingConfigView(
                         FilterChip(
                             selected = formatConfig.amountMode == AmountMode.SEPARATE_DEBIT_CREDIT,
                             onClick = { onFormatConfigChange(formatConfig.copy(amountMode = AmountMode.SEPARATE_DEBIT_CREDIT)) },
-                            label = { Text("Separate Debit / Credit") },
+                            label = { Text(AmountMode.SEPARATE_DEBIT_CREDIT.getLocalizedName()) },
                             colors = FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = EmeraldPrimary.copy(alpha = 0.2f),
                                 selectedLabelColor = EmeraldPrimary
@@ -1139,7 +1143,7 @@ private fun PreviewReviewView(
                 ) {
                     Column {
                         Text(
-                            text = "${uiState.readyToImportCount} of ${uiState.totalValidRows} Ready to Import",
+                            text = stringResource(R.string.csv_preview_valid_count, uiState.readyToImportCount),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -1156,7 +1160,10 @@ private fun PreviewReviewView(
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
                     ) {
-                        Text("Import (${uiState.readyToImportCount})", fontWeight = FontWeight.Bold)
+                        Text(
+                            text = stringResource(R.string.csv_confirm_import_btn, uiState.readyToImportCount),
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
 
@@ -1317,8 +1324,7 @@ private fun ParsedRowCard(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         row.parsedDate?.let { epoch ->
-                            val dateStr = LocalDate.ofInstant(Instant.ofEpochMilli(epoch), ZoneOffset.UTC)
-                                .format(DateTimeFormatter.ofPattern("MMM dd, yyyy"))
+                            val dateStr = DateFormatterUtils.formatDate(epoch)
                             Text(
                                 text = dateStr,
                                 style = MaterialTheme.typography.labelSmall,
@@ -1382,7 +1388,7 @@ private fun ParsedRowCard(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Icon(imageVector = Icons.Default.Warning, contentDescription = null, tint = AmberWarning, modifier = Modifier.size(12.dp))
-                        val statusLabel = if (row.duplicateStatus == DuplicateStatus.EXACT_DUPLICATE) "Exact Duplicate" else "Potential Duplicate"
+                        val statusLabel = row.duplicateStatus.getLocalizedName()
                         val candidateDesc = row.duplicateTransactionDescription?.let { " ($it)" }.orEmpty()
                         Text(
                             text = "$statusLabel$candidateDesc",
@@ -1446,12 +1452,13 @@ private fun ImportSummaryView(
 
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
-                text = "Import Successful!",
+                text = stringResource(R.string.csv_summary_success),
                 style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
             )
             Text(
-                text = "${summary.importedCount} transactions imported to ${summary.destinationAccountName}",
+                text = stringResource(R.string.csv_summary_imported, summary.importedCount) + " • ${summary.destinationAccountName}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -1470,10 +1477,18 @@ private fun ImportSummaryView(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 SummaryStatRow("Total CSV Rows", "${summary.totalRows}")
-                SummaryStatRow("Successfully Imported", "${summary.importedCount}", EmeraldPrimary)
+                SummaryStatRow(
+                    label = stringResource(R.string.csv_summary_imported, summary.importedCount).substringBefore(":").ifEmpty { "Successfully Imported" },
+                    value = "${summary.importedCount}",
+                    valueColor = EmeraldPrimary
+                )
                 SummaryStatRow("Total Inflow Added", "+$${"%.2f".format(summary.totalIncomeMinor / 100.0)}", EmeraldPrimary)
                 SummaryStatRow("Total Outflow Added", "-$${"%.2f".format(summary.totalExpenseMinor / 100.0)}", CrimsonExpense)
-                SummaryStatRow("Duplicates Skipped", "${summary.skippedDuplicateCount}", AmberWarning)
+                SummaryStatRow(
+                    label = stringResource(R.string.csv_summary_skipped, summary.skippedDuplicateCount).substringBefore(":").ifEmpty { "Duplicates Skipped" },
+                    value = "${summary.skippedDuplicateCount}",
+                    valueColor = AmberWarning
+                )
                 SummaryStatRow("Excluded by User", "${summary.excludedCount}")
                 SummaryStatRow("Invalid Rows Ignored", "${summary.invalidCount}")
             }
@@ -1493,7 +1508,7 @@ private fun ImportSummaryView(
                     .height(52.dp)
             ) {
                 Text(
-                    text = "View Transactions",
+                    text = stringResource(R.string.nav_transactions),
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleSmall
                 )
@@ -1562,12 +1577,12 @@ private fun SaveProfileDialog(
                 enabled = profileName.isNotBlank(),
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Save")
+                Text(stringResource(R.string.action_save))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.action_cancel))
             }
         }
     )

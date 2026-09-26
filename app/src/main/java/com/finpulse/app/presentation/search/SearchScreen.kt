@@ -33,8 +33,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.ui.TransactionItem
 import com.finpulse.app.domain.repository.AccountRepository
@@ -64,14 +66,14 @@ fun SearchScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Global Search",
+                        text = stringResource(R.string.search_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -90,12 +92,12 @@ fun SearchScreen(
             OutlinedTextField(
                 value = query,
                 onValueChange = { query = it },
-                placeholder = { Text("Search merchants, tags, notes, payees...") },
+                placeholder = { Text(stringResource(R.string.search_hint)) },
                 leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = null) },
                 trailingIcon = {
                     if (query.isNotBlank()) {
                         IconButton(onClick = { query = "" }) {
-                            Icon(imageVector = Icons.Default.Close, contentDescription = "Clear")
+                            Icon(imageVector = Icons.Default.Close, contentDescription = stringResource(R.string.action_close))
                         }
                     }
                 },
@@ -120,7 +122,7 @@ fun SearchScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Type a search term to find transactions across all accounts",
+                        text = stringResource(R.string.search_empty_hint),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -133,7 +135,7 @@ fun SearchScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "No records matched \"$query\"",
+                        text = stringResource(R.string.search_no_results),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -145,7 +147,7 @@ fun SearchScreen(
                 ) {
                     item {
                         Text(
-                            text = "${transactions.size} results found",
+                            text = stringResource(R.string.search_results_count, transactions.size),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(vertical = 4.dp)

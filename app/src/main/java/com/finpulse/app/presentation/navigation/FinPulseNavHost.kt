@@ -270,8 +270,17 @@ fun FinPulseApp(
 
             // 5. More (Hub)
             composable(Screen.More.route) {
+                val context = androidx.compose.ui.platform.LocalContext.current
+                val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
                 MoreHubScreen(
                     baseCurrency = userPrefs.baseCurrencyCode,
+                    selectedLanguageCode = userPrefs.selectedLanguage,
+                    onLanguageSelected = { lang ->
+                        com.finpulse.app.core.locale.AppLocaleManager.setLocale(context, lang)
+                        coroutineScope.launch {
+                            container.userPreferencesDataStore.setSelectedLanguage(lang.code)
+                        }
+                    },
                     onNavigate = { screen -> navController.navigate(screen.route) }
                 )
             }

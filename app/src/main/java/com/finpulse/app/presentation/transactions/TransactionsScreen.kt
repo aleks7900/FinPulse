@@ -59,14 +59,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.AmberWarning
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.TransferBlue
 import com.finpulse.app.core.ui.TransactionItem
+import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.Category
 import com.finpulse.app.domain.model.Transaction
@@ -112,7 +115,7 @@ fun TransactionsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Transactions Ledger",
+                        text = stringResource(R.string.tx_filter_sort_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -121,14 +124,14 @@ fun TransactionsScreen(
                     IconButton(onClick = onNavigateToCsvImport) {
                         Icon(
                             imageVector = Icons.Default.CloudUpload,
-                            contentDescription = "Import Statement CSV",
+                            contentDescription = stringResource(R.string.more_csv_title),
                             tint = EmeraldPrimary
                         )
                     }
                     IconButton(onClick = { onShowFilterSheet(true) }) {
                         Icon(
                             imageVector = Icons.Default.FilterList,
-                            contentDescription = "Filter",
+                            contentDescription = stringResource(R.string.action_filter),
                             tint = if (uiState.selectedTypeFilter != null || uiState.selectedAccountFilter != null || uiState.selectedCategoryFilter != null)
                                 EmeraldPrimary else MaterialTheme.colorScheme.onSurface
                         )
@@ -145,7 +148,7 @@ fun TransactionsScreen(
                 containerColor = EmeraldPrimary,
                 contentColor = Color.Black
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Transaction")
+                Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.cd_add))
             }
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -160,14 +163,14 @@ fun TransactionsScreen(
             OutlinedTextField(
                 value = uiState.searchQuery,
                 onValueChange = onSearchQueryChange,
-                placeholder = { Text("Search merchant, note, tags...") },
+                placeholder = { Text(stringResource(R.string.tx_search_hint)) },
                 leadingIcon = {
                     Icon(imageVector = Icons.Default.Search, contentDescription = null)
                 },
                 trailingIcon = {
                     if (uiState.searchQuery.isNotBlank()) {
                         IconButton(onClick = { onSearchQueryChange("") }) {
-                            Icon(imageVector = Icons.Default.Close, contentDescription = "Clear")
+                            Icon(imageVector = Icons.Default.Close, contentDescription = stringResource(R.string.action_close))
                         }
                     }
                 },
@@ -216,13 +219,13 @@ fun TransactionsScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "${uiState.unreviewedCount} transactions need category review",
+                            text = stringResource(R.string.tx_review_banner, uiState.unreviewedCount),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text = "Review Queue →",
+                            text = stringResource(R.string.tx_review_queue_action),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = AmberWarning
@@ -243,14 +246,14 @@ fun TransactionsScreen(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "No Transactions Found",
+                            text = stringResource(R.string.tx_empty_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            text = "Try clearing filters or search query.",
+                            text = stringResource(R.string.tx_empty_desc),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -263,7 +266,7 @@ fun TransactionsScreen(
                 ) {
                     items(uiState.transactions, key = { it.id }) { tx ->
                         val cat = categoryMap[tx.categoryId]
-                        val acc = accountMap[tx.sourceAccountId]?.name ?: "Account"
+                        val acc = accountMap[tx.sourceAccountId]?.name ?: stringResource(R.string.tx_account)
                         TransactionItem(
                             transaction = tx,
                             category = cat,
@@ -353,7 +356,7 @@ fun TypeFilterRow(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "Needs Review ($unreviewedCount)",
+                        text = "${stringResource(R.string.tx_needs_review)} ($unreviewedCount)",
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -361,7 +364,7 @@ fun TypeFilterRow(
             }
         }
 
-        val types = listOf(null to "All") + TransactionType.values().map { it to it.displayName }
+        val types = listOf(null to stringResource(R.string.tx_filter_all)) + TransactionType.values().map { it to it.getLocalizedName() }
         types.forEach { (type, label) ->
             val isSelected = !filterOnlyUnreviewed && selectedType == type
             Surface(
@@ -413,24 +416,24 @@ fun FilterBottomSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Filter & Sort Ledger",
+                    text = stringResource(R.string.tx_filter_sort_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
                 TextButton(onClick = onReset) {
-                    Text("Reset All", color = EmeraldPrimary)
+                    Text(stringResource(R.string.action_reset), color = EmeraldPrimary)
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("Sort By", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.sort_by), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                SortChip("Newest", sortOrder == TransactionSort.DATE_DESC) { onSortOrderChange(TransactionSort.DATE_DESC) }
-                SortChip("Oldest", sortOrder == TransactionSort.DATE_ASC) { onSortOrderChange(TransactionSort.DATE_ASC) }
-                SortChip("Highest", sortOrder == TransactionSort.AMOUNT_DESC) { onSortOrderChange(TransactionSort.AMOUNT_DESC) }
-                SortChip("Lowest", sortOrder == TransactionSort.AMOUNT_ASC) { onSortOrderChange(TransactionSort.AMOUNT_ASC) }
+                SortChip(stringResource(R.string.sort_newest), sortOrder == TransactionSort.DATE_DESC) { onSortOrderChange(TransactionSort.DATE_DESC) }
+                SortChip(stringResource(R.string.sort_oldest), sortOrder == TransactionSort.DATE_ASC) { onSortOrderChange(TransactionSort.DATE_ASC) }
+                SortChip(stringResource(R.string.sort_highest), sortOrder == TransactionSort.AMOUNT_DESC) { onSortOrderChange(TransactionSort.AMOUNT_DESC) }
+                SortChip(stringResource(R.string.sort_lowest), sortOrder == TransactionSort.AMOUNT_ASC) { onSortOrderChange(TransactionSort.AMOUNT_ASC) }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -440,7 +443,7 @@ fun FilterBottomSheet(
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Apply Filters", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_apply), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -523,7 +526,7 @@ fun AddEditTransactionDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = if (editingTransaction != null) "Edit Transaction" else "Record Transaction",
+                text = if (editingTransaction != null) stringResource(R.string.action_edit) else stringResource(R.string.tx_record_title),
                 fontWeight = FontWeight.Bold
             )
         },
@@ -555,7 +558,7 @@ fun AddEditTransactionDialog(
                             contentColor = if (isSel) Color.White else MaterialTheme.colorScheme.onSurface
                         ) {
                             Text(
-                                text = type.displayName,
+                                text = type.getLocalizedName(),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(vertical = 8.dp),
@@ -572,7 +575,7 @@ fun AddEditTransactionDialog(
                         amountText = it
                         isError = false
                     },
-                    label = { Text("Amount ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.tx_amount)} ($baseCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     isError = isError,
                     singleLine = true,
@@ -583,7 +586,7 @@ fun AddEditTransactionDialog(
                 OutlinedTextField(
                     value = merchant,
                     onValueChange = { merchant = it },
-                    label = { Text("Merchant / Payee") },
+                    label = { Text(stringResource(R.string.tx_merchant)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -592,7 +595,7 @@ fun AddEditTransactionDialog(
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Description / Item") },
+                    label = { Text(stringResource(R.string.tx_notes)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -601,7 +604,7 @@ fun AddEditTransactionDialog(
                 OutlinedTextField(
                     value = tagsText,
                     onValueChange = { tagsText = it },
-                    label = { Text("Tags (comma separated, e.g. food, trip)") },
+                    label = { Text(stringResource(R.string.tx_tags)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -634,21 +637,21 @@ fun AddEditTransactionDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Save", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
             Row {
                 if (editingTransaction != null) {
                     IconButton(onClick = onDuplicate) {
-                        Icon(imageVector = Icons.Default.ContentCopy, contentDescription = "Duplicate")
+                        Icon(imageVector = Icons.Default.ContentCopy, contentDescription = stringResource(R.string.action_duplicate))
                     }
                     IconButton(onClick = onDelete) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete", tint = CrimsonExpense)
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.action_delete), tint = CrimsonExpense)
                     }
                 }
                 TextButton(onClick = onDismiss) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.action_cancel))
                 }
             }
         }
