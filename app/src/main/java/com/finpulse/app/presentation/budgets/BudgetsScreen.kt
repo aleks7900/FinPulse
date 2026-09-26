@@ -52,16 +52,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.finpulse.app.R
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.ui.draw.clip
 import com.finpulse.app.core.designsystem.AmberWarning
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.ui.BudgetProgressBar
 import com.finpulse.app.core.ui.CategoryIconBadge
+import com.finpulse.app.core.ui.CategoryPickerDialog
+import com.finpulse.app.core.ui.getDisplayName
 import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Budget
 import com.finpulse.app.domain.model.BudgetPeriod
 import com.finpulse.app.domain.model.BudgetStatus
 import com.finpulse.app.domain.model.Category
+import com.finpulse.app.domain.model.CategoryType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -316,7 +321,17 @@ fun AddEditBudgetDialog(
     onSave: (id: String?, categoryId: String, name: String, limitMinor: Long, period: BudgetPeriod) -> Unit,
     onDelete: () -> Unit
 ) {
-    var categoryId by remember { mutableStateOf(editingBudget?.categoryId ?: categories.firstOrNull()?.id ?: "") }
+    val expenseCategories = remember(categories) {
+        categories.filter { it.type == CategoryType.EXPENSE }
+    }
+    var categoryId by remember {
+        mutableStateOf(editingBudget?.categoryId ?: expenseCategories.firstOrNull()?.id ?: "")
+    }
+    val selectedCategory = remember(expenseCategories, categoryId) {
+        expenseCategories.find { it.id == categoryId }
+    }
+    var showCategoryPicker by remember { mutableStateOf(false) }
+
     var limitText by remember { mutableStateOf(editingBudget?.limitAmount?.amountBigDecimal?.toPlainString() ?: "") }
     var selectedPeriod by remember { mutableStateOf(editingBudget?.periodType ?: BudgetPeriod.MONTHLY) }
     var isError by remember { mutableStateOf(false) }
@@ -328,6 +343,51 @@ fun AddEditBudgetDialog(
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                // Category Selector Surface
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .clickable { showCategoryPicker = true },
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (selectedCategory != null) {
+                            CategoryIconBadge(
+                                iconName = selectedCategory.icon,
+                                colorHex = selectedCategory.colorHex,
+                                size = 28.dp,
+                                iconSize = 16.dp
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Text(
+                                text = selectedCategory.getDisplayName(),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
+                        } else {
+                            Text(
+                                text = stringResource(R.string.quick_add_select_category),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
                 // Limit
                 OutlinedTextField(
                     value = limitText,
@@ -375,7 +435,7 @@ fun AddEditBudgetDialog(
                         return@Button
                     }
                     val limitMinor = (limitVal * 100).toLong()
-                    val catName = categories.find { it.id == categoryId }?.name ?: "Budget"
+                    val catName = selectedCategory?.name ?: categories.find { it.id == categoryId }?.name ?: "Budget"
                     onSave(editingBudget?.id, categoryId, catName, limitMinor, selectedPeriod)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
@@ -394,4 +454,18 @@ fun AddEditBudgetDialog(
             }
         }
     )
+
+    if (showCategoryPicker) {
+        CategoryPickerDialog(
+            categories = expenseCategories,
+            selectedCategoryId = categoryId,
+            initialType = CategoryType.EXPENSE,
+            allowedType = CategoryType.EXPENSE,
+            onCategorySelected = { cat ->
+                categoryId = cat.id
+                showCategoryPicker = false
+            },
+            onDismissRequest = { showCategoryPicker = false }
+        )
+    }
 }

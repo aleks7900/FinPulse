@@ -27,7 +27,7 @@
     <string name="nav_analytics">分析レポート</string>
     <string name="nav_more">その他</string>
 
-    <!-- Common Actions & Buttons -->
+    <!-- Common Actions &amp; Buttons -->
     <string name="action_save">保存</string>
     <string name="action_cancel">キャンセル</string>
     <string name="action_delete">削除</string>
@@ -165,7 +165,7 @@
     <string name="account_archive">口座をアーカイブ</string>
     <string name="account_delete">口座を削除</string>
 
-    <!-- Recurring & Subscriptions -->
+    <!-- Recurring &amp; Subscriptions -->
     <string name="recurring_title">定期支払・サブスク管理</string>
     <string name="recurring_upcoming_title">支払予定</string>
     <string name="recurring_upcoming_subtitle">今後30日間の支払予定</string>
@@ -202,7 +202,7 @@
     <string name="goal_empty_title">貯蓄目標が設定されていません</string>
     <string name="goal_empty_desc">旅行やマイホーム資金、緊急予備資金などの目標を立てましょう</string>
 
-    <!-- Investments & Assets -->
+    <!-- Investments &amp; Assets -->
     <string name="investments_title">投資・保有資産</string>
     <string name="investments_total_portfolio">ポートフォリオ評価額</string>
     <string name="investments_total_gain_loss">評価損益合計</string>
@@ -216,7 +216,7 @@
     <string name="asset_empty_title">投資資産が登録されていません</string>
     <string name="asset_empty_desc">株式、投資信託、暗号資産、不動産、債券を管理</string>
 
-    <!-- Debt & Liabilities -->
+    <!-- Debt &amp; Liabilities -->
     <string name="debt_title">借入金・負債管理</string>
     <string name="debt_total_debt">負債残高合計</string>
     <string name="debt_total_paid_off">返済済み元金</string>
@@ -334,7 +334,7 @@
     <string name="more_insights_title">家計インサイト</string>
     <string name="more_insights_desc">支出傾向の分析と節約アドバイス</string>
 
-    <!-- Security & Privacy -->
+    <!-- Security &amp; Privacy -->
     <string name="security_title">セキュリティ設定</string>
     <string name="security_biometric">生体認証ログイン</string>
     <string name="security_biometric_desc">指紋認証または顔認証でロック解除</string>
@@ -349,7 +349,7 @@
     <string name="security_pin_mismatch">PINが一致しません。もう一度お試しください。</string>
     <string name="security_pin_set_success">セキュリティ設定を更新しました</string>
 
-    <!-- Categorization Rules & Smart Engine -->
+    <!-- Categorization Rules &amp; Smart Engine -->
     <string name="rules_title">自動仕分けルール</string>
     <string name="rules_tab_rules">ルール一覧 (%1$d)</string>
     <string name="rules_tab_review">確認待ち (%1$d)</string>
@@ -388,7 +388,7 @@
     <string name="insights_empty_title">現在インサイトはありません</string>
     <string name="insights_empty_desc">取引データを記録していくと、支出の傾向や分析が表示されます</string>
 
-    <!-- Search & Filter -->
+    <!-- Search &amp; Filter -->
     <string name="search_title">明細検索</string>
     <string name="search_hint">店舗名、金額、タグで検索…</string>
     <string name="search_results_count">%1$d 件見つかりました</string>
@@ -476,7 +476,7 @@
         <item quantity="other">%d行インポート完了</item>
     </plurals>
 
-    <!-- Filter & Sort -->
+    <!-- Filter &amp; Sort -->
     <string name="sort_by">並び替え</string>
     <string name="sort_newest">新しい順</string>
     <string name="sort_oldest">古い順</string>
@@ -506,14 +506,14 @@
     <string name="period_year">年間</string>
     <string name="period_all_time">全期間</string>
 
-    <!-- Recurring Tabs & Windows -->
+    <!-- Recurring Tabs &amp; Windows -->
     <string name="recurring_tab_upcoming">予定</string>
     <string name="recurring_tab_rules">すべてのルール</string>
     <string name="recurring_tab_subscriptions">サブスクリプション</string>
     <string name="recurring_window_7d">今後7日間</string>
     <string name="recurring_window_30d">今後30日間</string>
 
-    <!-- Debt Strategies & Metrics -->
+    <!-- Debt Strategies &amp; Metrics -->
     <string name="debt_strategy_snowball_title">スノーボール方式</string>
     <string name="debt_strategy_snowball_sub">残高の少ない順に返済</string>
     <string name="debt_strategy_avalanche_title">アバランチ方式</string>
@@ -530,7 +530,7 @@
     <string name="accounts_transfer_cannot_desc">口座間振替を行うには、有効な口座が2つ以上必要です。</string>
     <string name="accounts_active_tracked">%1$d 件のアクティブ口座</string>
 
-    <!-- Analytics & Budgets Extras -->
+    <!-- Analytics &amp; Budgets Extras -->
     <string name="analytics_avg_daily">1日平均支出</string>
     <string name="analytics_largest_expense">最大支出</string>
     <string name="analytics_top_merchants">主な利用先</string>
@@ -585,4 +585,191 @@
     <string name="security_pin_configure_title">セキュリティPINの設定</string>
     <string name="security_pin_min_digits">PINは4桁以上である必要があります</string>
     <string name="security_pin_save_btn">PINを保存</string>
+
+    <!-- Extended Default Categories &amp; UI -->
+    <string name="category_search_hint">カテゴリを検索…</string>
+    <string name="category_frequently_used">よく使うカテゴリ</string>
+    <string name="category_all_categories">すべてのカテゴリ</string>
+    <string name="category_browse_all">すべて表示</string>
+    <string name="cat_home_rent">家賃</string>
+    <string name="cat_home_mortgage">住宅ローン</string>
+    <string name="cat_home_general">住まい</string>
+    <string name="cat_home_utilities">公共料金</string>
+    <string name="cat_home_electricity">電気代</string>
+    <string name="cat_home_water">水道代</string>
+    <string name="cat_home_gas">ガス代</string>
+    <string name="cat_home_heating">暖房</string>
+    <string name="cat_home_internet">インターネット</string>
+    <string name="cat_home_phone">携帯電話</string>
+    <string name="cat_home_tv">テレビ</string>
+    <string name="cat_home_maintenance">住宅メンテナンス</string>
+    <string name="cat_home_repairs">住宅修繕</string>
+    <string name="cat_home_furniture">家具</string>
+    <string name="cat_home_supplies">日用品・消耗品</string>
+    <string name="cat_home_cleaning">清掃・クリーニング</string>
+    <string name="cat_home_security">防犯・セキュリティ</string>
+    <string name="cat_home_property_tax">固定資産税</string>
+    <string name="cat_food_restaurants">レストラン</string>
+    <string name="cat_food_cafes">カフェ</string>
+    <string name="cat_food_fast_food">ファストフード</string>
+    <string name="cat_food_delivery">フードデリバリー</string>
+    <string name="cat_food_lunch">ランチ</string>
+    <string name="cat_food_snacks">軽食・スナック</string>
+    <string name="cat_food_drinks">飲み物</string>
+    <string name="cat_food_bakery">ベーカリー</string>
+    <string name="cat_food_other">その他の食品</string>
+    <string name="cat_transport_public">公共交通機関</string>
+    <string name="cat_transport_taxi">タクシー</string>
+    <string name="cat_transport_parking">駐車場</string>
+    <string name="cat_transport_maintenance">車の点検・整備</string>
+    <string name="cat_transport_repair">車修理</string>
+    <string name="cat_transport_insurance">自動車保険</string>
+    <string name="cat_transport_wash">洗車</string>
+    <string name="cat_transport_tolls">有料道路・ETC</string>
+    <string name="cat_transport_rental">レンタカー</string>
+    <string name="cat_transport_bicycle">自転車</string>
+    <string name="cat_transport_other">その他の交通</string>
+    <string name="cat_shopping_clothing">衣類</string>
+    <string name="cat_shopping_shoes">靴</string>
+    <string name="cat_shopping_accessories">アクセサリー</string>
+    <string name="cat_shopping_electronics">電子機器・ガジェット</string>
+    <string name="cat_shopping_appliances">家電製品</string>
+    <string name="cat_shopping_online">ネット通販</string>
+    <string name="cat_shopping_aliexpress">AliExpress</string>
+    <string name="cat_shopping_amazon">Amazon</string>
+    <string name="cat_shopping_google_play">Google Play</string>
+    <string name="cat_shopping_app_store">App Store</string>
+    <string name="cat_shopping_games">ゲーム</string>
+    <string name="cat_shopping_gifts">ギフト・プレゼント</string>
+    <string name="cat_shopping_other">その他の買い物</string>
+    <string name="cat_health_pharmacy">薬局・ドラッグストア</string>
+    <string name="cat_health_medicine">医薬品</string>
+    <string name="cat_health_doctor">診療・医師</string>
+    <string name="cat_health_dentist">歯科・デンタル</string>
+    <string name="cat_health_hospital">病院</string>
+    <string name="cat_health_tests">検査・診断</string>
+    <string name="cat_health_vitamins">ビタミン・サプリ</string>
+    <string name="cat_health_insurance">健康保険・医療保険</string>
+    <string name="cat_health_gym">ジム</string>
+    <string name="cat_health_other">その他の健康</string>
+    <string name="cat_entertainment_cinema">映画館</string>
+    <string name="cat_entertainment_music">音楽</string>
+    <string name="cat_entertainment_games">ゲーム</string>
+    <string name="cat_entertainment_events">イベント</string>
+    <string name="cat_entertainment_concerts">コンサート・ライブ</string>
+    <string name="cat_entertainment_nightlife">ナイトライフ・バー</string>
+    <string name="cat_entertainment_hobbies">趣味</string>
+    <string name="cat_entertainment_books">書籍・電子書籍</string>
+    <string name="cat_entertainment_streaming">動画配信サービス</string>
+    <string name="cat_entertainment_other">その他のエンタメ</string>
+    <string name="cat_sub_netflix">Netflix</string>
+    <string name="cat_sub_spotify">Spotify</string>
+    <string name="cat_sub_youtube">YouTube</string>
+    <string name="cat_sub_cloud">クラウドストレージ</string>
+    <string name="cat_sub_software">ソフトウェア</string>
+    <string name="cat_sub_apps">モバイルアプリ</string>
+    <string name="cat_sub_digital_services">デジタルサービス</string>
+    <string name="cat_sub_other">その他のサブスク</string>
+    <string name="cat_personal_care">パーソナルケア</string>
+    <string name="cat_personal_barber">美容室・理容室</string>
+    <string name="cat_personal_beauty">美容</string>
+    <string name="cat_personal_cosmetics">化粧品・コスメ</string>
+    <string name="cat_personal_spa">スパ</string>
+    <string name="cat_personal_massage">マッサージ</string>
+    <string name="cat_personal_other">その他のケア</string>
+    <string name="cat_family">家族・子ども</string>
+    <string name="cat_family_children">子ども</string>
+    <string name="cat_family_kindergarten">幼稚園・保育園</string>
+    <string name="cat_family_school">学校</string>
+    <string name="cat_family_education">教育費</string>
+    <string name="cat_family_courses">習い事・教室</string>
+    <string name="cat_family_toys">おもちゃ</string>
+    <string name="cat_family_childcare">ベビーシッター・託児</string>
+    <string name="cat_family_pocket_money">お小遣い</string>
+    <string name="cat_family_support">仕送り・家族支援</string>
+    <string name="cat_family_other">その他の家族費用</string>
+    <string name="cat_pets">ペット</string>
+    <string name="cat_pets_food">ペットフード</string>
+    <string name="cat_pets_vet">動物病院・獣医</string>
+    <string name="cat_pets_supplies">ペット用品</string>
+    <string name="cat_pets_grooming">トリミング</string>
+    <string name="cat_pets_other">その他のペット費用</string>
+    <string name="cat_travel">旅行</string>
+    <string name="cat_travel_flights">航空券</string>
+    <string name="cat_travel_hotels">ホテル・宿泊</string>
+    <string name="cat_travel_train">鉄道・新幹線</string>
+    <string name="cat_travel_bus">長距離バス</string>
+    <string name="cat_travel_taxi">送迎・タクシー</string>
+    <string name="cat_travel_car_rental">旅行レンタカー</string>
+    <string name="cat_travel_insurance">旅行保険</string>
+    <string name="cat_travel_vacation">バカンス・休暇</string>
+    <string name="cat_travel_tours">ツアー・アクティビティ</string>
+    <string name="cat_travel_other">その他の旅行費</string>
+    <string name="cat_edu_school">学校</string>
+    <string name="cat_edu_university">大学・大学院</string>
+    <string name="cat_edu_courses">講座・コース</string>
+    <string name="cat_edu_books">参考書・専門書</string>
+    <string name="cat_edu_online">オンライン講座</string>
+    <string name="cat_edu_training">研修・ワークショップ</string>
+    <string name="cat_edu_other">その他の教育費</string>
+    <string name="cat_financial">金融費用</string>
+    <string name="cat_fin_bank_fees">銀行手数料</string>
+    <string name="cat_fin_interest">利息・金利</string>
+    <string name="cat_fin_loan_payment">ローン返済</string>
+    <string name="cat_fin_card_payment">クレジットカード支払い</string>
+    <string name="cat_fin_insurance">各種保険料</string>
+    <string name="cat_fin_taxes">税金</string>
+    <string name="cat_fin_fines">罰金・延滞金</string>
+    <string name="cat_fin_exchange_fees">為替手数料</string>
+    <string name="cat_fin_services">金融サービス</string>
+    <string name="cat_fin_other">その他の金融費用</string>
+    <string name="cat_debt">ローン・負債</string>
+    <string name="cat_debt_loan">ローン</string>
+    <string name="cat_debt_mortgage">住宅ローン返済</string>
+    <string name="cat_debt_consumer">消費者ローン・リボ払い</string>
+    <string name="cat_debt_car">自動車ローン</string>
+    <string name="cat_debt_card">クレジットカード</string>
+    <string name="cat_debt_repayment">負債返済</string>
+    <string name="cat_debt_other">その他の負債</string>
+    <string name="cat_gifts_charity">慈善活動</string>
+    <string name="cat_gifts_donations">寄付</string>
+    <string name="cat_gifts_to_others">お祝い・贈答</string>
+    <string name="cat_gifts_religious">宗教寄付・お布施</string>
+    <string name="cat_gifts_other">その他の寄付</string>
+    <string name="cat_other_expenses">その他の支出</string>
+    <string name="cat_other_expense_item">その他の費用</string>
+    <string name="cat_income_salary">給与</string>
+    <string name="cat_income_bonus">賞与・ボーナス</string>
+    <string name="cat_income_overtime">残業手当</string>
+    <string name="cat_income_commission">歩合給・コミッション</string>
+    <string name="cat_income_tips">チップ</string>
+    <string name="cat_income_reimbursement">立替金精算</string>
+    <string name="cat_income_freelance">フリーランス</string>
+    <string name="cat_income_business">事業所得</string>
+    <string name="cat_income_consulting">コンサルティング</string>
+    <string name="cat_income_contract">請負・委託業務</string>
+    <string name="cat_income_side_job">副業</string>
+    <string name="cat_income_business_other">その他の事業収入</string>
+    <string name="cat_income_investment_income">投資収益</string>
+    <string name="cat_income_dividends">配当金</string>
+    <string name="cat_income_interest">利息収入</string>
+    <string name="cat_income_capital_gains">譲渡益・キャピタルゲイン</string>
+    <string name="cat_income_crypto">暗号資産収益</string>
+    <string name="cat_income_rental">不動産賃貸収入</string>
+    <string name="cat_income_government">公的手当・給付金</string>
+    <string name="cat_income_benefits">給付金</string>
+    <string name="cat_income_pension">年金</string>
+    <string name="cat_income_scholarship">奨学金</string>
+    <string name="cat_income_social_payments">社会保障給付</string>
+    <string name="cat_income_tax_refund">還付申告・税金還付</string>
+    <string name="cat_income_gifts">祝儀・贈り物</string>
+    <string name="cat_income_cashback">キャッシュバック・還元</string>
+    <string name="cat_income_refund">購入品の返金</string>
+    <string name="cat_income_sale_of_items">不用品・フリマ売上</string>
+    <string name="cat_income_prize">懸賞・当せん金</string>
+    <string name="cat_income_other_item">その他の収入</string>
+    <string name="cat_income_uncategorized">未分類の収入</string>
+    <string name="cat_transfer">口座間振替</string>
+    <string name="cat_transfer_withdrawal">ATM現金引出し</string>
+    <string name="cat_transfer_deposit">ATM現金預入れ</string>
 </resources>

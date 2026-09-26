@@ -27,7 +27,7 @@
     <string name="nav_analytics">분석</string>
     <string name="nav_more">더보기</string>
 
-    <!-- Common Actions & Buttons -->
+    <!-- Common Actions &amp; Buttons -->
     <string name="action_save">저장</string>
     <string name="action_cancel">취소</string>
     <string name="action_delete">삭제</string>
@@ -165,7 +165,7 @@
     <string name="account_archive">계좌 보관</string>
     <string name="account_delete">계좌 삭제</string>
 
-    <!-- Recurring & Subscriptions -->
+    <!-- Recurring &amp; Subscriptions -->
     <string name="recurring_title">정기 결제 및 구독</string>
     <string name="recurring_upcoming_title">결제 예정 내역</string>
     <string name="recurring_upcoming_subtitle">향후 30일간 지출 예정</string>
@@ -202,7 +202,7 @@
     <string name="goal_empty_title">설정된 재무 목표가 없습니다</string>
     <string name="goal_empty_desc">여행, 비상금, 목돈 마련을 위한 목표를 세워보세요</string>
 
-    <!-- Investments & Assets -->
+    <!-- Investments &amp; Assets -->
     <string name="investments_title">투자 및 자산</string>
     <string name="investments_total_portfolio">포트폴리오 평가액</string>
     <string name="investments_total_gain_loss">총 평가수익</string>
@@ -216,7 +216,7 @@
     <string name="asset_empty_title">등록된 투자 자산이 없습니다</string>
     <string name="asset_empty_desc">주식, ETF, 가상자산, 부동산, 채권을 한곳에서 추적하세요</string>
 
-    <!-- Debt & Liabilities -->
+    <!-- Debt &amp; Liabilities -->
     <string name="debt_title">대출 및 부채</string>
     <string name="debt_total_debt">총 잔여 대출 원금</string>
     <string name="debt_total_paid_off">상환 완료 원금</string>
@@ -334,7 +334,7 @@
     <string name="more_insights_title">소비 분석 및 인사이트</string>
     <string name="more_insights_desc">소비 패턴 분석 및 절약 팁 제공</string>
 
-    <!-- Security & Privacy -->
+    <!-- Security &amp; Privacy -->
     <string name="security_title">보안 및 개인정보 보호</string>
     <string name="security_biometric">생체 인식 잠금 해제</string>
     <string name="security_biometric_desc">지문 또는 얼굴 인식으로 앱 잠금 해제</string>
@@ -349,7 +349,7 @@
     <string name="security_pin_mismatch">PIN 번호가 일치하지 않습니다. 다시 입력해주세요.</string>
     <string name="security_pin_set_success">보안 설정이 성공적으로 업데이트되었습니다</string>
 
-    <!-- Categorization Rules & Smart Engine -->
+    <!-- Categorization Rules &amp; Smart Engine -->
     <string name="rules_title">자동 분류 규칙</string>
     <string name="rules_tab_rules">규칙 목록 (%1$d)</string>
     <string name="rules_tab_review">검토 대기 (%1$d)</string>
@@ -388,7 +388,7 @@
     <string name="insights_empty_title">표시할 인사이트가 없습니다</string>
     <string name="insights_empty_desc">소비 내역을 기록하면 맞춤형 지출 분석과 팁이 제공됩니다</string>
 
-    <!-- Search & Filter -->
+    <!-- Search &amp; Filter -->
     <string name="search_title">거래내역 검색</string>
     <string name="search_hint">거래처, 금액, 태그로 검색…</string>
     <string name="search_results_count">%1$d건의 결과</string>
@@ -476,7 +476,7 @@
         <item quantity="other">%d행 가져오기 완료</item>
     </plurals>
 
-    <!-- Filter & Sort -->
+    <!-- Filter &amp; Sort -->
     <string name="sort_by">정렬 기준</string>
     <string name="sort_newest">최신순</string>
     <string name="sort_oldest">오래된순</string>
@@ -506,14 +506,14 @@
     <string name="period_year">연간</string>
     <string name="period_all_time">전체 기간</string>
 
-    <!-- Recurring Tabs & Windows -->
+    <!-- Recurring Tabs &amp; Windows -->
     <string name="recurring_tab_upcoming">예정된 결제</string>
     <string name="recurring_tab_rules">모든 규칙</string>
     <string name="recurring_tab_subscriptions">정기 구독</string>
     <string name="recurring_window_7d">향후 7일</string>
     <string name="recurring_window_30d">향후 30일</string>
 
-    <!-- Debt Strategies & Metrics -->
+    <!-- Debt Strategies &amp; Metrics -->
     <string name="debt_strategy_snowball_title">스노우볼 방식</string>
     <string name="debt_strategy_snowball_sub">가장 적은 잔액부터 상환</string>
     <string name="debt_strategy_avalanche_title">애벌랜치 방식</string>
@@ -530,7 +530,7 @@
     <string name="accounts_transfer_cannot_desc">계좌 간 이체를 하려면 최소 2개 이상의 활성 계좌가 필요합니다.</string>
     <string name="accounts_active_tracked">%1$d개의 활성 계좌 관리 중</string>
 
-    <!-- Analytics & Budgets Extras -->
+    <!-- Analytics &amp; Budgets Extras -->
     <string name="analytics_avg_daily">일평균 지출</string>
     <string name="analytics_largest_expense">최대 지출 항목</string>
     <string name="analytics_top_merchants">주요 지출처</string>
@@ -585,4 +585,191 @@
     <string name="security_pin_configure_title">보안 PIN 설정</string>
     <string name="security_pin_min_digits">PIN은 4자리 이상이어야 합니다</string>
     <string name="security_pin_save_btn">PIN 저장</string>
+
+    <!-- Extended Default Categories &amp; UI -->
+    <string name="category_search_hint">카테고리 검색…</string>
+    <string name="category_frequently_used">자주 사용하는 항목</string>
+    <string name="category_all_categories">모든 카테고리</string>
+    <string name="category_browse_all">전체 보기</string>
+    <string name="cat_home_rent">월세/임대료</string>
+    <string name="cat_home_mortgage">주택 담보 대출</string>
+    <string name="cat_home_general">주거/가정</string>
+    <string name="cat_home_utilities">공과금</string>
+    <string name="cat_home_electricity">전기요금</string>
+    <string name="cat_home_water">수도요금</string>
+    <string name="cat_home_gas">가스요금</string>
+    <string name="cat_home_heating">난방비</string>
+    <string name="cat_home_internet">인터넷</string>
+    <string name="cat_home_phone">휴대폰 요금</string>
+    <string name="cat_home_tv">TV 방송</string>
+    <string name="cat_home_maintenance">주택 유지 관리</string>
+    <string name="cat_home_repairs">집 수리</string>
+    <string name="cat_home_furniture">가구</string>
+    <string name="cat_home_supplies">생활용품</string>
+    <string name="cat_home_cleaning">청소/클리닝</string>
+    <string name="cat_home_security">보안/경비</string>
+    <string name="cat_home_property_tax">재산세</string>
+    <string name="cat_food_restaurants">식당/레스토랑</string>
+    <string name="cat_food_cafes">카페/커피</string>
+    <string name="cat_food_fast_food">패스트푸드</string>
+    <string name="cat_food_delivery">배달 음식</string>
+    <string name="cat_food_lunch">점심 식사</string>
+    <string name="cat_food_snacks">간식</string>
+    <string name="cat_food_drinks">음료</string>
+    <string name="cat_food_bakery">베이커리/빵</string>
+    <string name="cat_food_other">기타 음식</string>
+    <string name="cat_transport_public">대중교통</string>
+    <string name="cat_transport_taxi">택시</string>
+    <string name="cat_transport_parking">주차비</string>
+    <string name="cat_transport_maintenance">차량 유지보수</string>
+    <string name="cat_transport_repair">차량 수리</string>
+    <string name="cat_transport_insurance">자동차 보험</string>
+    <string name="cat_transport_wash">세차</string>
+    <string name="cat_transport_tolls">통행료</string>
+    <string name="cat_transport_rental">렌터카</string>
+    <string name="cat_transport_bicycle">자전거</string>
+    <string name="cat_transport_other">기타 교통</string>
+    <string name="cat_shopping_clothing">의류</string>
+    <string name="cat_shopping_shoes">신발</string>
+    <string name="cat_shopping_accessories">액세서리</string>
+    <string name="cat_shopping_electronics">전자기기</string>
+    <string name="cat_shopping_appliances">가전제품</string>
+    <string name="cat_shopping_online">온라인 쇼핑</string>
+    <string name="cat_shopping_aliexpress">AliExpress</string>
+    <string name="cat_shopping_amazon">Amazon</string>
+    <string name="cat_shopping_google_play">Google Play</string>
+    <string name="cat_shopping_app_store">App Store</string>
+    <string name="cat_shopping_games">게임 구매</string>
+    <string name="cat_shopping_gifts">선물</string>
+    <string name="cat_shopping_other">기타 쇼핑</string>
+    <string name="cat_health_pharmacy">약국</string>
+    <string name="cat_health_medicine">의약품</string>
+    <string name="cat_health_doctor">진료/의사</string>
+    <string name="cat_health_dentist">치과</string>
+    <string name="cat_health_hospital">병원</string>
+    <string name="cat_health_tests">건강 검진/검사</string>
+    <string name="cat_health_vitamins">비타민/영양제</string>
+    <string name="cat_health_insurance">건강보험</string>
+    <string name="cat_health_gym">헬스장</string>
+    <string name="cat_health_other">기타 건강</string>
+    <string name="cat_entertainment_cinema">영화관</string>
+    <string name="cat_entertainment_music">음악</string>
+    <string name="cat_entertainment_games">게임</string>
+    <string name="cat_entertainment_events">행사/이벤트</string>
+    <string name="cat_entertainment_concerts">콘서트/공연</string>
+    <string name="cat_entertainment_nightlife">나이트라이프/주점</string>
+    <string name="cat_entertainment_hobbies">취미</string>
+    <string name="cat_entertainment_books">도서</string>
+    <string name="cat_entertainment_streaming">스트리밍 서비스</string>
+    <string name="cat_entertainment_other">기타 엔터테인먼트</string>
+    <string name="cat_sub_netflix">넷플릭스 (Netflix)</string>
+    <string name="cat_sub_spotify">스포티파이 (Spotify)</string>
+    <string name="cat_sub_youtube">유튜브 (YouTube)</string>
+    <string name="cat_sub_cloud">클라우드 저장소</string>
+    <string name="cat_sub_software">소프트웨어</string>
+    <string name="cat_sub_apps">모바일 앱</string>
+    <string name="cat_sub_digital_services">디지털 서비스</string>
+    <string name="cat_sub_other">기타 구독</string>
+    <string name="cat_personal_care">개인 관리/미용</string>
+    <string name="cat_personal_barber">미용실/이발소</string>
+    <string name="cat_personal_beauty">뷰티</string>
+    <string name="cat_personal_cosmetics">화장품</string>
+    <string name="cat_personal_spa">스파</string>
+    <string name="cat_personal_massage">마사지</string>
+    <string name="cat_personal_other">기타 개인 관리</string>
+    <string name="cat_family">가족 및 자녀</string>
+    <string name="cat_family_children">자녀</string>
+    <string name="cat_family_kindergarten">어린이집/유치원</string>
+    <string name="cat_family_school">학교</string>
+    <string name="cat_family_education">자녀 교육</string>
+    <string name="cat_family_courses">학원/과외</string>
+    <string name="cat_family_toys">장난감</string>
+    <string name="cat_family_childcare">보육/베이비시터</string>
+    <string name="cat_family_pocket_money">용돈 지급</string>
+    <string name="cat_family_support">가족 부양/지원</string>
+    <string name="cat_family_other">기타 가족 지출</string>
+    <string name="cat_pets">반려동물</string>
+    <string name="cat_pets_food">사료/간식</string>
+    <string name="cat_pets_vet">동물병원/수의</string>
+    <string name="cat_pets_supplies">반려동물 용품</string>
+    <string name="cat_pets_grooming">미용/목욕</string>
+    <string name="cat_pets_other">기타 반려동물 지출</string>
+    <string name="cat_travel">여행</string>
+    <string name="cat_travel_flights">항공권</string>
+    <string name="cat_travel_hotels">호텔/숙박</string>
+    <string name="cat_travel_train">기차/열차</string>
+    <string name="cat_travel_bus">고속버스</string>
+    <string name="cat_travel_taxi">여행 택시/환승</string>
+    <string name="cat_travel_car_rental">여행 렌터카</string>
+    <string name="cat_travel_insurance">여행자 보험</string>
+    <string name="cat_travel_vacation">휴가</string>
+    <string name="cat_travel_tours">투어 및 체험</string>
+    <string name="cat_travel_other">기타 여행 비용</string>
+    <string name="cat_edu_school">학교 학비</string>
+    <string name="cat_edu_university">대학교/대학원</string>
+    <string name="cat_edu_courses">전문 강의</string>
+    <string name="cat_edu_books">교재/전문 서적</string>
+    <string name="cat_edu_online">온라인 강의</string>
+    <string name="cat_edu_training">직무 교육/훈련</string>
+    <string name="cat_edu_other">기타 교육비</string>
+    <string name="cat_financial">금융 비용</string>
+    <string name="cat_fin_bank_fees">은행 수수료</string>
+    <string name="cat_fin_interest">이자 지출</string>
+    <string name="cat_fin_loan_payment">대출 원리금 상환</string>
+    <string name="cat_fin_card_payment">신용카드 대금 결제</string>
+    <string name="cat_fin_insurance">보험료</string>
+    <string name="cat_fin_taxes">세금 및 공과금</string>
+    <string name="cat_fin_fines">과태료/벌금</string>
+    <string name="cat_fin_exchange_fees">환전 수수료</string>
+    <string name="cat_fin_services">금융 컨설팅/서비스</string>
+    <string name="cat_fin_other">기타 금융 비용</string>
+    <string name="cat_debt">대출 및 채무</string>
+    <string name="cat_debt_loan">일반 대출</string>
+    <string name="cat_debt_mortgage">주택 대출금 납입</string>
+    <string name="cat_debt_consumer">신용 대출</string>
+    <string name="cat_debt_car">자동차 할부</string>
+    <string name="cat_debt_card">신용카드</string>
+    <string name="cat_debt_repayment">부채 상환</string>
+    <string name="cat_debt_other">기타 채무</string>
+    <string name="cat_gifts_charity">자선 활동</string>
+    <string name="cat_gifts_donations">후원금/기부</string>
+    <string name="cat_gifts_to_others">타인을 위한 선물</string>
+    <string name="cat_gifts_religious">종교 헌금</string>
+    <string name="cat_gifts_other">기타 기부</string>
+    <string name="cat_other_expenses">기타 지출</string>
+    <string name="cat_other_expense_item">기타 항목</string>
+    <string name="cat_income_salary">급여</string>
+    <string name="cat_income_bonus">보너스/상여금</string>
+    <string name="cat_income_overtime">야근/초과근무 수당</string>
+    <string name="cat_income_commission">수수료/인센티브</string>
+    <string name="cat_income_tips">팁</string>
+    <string name="cat_income_reimbursement">경비 환급</string>
+    <string name="cat_income_freelance">프리랜서</string>
+    <string name="cat_income_business">사업 소득</string>
+    <string name="cat_income_consulting">자문/컨설팅</string>
+    <string name="cat_income_contract">계약직 수입</string>
+    <string name="cat_income_side_job">부업/아르바이트</string>
+    <string name="cat_income_business_other">기타 사업 수입</string>
+    <string name="cat_income_investment_income">투자 수익</string>
+    <string name="cat_income_dividends">배당금</string>
+    <string name="cat_income_interest">이자 소득</string>
+    <string name="cat_income_capital_gains">자본 이득/매매 차익</string>
+    <string name="cat_income_crypto">가상자산 수익</string>
+    <string name="cat_income_rental">부동산 임대 수입</string>
+    <string name="cat_income_government">정부 지원금 및 보조금</string>
+    <string name="cat_income_benefits">수당</string>
+    <string name="cat_income_pension">연금</string>
+    <string name="cat_income_scholarship">장학금</string>
+    <string name="cat_income_social_payments">사회보장 급여</string>
+    <string name="cat_income_tax_refund">연말정산 환급</string>
+    <string name="cat_income_gifts">받은 선물/축의금</string>
+    <string name="cat_income_cashback">캐시백/포인트 환급</string>
+    <string name="cat_income_refund">환불금</string>
+    <string name="cat_income_sale_of_items">물품 판매</string>
+    <string name="cat_income_prize">상금/당첨금</string>
+    <string name="cat_income_other_item">기타 수입</string>
+    <string name="cat_income_uncategorized">미분류 수입</string>
+    <string name="cat_transfer">계좌 간 이체</string>
+    <string name="cat_transfer_withdrawal">현금 인출</string>
+    <string name="cat_transfer_deposit">현금 입금</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.finpulse.app.data.repository
 
 import com.finpulse.app.core.database.FinPulseDatabase
+import com.finpulse.app.core.database.dao.CategoryDao
 import com.finpulse.app.core.database.entity.CategoryEntity
 import com.finpulse.app.core.model.Money
 import com.finpulse.app.data.mapper.toDomain
@@ -198,8 +199,8 @@ class TransactionRepositoryImpl(private val database: FinPulseDatabase) : Transa
     }
 }
 
-class CategoryRepositoryImpl(private val database: FinPulseDatabase) : CategoryRepository {
-    private val dao = database.categoryDao()
+class CategoryRepositoryImpl(private val dao: CategoryDao) : CategoryRepository {
+    constructor(database: FinPulseDatabase) : this(database.categoryDao())
 
     override fun getAllCategoriesFlow(): Flow<List<Category>> =
         dao.getAllCategoriesFlow().map { list -> list.map { it.toDomain() } }
@@ -215,28 +216,11 @@ class CategoryRepositoryImpl(private val database: FinPulseDatabase) : CategoryR
     }
 
     override suspend fun seedDefaultCategoriesIfNeeded() {
-        if (dao.getCategoryCount() > 0) return
-
-        val defaults = listOf(
-            CategoryEntity("cat_food", "Food & Dining", "EXPENSE", null, "fastfood", 0xFFFF9800, true, 1),
-            CategoryEntity("cat_groceries", "Groceries", "EXPENSE", "cat_food", "shopping", 0xFF4CAF50, true, 2),
-            CategoryEntity("cat_housing", "Housing & Rent", "EXPENSE", null, "home", 0xFF3F51B5, true, 3),
-            CategoryEntity("cat_transport", "Transportation", "EXPENSE", null, "transport", 0xFF2196F3, true, 4),
-            CategoryEntity("cat_fuel", "Fuel & Gas", "EXPENSE", "cat_transport", "fuel", 0xFF00BCD4, true, 5),
-            CategoryEntity("cat_shopping", "Shopping", "EXPENSE", null, "shopping", 0xFFE91E63, true, 6),
-            CategoryEntity("cat_entertainment", "Entertainment", "EXPENSE", null, "entertainment", 0xFF9C27B0, true, 7),
-            CategoryEntity("cat_health", "Health & Medical", "EXPENSE", null, "health", 0xFFF44336, true, 8),
-            CategoryEntity("cat_education", "Education", "EXPENSE", null, "education", 0xFF795548, true, 9),
-            CategoryEntity("cat_fitness", "Fitness & Sports", "EXPENSE", null, "fitness", 0xFF009688, true, 10),
-            CategoryEntity("cat_subscriptions", "Subscriptions", "EXPENSE", null, "subscriptions", 0xFF673AB7, true, 11),
-            CategoryEntity("cat_gifts", "Gifts & Donations", "EXPENSE", null, "gifts", 0xFFFF4081, true, 12),
-            CategoryEntity("cat_salary", "Salary", "INCOME", null, "salary", 0xFF4CAF50, true, 1),
-            CategoryEntity("cat_freelance", "Freelance & Consulting", "INCOME", null, "work", 0xFF8BC34A, true, 2),
-            CategoryEntity("cat_invest_return", "Investment Return", "INCOME", null, "investments", 0xFF009688, true, 3),
-            CategoryEntity("cat_other_income", "Other Income", "INCOME", null, "paid", 0xFF607D8B, true, 4),
-            CategoryEntity("cat_uncategorized", "Uncategorized", "EXPENSE", null, "help", 0xFF9E9E9E, true, 99)
-        )
-        dao.insertCategories(defaults)
+        val existingIds = dao.getAllCategoryIds().toSet()
+        val missingDefaults = com.finpulse.app.domain.model.DefaultCategoryCatalog.ALL.filter { it.id !in existingIds }
+        if (missingDefaults.isNotEmpty()) {
+            dao.insertCategoriesIgnore(missingDefaults)
+        }
     }
 }
 

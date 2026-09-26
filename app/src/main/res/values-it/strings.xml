@@ -27,7 +27,7 @@
     <string name="nav_analytics">Statistiche</string>
     <string name="nav_more">Altro</string>
 
-    <!-- Common Actions & Buttons -->
+    <!-- Common Actions &amp; Buttons -->
     <string name="action_save">Salva</string>
     <string name="action_cancel">Annulla</string>
     <string name="action_delete">Elimina</string>
@@ -165,7 +165,7 @@
     <string name="account_archive">Archivia conto</string>
     <string name="account_delete">Elimina conto</string>
 
-    <!-- Recurring & Subscriptions -->
+    <!-- Recurring &amp; Subscriptions -->
     <string name="recurring_title">Pagamenti ricorrenti e abbonamenti</string>
     <string name="recurring_upcoming_title">Prossime scadenze</string>
     <string name="recurring_upcoming_subtitle">Previsione per i prossimi 30 giorni</string>
@@ -202,7 +202,7 @@
     <string name="goal_empty_title">Nessun obiettivo impostato</string>
     <string name="goal_empty_desc">Pianifica le tue riserve per vacanze, spese impreviste o acquisti</string>
 
-    <!-- Investments & Assets -->
+    <!-- Investments &amp; Assets -->
     <string name="investments_title">Investimenti e attività</string>
     <string name="investments_total_portfolio">Valore del portafoglio</string>
     <string name="investments_total_gain_loss">Rendimento complessivo</string>
@@ -216,7 +216,7 @@
     <string name="asset_empty_title">Nessun investimento registrato</string>
     <string name="asset_empty_desc">Monitora azioni, ETF, criptovalute, immobili e obbligazioni</string>
 
-    <!-- Debt & Liabilities -->
+    <!-- Debt &amp; Liabilities -->
     <string name="debt_title">Debiti e finanziamenti</string>
     <string name="debt_total_debt">Debito residuo totale</string>
     <string name="debt_total_paid_off">Quota capitale rimborsata</string>
@@ -334,7 +334,7 @@
     <string name="more_insights_title">Analisi e suggerimenti</string>
     <string name="more_insights_desc">Rilevamento anomalie e consigli di bilancio</string>
 
-    <!-- Security & Privacy -->
+    <!-- Security &amp; Privacy -->
     <string name="security_title">Sicurezza e privacy</string>
     <string name="security_biometric">Autenticazione biometrica</string>
     <string name="security_biometric_desc">Sblocco con impronta digitale o riconoscimento facciale</string>
@@ -349,7 +349,7 @@
     <string name="security_pin_mismatch">I codici PIN non coincidono. Riprova.</string>
     <string name="security_pin_set_success">Impostazioni di sicurezza aggiornate con successo</string>
 
-    <!-- Categorization Rules & Smart Engine -->
+    <!-- Categorization Rules &amp; Smart Engine -->
     <string name="rules_title">Regole di categorizzazione</string>
     <string name="rules_tab_rules">Regole (%1$d)</string>
     <string name="rules_tab_review">In attesa (%1$d)</string>
@@ -388,7 +388,7 @@
     <string name="insights_empty_title">Nessun suggerimento al momento</string>
     <string name="insights_empty_desc">I suggerimenti appariranno man mano che registrerai più spese</string>
 
-    <!-- Search & Filter -->
+    <!-- Search &amp; Filter -->
     <string name="search_title">Cerca nei movimenti</string>
     <string name="search_hint">Cerca per esercente, importo o tag…</string>
     <string name="search_results_count">%1$d risultati trovati</string>
@@ -484,7 +484,7 @@
         <item quantity="other">%d righe importate</item>
     </plurals>
 
-    <!-- Filter & Sort -->
+    <!-- Filter &amp; Sort -->
     <string name="sort_by">Ordina per</string>
     <string name="sort_newest">Più recenti</string>
     <string name="sort_oldest">Meno recenti</string>
@@ -514,14 +514,14 @@
     <string name="period_year">Anno</string>
     <string name="period_all_time">Tutto il periodo</string>
 
-    <!-- Recurring Tabs & Windows -->
+    <!-- Recurring Tabs &amp; Windows -->
     <string name="recurring_tab_upcoming">In scadenza</string>
     <string name="recurring_tab_rules">Tutte le regole</string>
     <string name="recurring_tab_subscriptions">Abbonamenti</string>
     <string name="recurring_window_7d">Prossimi 7 giorni</string>
     <string name="recurring_window_30d">Prossimi 30 giorni</string>
 
-    <!-- Debt Strategies & Metrics -->
+    <!-- Debt Strategies &amp; Metrics -->
     <string name="debt_strategy_snowball_title">Metodo palla di neve</string>
     <string name="debt_strategy_snowball_sub">Saldo minore prima</string>
     <string name="debt_strategy_avalanche_title">Metodo valanga</string>
@@ -538,7 +538,7 @@
     <string name="accounts_transfer_cannot_desc">Sono necessari almeno 2 conti attivi per effettuare un giroconto.</string>
     <string name="accounts_active_tracked">%1$d conti attivi monitorati</string>
 
-    <!-- Analytics & Budgets Extras -->
+    <!-- Analytics &amp; Budgets Extras -->
     <string name="analytics_avg_daily">Spesa media giornaliera</string>
     <string name="analytics_largest_expense">Spesa maggiore</string>
     <string name="analytics_top_merchants">Principali esercenti</string>
@@ -593,4 +593,191 @@
     <string name="security_pin_configure_title">Configura PIN di sicurezza</string>
     <string name="security_pin_min_digits">Il PIN deve contenere almeno 4 cifre</string>
     <string name="security_pin_save_btn">Salva PIN</string>
+
+    <!-- Extended Default Categories &amp; UI -->
+    <string name="category_search_hint">Cerca categorie…</string>
+    <string name="category_frequently_used">Più usate</string>
+    <string name="category_all_categories">Tutte le categorie</string>
+    <string name="category_browse_all">Sfoglia tutte</string>
+    <string name="cat_home_rent">Affitto</string>
+    <string name="cat_home_mortgage">Mutuo</string>
+    <string name="cat_home_general">Casa</string>
+    <string name="cat_home_utilities">Utenze</string>
+    <string name="cat_home_electricity">Elettricità</string>
+    <string name="cat_home_water">Acqua</string>
+    <string name="cat_home_gas">Gas</string>
+    <string name="cat_home_heating">Riscaldamento</string>
+    <string name="cat_home_internet">Internet</string>
+    <string name="cat_home_phone">Cellulare</string>
+    <string name="cat_home_tv">Televisione</string>
+    <string name="cat_home_maintenance">Manutenzione casa</string>
+    <string name="cat_home_repairs">Riparazioni domestiche</string>
+    <string name="cat_home_furniture">Mobili</string>
+    <string name="cat_home_supplies">Forniture per la casa</string>
+    <string name="cat_home_cleaning">Pulizia</string>
+    <string name="cat_home_security">Sicurezza</string>
+    <string name="cat_home_property_tax">Imposta sugli immobili</string>
+    <string name="cat_food_restaurants">Ristoranti</string>
+    <string name="cat_food_cafes">Caffè</string>
+    <string name="cat_food_fast_food">Fast food</string>
+    <string name="cat_food_delivery">Consegna a domicilio</string>
+    <string name="cat_food_lunch">Pranzo</string>
+    <string name="cat_food_snacks">Spuntini</string>
+    <string name="cat_food_drinks">Bevande</string>
+    <string name="cat_food_bakery">Panetteria</string>
+    <string name="cat_food_other">Altro cibo</string>
+    <string name="cat_transport_public">Trasporto pubblico</string>
+    <string name="cat_transport_taxi">Taxi</string>
+    <string name="cat_transport_parking">Parcheggio</string>
+    <string name="cat_transport_maintenance">Manutenzione auto</string>
+    <string name="cat_transport_repair">Riparazione auto</string>
+    <string name="cat_transport_insurance">Assicurazione auto</string>
+    <string name="cat_transport_wash">Lavaggio auto</string>
+    <string name="cat_transport_tolls">Pedaggi</string>
+    <string name="cat_transport_rental">Noleggio auto</string>
+    <string name="cat_transport_bicycle">Bicicletta</string>
+    <string name="cat_transport_other">Altri trasporti</string>
+    <string name="cat_shopping_clothing">Abbigliamento</string>
+    <string name="cat_shopping_shoes">Scarpe</string>
+    <string name="cat_shopping_accessories">Accessori</string>
+    <string name="cat_shopping_electronics">Elettronica</string>
+    <string name="cat_shopping_appliances">Elettrodomestici</string>
+    <string name="cat_shopping_online">Acquisti online</string>
+    <string name="cat_shopping_aliexpress">AliExpress</string>
+    <string name="cat_shopping_amazon">Amazon</string>
+    <string name="cat_shopping_google_play">Google Play</string>
+    <string name="cat_shopping_app_store">App Store</string>
+    <string name="cat_shopping_games">Giochi</string>
+    <string name="cat_shopping_gifts">Regali</string>
+    <string name="cat_shopping_other">Altri acquisti</string>
+    <string name="cat_health_pharmacy">Farmacia</string>
+    <string name="cat_health_medicine">Medicinali</string>
+    <string name="cat_health_doctor">Medico</string>
+    <string name="cat_health_dentist">Dentista</string>
+    <string name="cat_health_hospital">Ospedale</string>
+    <string name="cat_health_tests">Esami medici</string>
+    <string name="cat_health_vitamins">Vitamine</string>
+    <string name="cat_health_insurance">Assicurazione sanitaria</string>
+    <string name="cat_health_gym">Palestra</string>
+    <string name="cat_health_other">Altre spese sanitarie</string>
+    <string name="cat_entertainment_cinema">Cinema</string>
+    <string name="cat_entertainment_music">Musica</string>
+    <string name="cat_entertainment_games">Videogiochi</string>
+    <string name="cat_entertainment_events">Eventi</string>
+    <string name="cat_entertainment_concerts">Concerti</string>
+    <string name="cat_entertainment_nightlife">Vita notturna</string>
+    <string name="cat_entertainment_hobbies">Hobby</string>
+    <string name="cat_entertainment_books">Libri</string>
+    <string name="cat_entertainment_streaming">Servizi di streaming</string>
+    <string name="cat_entertainment_other">Altro intrattenimento</string>
+    <string name="cat_sub_netflix">Netflix</string>
+    <string name="cat_sub_spotify">Spotify</string>
+    <string name="cat_sub_youtube">YouTube</string>
+    <string name="cat_sub_cloud">Archiviazione cloud</string>
+    <string name="cat_sub_software">Software</string>
+    <string name="cat_sub_apps">App mobili</string>
+    <string name="cat_sub_digital_services">Servizi digitali</string>
+    <string name="cat_sub_other">Altri abbonamenti</string>
+    <string name="cat_personal_care">Cura della persona</string>
+    <string name="cat_personal_barber">Parrucchiere / Barbiere</string>
+    <string name="cat_personal_beauty">Bellezza</string>
+    <string name="cat_personal_cosmetics">Cosmetici</string>
+    <string name="cat_personal_spa">Spa</string>
+    <string name="cat_personal_massage">Massaggio</string>
+    <string name="cat_personal_other">Altra cura personale</string>
+    <string name="cat_family">Famiglia e figli</string>
+    <string name="cat_family_children">Figli</string>
+    <string name="cat_family_kindergarten">Asilo</string>
+    <string name="cat_family_school">Scuola</string>
+    <string name="cat_family_education">Istruzione figli</string>
+    <string name="cat_family_courses">Corsi per bambini</string>
+    <string name="cat_family_toys">Giocattoli</string>
+    <string name="cat_family_childcare">Baby-sitting</string>
+    <string name="cat_family_pocket_money">Paghetta</string>
+    <string name="cat_family_support">Sostegno alla famiglia</string>
+    <string name="cat_family_other">Altre spese familiari</string>
+    <string name="cat_pets">Animali domestici</string>
+    <string name="cat_pets_food">Cibo per animali</string>
+    <string name="cat_pets_vet">Veterinario</string>
+    <string name="cat_pets_supplies">Articoli per animali</string>
+    <string name="cat_pets_grooming">Toelettatura</string>
+    <string name="cat_pets_other">Altre spese per animali</string>
+    <string name="cat_travel">Viaggi</string>
+    <string name="cat_travel_flights">Voli</string>
+    <string name="cat_travel_hotels">Hotel</string>
+    <string name="cat_travel_train">Treno</string>
+    <string name="cat_travel_bus">Autobus</string>
+    <string name="cat_travel_taxi">Taxi / Trasferimenti</string>
+    <string name="cat_travel_car_rental">Autonoleggio in viaggio</string>
+    <string name="cat_travel_insurance">Assicurazione di viaggio</string>
+    <string name="cat_travel_vacation">Vacanze</string>
+    <string name="cat_travel_tours">Tour e attività</string>
+    <string name="cat_travel_other">Altre spese di viaggio</string>
+    <string name="cat_edu_school">Scuola</string>
+    <string name="cat_edu_university">Università</string>
+    <string name="cat_edu_courses">Corsi</string>
+    <string name="cat_edu_books">Libri scolastici</string>
+    <string name="cat_edu_online">Corsi online</string>
+    <string name="cat_edu_training">Training e workshop</string>
+    <string name="cat_edu_other">Altra istruzione</string>
+    <string name="cat_financial">Spese finanziarie</string>
+    <string name="cat_fin_bank_fees">Commissioni bancarie</string>
+    <string name="cat_fin_interest">Interessi passivi</string>
+    <string name="cat_fin_loan_payment">Rata prestito</string>
+    <string name="cat_fin_card_payment">Pagamento carta di credito</string>
+    <string name="cat_fin_insurance">Assicurazioni</string>
+    <string name="cat_fin_taxes">Tasse e tributi</string>
+    <string name="cat_fin_fines">Multe e sanzioni</string>
+    <string name="cat_fin_exchange_fees">Commissioni di cambio</string>
+    <string name="cat_fin_services">Servizi finanziari</string>
+    <string name="cat_fin_other">Altre spese finanziarie</string>
+    <string name="cat_debt">Prestiti e debiti</string>
+    <string name="cat_debt_loan">Prestito</string>
+    <string name="cat_debt_mortgage">Rata del mutuo</string>
+    <string name="cat_debt_consumer">Credito al consumo</string>
+    <string name="cat_debt_car">Finanziamento auto</string>
+    <string name="cat_debt_card">Carta di credito</string>
+    <string name="cat_debt_repayment">Estinzione debito</string>
+    <string name="cat_debt_other">Altri debiti</string>
+    <string name="cat_gifts_charity">Beneficenza</string>
+    <string name="cat_gifts_donations">Donazioni</string>
+    <string name="cat_gifts_to_others">Regali per altri</string>
+    <string name="cat_gifts_religious">Donazioni religiose</string>
+    <string name="cat_gifts_other">Altre donazioni</string>
+    <string name="cat_other_expenses">Altre spese</string>
+    <string name="cat_other_expense_item">Altra spesa</string>
+    <string name="cat_income_salary">Stipendio</string>
+    <string name="cat_income_bonus">Bonus</string>
+    <string name="cat_income_overtime">Straordinari</string>
+    <string name="cat_income_commission">Provvigioni</string>
+    <string name="cat_income_tips">Mance</string>
+    <string name="cat_income_reimbursement">Rimborso spese</string>
+    <string name="cat_income_freelance">Freelance</string>
+    <string name="cat_income_business">Entrate aziendali</string>
+    <string name="cat_income_consulting">Consulenze</string>
+    <string name="cat_income_contract">Lavoro su contratto</string>
+    <string name="cat_income_side_job">Secondo lavoro</string>
+    <string name="cat_income_business_other">Altre entrate d\'impresa</string>
+    <string name="cat_income_investment_income">Rendite da investimento</string>
+    <string name="cat_income_dividends">Dividendi</string>
+    <string name="cat_income_interest">Interessi attivi</string>
+    <string name="cat_income_capital_gains">Plusvalenze</string>
+    <string name="cat_income_crypto">Guadagni in criptovalute</string>
+    <string name="cat_income_rental">Redditi da locazione</string>
+    <string name="cat_income_government">Sussidi e prestazioni statali</string>
+    <string name="cat_income_benefits">Sussidi</string>
+    <string name="cat_income_pension">Pensione</string>
+    <string name="cat_income_scholarship">Borsa di studio</string>
+    <string name="cat_income_social_payments">Indennità sociali</string>
+    <string name="cat_income_tax_refund">Rimborso fiscale</string>
+    <string name="cat_income_gifts">Regali ricevuti</string>
+    <string name="cat_income_cashback">Cashback</string>
+    <string name="cat_income_refund">Rimborso</string>
+    <string name="cat_income_sale_of_items">Vendita oggetti usati</string>
+    <string name="cat_income_prize">Vincite e premi</string>
+    <string name="cat_income_other_item">Altre entrate</string>
+    <string name="cat_income_uncategorized">Entrate non categorizzate</string>
+    <string name="cat_transfer">Giroconto tra conti</string>
+    <string name="cat_transfer_withdrawal">Prelievo contanti</string>
+    <string name="cat_transfer_deposit">Versamento contanti</string>
 </resources>

@@ -27,7 +27,7 @@
     <string name="nav_analytics">Analytics</string>
     <string name="nav_more">More</string>
 
-    <!-- Common Actions & Buttons -->
+    <!-- Common Actions &amp; Buttons -->
     <string name="action_save">Save</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_delete">Delete</string>
@@ -165,7 +165,7 @@
     <string name="account_archive">Archive Account</string>
     <string name="account_delete">Delete Account</string>
 
-    <!-- Recurring & Subscriptions -->
+    <!-- Recurring &amp; Subscriptions -->
     <string name="recurring_title">Recurring Bills &amp; Subscriptions</string>
     <string name="recurring_upcoming_title">Upcoming Due Dates</string>
     <string name="recurring_upcoming_subtitle">Next 30 days projection</string>
@@ -202,7 +202,7 @@
     <string name="goal_empty_title">No financial goals set</string>
     <string name="goal_empty_desc">Create goals for vacations, emergency funds, or purchases</string>
 
-    <!-- Investments & Assets -->
+    <!-- Investments &amp; Assets -->
     <string name="investments_title">Investments &amp; Assets</string>
     <string name="investments_total_portfolio">Portfolio Value</string>
     <string name="investments_total_gain_loss">Total Return</string>
@@ -216,7 +216,7 @@
     <string name="asset_empty_title">No investment assets</string>
     <string name="asset_empty_desc">Track stocks, ETFs, crypto, real estate, and bonds</string>
 
-    <!-- Debt & Liabilities -->
+    <!-- Debt &amp; Liabilities -->
     <string name="debt_title">Debts &amp; Loans</string>
     <string name="debt_total_debt">Total Outstanding Debt</string>
     <string name="debt_total_paid_off">Total Principal Paid</string>
@@ -334,7 +334,7 @@
     <string name="more_insights_title">Financial Insights</string>
     <string name="more_insights_desc">Spending anomalies and budgeting tips</string>
 
-    <!-- Security & Privacy -->
+    <!-- Security &amp; Privacy -->
     <string name="security_title">Security &amp; Privacy</string>
     <string name="security_biometric">Biometric Authentication</string>
     <string name="security_biometric_desc">Unlock app with fingerprint or face recognition</string>
@@ -349,7 +349,7 @@
     <string name="security_pin_mismatch">PINs do not match. Try again.</string>
     <string name="security_pin_set_success">PIN protection updated successfully</string>
 
-    <!-- Categorization Rules & Smart Engine -->
+    <!-- Categorization Rules &amp; Smart Engine -->
     <string name="rules_title">Categorization Rules</string>
     <string name="rules_tab_rules">Rules (%1$d)</string>
     <string name="rules_tab_review">Review Queue (%1$d)</string>
@@ -388,7 +388,7 @@
     <string name="insights_empty_title">No insights yet</string>
     <string name="insights_empty_desc">Insights appear as you record more spending habits</string>
 
-    <!-- Search & Filter -->
+    <!-- Search &amp; Filter -->
     <string name="search_title">Search Ledger</string>
     <string name="search_hint">Search by payee, amount, or tag…</string>
     <string name="search_results_count">%1$d results found</string>
@@ -484,7 +484,7 @@
         <item quantity="other">%d rows imported</item>
     </plurals>
 
-    <!-- Filter & Sort -->
+    <!-- Filter &amp; Sort -->
     <string name="sort_by">Sort By</string>
     <string name="sort_newest">Newest</string>
     <string name="sort_oldest">Oldest</string>
@@ -514,14 +514,14 @@
     <string name="period_year">Year</string>
     <string name="period_all_time">All Time</string>
 
-    <!-- Recurring Tabs & Windows -->
+    <!-- Recurring Tabs &amp; Windows -->
     <string name="recurring_tab_upcoming">Upcoming</string>
     <string name="recurring_tab_rules">All Rules</string>
     <string name="recurring_tab_subscriptions">Subscriptions</string>
     <string name="recurring_window_7d">Next 7 Days</string>
     <string name="recurring_window_30d">Next 30 Days</string>
 
-    <!-- Debt Strategies & Metrics -->
+    <!-- Debt Strategies &amp; Metrics -->
     <string name="debt_strategy_snowball_title">Snowball Strategy</string>
     <string name="debt_strategy_snowball_sub">Lowest Balance First</string>
     <string name="debt_strategy_avalanche_title">Avalanche Strategy</string>
@@ -538,7 +538,7 @@
     <string name="accounts_transfer_cannot_desc">You need at least 2 active accounts to transfer funds.</string>
     <string name="accounts_active_tracked">%1$d active accounts tracked</string>
 
-    <!-- Analytics & Budgets Extras -->
+    <!-- Analytics &amp; Budgets Extras -->
     <string name="analytics_avg_daily">Avg. Daily Spend</string>
     <string name="analytics_largest_expense">Largest Expense</string>
     <string name="analytics_top_merchants">Top Spending Merchants</string>
@@ -593,4 +593,191 @@
     <string name="security_pin_configure_title">Configure Security PIN</string>
     <string name="security_pin_min_digits">PIN must be at least 4 digits</string>
     <string name="security_pin_save_btn">Save PIN</string>
+
+    <!-- Extended Default Categories &amp; UI -->
+    <string name="category_search_hint">Search categories…</string>
+    <string name="category_frequently_used">Frequently Used</string>
+    <string name="category_all_categories">All Categories</string>
+    <string name="category_browse_all">Browse all</string>
+    <string name="cat_home_rent">Rent</string>
+    <string name="cat_home_mortgage">Mortgage</string>
+    <string name="cat_home_general">Home</string>
+    <string name="cat_home_utilities">Utilities</string>
+    <string name="cat_home_electricity">Electricity</string>
+    <string name="cat_home_water">Water</string>
+    <string name="cat_home_gas">Gas</string>
+    <string name="cat_home_heating">Heating</string>
+    <string name="cat_home_internet">Internet</string>
+    <string name="cat_home_phone">Mobile Phone</string>
+    <string name="cat_home_tv">TV</string>
+    <string name="cat_home_maintenance">Home Maintenance</string>
+    <string name="cat_home_repairs">Home Repairs</string>
+    <string name="cat_home_furniture">Furniture</string>
+    <string name="cat_home_supplies">Household Supplies</string>
+    <string name="cat_home_cleaning">Cleaning</string>
+    <string name="cat_home_security">Security</string>
+    <string name="cat_home_property_tax">Property Tax</string>
+    <string name="cat_food_restaurants">Restaurants</string>
+    <string name="cat_food_cafes">Cafes</string>
+    <string name="cat_food_fast_food">Fast Food</string>
+    <string name="cat_food_delivery">Food Delivery</string>
+    <string name="cat_food_lunch">Lunch</string>
+    <string name="cat_food_snacks">Snacks</string>
+    <string name="cat_food_drinks">Drinks</string>
+    <string name="cat_food_bakery">Bakery</string>
+    <string name="cat_food_other">Other Food</string>
+    <string name="cat_transport_public">Public Transport</string>
+    <string name="cat_transport_taxi">Taxi</string>
+    <string name="cat_transport_parking">Parking</string>
+    <string name="cat_transport_maintenance">Car Maintenance</string>
+    <string name="cat_transport_repair">Car Repair</string>
+    <string name="cat_transport_insurance">Car Insurance</string>
+    <string name="cat_transport_wash">Car Wash</string>
+    <string name="cat_transport_tolls">Tolls</string>
+    <string name="cat_transport_rental">Car Rental</string>
+    <string name="cat_transport_bicycle">Bicycle</string>
+    <string name="cat_transport_other">Other Transportation</string>
+    <string name="cat_shopping_clothing">Clothing</string>
+    <string name="cat_shopping_shoes">Shoes</string>
+    <string name="cat_shopping_accessories">Accessories</string>
+    <string name="cat_shopping_electronics">Electronics</string>
+    <string name="cat_shopping_appliances">Appliances</string>
+    <string name="cat_shopping_online">Online Shopping</string>
+    <string name="cat_shopping_aliexpress">AliExpress</string>
+    <string name="cat_shopping_amazon">Amazon</string>
+    <string name="cat_shopping_google_play">Google Play</string>
+    <string name="cat_shopping_app_store">App Store</string>
+    <string name="cat_shopping_games">Games</string>
+    <string name="cat_shopping_gifts">Gifts</string>
+    <string name="cat_shopping_other">Other Shopping</string>
+    <string name="cat_health_pharmacy">Pharmacy</string>
+    <string name="cat_health_medicine">Medicine</string>
+    <string name="cat_health_doctor">Doctor</string>
+    <string name="cat_health_dentist">Dentist</string>
+    <string name="cat_health_hospital">Hospital</string>
+    <string name="cat_health_tests">Medical Tests</string>
+    <string name="cat_health_vitamins">Vitamins</string>
+    <string name="cat_health_insurance">Health Insurance</string>
+    <string name="cat_health_gym">Gym</string>
+    <string name="cat_health_other">Other Health</string>
+    <string name="cat_entertainment_cinema">Cinema</string>
+    <string name="cat_entertainment_music">Music</string>
+    <string name="cat_entertainment_games">Games</string>
+    <string name="cat_entertainment_events">Events</string>
+    <string name="cat_entertainment_concerts">Concerts</string>
+    <string name="cat_entertainment_nightlife">Nightlife</string>
+    <string name="cat_entertainment_hobbies">Hobbies</string>
+    <string name="cat_entertainment_books">Books</string>
+    <string name="cat_entertainment_streaming">Streaming Services</string>
+    <string name="cat_entertainment_other">Other Entertainment</string>
+    <string name="cat_sub_netflix">Netflix</string>
+    <string name="cat_sub_spotify">Spotify</string>
+    <string name="cat_sub_youtube">YouTube</string>
+    <string name="cat_sub_cloud">Cloud Storage</string>
+    <string name="cat_sub_software">Software</string>
+    <string name="cat_sub_apps">Mobile Apps</string>
+    <string name="cat_sub_digital_services">Digital Services</string>
+    <string name="cat_sub_other">Other Subscriptions</string>
+    <string name="cat_personal_care">Personal Care</string>
+    <string name="cat_personal_barber">Hairdresser / Barber</string>
+    <string name="cat_personal_beauty">Beauty</string>
+    <string name="cat_personal_cosmetics">Cosmetics</string>
+    <string name="cat_personal_spa">Spa</string>
+    <string name="cat_personal_massage">Massage</string>
+    <string name="cat_personal_other">Other Personal Care</string>
+    <string name="cat_family">Family &amp; Children</string>
+    <string name="cat_family_children">Children</string>
+    <string name="cat_family_kindergarten">Kindergarten</string>
+    <string name="cat_family_school">School</string>
+    <string name="cat_family_education">Education</string>
+    <string name="cat_family_courses">Courses</string>
+    <string name="cat_family_toys">Toys</string>
+    <string name="cat_family_childcare">Childcare</string>
+    <string name="cat_family_pocket_money">Pocket Money</string>
+    <string name="cat_family_support">Family Support</string>
+    <string name="cat_family_other">Other Family Expenses</string>
+    <string name="cat_pets">Pets</string>
+    <string name="cat_pets_food">Pet Food</string>
+    <string name="cat_pets_vet">Veterinary</string>
+    <string name="cat_pets_supplies">Pet Supplies</string>
+    <string name="cat_pets_grooming">Grooming</string>
+    <string name="cat_pets_other">Other Pet Expenses</string>
+    <string name="cat_travel">Travel</string>
+    <string name="cat_travel_flights">Flights</string>
+    <string name="cat_travel_hotels">Hotels</string>
+    <string name="cat_travel_train">Train</string>
+    <string name="cat_travel_bus">Bus</string>
+    <string name="cat_travel_taxi">Taxi / Transfers</string>
+    <string name="cat_travel_car_rental">Car Rental</string>
+    <string name="cat_travel_insurance">Travel Insurance</string>
+    <string name="cat_travel_vacation">Vacation</string>
+    <string name="cat_travel_tours">Tours &amp; Activities</string>
+    <string name="cat_travel_other">Other Travel</string>
+    <string name="cat_edu_school">School</string>
+    <string name="cat_edu_university">University</string>
+    <string name="cat_edu_courses">Courses</string>
+    <string name="cat_edu_books">Books</string>
+    <string name="cat_edu_online">Online Courses</string>
+    <string name="cat_edu_training">Training</string>
+    <string name="cat_edu_other">Other Education</string>
+    <string name="cat_financial">Financial Expenses</string>
+    <string name="cat_fin_bank_fees">Bank Fees</string>
+    <string name="cat_fin_interest">Interest</string>
+    <string name="cat_fin_loan_payment">Loan Payment</string>
+    <string name="cat_fin_card_payment">Credit Card Payment</string>
+    <string name="cat_fin_insurance">Insurance</string>
+    <string name="cat_fin_taxes">Taxes</string>
+    <string name="cat_fin_fines">Fines</string>
+    <string name="cat_fin_exchange_fees">Currency Exchange Fees</string>
+    <string name="cat_fin_services">Financial Services</string>
+    <string name="cat_fin_other">Other Financial Expenses</string>
+    <string name="cat_debt">Loans &amp; Debt</string>
+    <string name="cat_debt_loan">Loan</string>
+    <string name="cat_debt_mortgage">Mortgage Payment</string>
+    <string name="cat_debt_consumer">Consumer Loan</string>
+    <string name="cat_debt_car">Car Loan</string>
+    <string name="cat_debt_card">Credit Card</string>
+    <string name="cat_debt_repayment">Debt Repayment</string>
+    <string name="cat_debt_other">Other Debt</string>
+    <string name="cat_gifts_charity">Charity</string>
+    <string name="cat_gifts_donations">Donations</string>
+    <string name="cat_gifts_to_others">Gifts to Others</string>
+    <string name="cat_gifts_religious">Religious Donations</string>
+    <string name="cat_gifts_other">Other Donations</string>
+    <string name="cat_other_expenses">Other Expenses</string>
+    <string name="cat_other_expense_item">Other Expense</string>
+    <string name="cat_income_salary">Salary</string>
+    <string name="cat_income_bonus">Bonus</string>
+    <string name="cat_income_overtime">Overtime</string>
+    <string name="cat_income_commission">Commission</string>
+    <string name="cat_income_tips">Tips</string>
+    <string name="cat_income_reimbursement">Reimbursement</string>
+    <string name="cat_income_freelance">Freelance</string>
+    <string name="cat_income_business">Business Income</string>
+    <string name="cat_income_consulting">Consulting</string>
+    <string name="cat_income_contract">Contract Work</string>
+    <string name="cat_income_side_job">Side Job</string>
+    <string name="cat_income_business_other">Other Business Income</string>
+    <string name="cat_income_investment_income">Investment Income</string>
+    <string name="cat_income_dividends">Dividends</string>
+    <string name="cat_income_interest">Interest Income</string>
+    <string name="cat_income_capital_gains">Capital Gains</string>
+    <string name="cat_income_crypto">Crypto Income</string>
+    <string name="cat_income_rental">Rental Income</string>
+    <string name="cat_income_government">Government &amp; Benefits</string>
+    <string name="cat_income_benefits">Benefits</string>
+    <string name="cat_income_pension">Pension</string>
+    <string name="cat_income_scholarship">Scholarship</string>
+    <string name="cat_income_social_payments">Social Payments</string>
+    <string name="cat_income_tax_refund">Tax Refund</string>
+    <string name="cat_income_gifts">Gifts Received</string>
+    <string name="cat_income_cashback">Cashback</string>
+    <string name="cat_income_refund">Refund</string>
+    <string name="cat_income_sale_of_items">Sale of Items</string>
+    <string name="cat_income_prize">Prize / Winnings</string>
+    <string name="cat_income_other_item">Other Income</string>
+    <string name="cat_income_uncategorized">Uncategorized Income</string>
+    <string name="cat_transfer">Account Transfer</string>
+    <string name="cat_transfer_withdrawal">Cash Withdrawal</string>
+    <string name="cat_transfer_deposit">Cash Deposit</string>
 </resources>

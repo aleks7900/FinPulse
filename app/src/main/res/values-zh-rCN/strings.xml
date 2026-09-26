@@ -27,7 +27,7 @@
     <string name="nav_analytics">分析</string>
     <string name="nav_more">更多</string>
 
-    <!-- Common Actions & Buttons -->
+    <!-- Common Actions &amp; Buttons -->
     <string name="action_save">保存</string>
     <string name="action_cancel">取消</string>
     <string name="action_delete">删除</string>
@@ -165,7 +165,7 @@
     <string name="account_archive">归档账户</string>
     <string name="account_delete">删除账户</string>
 
-    <!-- Recurring & Subscriptions -->
+    <!-- Recurring &amp; Subscriptions -->
     <string name="recurring_title">周期账目与订阅</string>
     <string name="recurring_upcoming_title">近期应缴</string>
     <string name="recurring_upcoming_subtitle">未来30天支出预测</string>
@@ -202,7 +202,7 @@
     <string name="goal_empty_title">暂无储蓄目标</string>
     <string name="goal_empty_desc">设定旅行、应急资金或大件采购的攒钱计划</string>
 
-    <!-- Investments & Assets -->
+    <!-- Investments &amp; Assets -->
     <string name="investments_title">投资与持仓资产</string>
     <string name="investments_total_portfolio">投资组合总值</string>
     <string name="investments_total_gain_loss">累计收益</string>
@@ -216,7 +216,7 @@
     <string name="asset_empty_title">暂无投资持仓</string>
     <string name="asset_empty_desc">追踪股票、公募基金、加密资产、房产与债券</string>
 
-    <!-- Debt & Liabilities -->
+    <!-- Debt &amp; Liabilities -->
     <string name="debt_title">借款与债务管理</string>
     <string name="debt_total_debt">剩余待还本金</string>
     <string name="debt_total_paid_off">已还本金总额</string>
@@ -334,7 +334,7 @@
     <string name="more_insights_title">财务洞察分析</string>
     <string name="more_insights_desc">支出异常预警与消费建议</string>
 
-    <!-- Security & Privacy -->
+    <!-- Security &amp; Privacy -->
     <string name="security_title">安全与隐私</string>
     <string name="security_biometric">生物识别认证</string>
     <string name="security_biometric_desc">使用指纹或面容快速解锁应用</string>
@@ -349,7 +349,7 @@
     <string name="security_pin_mismatch">两次输入的密码不一致，请重试</string>
     <string name="security_pin_set_success">安全设置已成功生效</string>
 
-    <!-- Categorization Rules & Smart Engine -->
+    <!-- Categorization Rules &amp; Smart Engine -->
     <string name="rules_title">智能分类规则</string>
     <string name="rules_tab_rules">规则库 (%1$d)</string>
     <string name="rules_tab_review">待核对 (%1$d)</string>
@@ -388,7 +388,7 @@
     <string name="insights_empty_title">暂无消费洞察</string>
     <string name="insights_empty_desc">随着记账数据的增加，系统将为您生成专属的财务分析与省钱建议</string>
 
-    <!-- Search & Filter -->
+    <!-- Search &amp; Filter -->
     <string name="search_title">明细检索</string>
     <string name="search_hint">输入商户名、金额或标签搜索…</string>
     <string name="search_results_count">共找到 %1$d 条相关结果</string>
@@ -476,7 +476,7 @@
         <item quantity="other">已导入 %d 行数据</item>
     </plurals>
 
-    <!-- Filter & Sort -->
+    <!-- Filter &amp; Sort -->
     <string name="sort_by">排序方式</string>
     <string name="sort_newest">最新优先</string>
     <string name="sort_oldest">最早优先</string>
@@ -506,14 +506,14 @@
     <string name="period_year">本年</string>
     <string name="period_all_time">全部时间</string>
 
-    <!-- Recurring Tabs & Windows -->
+    <!-- Recurring Tabs &amp; Windows -->
     <string name="recurring_tab_upcoming">待处理账单</string>
     <string name="recurring_tab_rules">周期规则</string>
     <string name="recurring_tab_subscriptions">订阅管理</string>
     <string name="recurring_window_7d">未来7天</string>
     <string name="recurring_window_30d">未来30天</string>
 
-    <!-- Debt Strategies & Metrics -->
+    <!-- Debt Strategies &amp; Metrics -->
     <string name="debt_strategy_snowball_title">滚雪球法</string>
     <string name="debt_strategy_snowball_sub">优先偿还最小本金</string>
     <string name="debt_strategy_avalanche_title">雪崩法</string>
@@ -530,7 +530,7 @@
     <string name="accounts_transfer_cannot_desc">您需要至少两个有效账户才能进行账户间资金互转。</string>
     <string name="accounts_active_tracked">已追踪 %1$d 个有效账户</string>
 
-    <!-- Analytics & Budgets Extras -->
+    <!-- Analytics &amp; Budgets Extras -->
     <string name="analytics_avg_daily">日均支出</string>
     <string name="analytics_largest_expense">最大单笔支出</string>
     <string name="analytics_top_merchants">主要消费商户</string>
@@ -585,4 +585,191 @@
     <string name="security_pin_configure_title">设置安全 PIN 码</string>
     <string name="security_pin_min_digits">PIN 码至少需要 4 位数字</string>
     <string name="security_pin_save_btn">保存 PIN 码</string>
+
+    <!-- Extended Default Categories &amp; UI -->
+    <string name="category_search_hint">搜索类别…</string>
+    <string name="category_frequently_used">常用类别</string>
+    <string name="category_all_categories">所有类别</string>
+    <string name="category_browse_all">浏览全部</string>
+    <string name="cat_home_rent">房租</string>
+    <string name="cat_home_mortgage">房贷</string>
+    <string name="cat_home_general">住宅</string>
+    <string name="cat_home_utilities">公共事业费</string>
+    <string name="cat_home_electricity">电费</string>
+    <string name="cat_home_water">水费</string>
+    <string name="cat_home_gas">燃气费</string>
+    <string name="cat_home_heating">暖气费</string>
+    <string name="cat_home_internet">宽带网络</string>
+    <string name="cat_home_phone">手机通信</string>
+    <string name="cat_home_tv">电视服务</string>
+    <string name="cat_home_maintenance">房屋维护</string>
+    <string name="cat_home_repairs">房屋修缮</string>
+    <string name="cat_home_furniture">家具</string>
+    <string name="cat_home_supplies">生活用品</string>
+    <string name="cat_home_cleaning">保洁清洁</string>
+    <string name="cat_home_security">安防监控</string>
+    <string name="cat_home_property_tax">房产税</string>
+    <string name="cat_food_restaurants">餐馆</string>
+    <string name="cat_food_cafes">咖啡馆</string>
+    <string name="cat_food_fast_food">快餐</string>
+    <string name="cat_food_delivery">外卖订餐</string>
+    <string name="cat_food_lunch">午餐</string>
+    <string name="cat_food_snacks">零食小吃</string>
+    <string name="cat_food_drinks">饮料</string>
+    <string name="cat_food_bakery">烘焙面包</string>
+    <string name="cat_food_other">其他餐饮</string>
+    <string name="cat_transport_public">公共交通</string>
+    <string name="cat_transport_taxi">出租车/网约车</string>
+    <string name="cat_transport_parking">停车费</string>
+    <string name="cat_transport_maintenance">汽车保养</string>
+    <string name="cat_transport_repair">车辆维修</string>
+    <string name="cat_transport_insurance">车险</string>
+    <string name="cat_transport_wash">洗车</string>
+    <string name="cat_transport_tolls">过路通行费</string>
+    <string name="cat_transport_rental">汽车租赁</string>
+    <string name="cat_transport_bicycle">自行车/骑行</string>
+    <string name="cat_transport_other">其他交通</string>
+    <string name="cat_shopping_clothing">服装</string>
+    <string name="cat_shopping_shoes">鞋履</string>
+    <string name="cat_shopping_accessories">配饰</string>
+    <string name="cat_shopping_electronics">数码电子</string>
+    <string name="cat_shopping_appliances">家用电器</string>
+    <string name="cat_shopping_online">网购</string>
+    <string name="cat_shopping_aliexpress">AliExpress全球速卖通</string>
+    <string name="cat_shopping_amazon">亚马逊 Amazon</string>
+    <string name="cat_shopping_google_play">Google Play</string>
+    <string name="cat_shopping_app_store">App Store</string>
+    <string name="cat_shopping_games">游戏消费</string>
+    <string name="cat_shopping_gifts">礼品</string>
+    <string name="cat_shopping_other">其他购物</string>
+    <string name="cat_health_pharmacy">药房</string>
+    <string name="cat_health_medicine">药品</string>
+    <string name="cat_health_doctor">医生诊疗</string>
+    <string name="cat_health_dentist">牙科</string>
+    <string name="cat_health_hospital">医院住院</string>
+    <string name="cat_health_tests">医疗检查检验</string>
+    <string name="cat_health_vitamins">维生素保健品</string>
+    <string name="cat_health_insurance">医疗保险</string>
+    <string name="cat_health_gym">健身房</string>
+    <string name="cat_health_other">其他医疗健康</string>
+    <string name="cat_entertainment_cinema">电影院</string>
+    <string name="cat_entertainment_music">音乐</string>
+    <string name="cat_entertainment_games">电子游戏</string>
+    <string name="cat_entertainment_events">活动展会</string>
+    <string name="cat_entertainment_concerts">音乐会/演唱会</string>
+    <string name="cat_entertainment_nightlife">夜生活/酒吧</string>
+    <string name="cat_entertainment_hobbies">兴趣爱好</string>
+    <string name="cat_entertainment_books">图书</string>
+    <string name="cat_entertainment_streaming">流媒体服务</string>
+    <string name="cat_entertainment_other">其他娱乐</string>
+    <string name="cat_sub_netflix">Netflix</string>
+    <string name="cat_sub_spotify">Spotify</string>
+    <string name="cat_sub_youtube">YouTube</string>
+    <string name="cat_sub_cloud">云存储</string>
+    <string name="cat_sub_software">软件服务</string>
+    <string name="cat_sub_apps">移动应用</string>
+    <string name="cat_sub_digital_services">数字服务</string>
+    <string name="cat_sub_other">其他订阅</string>
+    <string name="cat_personal_care">个人护理</string>
+    <string name="cat_personal_barber">理发/美发</string>
+    <string name="cat_personal_beauty">美容</string>
+    <string name="cat_personal_cosmetics">化妆品</string>
+    <string name="cat_personal_spa">水疗 SPA</string>
+    <string name="cat_personal_massage">按摩理疗</string>
+    <string name="cat_personal_other">其他个人护理</string>
+    <string name="cat_family">家庭与子女</string>
+    <string name="cat_family_children">子女费用</string>
+    <string name="cat_family_kindergarten">幼儿园</string>
+    <string name="cat_family_school">中小学</string>
+    <string name="cat_family_education">子女教育</string>
+    <string name="cat_family_courses">课外培训/兴趣班</string>
+    <string name="cat_family_toys">玩具</string>
+    <string name="cat_family_childcare">托育看护</string>
+    <string name="cat_family_pocket_money">零花钱</string>
+    <string name="cat_family_support">赡养资助</string>
+    <string name="cat_family_other">其他家庭支出</string>
+    <string name="cat_pets">宠物</string>
+    <string name="cat_pets_food">宠物粮</string>
+    <string name="cat_pets_vet">宠物医疗</string>
+    <string name="cat_pets_supplies">宠物用品</string>
+    <string name="cat_pets_grooming">宠物美容</string>
+    <string name="cat_pets_other">其他宠物开销</string>
+    <string name="cat_travel">旅行度假</string>
+    <string name="cat_travel_flights">飞机票</string>
+    <string name="cat_travel_hotels">酒店住宿</string>
+    <string name="cat_travel_train">火车客运</string>
+    <string name="cat_travel_bus">长途汽车</string>
+    <string name="cat_travel_taxi">接送机与旅行打车</string>
+    <string name="cat_travel_car_rental">旅行租车</string>
+    <string name="cat_travel_insurance">旅行意外险</string>
+    <string name="cat_travel_vacation">休假度假</string>
+    <string name="cat_travel_tours">景点门票与旅游团</string>
+    <string name="cat_travel_other">其他旅游支出</string>
+    <string name="cat_edu_school">学费</string>
+    <string name="cat_edu_university">大学高教</string>
+    <string name="cat_edu_courses">线下课程</string>
+    <string name="cat_edu_books">教科书教材</string>
+    <string name="cat_edu_online">在线网课</string>
+    <string name="cat_edu_training">专业技能培训</string>
+    <string name="cat_edu_other">其他教育培训</string>
+    <string name="cat_financial">金融支出</string>
+    <string name="cat_fin_bank_fees">银行手续费</string>
+    <string name="cat_fin_interest">利息支出</string>
+    <string name="cat_fin_loan_payment">贷款还款</string>
+    <string name="cat_fin_card_payment">信用卡还款</string>
+    <string name="cat_fin_insurance">商业保险</string>
+    <string name="cat_fin_taxes">税金缴付</string>
+    <string name="cat_fin_fines">违章罚款</string>
+    <string name="cat_fin_exchange_fees">货币兑换汇费</string>
+    <string name="cat_fin_services">金融中介服务</string>
+    <string name="cat_fin_other">其他金融支出</string>
+    <string name="cat_debt">借贷与债务</string>
+    <string name="cat_debt_loan">个人借款</string>
+    <string name="cat_debt_mortgage">房贷月供</string>
+    <string name="cat_debt_consumer">消费分期贷款</string>
+    <string name="cat_debt_car">汽车贷款</string>
+    <string name="cat_debt_card">信用卡账单</string>
+    <string name="cat_debt_repayment">归还欠款</string>
+    <string name="cat_debt_other">其他债务</string>
+    <string name="cat_gifts_charity">慈善公益</string>
+    <string name="cat_gifts_donations">爱心捐助</string>
+    <string name="cat_gifts_to_others">赠送礼品</string>
+    <string name="cat_gifts_religious">宗教捐赠</string>
+    <string name="cat_gifts_other">其他捐赠</string>
+    <string name="cat_other_expenses">其他开支</string>
+    <string name="cat_other_expense_item">杂项支出</string>
+    <string name="cat_income_salary">基本工资</string>
+    <string name="cat_income_bonus">奖金分红</string>
+    <string name="cat_income_overtime">加班费</string>
+    <string name="cat_income_commission">业务提成</string>
+    <string name="cat_income_tips">小费收入</string>
+    <string name="cat_income_reimbursement">报销回款</string>
+    <string name="cat_income_freelance">自由职业</string>
+    <string name="cat_income_business">营业收入</string>
+    <string name="cat_income_consulting">咨询费</string>
+    <string name="cat_income_contract">合同劳务</string>
+    <string name="cat_income_side_job">兼职副业</string>
+    <string name="cat_income_business_other">其他经营收入</string>
+    <string name="cat_income_investment_income">投资收益</string>
+    <string name="cat_income_dividends">股票股息</string>
+    <string name="cat_income_interest">利息收入</string>
+    <string name="cat_income_capital_gains">资本利得</string>
+    <string name="cat_income_crypto">加密资产收益</string>
+    <string name="cat_income_rental">房屋租金收入</string>
+    <string name="cat_income_government">政府补贴与津贴</string>
+    <string name="cat_income_benefits">福利津贴</string>
+    <string name="cat_income_pension">养老金</string>
+    <string name="cat_income_scholarship">奖学金</string>
+    <string name="cat_income_social_payments">社会救助金</string>
+    <string name="cat_income_tax_refund">退税退款</string>
+    <string name="cat_income_gifts">礼金赠予</string>
+    <string name="cat_income_cashback">返现奖励</string>
+    <string name="cat_income_refund">退货退款</string>
+    <string name="cat_income_sale_of_items">二手闲置出售</string>
+    <string name="cat_income_prize">中奖与奖品</string>
+    <string name="cat_income_other_item">其他收入</string>
+    <string name="cat_income_uncategorized">未分类收入</string>
+    <string name="cat_transfer">账户间转账</string>
+    <string name="cat_transfer_withdrawal">现金取款</string>
+    <string name="cat_transfer_deposit">现金存款</string>
 </resources>

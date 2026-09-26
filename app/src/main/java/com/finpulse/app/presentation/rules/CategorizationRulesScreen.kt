@@ -87,12 +87,14 @@ import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.PurpleAccent
 import com.finpulse.app.core.designsystem.TransferBlue
 import com.finpulse.app.core.ui.CategoryIconBadge
+import com.finpulse.app.core.ui.CategoryPickerDialog
 import com.finpulse.app.core.ui.DateFormatterUtils
 import com.finpulse.app.core.ui.getDisplayName
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.CategorizationConfidence
 import com.finpulse.app.domain.model.CategorizationRule
 import com.finpulse.app.domain.model.Category
+import com.finpulse.app.domain.model.CategoryType
 import com.finpulse.app.domain.model.MatchType
 import com.finpulse.app.domain.model.Transaction
 import com.finpulse.app.domain.model.TransactionType
@@ -1176,59 +1178,18 @@ private fun ChangeCategoryPickerModal(
     onCategorySelected: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Column {
-                Text(
-                    text = "Select Category",
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "For: ${transaction.merchant ?: transaction.description}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+    val initialType = when (transaction.type) {
+        TransactionType.INCOME, TransactionType.REFUND -> CategoryType.INCOME
+        else -> CategoryType.EXPENSE
+    }
+    CategoryPickerDialog(
+        categories = categories,
+        selectedCategoryId = transaction.categoryId,
+        initialType = initialType,
+        onCategorySelected = { cat ->
+            onCategorySelected(cat.id)
+            onDismiss()
         },
-        text = {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                items(categories, key = { it.id }) { cat ->
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = if (cat.id == transaction.categoryId) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onCategorySelected(cat.id) }
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(10.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            CategoryIconBadge(cat.icon, cat.colorHex, size = 28.dp, iconSize = 16.dp)
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Text(
-                                text = cat.getDisplayName(),
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = if (cat.id == transaction.categoryId) FontWeight.Bold else FontWeight.Normal
-                            )
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {},
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.action_cancel))
-            }
-        }
+        onDismissRequest = onDismiss
     )
 }

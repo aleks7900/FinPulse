@@ -27,7 +27,7 @@
     <string name="nav_analytics">Analiz</string>
     <string name="nav_more">Daha Fazla</string>
 
-    <!-- Common Actions & Buttons -->
+    <!-- Common Actions &amp; Buttons -->
     <string name="action_save">Kaydet</string>
     <string name="action_cancel">İptal</string>
     <string name="action_delete">Sil</string>
@@ -165,7 +165,7 @@
     <string name="account_archive">Hesabı Arşivle</string>
     <string name="account_delete">Hesabı Sil</string>
 
-    <!-- Recurring & Subscriptions -->
+    <!-- Recurring &amp; Subscriptions -->
     <string name="recurring_title">Düzenli Ödemeler &amp; Abonelikler</string>
     <string name="recurring_upcoming_title">Yaklaşan Ödemeler</string>
     <string name="recurring_upcoming_subtitle">Gelecek 30 günlük projeksiyon</string>
@@ -202,7 +202,7 @@
     <string name="goal_empty_title">Henüz hedef belirlenmedi</string>
     <string name="goal_empty_desc">Tatil, acil durum veya büyük harcamalar için hedefler oluşturun</string>
 
-    <!-- Investments & Assets -->
+    <!-- Investments &amp; Assets -->
     <string name="investments_title">Yatırımlar ve Varlıklar</string>
     <string name="investments_total_portfolio">Portföy Değeri</string>
     <string name="investments_total_gain_loss">Toplam Getiri / Zarar</string>
@@ -216,7 +216,7 @@
     <string name="asset_empty_title">Yatırım varlığı bulunmuyor</string>
     <string name="asset_empty_desc">Hisse senetleri, fonlar, kripto paralar, gayrimenkul ve tahvilleri takip edin</string>
 
-    <!-- Debt & Liabilities -->
+    <!-- Debt &amp; Liabilities -->
     <string name="debt_title">Borçlar ve Krediler</string>
     <string name="debt_total_debt">Kalan Toplam Borç</string>
     <string name="debt_total_paid_off">Ödenen Ana Para</string>
@@ -334,7 +334,7 @@
     <string name="more_insights_title">Finansal Tavsiyeler</string>
     <string name="more_insights_desc">Harcama analizi ve tasarruf ipuçları</string>
 
-    <!-- Security & Privacy -->
+    <!-- Security &amp; Privacy -->
     <string name="security_title">Güvenlik ve Gizlilik</string>
     <string name="security_biometric">Biyometrik Kimlik Doğrulama</string>
     <string name="security_biometric_desc">Parmak izi veya yüz tanıma ile kilidi açın</string>
@@ -349,7 +349,7 @@
     <string name="security_pin_mismatch">PIN kodları eşleşmiyor. Tekrar deneyin.</string>
     <string name="security_pin_set_success">Güvenlik ayarları başarıyla güncellendi</string>
 
-    <!-- Categorization Rules & Smart Engine -->
+    <!-- Categorization Rules &amp; Smart Engine -->
     <string name="rules_title">Kategorilendirme Kuralları</string>
     <string name="rules_tab_rules">Kurallar (%1$d)</string>
     <string name="rules_tab_review">İnceleme Listesi (%1$d)</string>
@@ -388,7 +388,7 @@
     <string name="insights_empty_title">Henüz tavsiye bulunmuyor</string>
     <string name="insights_empty_desc">Harcamalarınızı kaydettikçe size özel tavsiyeler üretilecektir</string>
 
-    <!-- Search & Filter -->
+    <!-- Search &amp; Filter -->
     <string name="search_title">İşlem Arama</string>
     <string name="search_hint">İşyeri, tutar veya etiket ile ara…</string>
     <string name="search_results_count">%1$d sonuç bulundu</string>
@@ -484,7 +484,7 @@
         <item quantity="other">%d satır aktarıldı</item>
     </plurals>
 
-    <!-- Filter & Sort -->
+    <!-- Filter &amp; Sort -->
     <string name="sort_by">Sıralama ölçütü</string>
     <string name="sort_newest">En yeni</string>
     <string name="sort_oldest">En eski</string>
@@ -514,14 +514,14 @@
     <string name="period_year">Yıl</string>
     <string name="period_all_time">Tüm Zamanlar</string>
 
-    <!-- Recurring Tabs & Windows -->
+    <!-- Recurring Tabs &amp; Windows -->
     <string name="recurring_tab_upcoming">Yaklaşanlar</string>
     <string name="recurring_tab_rules">Tüm Kurallar</string>
     <string name="recurring_tab_subscriptions">Abonelikler</string>
     <string name="recurring_window_7d">Sonraki 7 Gün</string>
     <string name="recurring_window_30d">Sonraki 30 Gün</string>
 
-    <!-- Debt Strategies & Metrics -->
+    <!-- Debt Strategies &amp; Metrics -->
     <string name="debt_strategy_snowball_title">Kartopu Stratejisi</string>
     <string name="debt_strategy_snowball_sub">Önce En Düşük Bakiye</string>
     <string name="debt_strategy_avalanche_title">Çığ Stratejisi</string>
@@ -538,7 +538,7 @@
     <string name="accounts_transfer_cannot_desc">Bakiye aktarmak için en az 2 aktif hesabınız olmalıdır.</string>
     <string name="accounts_active_tracked">%1$d aktif hesap izleniyor</string>
 
-    <!-- Analytics & Budgets Extras -->
+    <!-- Analytics &amp; Budgets Extras -->
     <string name="analytics_avg_daily">Günlük Ortalama Harcama</string>
     <string name="analytics_largest_expense">En Büyük Harcama</string>
     <string name="analytics_top_merchants">En Çok Harcanan Yerler</string>
@@ -593,4 +593,191 @@
     <string name="security_pin_configure_title">Güvenlik PIN Kodunu Yapılandır</string>
     <string name="security_pin_min_digits">PIN en az 4 haneli olmalıdır</string>
     <string name="security_pin_save_btn">PIN\'i Kaydet</string>
+
+    <!-- Extended Default Categories &amp; UI -->
+    <string name="category_search_hint">Kategori ara…</string>
+    <string name="category_frequently_used">Sık Kullanılanlar</string>
+    <string name="category_all_categories">Tüm Kategoriler</string>
+    <string name="category_browse_all">Tümünü gör</string>
+    <string name="cat_home_rent">Kira</string>
+    <string name="cat_home_mortgage">İpotek</string>
+    <string name="cat_home_general">Ev</string>
+    <string name="cat_home_utilities">Faturalar</string>
+    <string name="cat_home_electricity">Elektrik</string>
+    <string name="cat_home_water">Su</string>
+    <string name="cat_home_gas">Doğalgaz</string>
+    <string name="cat_home_heating">Isınma</string>
+    <string name="cat_home_internet">İnternet</string>
+    <string name="cat_home_phone">Cep Telefonu</string>
+    <string name="cat_home_tv">Televizyon</string>
+    <string name="cat_home_maintenance">Ev Bakımı</string>
+    <string name="cat_home_repairs">Ev Tadilatı</string>
+    <string name="cat_home_furniture">Mobilya</string>
+    <string name="cat_home_supplies">Ev Gereçleri</string>
+    <string name="cat_home_cleaning">Temizlik</string>
+    <string name="cat_home_security">Güvenlik</string>
+    <string name="cat_home_property_tax">Emlak Vergisi</string>
+    <string name="cat_food_restaurants">Restoranlar</string>
+    <string name="cat_food_cafes">Kafeler</string>
+    <string name="cat_food_fast_food">Fast Food</string>
+    <string name="cat_food_delivery">Yemek Siparişi</string>
+    <string name="cat_food_lunch">Öğle Yemeği</string>
+    <string name="cat_food_snacks">Atıştırmalıklar</string>
+    <string name="cat_food_drinks">İçecekler</string>
+    <string name="cat_food_bakery">Fırın ve Pastane</string>
+    <string name="cat_food_other">Diğer Yiyecekler</string>
+    <string name="cat_transport_public">Toplu Taşıma</string>
+    <string name="cat_transport_taxi">Taksi</string>
+    <string name="cat_transport_parking">Otopark</string>
+    <string name="cat_transport_maintenance">Araç Bakımı</string>
+    <string name="cat_transport_repair">Araç Tamiri</string>
+    <string name="cat_transport_insurance">Araç Sigortası</string>
+    <string name="cat_transport_wash">Oto Yıkama</string>
+    <string name="cat_transport_tolls">Geçiş Ücretleri</string>
+    <string name="cat_transport_rental">Araç Kiralama</string>
+    <string name="cat_transport_bicycle">Bisiklet</string>
+    <string name="cat_transport_other">Diğer Ulaşım</string>
+    <string name="cat_shopping_clothing">Giyim</string>
+    <string name="cat_shopping_shoes">Ayakkabı</string>
+    <string name="cat_shopping_accessories">Aksesuar</string>
+    <string name="cat_shopping_electronics">Elektronik</string>
+    <string name="cat_shopping_appliances">Beyaz Eşya</string>
+    <string name="cat_shopping_online">Online Alışveriş</string>
+    <string name="cat_shopping_aliexpress">AliExpress</string>
+    <string name="cat_shopping_amazon">Amazon</string>
+    <string name="cat_shopping_google_play">Google Play</string>
+    <string name="cat_shopping_app_store">App Store</string>
+    <string name="cat_shopping_games">Oyunlar</string>
+    <string name="cat_shopping_gifts">Hediyeler</string>
+    <string name="cat_shopping_other">Diğer Alışveriş</string>
+    <string name="cat_health_pharmacy">Eczane</string>
+    <string name="cat_health_medicine">İlaçlar</string>
+    <string name="cat_health_doctor">Doktor</string>
+    <string name="cat_health_dentist">Diş Hekimi</string>
+    <string name="cat_health_hospital">Hastane</string>
+    <string name="cat_health_tests">Tıbbi Testler</string>
+    <string name="cat_health_vitamins">Vitaminler</string>
+    <string name="cat_health_insurance">Sağlık Sigortası</string>
+    <string name="cat_health_gym">Spor Salonu</string>
+    <string name="cat_health_other">Diğer Sağlık</string>
+    <string name="cat_entertainment_cinema">Sinema</string>
+    <string name="cat_entertainment_music">Müzik</string>
+    <string name="cat_entertainment_games">Oyunlar</string>
+    <string name="cat_entertainment_events">Etkinlikler</string>
+    <string name="cat_entertainment_concerts">Konserler</string>
+    <string name="cat_entertainment_nightlife">Gece Hayatı</string>
+    <string name="cat_entertainment_hobbies">Hobiler</string>
+    <string name="cat_entertainment_books">Kitaplar</string>
+    <string name="cat_entertainment_streaming">Yayın Servisleri</string>
+    <string name="cat_entertainment_other">Diğer Eğlence</string>
+    <string name="cat_sub_netflix">Netflix</string>
+    <string name="cat_sub_spotify">Spotify</string>
+    <string name="cat_sub_youtube">YouTube</string>
+    <string name="cat_sub_cloud">Bulut Depolama</string>
+    <string name="cat_sub_software">Yazılım</string>
+    <string name="cat_sub_apps">Mobil Uygulamalar</string>
+    <string name="cat_sub_digital_services">Dijital Servisler</string>
+    <string name="cat_sub_other">Diğer Abonelikler</string>
+    <string name="cat_personal_care">Kişisel Bakım</string>
+    <string name="cat_personal_barber">Kuaför / Berber</string>
+    <string name="cat_personal_beauty">Güzellik</string>
+    <string name="cat_personal_cosmetics">Kozmetik</string>
+    <string name="cat_personal_spa">Spa</string>
+    <string name="cat_personal_massage">Masaj</string>
+    <string name="cat_personal_other">Diğer Kişisel Bakım</string>
+    <string name="cat_family">Aile ve Çocuklar</string>
+    <string name="cat_family_children">Çocuklar</string>
+    <string name="cat_family_kindergarten">Anaokulu</string>
+    <string name="cat_family_school">Okul</string>
+    <string name="cat_family_education">Çocuk Eğitimi</string>
+    <string name="cat_family_courses">Kurslar ve Aktiviteler</string>
+    <string name="cat_family_toys">Oyuncaklar</string>
+    <string name="cat_family_childcare">Çocuk Bakımı</string>
+    <string name="cat_family_pocket_money">Harçlık</string>
+    <string name="cat_family_support">Aile Desteği</string>
+    <string name="cat_family_other">Diğer Aile Giderleri</string>
+    <string name="cat_pets">Evcil Hayvanlar</string>
+    <string name="cat_pets_food">Evcil Hayvan Maması</string>
+    <string name="cat_pets_vet">Veteriner</string>
+    <string name="cat_pets_supplies">Evcil Hayvan Malzemeleri</string>
+    <string name="cat_pets_grooming">Pet Kuaförü</string>
+    <string name="cat_pets_other">Diğer Evcil Hayvan Giderleri</string>
+    <string name="cat_travel">Seyahat</string>
+    <string name="cat_travel_flights">Uçak Biletleri</string>
+    <string name="cat_travel_hotels">Oteller</string>
+    <string name="cat_travel_train">Tren</string>
+    <string name="cat_travel_bus">Otobüs</string>
+    <string name="cat_travel_taxi">Transfer ve Taksi</string>
+    <string name="cat_travel_car_rental">Seyahat Araç Kiralama</string>
+    <string name="cat_travel_insurance">Seyahat Sigortası</string>
+    <string name="cat_travel_vacation">Tatil</string>
+    <string name="cat_travel_tours">Turlar ve Aktiviteler</string>
+    <string name="cat_travel_other">Diğer Seyahat Giderleri</string>
+    <string name="cat_edu_school">Okul</string>
+    <string name="cat_edu_university">Üniversite</string>
+    <string name="cat_edu_courses">Kurslar</string>
+    <string name="cat_edu_books">Ders Kitapları</string>
+    <string name="cat_edu_online">Online Kurslar</string>
+    <string name="cat_edu_training">Eğitim Seminerleri</string>
+    <string name="cat_edu_other">Diğer Eğitim Giderleri</string>
+    <string name="cat_financial">Finansal Giderler</string>
+    <string name="cat_fin_bank_fees">Banka Ücretleri</string>
+    <string name="cat_fin_interest">Faiz Giderleri</string>
+    <string name="cat_fin_loan_payment">Kredi Ödemesi</string>
+    <string name="cat_fin_card_payment">Kredi Kartı Ödemesi</string>
+    <string name="cat_fin_insurance">Sigorta</string>
+    <string name="cat_fin_taxes">Vergiler</string>
+    <string name="cat_fin_fines">Trafik ve Diğer Cezalar</string>
+    <string name="cat_fin_exchange_fees">Döviz Komisyonları</string>
+    <string name="cat_fin_services">Finansal Hizmetler</string>
+    <string name="cat_fin_other">Diğer Finansal Giderler</string>
+    <string name="cat_debt">Krediler ve Borçlar</string>
+    <string name="cat_debt_loan">Kredi</string>
+    <string name="cat_debt_mortgage">Konut Kredisi Taksiti</string>
+    <string name="cat_debt_consumer">İhtiyaç Kredisi</string>
+    <string name="cat_debt_car">Taşıt Kredisi</string>
+    <string name="cat_debt_card">Kredi Kartı</string>
+    <string name="cat_debt_repayment">Borç Geri Ödemesi</string>
+    <string name="cat_debt_other">Diğer Borçlar</string>
+    <string name="cat_gifts_charity">Hayır İşleri</string>
+    <string name="cat_gifts_donations">Bağışlar</string>
+    <string name="cat_gifts_to_others">Başkalarına Hediyeler</string>
+    <string name="cat_gifts_religious">Dini Bağışlar</string>
+    <string name="cat_gifts_other">Diğer Bağışlar</string>
+    <string name="cat_other_expenses">Diğer Giderler</string>
+    <string name="cat_other_expense_item">Diğer Harcama</string>
+    <string name="cat_income_salary">Maaş</string>
+    <string name="cat_income_bonus">Prim ve İkramiye</string>
+    <string name="cat_income_overtime">Fazla Mesai</string>
+    <string name="cat_income_commission">Komisyon</string>
+    <string name="cat_income_tips">Bahşiş</string>
+    <string name="cat_income_reimbursement">Masraf İadesi</string>
+    <string name="cat_income_freelance">Serbest Çalışma</string>
+    <string name="cat_income_business">Ticari Kazanç</string>
+    <string name="cat_income_consulting">Danışmanlık</string>
+    <string name="cat_income_contract">Sözleşmeli İşler</string>
+    <string name="cat_income_side_job">Ek İş</string>
+    <string name="cat_income_business_other">Diğer İş Gelirleri</string>
+    <string name="cat_income_investment_income">Yatırım Geliri</string>
+    <string name="cat_income_dividends">Temettüler</string>
+    <string name="cat_income_interest">Faiz Geliri</string>
+    <string name="cat_income_capital_gains">Sermaye Kazancı</string>
+    <string name="cat_income_crypto">Kripto Geliri</string>
+    <string name="cat_income_rental">Kira Geliri</string>
+    <string name="cat_income_government">Devlet Yardımları ve Ödenekler</string>
+    <string name="cat_income_benefits">Yardımlar</string>
+    <string name="cat_income_pension">Emekli Maaşı</string>
+    <string name="cat_income_scholarship">Burs</string>
+    <string name="cat_income_social_payments">Sosyal Ödemeler</string>
+    <string name="cat_income_tax_refund">Vergi İadesi</string>
+    <string name="cat_income_gifts">Alınan Hediyeler</string>
+    <string name="cat_income_cashback">Nakit İade (Cashback)</string>
+    <string name="cat_income_refund">Geri Ödeme</string>
+    <string name="cat_income_sale_of_items">Eşya Satışı</string>
+    <string name="cat_income_prize">Ödüller ve İkramiyeler</string>
+    <string name="cat_income_other_item">Diğer Gelir</string>
+    <string name="cat_income_uncategorized">Kategorisiz Gelir</string>
+    <string name="cat_transfer">Hesaplar Arası Transfer</string>
+    <string name="cat_transfer_withdrawal">Nakit Para Çekme</string>
+    <string name="cat_transfer_deposit">Nakit Para Yatırma</string>
 </resources>

@@ -27,7 +27,7 @@
     <string name="nav_analytics">Аналитика</string>
     <string name="nav_more">Ещё</string>
 
-    <!-- Common Actions & Buttons -->
+    <!-- Common Actions &amp; Buttons -->
     <string name="action_save">Сохранить</string>
     <string name="action_cancel">Отмена</string>
     <string name="action_delete">Удалить</string>
@@ -165,7 +165,7 @@
     <string name="account_archive">Архивировать счёт</string>
     <string name="account_delete">Удалить счёт</string>
 
-    <!-- Recurring & Subscriptions -->
+    <!-- Recurring &amp; Subscriptions -->
     <string name="recurring_title">Регулярные платежи и подписки</string>
     <string name="recurring_upcoming_title">Предстоящие платежи</string>
     <string name="recurring_upcoming_subtitle">Прогноз на ближайшие 30 дней</string>
@@ -202,7 +202,7 @@
     <string name="goal_empty_title">Цели ещё не поставлены</string>
     <string name="goal_empty_desc">Создайте цели для накоплений, отпуска или крупных покупок</string>
 
-    <!-- Investments & Assets -->
+    <!-- Investments &amp; Assets -->
     <string name="investments_title">Инвестиции и активы</string>
     <string name="investments_total_portfolio">Стоимость портфеля</string>
     <string name="investments_total_gain_loss">Доходность / Убыток</string>
@@ -216,7 +216,7 @@
     <string name="asset_empty_title">Инвестиционные активы отсутствуют</string>
     <string name="asset_empty_desc">Учитывайте акции, облигации, фонды, недвижимость и металлы</string>
 
-    <!-- Debt & Liabilities -->
+    <!-- Debt &amp; Liabilities -->
     <string name="debt_title">Долги и кредиты</string>
     <string name="debt_total_debt">Остаток задолженности</string>
     <string name="debt_total_paid_off">Выплачено основного долга</string>
@@ -334,7 +334,7 @@
     <string name="more_insights_title">Финансовые инсайты</string>
     <string name="more_insights_desc">Анализ отклонений в расходах и полезные советы</string>
 
-    <!-- Security & Privacy -->
+    <!-- Security &amp; Privacy -->
     <string name="security_title">Безопасность</string>
     <string name="security_biometric">Биометрическая аутентификация</string>
     <string name="security_biometric_desc">Вход по отпечатку пальца или распознаванию лица</string>
@@ -349,7 +349,7 @@
     <string name="security_pin_mismatch">Коды не совпадают. Повторите попытку.</string>
     <string name="security_pin_set_success">Параметры защиты успешно обновлены</string>
 
-    <!-- Categorization Rules & Smart Engine -->
+    <!-- Categorization Rules &amp; Smart Engine -->
     <string name="rules_title">Правила категоризации</string>
     <string name="rules_tab_rules">Правила (%1$d)</string>
     <string name="rules_tab_review">Очередь проверки (%1$d)</string>
@@ -388,7 +388,7 @@
     <string name="insights_empty_title">Инсайты пока формируются</string>
     <string name="insights_empty_desc">Советы появятся по мере накопления истории ваших расходов</string>
 
-    <!-- Search & Filter -->
+    <!-- Search &amp; Filter -->
     <string name="search_title">Поиск по операциям</string>
     <string name="search_hint">Поиск по контрагенту, сумме или тегу…</string>
     <string name="search_results_count">Найдено результатов: %1$d</string>
@@ -500,7 +500,7 @@
         <item quantity="other">%d строки импортировано</item>
     </plurals>
 
-    <!-- Filter & Sort -->
+    <!-- Filter &amp; Sort -->
     <string name="sort_by">Сортировка</string>
     <string name="sort_newest">Сначала новые</string>
     <string name="sort_oldest">Сначала старые</string>
@@ -530,14 +530,14 @@
     <string name="period_year">Год</string>
     <string name="period_all_time">За все время</string>
 
-    <!-- Recurring Tabs & Windows -->
+    <!-- Recurring Tabs &amp; Windows -->
     <string name="recurring_tab_upcoming">Предстоящие</string>
     <string name="recurring_tab_rules">Все правила</string>
     <string name="recurring_tab_subscriptions">Подписки</string>
     <string name="recurring_window_7d">Ближайшие 7 дней</string>
     <string name="recurring_window_30d">Ближайшие 30 дней</string>
 
-    <!-- Debt Strategies & Metrics -->
+    <!-- Debt Strategies &amp; Metrics -->
     <string name="debt_strategy_snowball_title">Метод снежного кома</string>
     <string name="debt_strategy_snowball_sub">Сначала наименьший остаток</string>
     <string name="debt_strategy_avalanche_title">Метод лавины</string>
@@ -554,7 +554,7 @@
     <string name="accounts_transfer_cannot_desc">Для перевода средств необходимо минимум 2 активных счета.</string>
     <string name="accounts_active_tracked">Отслеживается активных счетов: %1$d</string>
 
-    <!-- Analytics & Budgets Extras -->
+    <!-- Analytics &amp; Budgets Extras -->
     <string name="analytics_avg_daily">Среднесуточный расход</string>
     <string name="analytics_largest_expense">Крупнейший расход</string>
     <string name="analytics_top_merchants">Основные контрагенты</string>
@@ -609,4 +609,191 @@
     <string name="security_pin_configure_title">Настройка PIN-кода безопасности</string>
     <string name="security_pin_min_digits">PIN-код должен содержать не менее 4 цифр</string>
     <string name="security_pin_save_btn">Сохранить PIN-код</string>
+
+    <!-- Extended Default Categories &amp; UI -->
+    <string name="category_search_hint">Поиск категорий…</string>
+    <string name="category_frequently_used">Часто используемые</string>
+    <string name="category_all_categories">Все категории</string>
+    <string name="category_browse_all">Все категории</string>
+    <string name="cat_home_rent">Аренда жилья</string>
+    <string name="cat_home_mortgage">Ипотека</string>
+    <string name="cat_home_general">Дом</string>
+    <string name="cat_home_utilities">Коммунальные услуги</string>
+    <string name="cat_home_electricity">Электричество</string>
+    <string name="cat_home_water">Водоснабжение</string>
+    <string name="cat_home_gas">Газ</string>
+    <string name="cat_home_heating">Отопление</string>
+    <string name="cat_home_internet">Интернет</string>
+    <string name="cat_home_phone">Мобильная связь</string>
+    <string name="cat_home_tv">Телевидение</string>
+    <string name="cat_home_maintenance">Обслуживание дома</string>
+    <string name="cat_home_repairs">Ремонт дома</string>
+    <string name="cat_home_furniture">Мебель</string>
+    <string name="cat_home_supplies">Товары для дома</string>
+    <string name="cat_home_cleaning">Уборка и клининг</string>
+    <string name="cat_home_security">Охрана и безопасность</string>
+    <string name="cat_home_property_tax">Налог на имущество</string>
+    <string name="cat_food_restaurants">Рестораны</string>
+    <string name="cat_food_cafes">Кафе и кофейни</string>
+    <string name="cat_food_fast_food">Фастфуд</string>
+    <string name="cat_food_delivery">Доставка еды</string>
+    <string name="cat_food_lunch">Обеды</string>
+    <string name="cat_food_snacks">Перекусы</string>
+    <string name="cat_food_drinks">Напитки</string>
+    <string name="cat_food_bakery">Выпечка и хлеб</string>
+    <string name="cat_food_other">Прочая еда</string>
+    <string name="cat_transport_public">Общественный транспорт</string>
+    <string name="cat_transport_taxi">Такси</string>
+    <string name="cat_transport_parking">Парковка</string>
+    <string name="cat_transport_maintenance">Техобслуживание авто</string>
+    <string name="cat_transport_repair">Ремонт автомобиля</string>
+    <string name="cat_transport_insurance">Автострахование</string>
+    <string name="cat_transport_wash">Автомойка</string>
+    <string name="cat_transport_tolls">Платные дороги</string>
+    <string name="cat_transport_rental">Аренда автомобиля</string>
+    <string name="cat_transport_bicycle">Велосипед и самокаты</string>
+    <string name="cat_transport_other">Другой транспорт</string>
+    <string name="cat_shopping_clothing">Одежда</string>
+    <string name="cat_shopping_shoes">Обувь</string>
+    <string name="cat_shopping_accessories">Аксессуары</string>
+    <string name="cat_shopping_electronics">Электроника</string>
+    <string name="cat_shopping_appliances">Бытовая техника</string>
+    <string name="cat_shopping_online">Онлайн-покупки</string>
+    <string name="cat_shopping_aliexpress">AliExpress</string>
+    <string name="cat_shopping_amazon">Amazon</string>
+    <string name="cat_shopping_google_play">Google Play</string>
+    <string name="cat_shopping_app_store">App Store</string>
+    <string name="cat_shopping_games">Игры и покупки</string>
+    <string name="cat_shopping_gifts">Подарки</string>
+    <string name="cat_shopping_other">Прочие покупки</string>
+    <string name="cat_health_pharmacy">Аптека</string>
+    <string name="cat_health_medicine">Лекарства</string>
+    <string name="cat_health_doctor">Врачи и специалисты</string>
+    <string name="cat_health_dentist">Стоматология</string>
+    <string name="cat_health_hospital">Больница и клиника</string>
+    <string name="cat_health_tests">Анализы и диагностика</string>
+    <string name="cat_health_vitamins">Витамины и БАДы</string>
+    <string name="cat_health_insurance">Медицинская страховка</string>
+    <string name="cat_health_gym">Тренажерный зал</string>
+    <string name="cat_health_other">Прочее здоровье</string>
+    <string name="cat_entertainment_cinema">Кино</string>
+    <string name="cat_entertainment_music">Музыка</string>
+    <string name="cat_entertainment_games">Видеоигры</string>
+    <string name="cat_entertainment_events">Мероприятия</string>
+    <string name="cat_entertainment_concerts">Концерты</string>
+    <string name="cat_entertainment_nightlife">Ночная жизнь и бары</string>
+    <string name="cat_entertainment_hobbies">Хобби и увлечения</string>
+    <string name="cat_entertainment_books">Книги</string>
+    <string name="cat_entertainment_streaming">Стриминговые сервисы</string>
+    <string name="cat_entertainment_other">Прочие развлечения</string>
+    <string name="cat_sub_netflix">Netflix</string>
+    <string name="cat_sub_spotify">Spotify</string>
+    <string name="cat_sub_youtube">YouTube</string>
+    <string name="cat_sub_cloud">Облачные хранилища</string>
+    <string name="cat_sub_software">Программное обеспечение</string>
+    <string name="cat_sub_apps">Мобильные приложения</string>
+    <string name="cat_sub_digital_services">Цифровые сервисы</string>
+    <string name="cat_sub_other">Другие подписки</string>
+    <string name="cat_personal_care">Личная гигиена и уход</string>
+    <string name="cat_personal_barber">Парикмахер и барбер</string>
+    <string name="cat_personal_beauty">Красота</string>
+    <string name="cat_personal_cosmetics">Косметика</string>
+    <string name="cat_personal_spa">СПА</string>
+    <string name="cat_personal_massage">Массаж</string>
+    <string name="cat_personal_other">Прочий уход</string>
+    <string name="cat_family">Семья и дети</string>
+    <string name="cat_family_children">Дети</string>
+    <string name="cat_family_kindergarten">Детский сад</string>
+    <string name="cat_family_school">Школа</string>
+    <string name="cat_family_education">Обучение детей</string>
+    <string name="cat_family_courses">Кружки и секции</string>
+    <string name="cat_family_toys">Игрушки</string>
+    <string name="cat_family_childcare">Няни и уход</string>
+    <string name="cat_family_pocket_money">Карманные деньги</string>
+    <string name="cat_family_support">Помощь родственникам</string>
+    <string name="cat_family_other">Прочие семейные расходы</string>
+    <string name="cat_pets">Питомцы</string>
+    <string name="cat_pets_food">Корм для питомцев</string>
+    <string name="cat_pets_vet">Ветеринарные услуги</string>
+    <string name="cat_pets_supplies">Товары для животных</string>
+    <string name="cat_pets_grooming">Груминг и уход</string>
+    <string name="cat_pets_other">Прочие расходы на питомцев</string>
+    <string name="cat_travel">Путешествия</string>
+    <string name="cat_travel_flights">Авиабилеты</string>
+    <string name="cat_travel_hotels">Отели и жильё</string>
+    <string name="cat_travel_train">Поезда и электрички</string>
+    <string name="cat_travel_bus">Междугородние автобусы</string>
+    <string name="cat_travel_taxi">Трансфер и такси в поездках</string>
+    <string name="cat_travel_car_rental">Прокат авто в путешествиях</string>
+    <string name="cat_travel_insurance">Туристическая страховка</string>
+    <string name="cat_travel_vacation">Отпуск</string>
+    <string name="cat_travel_tours">Экскурсии и туры</string>
+    <string name="cat_travel_other">Прочие расходы в поездках</string>
+    <string name="cat_edu_school">Школьное обучение</string>
+    <string name="cat_edu_university">Университет и колледж</string>
+    <string name="cat_edu_courses">Курсы повышения квалификации</string>
+    <string name="cat_edu_books">Учебники и книги</string>
+    <string name="cat_edu_online">Онлайн-курсы</string>
+    <string name="cat_edu_training">Тренинги и мастер-классы</string>
+    <string name="cat_edu_other">Прочее образование</string>
+    <string name="cat_financial">Финансовые расходы</string>
+    <string name="cat_fin_bank_fees">Банковские комиссии</string>
+    <string name="cat_fin_interest">Проценты по кредитам</string>
+    <string name="cat_fin_loan_payment">Платеж по кредиту</string>
+    <string name="cat_fin_card_payment">Платеж по кредитной карте</string>
+    <string name="cat_fin_insurance">Страховые взносы</string>
+    <string name="cat_fin_taxes">Налоги и сборы</string>
+    <string name="cat_fin_fines">Штрафы и пени</string>
+    <string name="cat_fin_exchange_fees">Комиссии за обмен валюты</string>
+    <string name="cat_fin_services">Финансовые консультации</string>
+    <string name="cat_fin_other">Прочие финансовые расходы</string>
+    <string name="cat_debt">Кредиты и долги</string>
+    <string name="cat_debt_loan">Кредит</string>
+    <string name="cat_debt_mortgage">Ипотечный платеж</string>
+    <string name="cat_debt_consumer">Потребительский кредит</string>
+    <string name="cat_debt_car">Автокредит</string>
+    <string name="cat_debt_card">Кредитная карта</string>
+    <string name="cat_debt_repayment">Погашение долга</string>
+    <string name="cat_debt_other">Прочие долги</string>
+    <string name="cat_gifts_charity">Благотворительность</string>
+    <string name="cat_gifts_donations">Пожертвования</string>
+    <string name="cat_gifts_to_others">Подарки близким</string>
+    <string name="cat_gifts_religious">Религиозные взносы</string>
+    <string name="cat_gifts_other">Прочие пожертвования</string>
+    <string name="cat_other_expenses">Прочие расходы</string>
+    <string name="cat_other_expense_item">Прочий расход</string>
+    <string name="cat_income_salary">Основная зарплата</string>
+    <string name="cat_income_bonus">Премия и бонусы</string>
+    <string name="cat_income_overtime">Сверхурочные</string>
+    <string name="cat_income_commission">Комиссионные</string>
+    <string name="cat_income_tips">Чаевые</string>
+    <string name="cat_income_reimbursement">Компенсация расходов</string>
+    <string name="cat_income_freelance">Фриланс</string>
+    <string name="cat_income_business">Доход от бизнеса</string>
+    <string name="cat_income_consulting">Консалтинг</string>
+    <string name="cat_income_contract">Работа по контракту</string>
+    <string name="cat_income_side_job">Подработка</string>
+    <string name="cat_income_business_other">Прочий доход от бизнеса</string>
+    <string name="cat_income_investment_income">Доход от инвестиций</string>
+    <string name="cat_income_dividends">Дивиденды</string>
+    <string name="cat_income_interest">Проценты по вкладам</string>
+    <string name="cat_income_capital_gains">Прирост капитала</string>
+    <string name="cat_income_crypto">Доход от криптовалюты</string>
+    <string name="cat_income_rental">Доход от сдачи в аренду</string>
+    <string name="cat_income_government">Господдержка и пособия</string>
+    <string name="cat_income_benefits">Пособия</string>
+    <string name="cat_income_pension">Пенсия</string>
+    <string name="cat_income_scholarship">Стипендия</string>
+    <string name="cat_income_social_payments">Социальные выплаты</string>
+    <string name="cat_income_tax_refund">Налоговый вычет</string>
+    <string name="cat_income_gifts">Подаренные деньги</string>
+    <string name="cat_income_cashback">Кэшбэк и бонусы</string>
+    <string name="cat_income_refund">Возврат средств</string>
+    <string name="cat_income_sale_of_items">Продажа вещей</string>
+    <string name="cat_income_prize">Выигрыши и призы</string>
+    <string name="cat_income_other_item">Прочий доход</string>
+    <string name="cat_income_uncategorized">Доход без категории</string>
+    <string name="cat_transfer">Перевод между счетами</string>
+    <string name="cat_transfer_withdrawal">Снятие наличных</string>
+    <string name="cat_transfer_deposit">Внесение наличных</string>
 </resources>

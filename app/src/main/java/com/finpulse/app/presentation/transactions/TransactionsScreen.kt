@@ -51,13 +51,16 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -68,10 +71,14 @@ import com.finpulse.app.core.designsystem.AmberWarning
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.TransferBlue
+import com.finpulse.app.core.ui.CategoryIconBadge
+import com.finpulse.app.core.ui.CategoryPickerDialog
 import com.finpulse.app.core.ui.TransactionItem
+import com.finpulse.app.core.ui.getDisplayName
 import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.Category
+import com.finpulse.app.domain.model.CategoryType
 import com.finpulse.app.domain.model.Transaction
 import com.finpulse.app.domain.model.TransactionType
 
@@ -436,6 +443,60 @@ fun FilterBottomSheet(
                 SortChip(stringResource(R.string.sort_lowest), sortOrder == TransactionSort.AMOUNT_ASC) { onSortOrderChange(TransactionSort.AMOUNT_ASC) }
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(stringResource(R.string.quick_add_select_category), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(8.dp))
+            var showFilterCategoryPicker by remember { mutableStateOf(false) }
+            val filterCategory = categories.find { it.id == selectedCategory }
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable { showFilterCategoryPicker = true },
+                shape = RoundedCornerShape(12.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (filterCategory != null) {
+                        CategoryIconBadge(filterCategory.icon, filterCategory.colorHex, size = 24.dp, iconSize = 14.dp)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = filterCategory.getDisplayName(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.weight(1f)
+                        )
+                        IconButton(onClick = { onCategorySelected(null) }, modifier = Modifier.size(24.dp)) {
+                            Icon(Icons.Default.Close, contentDescription = "Clear", modifier = Modifier.size(16.dp))
+                        }
+                    } else {
+                        Text(
+                            text = stringResource(R.string.category_all_categories),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Icon(Icons.Default.KeyboardArrowDown, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+            }
+            if (showFilterCategoryPicker) {
+                CategoryPickerDialog(
+                    categories = categories,
+                    selectedCategoryId = selectedCategory,
+                    onCategorySelected = { cat ->
+                        onCategorySelected(cat.id)
+                        showFilterCategoryPicker = false
+                    },
+                    onDismissRequest = { showFilterCategoryPicker = false }
+                )
+            }
+
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
@@ -507,6 +568,31 @@ fun AddEditTransactionDialog(
     var categoryId by remember {
         mutableStateOf(editingTransaction?.categoryId ?: categories.firstOrNull()?.id ?: "")
     }
+
+    val relevantCategories = remember(categories, selectedType) {
+        val catType = when (selectedType) {
+            TransactionType.INCOME, TransactionType.REFUND -> CategoryType.INCOME
+            else -> CategoryType.EXPENSE
+        }
+        categories.filter { it.type == catType }
+    }
+    var showCategoryPicker by remember { mutableStateOf(false) }
+
+    LaunchedEffect(selectedType) {
+        if (selectedType == TransactionType.TRANSFER) {
+            categoryId = "cat_transfer"
+        } else {
+            val catType = when (selectedType) {
+                TransactionType.INCOME, TransactionType.REFUND -> CategoryType.INCOME
+                else -> CategoryType.EXPENSE
+            }
+            val currentCat = categories.find { it.id == categoryId }
+            if (currentCat == null || currentCat.type != catType) {
+                categoryId = categories.firstOrNull { it.type == catType }?.id ?: ""
+            }
+        }
+    }
+
     var merchant by remember {
         mutableStateOf(editingTransaction?.merchant ?: "")
     }
@@ -563,6 +649,54 @@ fun AddEditTransactionDialog(
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(vertical = 8.dp),
                                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+                        }
+                    }
+                }
+
+                // Category Selector Surface for non-transfers
+                if (selectedType != TransactionType.TRANSFER) {
+                    val currentCategory = categories.find { it.id == categoryId }
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable { showCategoryPicker = true },
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            if (currentCategory != null) {
+                                CategoryIconBadge(
+                                    iconName = currentCategory.icon,
+                                    colorHex = currentCategory.colorHex,
+                                    size = 28.dp,
+                                    iconSize = 16.dp
+                                )
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Text(
+                                    text = currentCategory.getDisplayName(),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.weight(1f)
+                                )
+                            } else {
+                                Text(
+                                    text = stringResource(R.string.quick_add_select_category),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowDown,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -656,4 +790,22 @@ fun AddEditTransactionDialog(
             }
         }
     )
+
+    if (showCategoryPicker) {
+        val catType = when (selectedType) {
+            TransactionType.INCOME, TransactionType.REFUND -> CategoryType.INCOME
+            else -> CategoryType.EXPENSE
+        }
+        CategoryPickerDialog(
+            categories = relevantCategories,
+            selectedCategoryId = categoryId,
+            initialType = catType,
+            allowedType = catType,
+            onCategorySelected = { cat ->
+                categoryId = cat.id
+                showCategoryPicker = false
+            },
+            onDismissRequest = { showCategoryPicker = false }
+        )
+    }
 }

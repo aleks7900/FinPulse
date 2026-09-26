@@ -65,10 +65,12 @@ import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.TransferBlue
 import com.finpulse.app.core.model.CurrencyInfo
 import com.finpulse.app.core.ui.CategoryIconBadge
+import com.finpulse.app.core.ui.CategoryPickerDialog
 import com.finpulse.app.core.ui.getDisplayName
 import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.Category
+import com.finpulse.app.domain.model.CategoryType
 import com.finpulse.app.domain.model.Transaction
 import com.finpulse.app.domain.model.TransactionType
 
@@ -93,6 +95,7 @@ fun QuickAddBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showDetails by remember { mutableStateOf(false) }
+    var showCategoryPickerDialog by remember { mutableStateOf(false) }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -280,16 +283,53 @@ fun QuickAddBottomSheet(
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            // 4. Frequent Category Selector (1-tap)
+            // 4. Category Selector (Frequent + Browse All)
             if (uiState.selectedType != TransactionType.TRANSFER) {
                 val scrollState = rememberScrollState()
+                val displayCategories = remember(uiState.frequentCategories, uiState.selectedCategoryId, uiState.categories) {
+                    val selected = uiState.categories.find { it.id == uiState.selectedCategoryId }
+                    if (selected != null && uiState.frequentCategories.none { it.id == selected.id }) {
+                        listOf(selected) + uiState.frequentCategories
+                    } else {
+                        uiState.frequentCategories
+                    }
+                }
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .horizontalScroll(scrollState),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    uiState.frequentCategories.forEach { category ->
+                    // Browse all categories trigger
+                    Surface(
+                        modifier = Modifier.clickable { showCategoryPickerDialog = true },
+                        shape = RoundedCornerShape(16.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = stringResource(R.string.category_browse_all),
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = stringResource(R.string.category_browse_all),
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+
+                    displayCategories.forEach { category ->
                         val isSelected = category.id == uiState.selectedCategoryId
                         Surface(
                             modifier = Modifier.clickable { onCategorySelected(category.id) },
@@ -484,6 +524,23 @@ fun QuickAddBottomSheet(
                 }
             }
         }
+    }
+
+    if (showCategoryPickerDialog) {
+        CategoryPickerDialog(
+            categories = uiState.categories,
+            selectedCategoryId = uiState.selectedCategoryId,
+            initialType = when (uiState.selectedType) {
+                TransactionType.INCOME, TransactionType.REFUND -> CategoryType.INCOME
+                else -> CategoryType.EXPENSE
+            },
+            frequentCategories = uiState.frequentCategories,
+            onCategorySelected = { category ->
+                onCategorySelected(category.id)
+                showCategoryPickerDialog = false
+            },
+            onDismissRequest = { showCategoryPickerDialog = false }
+        )
     }
 }
 
