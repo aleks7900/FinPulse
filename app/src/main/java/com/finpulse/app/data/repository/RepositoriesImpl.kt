@@ -107,6 +107,15 @@ class TransactionRepositoryImpl(private val database: FinPulseDatabase) : Transa
         }
     }
 
+    override fun getFrequentCategoryIdsFlow(type: TransactionType, limit: Int): Flow<List<String>> =
+        txDao.getFrequentCategoryIdsFlow(type.name, limit)
+
+    override fun getFrequentMerchantsFlow(limit: Int): Flow<List<String>> =
+        txDao.getFrequentMerchantsFlow(limit)
+
+    override suspend fun getSuggestedCategoryForMerchant(merchant: String): String? =
+        txDao.getSuggestedCategoryForMerchant(merchant)
+
     private suspend fun applyTransactionBalanceChange(tx: Transaction, isReversal: Boolean) {
         val multiplier = if (isReversal) -1 else 1
 

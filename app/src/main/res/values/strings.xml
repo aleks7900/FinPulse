@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FinPulse</string>
+    <string name="shortcut_quick_add_short">Quick Add</string>
+    <string name="shortcut_quick_add_long">Quick Add Transaction</string>
 </resources>

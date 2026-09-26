@@ -1195,6 +1195,121 @@ public final class TransactionDao_Impl implements TransactionDao {
     });
   }
 
+  @Override
+  public Flow<List<String>> getFrequentCategoryIdsFlow(final String type, final int limit) {
+    final String _sql = "\n"
+            + "        SELECT categoryId FROM transactions \n"
+            + "        WHERE type = ? \n"
+            + "        GROUP BY categoryId \n"
+            + "        ORDER BY COUNT(*) DESC, MAX(timestamp) DESC \n"
+            + "        LIMIT ?\n"
+            + "    ";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 2);
+    int _argIndex = 1;
+    _statement.bindString(_argIndex, type);
+    _argIndex = 2;
+    _statement.bindLong(_argIndex, limit);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"transactions"}, new Callable<List<String>>() {
+      @Override
+      @NonNull
+      public List<String> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final List<String> _result = new ArrayList<String>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final String _item;
+            _item = _cursor.getString(0);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Flow<List<String>> getFrequentMerchantsFlow(final int limit) {
+    final String _sql = "\n"
+            + "        SELECT merchant FROM transactions \n"
+            + "        WHERE merchant IS NOT NULL AND merchant != '' \n"
+            + "        GROUP BY merchant \n"
+            + "        ORDER BY COUNT(*) DESC, MAX(timestamp) DESC \n"
+            + "        LIMIT ?\n"
+            + "    ";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, limit);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"transactions"}, new Callable<List<String>>() {
+      @Override
+      @NonNull
+      public List<String> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final List<String> _result = new ArrayList<String>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final String _item;
+            _item = _cursor.getString(0);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Object getSuggestedCategoryForMerchant(final String merchant,
+      final Continuation<? super String> $completion) {
+    final String _sql = "\n"
+            + "        SELECT categoryId FROM transactions \n"
+            + "        WHERE merchant = ? \n"
+            + "        GROUP BY categoryId \n"
+            + "        ORDER BY COUNT(*) DESC, MAX(timestamp) DESC \n"
+            + "        LIMIT 1\n"
+            + "    ";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindString(_argIndex, merchant);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<String>() {
+      @Override
+      @Nullable
+      public String call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final String _result;
+          if (_cursor.moveToFirst()) {
+            if (_cursor.isNull(0)) {
+              _result = null;
+            } else {
+              _result = _cursor.getString(0);
+            }
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
   @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();

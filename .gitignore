@@ -1,0 +1,123 @@
+# Gradle
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local configuration
+local.properties
+
+# Android Studio / IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Android generated files
+.externalNativeBuild/
+.cxx/
+captures/
+.navigation/
+*.apk
+*.ap_
+*.aab
+*.aar
+output-metadata.json
+
+# Kotlin
+.kotlin/
+
+# Signing / Keystores
+*.jks
+*.keystore
+*.p12
+*.pem
+*.key
+keystore.properties
+signing.properties
+
+# Secrets / Environment configuration
+.env
+.env.*
+!.env.example
+secrets.properties
+local-secrets.properties
+credentials.properties
+api-keys.properties
+apikey.properties
+credentials.json
+
+# Google / Firebase sensitive configuration
+google-services.json
+GoogleService-Info.plist
+service-account*.json
+firebase-adminsdk*.json
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Logs / temp
+*.log
+logs/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.cache/
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Thumbs.db:encryptable
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+.directory
+.Trash-*
+
+# VS Code
+.vscode/
+
+# Tests / coverage / profiling
+coverage/
+test-results/
+*.exec
+*.ec
+*.hprof
+*.trace
+*.prof
+
+# Fastlane generated files
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# Native build artifacts
+obj/
+
+# Local financial/import/export data
+exports/
+backups/
+local-data/
+imports/
+local-imports/
+*.backup
+*.bak
+*.ofx
+*.qfx
+*.qif
+*.mt940
+
+# Misc generated files
+generated/
+tmp/
+temp/

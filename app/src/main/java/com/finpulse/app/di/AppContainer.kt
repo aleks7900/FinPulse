@@ -19,6 +19,8 @@ import com.finpulse.app.domain.repository.GoalRepository
 import com.finpulse.app.domain.repository.InvestmentRepository
 import com.finpulse.app.domain.repository.RecurringRepository
 import com.finpulse.app.domain.repository.TransactionRepository
+import com.finpulse.app.domain.usecase.transaction.CreateTransactionUseCase
+import com.finpulse.app.domain.usecase.transaction.GetQuickAddSuggestionsUseCase
 
 interface AppContainer {
     val database: FinPulseDatabase
@@ -31,6 +33,8 @@ interface AppContainer {
     val goalRepository: GoalRepository
     val investmentRepository: InvestmentRepository
     val debtRepository: DebtRepository
+    val createTransactionUseCase: CreateTransactionUseCase
+    val getQuickAddSuggestionsUseCase: GetQuickAddSuggestionsUseCase
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -72,5 +76,13 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val debtRepository: DebtRepository by lazy {
         DebtRepositoryImpl(database)
+    }
+
+    override val createTransactionUseCase: CreateTransactionUseCase by lazy {
+        CreateTransactionUseCase(transactionRepository, accountRepository)
+    }
+
+    override val getQuickAddSuggestionsUseCase: GetQuickAddSuggestionsUseCase by lazy {
+        GetQuickAddSuggestionsUseCase(transactionRepository, categoryRepository, accountRepository, userPreferencesDataStore)
     }
 }

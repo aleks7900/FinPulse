@@ -66,4 +66,31 @@ interface TransactionDao {
 
     @Query("SELECT COALESCE(SUM(amountMinor), 0) FROM transactions WHERE categoryId = :categoryId AND type = 'EXPENSE' AND timestamp >= :startDate AND timestamp <= :endDate AND isExcludedFromBudget = 0")
     fun getExpenseSumByCategoryAndDateRangeFlow(categoryId: String, startDate: Long, endDate: Long): Flow<Long>
+
+    @Query("""
+        SELECT categoryId FROM transactions 
+        WHERE type = :type 
+        GROUP BY categoryId 
+        ORDER BY COUNT(*) DESC, MAX(timestamp) DESC 
+        LIMIT :limit
+    """)
+    fun getFrequentCategoryIdsFlow(type: String, limit: Int = 6): Flow<List<String>>
+
+    @Query("""
+        SELECT merchant FROM transactions 
+        WHERE merchant IS NOT NULL AND merchant != '' 
+        GROUP BY merchant 
+        ORDER BY COUNT(*) DESC, MAX(timestamp) DESC 
+        LIMIT :limit
+    """)
+    fun getFrequentMerchantsFlow(limit: Int = 8): Flow<List<String>>
+
+    @Query("""
+        SELECT categoryId FROM transactions 
+        WHERE merchant = :merchant 
+        GROUP BY categoryId 
+        ORDER BY COUNT(*) DESC, MAX(timestamp) DESC 
+        LIMIT 1
+    """)
+    suspend fun getSuggestedCategoryForMerchant(merchant: String): String?
 }

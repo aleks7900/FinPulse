@@ -20,7 +20,10 @@ data class UserPreferences(
     val hideBalances: Boolean = false,
     val isDarkMode: Boolean? = null, // null = system default
     val isOnboardingCompleted: Boolean = false,
-    val enableScreenshotProtection: Boolean = false
+    val enableScreenshotProtection: Boolean = false,
+    val lastUsedAccountId: String? = null,
+    val lastUsedCategoryId: String? = null,
+    val lastUsedTransactionType: String = "EXPENSE"
 )
 
 class UserPreferencesDataStore(private val context: Context) {
@@ -34,6 +37,9 @@ class UserPreferencesDataStore(private val context: Context) {
         val DARK_MODE = stringPreferencesKey("dark_mode") // "SYSTEM", "LIGHT", "DARK"
         val ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")
         val SCREENSHOT_PROTECTION = booleanPreferencesKey("screenshot_protection")
+        val LAST_USED_ACCOUNT_ID = stringPreferencesKey("last_used_account_id")
+        val LAST_USED_CATEGORY_ID = stringPreferencesKey("last_used_category_id")
+        val LAST_USED_TX_TYPE = stringPreferencesKey("last_used_tx_type")
     }
 
     val userPreferencesFlow: Flow<UserPreferences> = context.dataStore.data.map { preferences ->
@@ -51,7 +57,10 @@ class UserPreferencesDataStore(private val context: Context) {
             hideBalances = preferences[PreferencesKeys.HIDE_BALANCES] ?: false,
             isDarkMode = darkModeBool,
             isOnboardingCompleted = preferences[PreferencesKeys.ONBOARDING_COMPLETED] ?: false,
-            enableScreenshotProtection = preferences[PreferencesKeys.SCREENSHOT_PROTECTION] ?: false
+            enableScreenshotProtection = preferences[PreferencesKeys.SCREENSHOT_PROTECTION] ?: false,
+            lastUsedAccountId = preferences[PreferencesKeys.LAST_USED_ACCOUNT_ID],
+            lastUsedCategoryId = preferences[PreferencesKeys.LAST_USED_CATEGORY_ID],
+            lastUsedTransactionType = preferences[PreferencesKeys.LAST_USED_TX_TYPE] ?: "EXPENSE"
         )
     }
 
@@ -95,6 +104,14 @@ class UserPreferencesDataStore(private val context: Context) {
     suspend fun setScreenshotProtection(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.SCREENSHOT_PROTECTION] = enabled
+        }
+    }
+
+    suspend fun setLastUsedTransactionDefaults(accountId: String, categoryId: String, type: String) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.LAST_USED_ACCOUNT_ID] = accountId
+            preferences[PreferencesKeys.LAST_USED_CATEGORY_ID] = categoryId
+            preferences[PreferencesKeys.LAST_USED_TX_TYPE] = type
         }
     }
 

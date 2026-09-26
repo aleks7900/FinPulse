@@ -10,6 +10,7 @@ import com.finpulse.app.domain.model.FinancialGoal
 import com.finpulse.app.domain.model.InvestmentAsset
 import com.finpulse.app.domain.model.RecurringTransaction
 import com.finpulse.app.domain.model.Transaction
+import com.finpulse.app.domain.model.TransactionType
 import kotlinx.coroutines.flow.Flow
 
 interface AccountRepository {
@@ -33,6 +34,9 @@ interface TransactionRepository {
     suspend fun createTransaction(transaction: Transaction)
     suspend fun updateTransaction(transaction: Transaction)
     suspend fun deleteTransaction(id: String)
+    fun getFrequentCategoryIdsFlow(type: TransactionType, limit: Int = 6): Flow<List<String>>
+    fun getFrequentMerchantsFlow(limit: Int = 8): Flow<List<String>>
+    suspend fun getSuggestedCategoryForMerchant(merchant: String): String?
 }
 
 interface CategoryRepository {

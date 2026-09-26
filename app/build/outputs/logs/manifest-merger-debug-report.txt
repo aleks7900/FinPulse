@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:2:1-26:12
+ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:2:1-40:12
+INJECTED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:2:1-40:12
+INJECTED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:2:1-40:12
+INJECTED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:2:1-40:12
 MERGED from [androidx.work:work-runtime-ktx:2.10.0] C:\Users\aleks\.gradle\caches\8.13\transforms\b89acee6f0622ec9bd8b733d3dc74c70\transformed\work-runtime-ktx-2.10.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.work:work-runtime:2.10.0] C:\Users\aleks\.gradle\caches\8.13\transforms\8c653a2401021c9f616ba80e034c9994\transformed\work-runtime-2.10.0\AndroidManifest.xml:17:1-145:12
 MERGED from [androidx.biometric:biometric-ktx:1.2.0-alpha05] C:\Users\aleks\.gradle\caches\8.13\transforms\e2a7d37c269ff383060f005193ebae3b\transformed\biometric-ktx-1.2.0-alpha05\AndroidManifest.xml:2:1-7:12
@@ -101,8 +101,8 @@ ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\
 	android:name
 		ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:5:22-74
 application
-ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:7:5-24:19
-INJECTED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:7:5-24:19
+ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:7:5-38:19
+INJECTED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:7:5-38:19
 MERGED from [androidx.work:work-runtime:2.10.0] C:\Users\aleks\.gradle\caches\8.13\transforms\8c653a2401021c9f616ba80e034c9994\transformed\work-runtime-2.10.0\AndroidManifest.xml:28:5-143:19
 MERGED from [androidx.work:work-runtime:2.10.0] C:\Users\aleks\.gradle\caches\8.13\transforms\8c653a2401021c9f616ba80e034c9994\transformed\work-runtime-2.10.0\AndroidManifest.xml:28:5-143:19
 MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\aleks\.gradle\caches\8.13\transforms\c1c3a609efb0f11846cc2295bf8e066e\transformed\emoji2-1.3.0\AndroidManifest.xml:23:5-33:19
@@ -140,7 +140,7 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\al
 	android:name
 		ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:8:9-44
 activity#com.finpulse.app.MainActivity
-ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:15:9-23:20
+ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:15:9-37:20
 	android:windowSoftInputMode
 		ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:18:13-55
 	android:exported
@@ -157,6 +157,32 @@ category#android.intent.category.LAUNCHER
 ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:21:17-77
 	android:name
 		ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:21:27-74
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:host:quick-add+data:scheme:finpulse
+ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:25:13-32:29
+action#android.intent.action.VIEW
+ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:26:17-69
+	android:name
+		ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:26:25-66
+category#android.intent.category.DEFAULT
+ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:27:17-76
+	android:name
+		ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:27:27-73
+category#android.intent.category.BROWSABLE
+ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:28:17-78
+	android:name
+		ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:28:27-75
+data
+ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:29:17-31:48
+	android:host
+		ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:31:21-45
+	android:scheme
+		ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:30:21-46
+meta-data#android.app.shortcuts
+ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:34:13-36:53
+	android:resource
+		ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:36:17-50
+	android:name
+		ADDED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml:35:17-53
 uses-sdk
 INJECTED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\aleks\.gemini\antigravity-ide\scratch\FinPulse\app\src\main\AndroidManifest.xml
