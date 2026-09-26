@@ -1,0 +1,69 @@
+package com.finpulse.app.core.database.dao
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import com.finpulse.app.core.database.entity.TransactionEntity
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface TransactionDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTransaction(transaction: TransactionEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTransactions(transactions: List<TransactionEntity>)
+
+    @Update
+    suspend fun updateTransaction(transaction: TransactionEntity)
+
+    @Delete
+    suspend fun deleteTransaction(transaction: TransactionEntity)
+
+    @Query("DELETE FROM transactions WHERE id = :id")
+    suspend fun deleteTransactionById(id: String)
+
+    @Query("SELECT * FROM transactions WHERE id = :id")
+    suspend fun getTransactionById(id: String): TransactionEntity?
+
+    @Query("SELECT * FROM transactions WHERE id = :id")
+    fun getTransactionByIdFlow(id: String): Flow<TransactionEntity?>
+
+    @Query("SELECT * FROM transactions ORDER BY timestamp DESC")
+    fun getAllTransactionsFlow(): Flow<List<TransactionEntity>>
+
+    @Query("SELECT * FROM transactions ORDER BY timestamp DESC LIMIT :limit")
+    fun getRecentTransactionsFlow(limit: Int): Flow<List<TransactionEntity>>
+
+    @Query("SELECT * FROM transactions WHERE sourceAccountId = :accountId OR destinationAccountId = :accountId ORDER BY timestamp DESC")
+    fun getTransactionsByAccountFlow(accountId: String): Flow<List<TransactionEntity>>
+
+    @Query("SELECT * FROM transactions WHERE categoryId = :categoryId ORDER BY timestamp DESC")
+    fun getTransactionsByCategoryFlow(categoryId: String): Flow<List<TransactionEntity>>
+
+    @Query("SELECT * FROM transactions WHERE timestamp >= :startDate AND timestamp <= :endDate ORDER BY timestamp DESC")
+    fun getTransactionsByDateRangeFlow(startDate: Long, endDate: Long): Flow<List<TransactionEntity>>
+
+    @Query("SELECT * FROM transactions WHERE timestamp >= :startDate AND timestamp <= :endDate")
+    suspend fun getTransactionsByDateRange(startDate: Long, endDate: Long): List<TransactionEntity>
+
+    @Query("""
+        SELECT * FROM transactions 
+        WHERE (description LIKE '%' || :query || '%' 
+           OR merchant LIKE '%' || :query || '%' 
+           OR notes LIKE '%' || :query || '%' 
+           OR tags LIKE '%' || :query || '%')
+        ORDER BY timestamp DESC
+    """)
+    fun searchTransactionsFlow(query: String): Flow<List<TransactionEntity>>
+
+    @Query("SELECT COALESCE(SUM(amountMinor), 0) FROM transactions WHERE type = :type AND timestamp >= :startDate AND timestamp <= :endDate AND isExcludedFromBudget = 0")
+    fun getSumByTypeAndDateRangeFlow(type: String, startDate: Long, endDate: Long): Flow<Long>
+
+    @Query("SELECT COALESCE(SUM(amountMinor), 0) FROM transactions WHERE categoryId = :categoryId AND type = 'EXPENSE' AND timestamp >= :startDate AND timestamp <= :endDate AND isExcludedFromBudget = 0")
+    fun getExpenseSumByCategoryAndDateRangeFlow(categoryId: String, startDate: Long, endDate: Long): Flow<Long>
+}
