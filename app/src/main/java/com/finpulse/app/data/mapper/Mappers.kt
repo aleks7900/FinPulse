@@ -17,10 +17,14 @@ import com.finpulse.app.domain.model.BudgetPeriod
 import com.finpulse.app.domain.model.Category
 import com.finpulse.app.domain.model.CategoryType
 import com.finpulse.app.domain.model.Debt
+import com.finpulse.app.core.database.entity.RecurringOccurrenceEntity
+import com.finpulse.app.domain.model.CustomIntervalUnit
 import com.finpulse.app.domain.model.DebtType
 import com.finpulse.app.domain.model.FinancialGoal
 import com.finpulse.app.domain.model.InvestmentAsset
+import com.finpulse.app.domain.model.OccurrenceStatus
 import com.finpulse.app.domain.model.PaymentFrequency
+import com.finpulse.app.domain.model.RecurringOccurrence
 import com.finpulse.app.domain.model.RecurringTransaction
 import com.finpulse.app.domain.model.Transaction
 import com.finpulse.app.domain.model.TransactionType
@@ -173,13 +177,21 @@ fun RecurringTransactionEntity.toDomain(): RecurringTransaction {
         id = id,
         title = title,
         amount = Money(amountMinor, currencyCode),
+        type = try { TransactionType.valueOf(type) } catch (_: Exception) { TransactionType.EXPENSE },
         accountId = accountId,
+        destinationAccountId = destinationAccountId,
         categoryId = categoryId,
         frequency = try { PaymentFrequency.valueOf(frequency) } catch (_: Exception) { PaymentFrequency.MONTHLY },
+        customIntervalValue = customIntervalValue,
+        customIntervalUnit = try { CustomIntervalUnit.valueOf(customIntervalUnit) } catch (_: Exception) { CustomIntervalUnit.MONTHS },
+        anchorDayOfMonth = anchorDayOfMonth,
         nextDueDate = nextDueDate,
         lastProcessedDate = lastProcessedDate,
         isActive = isActive,
+        isCancelled = isCancelled,
         isSubscription = isSubscription,
+        isVariableAmount = isVariableAmount,
+        reminderDaysBefore = reminderDaysBefore,
         notes = notes
     )
 }
@@ -190,13 +202,60 @@ fun RecurringTransaction.toEntity(): RecurringTransactionEntity {
         title = title,
         amountMinor = amount.amountMinor,
         currencyCode = amount.currencyCode,
+        type = type.name,
         accountId = accountId,
+        destinationAccountId = destinationAccountId,
         categoryId = categoryId,
         frequency = frequency.name,
+        customIntervalValue = customIntervalValue,
+        customIntervalUnit = customIntervalUnit.name,
+        anchorDayOfMonth = anchorDayOfMonth,
         nextDueDate = nextDueDate,
         lastProcessedDate = lastProcessedDate,
         isActive = isActive,
+        isCancelled = isCancelled,
         isSubscription = isSubscription,
+        isVariableAmount = isVariableAmount,
+        reminderDaysBefore = reminderDaysBefore,
+        notes = notes
+    )
+}
+
+fun RecurringOccurrenceEntity.toDomain(rule: RecurringTransaction): RecurringOccurrence {
+    val occAmount = if (amountMinor != null && currencyCode != null) {
+        Money(amountMinor, currencyCode)
+    } else {
+        rule.amount
+    }
+    return RecurringOccurrence(
+        id = id,
+        ruleId = ruleId,
+        ruleTitle = rule.title,
+        amount = occAmount,
+        type = rule.type,
+        accountId = rule.accountId,
+        destinationAccountId = rule.destinationAccountId,
+        categoryId = rule.categoryId,
+        dueDate = dueDate,
+        status = try { OccurrenceStatus.valueOf(status) } catch (_: Exception) { OccurrenceStatus.EXPECTED },
+        paidDate = paidDate,
+        transactionId = transactionId,
+        isVariableAmount = rule.isVariableAmount,
+        isSubscription = rule.isSubscription,
+        notes = notes ?: rule.notes
+    )
+}
+
+fun RecurringOccurrence.toEntity(): RecurringOccurrenceEntity {
+    return RecurringOccurrenceEntity(
+        id = id,
+        ruleId = ruleId,
+        dueDate = dueDate,
+        status = status.name,
+        amountMinor = amount.amountMinor,
+        currencyCode = amount.currencyCode,
+        paidDate = paidDate,
+        transactionId = transactionId,
         notes = notes
     )
 }

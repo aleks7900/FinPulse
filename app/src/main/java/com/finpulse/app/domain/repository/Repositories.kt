@@ -8,6 +8,7 @@ import com.finpulse.app.domain.model.CategoryType
 import com.finpulse.app.domain.model.Debt
 import com.finpulse.app.domain.model.FinancialGoal
 import com.finpulse.app.domain.model.InvestmentAsset
+import com.finpulse.app.domain.model.RecurringOccurrence
 import com.finpulse.app.domain.model.RecurringTransaction
 import com.finpulse.app.domain.model.Transaction
 import com.finpulse.app.domain.model.TransactionType
@@ -56,10 +57,23 @@ interface BudgetRepository {
 
 interface RecurringRepository {
     fun getAllRecurringFlow(): Flow<List<RecurringTransaction>>
+    fun getActiveRecurringFlow(): Flow<List<RecurringTransaction>>
     fun getActiveSubscriptionsFlow(): Flow<List<RecurringTransaction>>
+    suspend fun getRecurringById(id: String): RecurringTransaction?
     suspend fun getDueRecurring(timestamp: Long): List<RecurringTransaction>
     suspend fun saveRecurring(recurring: RecurringTransaction)
     suspend fun deleteRecurring(id: String)
+    suspend fun setRuleActive(id: String, isActive: Boolean)
+    suspend fun cancelRule(id: String)
+
+    // Occurrences
+    suspend fun getOccurrenceById(id: String): RecurringOccurrence?
+    fun getOccurrencesInRangeFlow(startDate: Long, endDate: Long): Flow<List<RecurringOccurrence>>
+    suspend fun getOccurrencesInRange(startDate: Long, endDate: Long): List<RecurringOccurrence>
+    suspend fun saveOccurrence(occurrence: RecurringOccurrence)
+    suspend fun markOccurrencePaid(occurrenceId: String, paidDate: Long, transactionId: String)
+    suspend fun markOccurrenceSkipped(occurrenceId: String)
+    suspend fun advanceRuleDueDate(ruleId: String, newDueDate: Long, processedDate: Long)
     suspend fun processDueRecurringTransactions(nowMillis: Long = System.currentTimeMillis())
 }
 

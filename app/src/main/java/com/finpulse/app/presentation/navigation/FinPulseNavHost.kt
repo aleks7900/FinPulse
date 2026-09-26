@@ -300,7 +300,12 @@ fun FinPulseApp(
                         recurringRepository = container.recurringRepository,
                         accountRepository = container.accountRepository,
                         categoryRepository = container.categoryRepository,
-                        userPreferencesDataStore = container.userPreferencesDataStore
+                        userPreferencesDataStore = container.userPreferencesDataStore,
+                        getUpcomingOccurrencesUseCase = container.getUpcomingOccurrencesUseCase,
+                        markOccurrencePaidUseCase = container.markOccurrencePaidUseCase,
+                        skipOccurrenceUseCase = container.skipOccurrenceUseCase,
+                        editOccurrenceUseCase = container.editOccurrenceUseCase,
+                        manageRecurringRuleUseCase = container.manageRecurringRuleUseCase
                     )
                 }
                 val uiState by viewModel.uiState.collectAsState()
@@ -308,9 +313,17 @@ fun FinPulseApp(
                 RecurringScreen(
                     uiState = uiState,
                     onNavigateBack = { navController.popBackStack() },
+                    onTabSelected = viewModel::onTabSelected,
+                    onWindowDaysChanged = viewModel::onWindowDaysChanged,
                     onShowAddEditDialog = viewModel::showAddEditDialog,
+                    onShowEditOccurrenceDialog = viewModel::showEditOccurrenceDialog,
+                    onShowConfirmPayDialog = viewModel::showConfirmPayDialog,
                     onSaveRecurring = viewModel::saveRecurring,
+                    onMarkPaid = viewModel::markOccurrencePaid,
+                    onSkipOccurrence = viewModel::skipOccurrence,
+                    onEditOccurrence = viewModel::editOccurrence,
                     onToggleActive = viewModel::toggleActive,
+                    onCancelRule = viewModel::cancelRule,
                     onDeleteRecurring = viewModel::deleteRecurring
                 )
             }

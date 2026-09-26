@@ -35,6 +35,11 @@ interface AppContainer {
     val debtRepository: DebtRepository
     val createTransactionUseCase: CreateTransactionUseCase
     val getQuickAddSuggestionsUseCase: GetQuickAddSuggestionsUseCase
+    val getUpcomingOccurrencesUseCase: com.finpulse.app.domain.usecase.recurring.GetUpcomingOccurrencesUseCase
+    val markOccurrencePaidUseCase: com.finpulse.app.domain.usecase.recurring.MarkOccurrencePaidUseCase
+    val skipOccurrenceUseCase: com.finpulse.app.domain.usecase.recurring.SkipOccurrenceUseCase
+    val editOccurrenceUseCase: com.finpulse.app.domain.usecase.recurring.EditOccurrenceUseCase
+    val manageRecurringRuleUseCase: com.finpulse.app.domain.usecase.recurring.ManageRecurringRuleUseCase
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -84,5 +89,25 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val getQuickAddSuggestionsUseCase: GetQuickAddSuggestionsUseCase by lazy {
         GetQuickAddSuggestionsUseCase(transactionRepository, categoryRepository, accountRepository, userPreferencesDataStore)
+    }
+
+    override val getUpcomingOccurrencesUseCase: com.finpulse.app.domain.usecase.recurring.GetUpcomingOccurrencesUseCase by lazy {
+        com.finpulse.app.domain.usecase.recurring.GetUpcomingOccurrencesUseCase(recurringRepository)
+    }
+
+    override val markOccurrencePaidUseCase: com.finpulse.app.domain.usecase.recurring.MarkOccurrencePaidUseCase by lazy {
+        com.finpulse.app.domain.usecase.recurring.MarkOccurrencePaidUseCase(recurringRepository, transactionRepository)
+    }
+
+    override val skipOccurrenceUseCase: com.finpulse.app.domain.usecase.recurring.SkipOccurrenceUseCase by lazy {
+        com.finpulse.app.domain.usecase.recurring.SkipOccurrenceUseCase(recurringRepository)
+    }
+
+    override val editOccurrenceUseCase: com.finpulse.app.domain.usecase.recurring.EditOccurrenceUseCase by lazy {
+        com.finpulse.app.domain.usecase.recurring.EditOccurrenceUseCase(recurringRepository)
+    }
+
+    override val manageRecurringRuleUseCase: com.finpulse.app.domain.usecase.recurring.ManageRecurringRuleUseCase by lazy {
+        com.finpulse.app.domain.usecase.recurring.ManageRecurringRuleUseCase(recurringRepository, accountRepository)
     }
 }

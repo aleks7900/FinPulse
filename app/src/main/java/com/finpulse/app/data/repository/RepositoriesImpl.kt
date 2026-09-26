@@ -12,7 +12,10 @@ import com.finpulse.app.domain.model.CategoryType
 import com.finpulse.app.domain.model.Debt
 import com.finpulse.app.domain.model.FinancialGoal
 import com.finpulse.app.domain.model.InvestmentAsset
+import com.finpulse.app.domain.engine.RecurringDateEngine
+import com.finpulse.app.domain.model.OccurrenceStatus
 import com.finpulse.app.domain.model.PaymentFrequency
+import com.finpulse.app.domain.model.RecurringOccurrence
 import com.finpulse.app.domain.model.RecurringTransaction
 import com.finpulse.app.domain.model.Transaction
 import com.finpulse.app.domain.model.TransactionType
@@ -235,8 +238,14 @@ class RecurringRepositoryImpl(
     override fun getAllRecurringFlow(): Flow<List<RecurringTransaction>> =
         dao.getAllRecurringFlow().map { list -> list.map { it.toDomain() } }
 
+    override fun getActiveRecurringFlow(): Flow<List<RecurringTransaction>> =
+        dao.getActiveRecurringFlow().map { list -> list.map { it.toDomain() } }
+
     override fun getActiveSubscriptionsFlow(): Flow<List<RecurringTransaction>> =
         dao.getActiveSubscriptionsFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getRecurringById(id: String): RecurringTransaction? =
+        dao.getRecurringById(id)?.toDomain()
 
     override suspend fun getDueRecurring(timestamp: Long): List<RecurringTransaction> =
         dao.getDueRecurring(timestamp).map { it.toDomain() }
@@ -246,36 +255,114 @@ class RecurringRepositoryImpl(
     }
 
     override suspend fun deleteRecurring(id: String) {
+        // Soft delete / cancel or hard delete rule
+        // Note: Historical transactions with recurringRuleId are preserved in ledger
         dao.deleteRecurringById(id)
+    }
+
+    override suspend fun setRuleActive(id: String, isActive: Boolean) {
+        dao.setRuleActive(id, isActive)
+    }
+
+    override suspend fun cancelRule(id: String) {
+        dao.cancelRule(id)
+    }
+
+    override suspend fun getOccurrenceById(id: String): RecurringOccurrence? {
+        val entity = dao.getOccurrenceById(id) ?: return null
+        val rule = dao.getRecurringById(entity.ruleId)?.toDomain() ?: return null
+        return entity.toDomain(rule)
+    }
+
+    override fun getOccurrencesInRangeFlow(startDate: Long, endDate: Long): Flow<List<RecurringOccurrence>> =
+        dao.getOccurrencesInRangeFlow(startDate, endDate).map { list ->
+            list.mapNotNull { entity ->
+                val rule = dao.getRecurringById(entity.ruleId)?.toDomain()
+                rule?.let { entity.toDomain(it) }
+            }
+        }
+
+    override suspend fun getOccurrencesInRange(startDate: Long, endDate: Long): List<RecurringOccurrence> =
+        dao.getOccurrencesInRange(startDate, endDate).mapNotNull { entity ->
+            val rule = dao.getRecurringById(entity.ruleId)?.toDomain()
+            rule?.let { entity.toDomain(it) }
+        }
+
+    override suspend fun saveOccurrence(occurrence: RecurringOccurrence) {
+        dao.insertOccurrence(occurrence.toEntity())
+    }
+
+    override suspend fun markOccurrencePaid(occurrenceId: String, paidDate: Long, transactionId: String) {
+        dao.markOccurrenceStatus(occurrenceId, OccurrenceStatus.PAID.name, paidDate, transactionId)
+    }
+
+    override suspend fun markOccurrenceSkipped(occurrenceId: String) {
+        dao.markOccurrenceStatus(occurrenceId, OccurrenceStatus.SKIPPED.name, null, null)
+    }
+
+    override suspend fun advanceRuleDueDate(ruleId: String, newDueDate: Long, processedDate: Long) {
+        dao.updateProcessedDate(ruleId, newDueDate, processedDate)
     }
 
     override suspend fun processDueRecurringTransactions(nowMillis: Long) {
         val dueList = dao.getDueRecurring(nowMillis)
         for (item in dueList) {
-            // Generate automatic transaction for this recurring entry
-            val frequency = try { PaymentFrequency.valueOf(item.frequency) } catch (_: Exception) { PaymentFrequency.MONTHLY }
+            val rule = item.toDomain()
+            val occurrenceId = "${rule.id}_${rule.nextDueDate}"
+
+            // Idempotency: Avoid duplicate generation after restart or WorkManager retry
+            val existingOcc = dao.getOccurrenceById(occurrenceId)
+            if (existingOcc != null && (existingOcc.status == OccurrenceStatus.PAID.name || existingOcc.status == OccurrenceStatus.SKIPPED.name || existingOcc.status == OccurrenceStatus.GENERATED.name)) {
+                // Already processed, calculate next due date if rule is still stuck on this date
+                val nextDue = RecurringDateEngine.calculateNextDueDate(
+                    currentDueDateMillis = rule.nextDueDate,
+                    frequency = rule.frequency,
+                    anchorDayOfMonth = rule.anchorDayOfMonth,
+                    customIntervalValue = rule.customIntervalValue,
+                    customIntervalUnit = rule.customIntervalUnit
+                )
+                dao.updateProcessedDate(rule.id, nextDue, nowMillis)
+                continue
+            }
+
+            // Create ledger transaction
             val tx = Transaction(
                 id = UUID.randomUUID().toString(),
-                amount = Money(item.amountMinor, item.currencyCode),
-                type = TransactionType.EXPENSE,
-                sourceAccountId = item.accountId,
-                categoryId = item.categoryId,
-                merchant = item.title,
-                timestamp = item.nextDueDate,
-                description = "Recurring: ${item.title}",
-                recurringRuleId = item.id
+                amount = rule.amount,
+                type = rule.type,
+                sourceAccountId = rule.accountId,
+                destinationAccountId = rule.destinationAccountId,
+                categoryId = rule.categoryId,
+                merchant = rule.title,
+                timestamp = rule.nextDueDate,
+                description = "Recurring: ${rule.title}",
+                recurringRuleId = rule.id
             )
             transactionRepository.createTransaction(tx)
 
-            // Calculate next due date
-            val nextDue = calculateNextDueDate(item.nextDueDate, frequency)
-            dao.updateProcessedDate(item.id, nextDue, nowMillis)
-        }
-    }
+            // Record occurrence as GENERATED (distinguishing expected, generated, paid, skipped, overdue)
+            val occEntity = com.finpulse.app.core.database.entity.RecurringOccurrenceEntity(
+                id = occurrenceId,
+                ruleId = rule.id,
+                dueDate = rule.nextDueDate,
+                status = OccurrenceStatus.GENERATED.name,
+                amountMinor = rule.amount.amountMinor,
+                currencyCode = rule.amount.currencyCode,
+                paidDate = nowMillis,
+                transactionId = tx.id
+            )
+            dao.insertOccurrence(occEntity)
 
-    private fun calculateNextDueDate(currentDueDate: Long, frequency: PaymentFrequency): Long {
-        val millisPerDay = 86_400_000L
-        return currentDueDate + (frequency.approxDays * millisPerDay)
+            // Advance rule to next due date with exact calendar calculation
+            val nextDue = RecurringDateEngine.calculateNextDueDate(
+                currentDueDateMillis = rule.nextDueDate,
+                frequency = rule.frequency,
+                anchorDayOfMonth = rule.anchorDayOfMonth,
+                customIntervalValue = rule.customIntervalValue,
+                customIntervalUnit = rule.customIntervalUnit
+            )
+            dao.updateProcessedDate(rule.id, nextDue, nowMillis)
+        }
     }
 }
 

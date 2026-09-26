@@ -23,5 +23,8 @@ class FinPulseApplication : Application() {
         applicationScope.launch {
             container.categoryRepository.seedDefaultCategoriesIfNeeded()
         }
+
+        // Schedule periodic WorkManager recurring check & reminders
+        com.finpulse.app.core.work.RecurringCheckWorker.schedulePeriodicCheck(this)
     }
 }

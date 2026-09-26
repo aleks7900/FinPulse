@@ -18,6 +18,7 @@ import com.finpulse.app.core.database.entity.BudgetEntity
 import com.finpulse.app.core.database.entity.CategoryEntity
 import com.finpulse.app.core.database.entity.DebtEntity
 import com.finpulse.app.core.database.entity.FinancialGoalEntity
+import com.finpulse.app.core.database.entity.RecurringOccurrenceEntity
 import com.finpulse.app.core.database.entity.RecurringTransactionEntity
 import com.finpulse.app.core.database.entity.TransactionEntity
 
@@ -28,11 +29,12 @@ import com.finpulse.app.core.database.entity.TransactionEntity
         CategoryEntity::class,
         BudgetEntity::class,
         RecurringTransactionEntity::class,
+        RecurringOccurrenceEntity::class,
         FinancialGoalEntity::class,
         AssetEntity::class,
         DebtEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class FinPulseDatabase : RoomDatabase() {
