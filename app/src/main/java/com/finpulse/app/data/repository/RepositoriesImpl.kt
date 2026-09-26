@@ -25,6 +25,7 @@ import com.finpulse.app.domain.repository.CategorizationRuleRepository
 import com.finpulse.app.domain.repository.CategoryRepository
 import com.finpulse.app.domain.repository.DebtRepository
 import com.finpulse.app.domain.repository.GoalRepository
+import com.finpulse.app.domain.repository.ImportProfileRepository
 import com.finpulse.app.domain.repository.InvestmentRepository
 import com.finpulse.app.domain.repository.MerchantSignalRepository
 import com.finpulse.app.domain.repository.RecurringRepository
@@ -626,3 +627,128 @@ class MerchantSignalRepositoryImpl(private val database: FinPulseDatabase) : Mer
         dao.clearAllSignals()
     }
 }
+
+class ImportProfileRepositoryImpl(private val database: FinPulseDatabase) : ImportProfileRepository {
+    private val dao = database.importProfileDao()
+
+    override fun getAllProfilesFlow(): Flow<List<com.finpulse.app.domain.model.ImportProfile>> =
+        dao.getAllProfilesFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getAllProfiles(): List<com.finpulse.app.domain.model.ImportProfile> =
+        dao.getAllProfiles().map { it.toDomain() }
+
+    override suspend fun getProfileById(id: String): com.finpulse.app.domain.model.ImportProfile? =
+        dao.getProfileById(id)?.toDomain()
+
+    override suspend fun saveProfile(profile: com.finpulse.app.domain.model.ImportProfile) {
+        dao.insertProfile(com.finpulse.app.core.database.entity.ImportProfileEntity.fromDomain(profile))
+    }
+
+    override suspend fun deleteProfile(id: String) {
+        dao.deleteProfileById(id)
+    }
+
+    override suspend fun seedDefaultProfilesIfNeeded() {
+        if (dao.getProfileCount() > 0) return
+
+        val defaults = listOf(
+            com.finpulse.app.domain.model.ImportProfile(
+                id = "profile_generic_csv",
+                name = "Standard CSV (Date, Amount, Description)",
+                institution = "Generic",
+                formatConfig = com.finpulse.app.domain.model.CsvFormatConfig(
+                    delimiter = ',',
+                    dateFormat = "yyyy-MM-dd",
+                    decimalSeparator = '.',
+                    hasHeader = true,
+                    amountMode = com.finpulse.app.domain.model.AmountMode.SINGLE_AMOUNT
+                ),
+                columnMapping = com.finpulse.app.domain.model.CsvColumnMapping(
+                    dateColumnIndex = 0,
+                    amountColumnIndex = 1,
+                    descriptionColumnIndex = 2
+                ),
+                isSystemPreset = true
+            ),
+            com.finpulse.app.domain.model.ImportProfile(
+                id = "profile_chase",
+                name = "Chase Bank Export",
+                institution = "Chase",
+                formatConfig = com.finpulse.app.domain.model.CsvFormatConfig(
+                    delimiter = ',',
+                    dateFormat = "MM/dd/yyyy",
+                    decimalSeparator = '.',
+                    hasHeader = true,
+                    amountMode = com.finpulse.app.domain.model.AmountMode.SINGLE_AMOUNT
+                ),
+                columnMapping = com.finpulse.app.domain.model.CsvColumnMapping(
+                    dateColumnIndex = 0,
+                    descriptionColumnIndex = 1,
+                    amountColumnIndex = 3,
+                    categoryColumnIndex = 4,
+                    balanceColumnIndex = 5
+                ),
+                isSystemPreset = true
+            ),
+            com.finpulse.app.domain.model.ImportProfile(
+                id = "profile_boa",
+                name = "Bank of America Export",
+                institution = "Bank of America",
+                formatConfig = com.finpulse.app.domain.model.CsvFormatConfig(
+                    delimiter = ',',
+                    dateFormat = "MM/dd/yyyy",
+                    decimalSeparator = '.',
+                    hasHeader = true,
+                    amountMode = com.finpulse.app.domain.model.AmountMode.SINGLE_AMOUNT
+                ),
+                columnMapping = com.finpulse.app.domain.model.CsvColumnMapping(
+                    dateColumnIndex = 0,
+                    descriptionColumnIndex = 1,
+                    amountColumnIndex = 2,
+                    balanceColumnIndex = 3
+                ),
+                isSystemPreset = true
+            ),
+            com.finpulse.app.domain.model.ImportProfile(
+                id = "profile_european_csv",
+                name = "European Semicolon (dd.MM.yyyy, comma decimal)",
+                institution = "European Banking",
+                formatConfig = com.finpulse.app.domain.model.CsvFormatConfig(
+                    delimiter = ';',
+                    dateFormat = "dd.MM.yyyy",
+                    decimalSeparator = ',',
+                    hasHeader = true,
+                    amountMode = com.finpulse.app.domain.model.AmountMode.SINGLE_AMOUNT
+                ),
+                columnMapping = com.finpulse.app.domain.model.CsvColumnMapping(
+                    dateColumnIndex = 0,
+                    descriptionColumnIndex = 1,
+                    amountColumnIndex = 2
+                ),
+                isSystemPreset = true
+            ),
+            com.finpulse.app.domain.model.ImportProfile(
+                id = "profile_split_debit_credit",
+                name = "Separate Debit / Credit Columns",
+                institution = "Generic Split",
+                formatConfig = com.finpulse.app.domain.model.CsvFormatConfig(
+                    delimiter = ',',
+                    dateFormat = "yyyy-MM-dd",
+                    decimalSeparator = '.',
+                    hasHeader = true,
+                    amountMode = com.finpulse.app.domain.model.AmountMode.SEPARATE_DEBIT_CREDIT
+                ),
+                columnMapping = com.finpulse.app.domain.model.CsvColumnMapping(
+                    dateColumnIndex = 0,
+                    descriptionColumnIndex = 1,
+                    debitColumnIndex = 2,
+                    creditColumnIndex = 3
+                ),
+                isSystemPreset = true
+            )
+        )
+
+        dao.insertProfiles(defaults.map { com.finpulse.app.core.database.entity.ImportProfileEntity.fromDomain(it) })
+    }
+}
+

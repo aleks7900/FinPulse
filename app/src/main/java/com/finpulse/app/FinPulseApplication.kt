@@ -19,10 +19,11 @@ class FinPulseApplication : Application() {
         super.onCreate()
         container = DefaultAppContainer(this)
 
-        // Seed default categories & rules in background
+        // Seed default categories, rules & import profiles in background
         applicationScope.launch {
             container.categoryRepository.seedDefaultCategoriesIfNeeded()
             container.categorizationRuleRepository.seedDefaultRulesIfNeeded()
+            container.importProfileRepository.seedDefaultProfilesIfNeeded()
         }
 
         // Schedule periodic WorkManager recurring check & reminders

@@ -22,6 +22,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
@@ -99,6 +100,7 @@ fun TransactionsScreen(
     onDeleteTransaction: (String) -> Unit,
     onToggleFilterOnlyUnreviewed: () -> Unit = {},
     onNavigateToReviewQueue: () -> Unit = {},
+    onNavigateToCsvImport: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val categoryMap = uiState.categories.associateBy { it.id }
@@ -116,6 +118,13 @@ fun TransactionsScreen(
                     )
                 },
                 actions = {
+                    IconButton(onClick = onNavigateToCsvImport) {
+                        Icon(
+                            imageVector = Icons.Default.CloudUpload,
+                            contentDescription = "Import Statement CSV",
+                            tint = EmeraldPrimary
+                        )
+                    }
                     IconButton(onClick = { onShowFilterSheet(true) }) {
                         Icon(
                             imageVector = Icons.Default.FilterList,

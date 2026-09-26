@@ -11,6 +11,7 @@ import com.finpulse.app.core.database.dao.CategoryDao
 import com.finpulse.app.core.database.dao.CategorizationRuleDao
 import com.finpulse.app.core.database.dao.DebtDao
 import com.finpulse.app.core.database.dao.FinancialGoalDao
+import com.finpulse.app.core.database.dao.ImportProfileDao
 import com.finpulse.app.core.database.dao.MerchantSignalDao
 import com.finpulse.app.core.database.dao.RecurringTransactionDao
 import com.finpulse.app.core.database.dao.TransactionDao
@@ -21,6 +22,7 @@ import com.finpulse.app.core.database.entity.CategorizationRuleEntity
 import com.finpulse.app.core.database.entity.CategoryEntity
 import com.finpulse.app.core.database.entity.DebtEntity
 import com.finpulse.app.core.database.entity.FinancialGoalEntity
+import com.finpulse.app.core.database.entity.ImportProfileEntity
 import com.finpulse.app.core.database.entity.MerchantSignalEntity
 import com.finpulse.app.core.database.entity.RecurringOccurrenceEntity
 import com.finpulse.app.core.database.entity.RecurringTransactionEntity
@@ -38,9 +40,10 @@ import com.finpulse.app.core.database.entity.TransactionEntity
         AssetEntity::class,
         DebtEntity::class,
         CategorizationRuleEntity::class,
-        MerchantSignalEntity::class
+        MerchantSignalEntity::class,
+        ImportProfileEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class FinPulseDatabase : RoomDatabase() {
@@ -55,6 +58,7 @@ abstract class FinPulseDatabase : RoomDatabase() {
     abstract fun debtDao(): DebtDao
     abstract fun categorizationRuleDao(): CategorizationRuleDao
     abstract fun merchantSignalDao(): MerchantSignalDao
+    abstract fun importProfileDao(): ImportProfileDao
 
     companion object {
         @Volatile

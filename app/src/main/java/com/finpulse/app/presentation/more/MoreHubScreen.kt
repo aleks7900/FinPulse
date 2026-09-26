@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Lightbulb
@@ -207,6 +208,13 @@ fun MoreHubScreen(
                         icon = Icons.Default.Settings,
                         tint = PurpleAccent,
                         onClick = { onNavigate(Screen.CategorizationRules) }
+                    )
+                    HubItem(
+                        title = "Bank Statement CSV Import",
+                        subtitle = "Import bank exports, map columns, detect duplicates",
+                        icon = Icons.Default.CloudUpload,
+                        tint = EmeraldPrimary,
+                        onClick = { onNavigate(Screen.CsvImport) }
                     )
                     HubItem(
                         title = "Backup & Data Export",

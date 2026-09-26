@@ -126,3 +126,13 @@ interface MerchantSignalRepository {
     suspend fun recordSignal(merchant: String, categoryId: String)
     suspend fun clearAllSignals()
 }
+
+interface ImportProfileRepository {
+    fun getAllProfilesFlow(): Flow<List<com.finpulse.app.domain.model.ImportProfile>>
+    suspend fun getAllProfiles(): List<com.finpulse.app.domain.model.ImportProfile>
+    suspend fun getProfileById(id: String): com.finpulse.app.domain.model.ImportProfile?
+    suspend fun saveProfile(profile: com.finpulse.app.domain.model.ImportProfile)
+    suspend fun deleteProfile(id: String)
+    suspend fun seedDefaultProfilesIfNeeded()
+}
+

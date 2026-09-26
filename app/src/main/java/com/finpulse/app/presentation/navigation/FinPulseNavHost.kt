@@ -226,7 +226,8 @@ fun FinPulseApp(
                     onDuplicateTransaction = viewModel::duplicateTransaction,
                     onDeleteTransaction = viewModel::deleteTransaction,
                     onToggleFilterOnlyUnreviewed = viewModel::toggleFilterOnlyUnreviewed,
-                    onNavigateToReviewQueue = { navController.navigate(Screen.CategorizationRules.route) }
+                    onNavigateToReviewQueue = { navController.navigate(Screen.CategorizationRules.route) },
+                    onNavigateToCsvImport = { navController.navigate(Screen.CsvImport.route) }
                 )
             }
 
@@ -487,6 +488,28 @@ fun FinPulseApp(
                     onSetOverrideManualOnApply = viewModel::setOverrideManualOnApply,
                     onConfirmApplyRule = viewModel::confirmApplyRule,
                     onDismissDialogs = viewModel::dismissDialogs
+                )
+            }
+
+            // Sub-screen: Bank Statement CSV Import
+            composable(Screen.CsvImport.route) {
+                val viewModel: com.finpulse.app.presentation.csvimport.CsvImportViewModel = viewModel {
+                    com.finpulse.app.presentation.csvimport.CsvImportViewModel(
+                        accountRepository = container.accountRepository,
+                        autoDetectCsvConfigUseCase = container.autoDetectCsvConfigUseCase,
+                        parseCsvStatementUseCase = container.parseCsvStatementUseCase,
+                        executeCsvImportUseCase = container.executeCsvImportUseCase,
+                        manageImportProfilesUseCase = container.manageImportProfilesUseCase
+                    )
+                }
+                com.finpulse.app.presentation.csvimport.CsvImportScreen(
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToTransactions = {
+                        navController.navigate(Screen.Transactions.route) {
+                            popUpTo(Screen.Dashboard.route)
+                        }
+                    }
                 )
             }
         }

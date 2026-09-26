@@ -48,6 +48,11 @@ interface AppContainer {
     val findMatchingTransactionsForRuleUseCase: com.finpulse.app.domain.usecase.categorization.FindMatchingTransactionsForRuleUseCase
     val applyRuleToExistingTransactionsUseCase: com.finpulse.app.domain.usecase.categorization.ApplyRuleToExistingTransactionsUseCase
     val getReviewQueueUseCase: com.finpulse.app.domain.usecase.categorization.GetReviewQueueUseCase
+    val importProfileRepository: com.finpulse.app.domain.repository.ImportProfileRepository
+    val autoDetectCsvConfigUseCase: com.finpulse.app.domain.usecase.csv.AutoDetectCsvConfigUseCase
+    val parseCsvStatementUseCase: com.finpulse.app.domain.usecase.csv.ParseCsvStatementUseCase
+    val executeCsvImportUseCase: com.finpulse.app.domain.usecase.csv.ExecuteCsvImportUseCase
+    val manageImportProfilesUseCase: com.finpulse.app.domain.usecase.csv.ManageImportProfilesUseCase
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -150,4 +155,25 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
     override val getReviewQueueUseCase: com.finpulse.app.domain.usecase.categorization.GetReviewQueueUseCase by lazy {
         com.finpulse.app.domain.usecase.categorization.GetReviewQueueUseCase(transactionRepository, categorizationRuleRepository, merchantSignalRepository)
     }
+
+    override val importProfileRepository: com.finpulse.app.domain.repository.ImportProfileRepository by lazy {
+        com.finpulse.app.data.repository.ImportProfileRepositoryImpl(database)
+    }
+
+    override val autoDetectCsvConfigUseCase: com.finpulse.app.domain.usecase.csv.AutoDetectCsvConfigUseCase by lazy {
+        com.finpulse.app.domain.usecase.csv.AutoDetectCsvConfigUseCase()
+    }
+
+    override val parseCsvStatementUseCase: com.finpulse.app.domain.usecase.csv.ParseCsvStatementUseCase by lazy {
+        com.finpulse.app.domain.usecase.csv.ParseCsvStatementUseCase(transactionRepository, categorizeTransactionUseCase)
+    }
+
+    override val executeCsvImportUseCase: com.finpulse.app.domain.usecase.csv.ExecuteCsvImportUseCase by lazy {
+        com.finpulse.app.domain.usecase.csv.ExecuteCsvImportUseCase(transactionRepository, accountRepository, merchantSignalRepository, categoryRepository)
+    }
+
+    override val manageImportProfilesUseCase: com.finpulse.app.domain.usecase.csv.ManageImportProfilesUseCase by lazy {
+        com.finpulse.app.domain.usecase.csv.ManageImportProfilesUseCase(importProfileRepository)
+    }
 }
+
