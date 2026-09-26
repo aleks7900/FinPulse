@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
@@ -60,6 +61,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.finpulse.app.core.designsystem.AmberWarning
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.TransferBlue
@@ -95,6 +97,8 @@ fun TransactionsScreen(
     ) -> Unit,
     onDuplicateTransaction: (Transaction) -> Unit,
     onDeleteTransaction: (String) -> Unit,
+    onToggleFilterOnlyUnreviewed: () -> Unit = {},
+    onNavigateToReviewQueue: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val categoryMap = uiState.categories.associateBy { it.id }
@@ -174,8 +178,49 @@ fun TransactionsScreen(
             // Quick Filter Pills Row
             TypeFilterRow(
                 selectedType = uiState.selectedTypeFilter,
-                onTypeSelected = onTypeFilterChange
+                onTypeSelected = onTypeFilterChange,
+                filterOnlyUnreviewed = uiState.filterOnlyUnreviewed,
+                unreviewedCount = uiState.unreviewedCount,
+                onToggleFilterOnlyUnreviewed = onToggleFilterOnlyUnreviewed
             )
+
+            // Review Queue Alert Banner
+            if (uiState.unreviewedCount > 0 && !uiState.filterOnlyUnreviewed) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(onClick = onNavigateToReviewQueue),
+                    shape = RoundedCornerShape(10.dp),
+                    color = AmberWarning.copy(alpha = 0.12f),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, AmberWarning.copy(alpha = 0.35f))
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AutoAwesome,
+                            contentDescription = null,
+                            tint = AmberWarning,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "${uiState.unreviewedCount} transactions need category review",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = "Review Queue →",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = AmberWarning
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -268,6 +313,9 @@ fun TransactionsScreen(
 fun TypeFilterRow(
     selectedType: TransactionType?,
     onTypeSelected: (TransactionType?) -> Unit,
+    filterOnlyUnreviewed: Boolean = false,
+    unreviewedCount: Int = 0,
+    onToggleFilterOnlyUnreviewed: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -277,9 +325,36 @@ fun TypeFilterRow(
             .horizontalScroll(scrollState),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        if (unreviewedCount > 0) {
+            Surface(
+                modifier = Modifier.clickable { onToggleFilterOnlyUnreviewed() },
+                shape = RoundedCornerShape(14.dp),
+                color = if (filterOnlyUnreviewed) AmberWarning else AmberWarning.copy(alpha = 0.15f),
+                contentColor = if (filterOnlyUnreviewed) Color.Black else AmberWarning,
+                border = if (!filterOnlyUnreviewed) androidx.compose.foundation.BorderStroke(1.dp, AmberWarning.copy(alpha = 0.4f)) else null
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AutoAwesome,
+                        contentDescription = null,
+                        modifier = Modifier.size(12.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Needs Review ($unreviewedCount)",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+
         val types = listOf(null to "All") + TransactionType.values().map { it to it.displayName }
         types.forEach { (type, label) ->
-            val isSelected = selectedType == type
+            val isSelected = !filterOnlyUnreviewed && selectedType == type
             Surface(
                 modifier = Modifier.clickable { onTypeSelected(type) },
                 shape = RoundedCornerShape(14.dp),

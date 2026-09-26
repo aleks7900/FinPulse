@@ -93,4 +93,46 @@ interface TransactionDao {
         LIMIT 1
     """)
     suspend fun getSuggestedCategoryForMerchant(merchant: String): String?
+
+    @Query("""
+        SELECT * FROM transactions 
+        WHERE isCategoryConfirmed = 0 OR categoryId = 'cat_uncategorized'
+        ORDER BY timestamp DESC
+    """)
+    fun getUnreviewedTransactionsFlow(): Flow<List<TransactionEntity>>
+
+    @Query("""
+        SELECT * FROM transactions 
+        WHERE isCategoryConfirmed = 0 OR categoryId = 'cat_uncategorized'
+        ORDER BY timestamp DESC
+    """)
+    suspend fun getUnreviewedTransactions(): List<TransactionEntity>
+
+    @Query("SELECT COUNT(*) FROM transactions WHERE isCategoryConfirmed = 0 OR categoryId = 'cat_uncategorized'")
+    fun getUnreviewedCountFlow(): Flow<Int>
+
+    @Query("""
+        UPDATE transactions 
+        SET categoryId = :categoryId, isCategoryConfirmed = :isConfirmed, matchedRuleId = :matchedRuleId, categorizationConfidence = :confidence
+        WHERE id = :id
+    """)
+    suspend fun updateTransactionCategory(
+        id: String,
+        categoryId: String,
+        isConfirmed: Boolean = true,
+        matchedRuleId: String? = null,
+        confidence: Float = 1.0f
+    )
+
+    @Query("""
+        UPDATE transactions 
+        SET categoryId = :categoryId, isCategoryConfirmed = :isConfirmed, matchedRuleId = :matchedRuleId, categorizationConfidence = 1.0
+        WHERE id IN (:ids)
+    """)
+    suspend fun bulkUpdateCategory(
+        ids: List<String>,
+        categoryId: String,
+        isConfirmed: Boolean = true,
+        matchedRuleId: String? = null
+    )
 }

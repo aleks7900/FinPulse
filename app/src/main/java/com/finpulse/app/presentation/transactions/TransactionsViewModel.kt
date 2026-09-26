@@ -37,6 +37,8 @@ data class TransactionsUiState(
     val sortOrder: TransactionSort = TransactionSort.DATE_DESC,
     val hideBalances: Boolean = false,
     val baseCurrency: String = "USD",
+    val unreviewedCount: Int = 0,
+    val filterOnlyUnreviewed: Boolean = false,
     val isFilterSheetVisible: Boolean = false,
     val isAddEditDialogVisible: Boolean = false,
     val editingTransaction: Transaction? = null
@@ -54,6 +56,7 @@ class TransactionsViewModel(
     private val _selectedAccountFilter = MutableStateFlow<String?>(null)
     private val _selectedCategoryFilter = MutableStateFlow<String?>(null)
     private val _sortOrder = MutableStateFlow(TransactionSort.DATE_DESC)
+    private val _filterOnlyUnreviewed = MutableStateFlow(false)
     private val _isFilterSheetVisible = MutableStateFlow(false)
     private val _isAddEditDialogVisible = MutableStateFlow(false)
     private val _editingTransaction = MutableStateFlow<Transaction?>(null)
@@ -68,9 +71,9 @@ class TransactionsViewModel(
         _selectedAccountFilter,
         _selectedCategoryFilter,
         _sortOrder,
-        _isFilterSheetVisible,
-        _isAddEditDialogVisible,
-        _editingTransaction
+        _filterOnlyUnreviewed,
+        transactionRepository.getUnreviewedCountFlow(),
+        combine(_isFilterSheetVisible, _isAddEditDialogVisible, _editingTransaction) { f, a, e -> Triple(f, a, e) }
     ) { params ->
         @Suppress("UNCHECKED_CAST")
         val allTx = params[0] as List<Transaction>
@@ -84,9 +87,13 @@ class TransactionsViewModel(
         val accountFilter = params[6] as String?
         val categoryFilter = params[7] as String?
         val sort = params[8] as TransactionSort
-        val isFilterVisible = params[9] as Boolean
-        val isAddVisible = params[10] as Boolean
-        val editingTx = params[11] as Transaction?
+        val onlyUnreviewed = params[9] as Boolean
+        val unreviewedCount = params[10] as Int
+        @Suppress("UNCHECKED_CAST")
+        val triple = params[11] as Triple<Boolean, Boolean, Transaction?>
+        val isFilterVisible = triple.first
+        val isAddVisible = triple.second
+        val editingTx = triple.third
 
         // Filter
         var filtered = allTx.filter { tx ->
@@ -99,8 +106,9 @@ class TransactionsViewModel(
             val matchesType = typeFilter == null || tx.type == typeFilter
             val matchesAccount = accountFilter == null || tx.sourceAccountId == accountFilter || tx.destinationAccountId == accountFilter
             val matchesCategory = categoryFilter == null || tx.categoryId == categoryFilter
+            val matchesReview = !onlyUnreviewed || (!tx.isCategoryConfirmed || tx.categoryId == "cat_uncategorized")
 
-            matchesQuery && matchesType && matchesAccount && matchesCategory
+            matchesQuery && matchesType && matchesAccount && matchesCategory && matchesReview
         }
 
         // Sort
@@ -122,6 +130,8 @@ class TransactionsViewModel(
             sortOrder = sort,
             hideBalances = userPrefs.hideBalances,
             baseCurrency = userPrefs.baseCurrencyCode,
+            unreviewedCount = unreviewedCount,
+            filterOnlyUnreviewed = onlyUnreviewed,
             isFilterSheetVisible = isFilterVisible,
             isAddEditDialogVisible = isAddVisible,
             editingTransaction = editingTx
@@ -150,6 +160,14 @@ class TransactionsViewModel(
 
     fun onSortOrderChange(sort: TransactionSort) {
         _sortOrder.value = sort
+    }
+
+    fun toggleFilterOnlyUnreviewed() {
+        _filterOnlyUnreviewed.value = !_filterOnlyUnreviewed.value
+    }
+
+    fun setFilterOnlyUnreviewed(onlyUnreviewed: Boolean) {
+        _filterOnlyUnreviewed.value = onlyUnreviewed
     }
 
     fun showFilterSheet(show: Boolean) {

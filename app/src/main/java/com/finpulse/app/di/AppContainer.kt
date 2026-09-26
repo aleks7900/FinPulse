@@ -40,6 +40,14 @@ interface AppContainer {
     val skipOccurrenceUseCase: com.finpulse.app.domain.usecase.recurring.SkipOccurrenceUseCase
     val editOccurrenceUseCase: com.finpulse.app.domain.usecase.recurring.EditOccurrenceUseCase
     val manageRecurringRuleUseCase: com.finpulse.app.domain.usecase.recurring.ManageRecurringRuleUseCase
+    val categorizationRuleRepository: com.finpulse.app.domain.repository.CategorizationRuleRepository
+    val merchantSignalRepository: com.finpulse.app.domain.repository.MerchantSignalRepository
+    val categorizeTransactionUseCase: com.finpulse.app.domain.usecase.categorization.CategorizeTransactionUseCase
+    val recordCategoryCorrectionUseCase: com.finpulse.app.domain.usecase.categorization.RecordCategoryCorrectionUseCase
+    val manageCategorizationRuleUseCase: com.finpulse.app.domain.usecase.categorization.ManageCategorizationRuleUseCase
+    val findMatchingTransactionsForRuleUseCase: com.finpulse.app.domain.usecase.categorization.FindMatchingTransactionsForRuleUseCase
+    val applyRuleToExistingTransactionsUseCase: com.finpulse.app.domain.usecase.categorization.ApplyRuleToExistingTransactionsUseCase
+    val getReviewQueueUseCase: com.finpulse.app.domain.usecase.categorization.GetReviewQueueUseCase
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -83,6 +91,14 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
         DebtRepositoryImpl(database)
     }
 
+    override val categorizationRuleRepository: com.finpulse.app.domain.repository.CategorizationRuleRepository by lazy {
+        com.finpulse.app.data.repository.CategorizationRuleRepositoryImpl(database)
+    }
+
+    override val merchantSignalRepository: com.finpulse.app.domain.repository.MerchantSignalRepository by lazy {
+        com.finpulse.app.data.repository.MerchantSignalRepositoryImpl(database)
+    }
+
     override val createTransactionUseCase: CreateTransactionUseCase by lazy {
         CreateTransactionUseCase(transactionRepository, accountRepository)
     }
@@ -109,5 +125,29 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val manageRecurringRuleUseCase: com.finpulse.app.domain.usecase.recurring.ManageRecurringRuleUseCase by lazy {
         com.finpulse.app.domain.usecase.recurring.ManageRecurringRuleUseCase(recurringRepository, accountRepository)
+    }
+
+    override val categorizeTransactionUseCase: com.finpulse.app.domain.usecase.categorization.CategorizeTransactionUseCase by lazy {
+        com.finpulse.app.domain.usecase.categorization.CategorizeTransactionUseCase(categorizationRuleRepository, merchantSignalRepository, categoryRepository)
+    }
+
+    override val recordCategoryCorrectionUseCase: com.finpulse.app.domain.usecase.categorization.RecordCategoryCorrectionUseCase by lazy {
+        com.finpulse.app.domain.usecase.categorization.RecordCategoryCorrectionUseCase(transactionRepository, merchantSignalRepository)
+    }
+
+    override val manageCategorizationRuleUseCase: com.finpulse.app.domain.usecase.categorization.ManageCategorizationRuleUseCase by lazy {
+        com.finpulse.app.domain.usecase.categorization.ManageCategorizationRuleUseCase(categorizationRuleRepository)
+    }
+
+    override val findMatchingTransactionsForRuleUseCase: com.finpulse.app.domain.usecase.categorization.FindMatchingTransactionsForRuleUseCase by lazy {
+        com.finpulse.app.domain.usecase.categorization.FindMatchingTransactionsForRuleUseCase(categorizationRuleRepository, transactionRepository)
+    }
+
+    override val applyRuleToExistingTransactionsUseCase: com.finpulse.app.domain.usecase.categorization.ApplyRuleToExistingTransactionsUseCase by lazy {
+        com.finpulse.app.domain.usecase.categorization.ApplyRuleToExistingTransactionsUseCase(categorizationRuleRepository, transactionRepository, findMatchingTransactionsForRuleUseCase)
+    }
+
+    override val getReviewQueueUseCase: com.finpulse.app.domain.usecase.categorization.GetReviewQueueUseCase by lazy {
+        com.finpulse.app.domain.usecase.categorization.GetReviewQueueUseCase(transactionRepository, categorizationRuleRepository, merchantSignalRepository)
     }
 }

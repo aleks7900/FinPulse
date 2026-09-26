@@ -14,6 +14,10 @@ import com.finpulse.app.domain.repository.CategoryRepository
 import com.finpulse.app.domain.usecase.transaction.CreateTransactionResult
 import com.finpulse.app.domain.usecase.transaction.CreateTransactionUseCase
 import com.finpulse.app.domain.usecase.transaction.GetQuickAddSuggestionsUseCase
+import com.finpulse.app.domain.model.CategorizationCandidate
+import com.finpulse.app.domain.model.CategorizationConfidence
+import com.finpulse.app.domain.usecase.categorization.CategorizeTransactionUseCase
+import com.finpulse.app.domain.usecase.categorization.RecordCategoryCorrectionUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -50,7 +54,12 @@ data class QuickAddUiState(
     val isSaving: Boolean = false,
     val lastSavedTransaction: Transaction? = null,
     val isEditing: Boolean = false,
-    val editingTransactionId: String? = null
+    val editingTransactionId: String? = null,
+    val suggestedCategory: Category? = null,
+    val suggestedConfidence: CategorizationConfidence = CategorizationConfidence.NONE,
+    val suggestionExplanation: String? = null,
+    val matchedRuleId: String? = null,
+    val isCategoryUserLocked: Boolean = false
 )
 
 class QuickAddViewModel(
@@ -58,7 +67,9 @@ class QuickAddViewModel(
     private val suggestionsUseCase: GetQuickAddSuggestionsUseCase,
     private val accountRepository: AccountRepository,
     private val categoryRepository: CategoryRepository,
-    private val userPreferencesDataStore: UserPreferencesDataStore
+    private val userPreferencesDataStore: UserPreferencesDataStore,
+    private val categorizeTransactionUseCase: CategorizeTransactionUseCase? = null,
+    private val recordCategoryCorrectionUseCase: RecordCategoryCorrectionUseCase? = null
 ) : ViewModel() {
 
     private val _amountInput = MutableStateFlow("0")
@@ -76,6 +87,14 @@ class QuickAddViewModel(
     private val _lastSavedTransaction = MutableStateFlow<Transaction?>(null)
     private val _editingTransactionId = MutableStateFlow<String?>(null)
 
+    // Smart Categorization state
+    private val _suggestedCategoryId = MutableStateFlow<String?>(null)
+    private val _suggestedConfidence = MutableStateFlow(CategorizationConfidence.NONE)
+    private val _suggestedConfidenceScore = MutableStateFlow(0.0f)
+    private val _suggestionExplanation = MutableStateFlow<String?>(null)
+    private val _matchedRuleId = MutableStateFlow<String?>(null)
+    private val _isCategoryUserLocked = MutableStateFlow(false)
+
     init {
         // Preload defaults
         viewModelScope.launch {
@@ -90,7 +109,7 @@ class QuickAddViewModel(
         }
     }
 
-    val uiState: StateFlow<QuickAddUiState> = combine(
+    private val group1 = combine(
         combine(
             _amountInput,
             _selectedType,
@@ -108,7 +127,10 @@ class QuickAddViewModel(
             _selectedTimestamp
         ) { merch, desc, tags, dateCh, time ->
             DetailsAndDate(merch, desc, tags, dateCh, time)
-        },
+        }
+    ) { ae, dd -> Pair(ae, dd) }
+
+    private val group2 = combine(
         combine(
             accountRepository.getActiveAccountsFlow(),
             categoryRepository.getAllCategoriesFlow(),
@@ -116,11 +138,25 @@ class QuickAddViewModel(
         ) { accounts, categories, prefs ->
             AccountsAndCategories(accounts, categories, prefs)
         },
-        suggestionsUseCase.getSuggestionsFlow(_selectedType.value),
+        suggestionsUseCase.getSuggestionsFlow(_selectedType.value)
+    ) { ac, suggestions -> Pair(ac, suggestions) }
+
+    private val group3 = combine(
         combine(_errorMessage, _isSaving, _lastSavedTransaction, _editingTransactionId) { err, saving, lastTx, editId ->
             StatusAndFeedback(err, saving, lastTx, editId)
+        },
+        combine(
+            _suggestedCategoryId,
+            _suggestedConfidence,
+            _suggestedConfidenceScore,
+            _suggestionExplanation,
+            combine(_matchedRuleId, _isCategoryUserLocked) { ruleId, locked -> Pair(ruleId, locked) }
+        ) { catId, conf, score, exp, (ruleId, locked) ->
+            SmartCatState(catId, conf, score, exp, ruleId, locked)
         }
-    ) { ae, dd, ac, suggestions, status ->
+    ) { status, smartCat -> Pair(status, smartCat) }
+
+    val uiState: StateFlow<QuickAddUiState> = combine(group1, group2, group3) { (ae, dd), (ac, suggestions), (status, smartCat) ->
         val amountMinor = parseAmountToMinor(ae.amountInput)
         val selectedAccount = ac.accounts.find { it.id == ae.sourceId }
         val currency = selectedAccount?.balance?.currencyCode ?: ac.userPrefs.baseCurrencyCode
@@ -130,6 +166,7 @@ class QuickAddViewModel(
             else -> CategoryType.EXPENSE
         }
         val relevantCategories = ac.categories.filter { it.type == catType }
+        val suggestedCategoryObj = ac.categories.find { it.id == smartCat.suggestedCategoryId }
 
         QuickAddUiState(
             amountInput = ae.amountInput,
@@ -152,7 +189,12 @@ class QuickAddViewModel(
             isSaving = status.isSaving,
             lastSavedTransaction = status.lastSavedTransaction,
             isEditing = status.editingTransactionId != null,
-            editingTransactionId = status.editingTransactionId
+            editingTransactionId = status.editingTransactionId,
+            suggestedCategory = suggestedCategoryObj,
+            suggestedConfidence = smartCat.suggestedConfidence,
+            suggestionExplanation = smartCat.suggestionExplanation,
+            matchedRuleId = smartCat.matchedRuleId,
+            isCategoryUserLocked = smartCat.isCategoryUserLocked
         )
     }.stateIn(
         scope = viewModelScope,
@@ -200,13 +242,15 @@ class QuickAddViewModel(
     fun onTypeSelected(type: TransactionType) {
         _selectedType.value = type
         _errorMessage.value = null
-        // Reset category selection so it defaults to top category for that type
         _selectedCategoryId.value = null
+        _isCategoryUserLocked.value = false
+        evaluateSmartCategorization()
     }
 
     fun onAccountSelected(accountId: String) {
         _selectedAccountId.value = accountId
         _errorMessage.value = null
+        evaluateSmartCategorization()
     }
 
     fun onDestinationAccountSelected(accountId: String) {
@@ -216,28 +260,91 @@ class QuickAddViewModel(
 
     fun onCategorySelected(categoryId: String) {
         _selectedCategoryId.value = categoryId
+        _isCategoryUserLocked.value = true
         _errorMessage.value = null
     }
 
     fun onMerchantSelected(merchant: String) {
         _merchant.value = merchant
         _errorMessage.value = null
-        // Predict historical category for this merchant
-        viewModelScope.launch {
-            val suggestedCategory = suggestionsUseCase.getSuggestedCategoryForMerchant(merchant)
-            if (suggestedCategory != null) {
-                _selectedCategoryId.value = suggestedCategory
-            }
-        }
+        evaluateSmartCategorization()
     }
 
     fun onMerchantTextChange(merchant: String) {
         _merchant.value = merchant
         _errorMessage.value = null
+        evaluateSmartCategorization()
     }
 
     fun onDescriptionTextChange(description: String) {
         _description.value = description
+        evaluateSmartCategorization()
+    }
+
+    private fun evaluateSmartCategorization() {
+        val merch = _merchant.value.trim()
+        val desc = _description.value.trim()
+        val type = _selectedType.value
+        val sourceAcc = _selectedAccountId.value
+        val amountMinor = parseAmountToMinor(_amountInput.value)
+
+        if (merch.isEmpty() && desc.isEmpty()) {
+            _suggestedCategoryId.value = null
+            _suggestedConfidence.value = CategorizationConfidence.NONE
+            _suggestedConfidenceScore.value = 0.0f
+            _suggestionExplanation.value = null
+            _matchedRuleId.value = null
+            return
+        }
+
+        viewModelScope.launch {
+            if (categorizeTransactionUseCase != null) {
+                val candidate = CategorizationCandidate(
+                    merchant = merch.takeIf { it.isNotEmpty() },
+                    description = desc,
+                    sourceAccountId = sourceAcc,
+                    amountMinor = amountMinor,
+                    type = type
+                )
+                val result = categorizeTransactionUseCase(candidate)
+                if (result.categoryId != null && result.confidence != CategorizationConfidence.NONE) {
+                    _suggestedCategoryId.value = result.categoryId
+                    _suggestedConfidence.value = result.confidence
+                    _suggestedConfidenceScore.value = result.confidenceScore
+                    _suggestionExplanation.value = result.explanation
+                    _matchedRuleId.value = result.matchedRuleId
+
+                    // Only auto-assign if user has not explicitly locked in a manual category
+                    if (!_isCategoryUserLocked.value) {
+                        _selectedCategoryId.value = result.categoryId
+                    }
+                    return@launch
+                }
+            }
+
+            // Fallback to historical merchant prediction
+            if (merch.isNotEmpty()) {
+                val histCat = suggestionsUseCase.getSuggestedCategoryForMerchant(merch)
+                if (histCat != null) {
+                    _suggestedCategoryId.value = histCat
+                    _suggestedConfidence.value = CategorizationConfidence.HIGH
+                    _suggestedConfidenceScore.value = 0.85f
+                    _suggestionExplanation.value = "Historical transaction match"
+                    _matchedRuleId.value = null
+
+                    if (!_isCategoryUserLocked.value) {
+                        _selectedCategoryId.value = histCat
+                    }
+                    return@launch
+                }
+            }
+
+            _suggestedCategoryId.value = null
+            _suggestedConfidence.value = CategorizationConfidence.NONE
+            _suggestedConfidenceScore.value = 0.0f
+            _suggestionExplanation.value = null
+            _matchedRuleId.value = null
+        }
     }
 
     fun onDateChoiceSelected(choice: QuickAddDateChoice) {
@@ -276,6 +383,7 @@ class QuickAddViewModel(
         _selectedTimestamp.value = transaction.timestamp
         _dateChoice.value = QuickAddDateChoice.CUSTOM
         _errorMessage.value = null
+        _isCategoryUserLocked.value = true
     }
 
     fun reset() {
@@ -287,6 +395,12 @@ class QuickAddViewModel(
         _errorMessage.value = null
         _dateChoice.value = QuickAddDateChoice.TODAY
         _selectedTimestamp.value = System.currentTimeMillis()
+        _isCategoryUserLocked.value = false
+        _suggestedCategoryId.value = null
+        _suggestedConfidence.value = CategorizationConfidence.NONE
+        _suggestedConfidenceScore.value = 0.0f
+        _suggestionExplanation.value = null
+        _matchedRuleId.value = null
     }
 
     fun save(andAddAnother: Boolean, onSaved: (Transaction) -> Unit) {
@@ -310,6 +424,9 @@ class QuickAddViewModel(
         _errorMessage.value = null
 
         val editId = _editingTransactionId.value
+        val isConfirmed = true
+        val confScore = if (_suggestedCategoryId.value == catId) _suggestedConfidenceScore.value else 1.0f
+        val matchedRule = if (_suggestedCategoryId.value == catId) _matchedRuleId.value else null
 
         viewModelScope.launch {
             val result = createTransactionUseCase(
@@ -323,7 +440,10 @@ class QuickAddViewModel(
                 merchant = state.merchant,
                 description = state.description,
                 tags = state.tags,
-                timestamp = state.selectedTimestamp
+                timestamp = state.selectedTimestamp,
+                isCategoryConfirmed = isConfirmed,
+                categorizationConfidence = confScore,
+                matchedRuleId = matchedRule
             )
 
             _isSaving.value = false
@@ -333,6 +453,16 @@ class QuickAddViewModel(
                     val savedTx = result.transaction
                     _lastSavedTransaction.value = savedTx
                     _editingTransactionId.value = null
+
+                    // Train deterministic signal from user confirmation/correction
+                    if (state.merchant.isNotBlank() || state.description.isNotBlank()) {
+                        recordCategoryCorrectionUseCase?.invoke(
+                            transactionId = savedTx.id,
+                            newCategoryId = catId,
+                            matchedRuleId = matchedRule,
+                            confidence = confScore
+                        )
+                    }
 
                     // Persist user defaults for next time
                     userPreferencesDataStore.setLastUsedTransactionDefaults(
@@ -349,7 +479,12 @@ class QuickAddViewModel(
                         _merchant.value = ""
                         _description.value = ""
                         _tags.value = emptyList()
-                        // Keep account, category, and date choice active
+                        _isCategoryUserLocked.value = false
+                        _suggestedCategoryId.value = null
+                        _suggestedConfidence.value = CategorizationConfidence.NONE
+                        _suggestedConfidenceScore.value = 0.0f
+                        _suggestionExplanation.value = null
+                        _matchedRuleId.value = null
                     }
                 }
                 is CreateTransactionResult.Error -> {
@@ -393,4 +528,13 @@ private data class StatusAndFeedback(
     val isSaving: Boolean,
     val lastSavedTransaction: Transaction?,
     val editingTransactionId: String?
+)
+
+private data class SmartCatState(
+    val suggestedCategoryId: String?,
+    val suggestedConfidence: CategorizationConfidence,
+    val suggestedConfidenceScore: Float,
+    val suggestionExplanation: String?,
+    val matchedRuleId: String?,
+    val isCategoryUserLocked: Boolean
 )

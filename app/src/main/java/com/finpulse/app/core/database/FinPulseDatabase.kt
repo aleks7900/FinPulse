@@ -8,16 +8,20 @@ import com.finpulse.app.core.database.dao.AccountDao
 import com.finpulse.app.core.database.dao.AssetDao
 import com.finpulse.app.core.database.dao.BudgetDao
 import com.finpulse.app.core.database.dao.CategoryDao
+import com.finpulse.app.core.database.dao.CategorizationRuleDao
 import com.finpulse.app.core.database.dao.DebtDao
 import com.finpulse.app.core.database.dao.FinancialGoalDao
+import com.finpulse.app.core.database.dao.MerchantSignalDao
 import com.finpulse.app.core.database.dao.RecurringTransactionDao
 import com.finpulse.app.core.database.dao.TransactionDao
 import com.finpulse.app.core.database.entity.AccountEntity
 import com.finpulse.app.core.database.entity.AssetEntity
 import com.finpulse.app.core.database.entity.BudgetEntity
+import com.finpulse.app.core.database.entity.CategorizationRuleEntity
 import com.finpulse.app.core.database.entity.CategoryEntity
 import com.finpulse.app.core.database.entity.DebtEntity
 import com.finpulse.app.core.database.entity.FinancialGoalEntity
+import com.finpulse.app.core.database.entity.MerchantSignalEntity
 import com.finpulse.app.core.database.entity.RecurringOccurrenceEntity
 import com.finpulse.app.core.database.entity.RecurringTransactionEntity
 import com.finpulse.app.core.database.entity.TransactionEntity
@@ -32,9 +36,11 @@ import com.finpulse.app.core.database.entity.TransactionEntity
         RecurringOccurrenceEntity::class,
         FinancialGoalEntity::class,
         AssetEntity::class,
-        DebtEntity::class
+        DebtEntity::class,
+        CategorizationRuleEntity::class,
+        MerchantSignalEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class FinPulseDatabase : RoomDatabase() {
@@ -47,6 +53,8 @@ abstract class FinPulseDatabase : RoomDatabase() {
     abstract fun financialGoalDao(): FinancialGoalDao
     abstract fun assetDao(): AssetDao
     abstract fun debtDao(): DebtDao
+    abstract fun categorizationRuleDao(): CategorizationRuleDao
+    abstract fun merchantSignalDao(): MerchantSignalDao
 
     companion object {
         @Volatile

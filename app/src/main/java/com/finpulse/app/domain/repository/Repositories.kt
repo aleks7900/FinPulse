@@ -3,11 +3,13 @@ package com.finpulse.app.domain.repository
 import com.finpulse.app.core.model.Money
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.Budget
+import com.finpulse.app.domain.model.CategorizationRule
 import com.finpulse.app.domain.model.Category
 import com.finpulse.app.domain.model.CategoryType
 import com.finpulse.app.domain.model.Debt
 import com.finpulse.app.domain.model.FinancialGoal
 import com.finpulse.app.domain.model.InvestmentAsset
+import com.finpulse.app.domain.model.MerchantSignal
 import com.finpulse.app.domain.model.RecurringOccurrence
 import com.finpulse.app.domain.model.RecurringTransaction
 import com.finpulse.app.domain.model.Transaction
@@ -38,6 +40,10 @@ interface TransactionRepository {
     fun getFrequentCategoryIdsFlow(type: TransactionType, limit: Int = 6): Flow<List<String>>
     fun getFrequentMerchantsFlow(limit: Int = 8): Flow<List<String>>
     suspend fun getSuggestedCategoryForMerchant(merchant: String): String?
+    fun getUnreviewedTransactionsFlow(): Flow<List<Transaction>>
+    fun getUnreviewedCountFlow(): Flow<Int>
+    suspend fun confirmTransactionCategory(id: String, categoryId: String, matchedRuleId: String? = null, confidence: Float = 1.0f)
+    suspend fun bulkUpdateCategory(ids: List<String>, categoryId: String, isConfirmed: Boolean = true, matchedRuleId: String? = null)
 }
 
 interface CategoryRepository {
@@ -99,4 +105,24 @@ interface DebtRepository {
     suspend fun saveDebt(debt: Debt)
     suspend fun deleteDebt(id: String)
     suspend fun makePayment(debtId: String, paymentAmount: Money)
+}
+
+interface CategorizationRuleRepository {
+    fun getAllRulesFlow(): Flow<List<CategorizationRule>>
+    fun getActiveRulesFlow(): Flow<List<CategorizationRule>>
+    suspend fun getActiveRules(): List<CategorizationRule>
+    suspend fun getRuleById(id: String): CategorizationRule?
+    suspend fun saveRule(rule: CategorizationRule)
+    suspend fun deleteRule(id: String)
+    suspend fun setRuleActive(id: String, isActive: Boolean)
+    suspend fun updateRulePriority(id: String, priority: Int)
+    suspend fun seedDefaultRulesIfNeeded()
+}
+
+interface MerchantSignalRepository {
+    fun getAllSignalsFlow(): Flow<List<MerchantSignal>>
+    suspend fun getAllSignals(): List<MerchantSignal>
+    suspend fun getSignal(normalizedMerchant: String): MerchantSignal?
+    suspend fun recordSignal(merchant: String, categoryId: String)
+    suspend fun clearAllSignals()
 }

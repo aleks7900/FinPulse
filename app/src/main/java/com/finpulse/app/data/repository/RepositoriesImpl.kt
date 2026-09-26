@@ -21,10 +21,12 @@ import com.finpulse.app.domain.model.Transaction
 import com.finpulse.app.domain.model.TransactionType
 import com.finpulse.app.domain.repository.AccountRepository
 import com.finpulse.app.domain.repository.BudgetRepository
+import com.finpulse.app.domain.repository.CategorizationRuleRepository
 import com.finpulse.app.domain.repository.CategoryRepository
 import com.finpulse.app.domain.repository.DebtRepository
 import com.finpulse.app.domain.repository.GoalRepository
 import com.finpulse.app.domain.repository.InvestmentRepository
+import com.finpulse.app.domain.repository.MerchantSignalRepository
 import com.finpulse.app.domain.repository.RecurringRepository
 import com.finpulse.app.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.Flow
@@ -119,6 +121,31 @@ class TransactionRepositoryImpl(private val database: FinPulseDatabase) : Transa
     override suspend fun getSuggestedCategoryForMerchant(merchant: String): String? =
         txDao.getSuggestedCategoryForMerchant(merchant)
 
+    override fun getUnreviewedTransactionsFlow(): Flow<List<Transaction>> =
+        txDao.getUnreviewedTransactionsFlow().map { list -> list.map { it.toDomain() } }
+
+    override fun getUnreviewedCountFlow(): Flow<Int> =
+        txDao.getUnreviewedCountFlow()
+
+    override suspend fun confirmTransactionCategory(id: String, categoryId: String, matchedRuleId: String?, confidence: Float) {
+        txDao.updateTransactionCategory(
+            id = id,
+            categoryId = categoryId,
+            isConfirmed = true,
+            matchedRuleId = matchedRuleId,
+            confidence = confidence
+        )
+    }
+
+    override suspend fun bulkUpdateCategory(ids: List<String>, categoryId: String, isConfirmed: Boolean, matchedRuleId: String?) {
+        txDao.bulkUpdateCategory(
+            ids = ids,
+            categoryId = categoryId,
+            isConfirmed = isConfirmed,
+            matchedRuleId = matchedRuleId
+        )
+    }
+
     private suspend fun applyTransactionBalanceChange(tx: Transaction, isReversal: Boolean) {
         val multiplier = if (isReversal) -1 else 1
 
@@ -205,7 +232,8 @@ class CategoryRepositoryImpl(private val database: FinPulseDatabase) : CategoryR
             CategoryEntity("cat_salary", "Salary", "INCOME", null, "salary", 0xFF4CAF50, true, 1),
             CategoryEntity("cat_freelance", "Freelance & Consulting", "INCOME", null, "work", 0xFF8BC34A, true, 2),
             CategoryEntity("cat_invest_return", "Investment Return", "INCOME", null, "investments", 0xFF009688, true, 3),
-            CategoryEntity("cat_other_income", "Other Income", "INCOME", null, "paid", 0xFF607D8B, true, 4)
+            CategoryEntity("cat_other_income", "Other Income", "INCOME", null, "paid", 0xFF607D8B, true, 4),
+            CategoryEntity("cat_uncategorized", "Uncategorized", "EXPENSE", null, "help", 0xFF9E9E9E, true, 99)
         )
         dao.insertCategories(defaults)
     }
@@ -434,5 +462,167 @@ class DebtRepositoryImpl(private val database: FinPulseDatabase) : DebtRepositor
         val debt = dao.getDebtById(debtId) ?: return
         val newBalance = (debt.remainingBalanceMinor - paymentAmount.amountMinor).coerceAtLeast(0L)
         dao.updateBalance(debtId, newBalance)
+    }
+}
+
+class CategorizationRuleRepositoryImpl(private val database: FinPulseDatabase) : CategorizationRuleRepository {
+    private val dao = database.categorizationRuleDao()
+
+    override fun getAllRulesFlow(): Flow<List<com.finpulse.app.domain.model.CategorizationRule>> =
+        dao.getAllRulesFlow().map { list -> list.map { it.toDomain() } }
+
+    override fun getActiveRulesFlow(): Flow<List<com.finpulse.app.domain.model.CategorizationRule>> =
+        dao.getActiveRulesFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getActiveRules(): List<com.finpulse.app.domain.model.CategorizationRule> =
+        dao.getActiveRules().map { it.toDomain() }
+
+    override suspend fun getRuleById(id: String): com.finpulse.app.domain.model.CategorizationRule? =
+        dao.getRuleById(id)?.toDomain()
+
+    override suspend fun saveRule(rule: com.finpulse.app.domain.model.CategorizationRule) {
+        dao.insertRule(rule.toEntity())
+    }
+
+    override suspend fun deleteRule(id: String) {
+        dao.deleteRuleById(id)
+    }
+
+    override suspend fun setRuleActive(id: String, isActive: Boolean) {
+        dao.setRuleActive(id, isActive)
+    }
+
+    override suspend fun updateRulePriority(id: String, priority: Int) {
+        dao.updateRulePriority(id, priority)
+    }
+
+    override suspend fun seedDefaultRulesIfNeeded() {
+        if (dao.getRuleCount() > 0) return
+
+        val defaults = listOf(
+            com.finpulse.app.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_amazon",
+                name = "Amazon Purchases",
+                targetCategoryId = "cat_shopping",
+                priority = 10,
+                merchantPattern = "amazon",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            com.finpulse.app.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_starbucks",
+                name = "Starbucks & Coffee",
+                targetCategoryId = "cat_food",
+                priority = 10,
+                merchantPattern = "starbucks",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            com.finpulse.app.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_uber",
+                name = "Uber Rides & Transit",
+                targetCategoryId = "cat_transport",
+                priority = 10,
+                merchantPattern = "uber",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            com.finpulse.app.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_lyft",
+                name = "Lyft Rides",
+                targetCategoryId = "cat_transport",
+                priority = 10,
+                merchantPattern = "lyft",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            com.finpulse.app.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_netflix",
+                name = "Netflix Streaming",
+                targetCategoryId = "cat_subscriptions",
+                priority = 10,
+                merchantPattern = "netflix",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            com.finpulse.app.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_spotify",
+                name = "Spotify Music",
+                targetCategoryId = "cat_subscriptions",
+                priority = 10,
+                merchantPattern = "spotify",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            com.finpulse.app.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_walmart",
+                name = "Walmart Groceries & Store",
+                targetCategoryId = "cat_groceries",
+                priority = 10,
+                merchantPattern = "walmart",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            com.finpulse.app.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_target",
+                name = "Target Store",
+                targetCategoryId = "cat_shopping",
+                priority = 10,
+                merchantPattern = "target",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            com.finpulse.app.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_payroll",
+                name = "Payroll & Salary",
+                targetCategoryId = "cat_salary",
+                priority = 15,
+                descriptionPattern = "payroll",
+                descriptionMatchType = "CONTAINS",
+                transactionType = "INCOME",
+                isActive = true
+            ),
+            com.finpulse.app.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_grocery",
+                name = "Supermarket & Groceries",
+                targetCategoryId = "cat_groceries",
+                priority = 8,
+                descriptionPattern = "grocery",
+                descriptionMatchType = "CONTAINS",
+                isActive = true
+            )
+        )
+        dao.insertRules(defaults)
+    }
+}
+
+class MerchantSignalRepositoryImpl(private val database: FinPulseDatabase) : MerchantSignalRepository {
+    private val dao = database.merchantSignalDao()
+
+    override fun getAllSignalsFlow(): Flow<List<com.finpulse.app.domain.model.MerchantSignal>> =
+        dao.getAllSignalsFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getAllSignals(): List<com.finpulse.app.domain.model.MerchantSignal> =
+        dao.getAllSignals().map { it.toDomain() }
+
+    override suspend fun getSignal(normalizedMerchant: String): com.finpulse.app.domain.model.MerchantSignal? =
+        dao.getSignal(normalizedMerchant)?.toDomain()
+
+    override suspend fun recordSignal(merchant: String, categoryId: String) {
+        val key = com.finpulse.app.domain.engine.MerchantNormalizer.toLookupKey(merchant)
+        if (key.isBlank()) return
+        val existing = dao.getSignal(key)
+        val count = (existing?.useCount ?: 0) + 1
+        val signal = com.finpulse.app.core.database.entity.MerchantSignalEntity(
+            normalizedMerchant = key,
+            categoryId = categoryId,
+            useCount = count,
+            lastUsedAt = System.currentTimeMillis()
+        )
+        dao.insertOrUpdateSignal(signal)
+    }
+
+    override suspend fun clearAllSignals() {
+        dao.clearAllSignals()
     }
 }

@@ -55,6 +55,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finpulse.app.core.designsystem.CrimsonExpense
@@ -208,6 +209,72 @@ fun QuickAddBottomSheet(
             }
 
             Spacer(modifier = Modifier.height(12.dp))
+
+            // 3.5. Smart Categorization Suggestion Banner
+            if (uiState.suggestedCategory != null && uiState.selectedType != TransactionType.TRANSFER) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onCategorySelected(uiState.suggestedCategory.id) },
+                    shape = RoundedCornerShape(12.dp),
+                    color = EmeraldPrimary.copy(alpha = 0.12f),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, EmeraldPrimary.copy(alpha = 0.35f))
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CategoryIconBadge(
+                            iconName = uiState.suggestedCategory.icon,
+                            colorHex = uiState.suggestedCategory.colorHex,
+                            size = 24.dp,
+                            iconSize = 14.dp
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = "Smart Suggestion:",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = EmeraldPrimary,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = uiState.suggestedCategory.name,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                            uiState.suggestionExplanation?.let { exp ->
+                                Text(
+                                    text = exp,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                        if (uiState.selectedCategoryId == uiState.suggestedCategory.id) {
+                            Text(
+                                text = "Applied ✓",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = EmeraldPrimary
+                            )
+                        } else {
+                            Text(
+                                text = "Tap to apply",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = EmeraldPrimary
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
 
             // 4. Frequent Category Selector (1-tap)
             if (uiState.selectedType != TransactionType.TRANSFER) {

@@ -673,4 +673,33 @@ class FakeTransactionRepository : TransactionRepository {
             .eachCount()
             .maxByOrNull { it.value }
             ?.key
+
+    override fun getUnreviewedTransactionsFlow(): Flow<List<Transaction>> =
+        transactions.asStateFlow().map { it.values.filter { tx -> !tx.isCategoryConfirmed || tx.categoryId == "cat_uncategorized" } }
+
+    override fun getUnreviewedCountFlow(): Flow<Int> =
+        transactions.asStateFlow().map { it.values.count { tx -> !tx.isCategoryConfirmed || tx.categoryId == "cat_uncategorized" } }
+
+    override suspend fun confirmTransactionCategory(id: String, categoryId: String, matchedRuleId: String?, confidence: Float) {
+        val tx = transactions.value[id] ?: return
+        transactions.value = transactions.value + (id to tx.copy(
+            categoryId = categoryId,
+            isCategoryConfirmed = true,
+            matchedRuleId = matchedRuleId,
+            categorizationConfidence = confidence
+        ))
+    }
+
+    override suspend fun bulkUpdateCategory(ids: List<String>, categoryId: String, isConfirmed: Boolean, matchedRuleId: String?) {
+        val current = transactions.value.toMutableMap()
+        for (id in ids) {
+            val tx = current[id] ?: continue
+            current[id] = tx.copy(
+                categoryId = categoryId,
+                isCategoryConfirmed = isConfirmed,
+                matchedRuleId = matchedRuleId
+            )
+        }
+        transactions.value = current
+    }
 }

@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
@@ -74,6 +75,7 @@ fun DashboardScreen(
     onNavigateToBudgets: () -> Unit,
     onNavigateToSearch: () -> Unit,
     onNavigateToInsights: () -> Unit,
+    onNavigateToReviewQueue: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val categoryMap = uiState.categories.associateBy { it.id }
@@ -135,6 +137,16 @@ fun DashboardScreen(
                     selectedPeriod = uiState.selectedPeriod,
                     onPeriodSelected = onPeriodSelected
                 )
+            }
+
+            // Review Queue Alert Banner
+            if (uiState.unreviewedCount > 0) {
+                item {
+                    ReviewQueueBannerCard(
+                        unreviewedCount = uiState.unreviewedCount,
+                        onClick = onNavigateToReviewQueue
+                    )
+                }
             }
 
             // 2. Executive Balance & Cash Flow Card
@@ -590,6 +602,81 @@ fun EmptyTransactionsPrompt(
             ) {
                 Text("Record Transaction", color = Color.Black, fontWeight = FontWeight.Bold)
             }
+        }
+    }
+}
+
+@Composable
+fun ReviewQueueBannerCard(
+    unreviewedCount: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(16.dp),
+        color = AmberWarning.copy(alpha = 0.12f),
+        border = androidx.compose.foundation.BorderStroke(1.dp, AmberWarning.copy(alpha = 0.4f))
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(AmberWarning.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AutoAwesome,
+                    contentDescription = null,
+                    tint = AmberWarning,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(14.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Review Queue",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Surface(
+                        shape = CircleShape,
+                        color = AmberWarning
+                    ) {
+                        Text(
+                            text = unreviewedCount.toString(),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black,
+                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = "$unreviewedCount transactions need category confirmation or rule learning",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                imageVector = Icons.Default.ArrowForward,
+                contentDescription = "Review",
+                tint = AmberWarning,
+                modifier = Modifier.size(20.dp)
+            )
         }
     }
 }

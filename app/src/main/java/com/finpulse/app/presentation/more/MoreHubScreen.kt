@@ -202,6 +202,13 @@ fun MoreHubScreen(
                         onClick = { onNavigate(Screen.Categories) }
                     )
                     HubItem(
+                        title = "Smart Categorization & Rules",
+                        subtitle = "Rules, review queue, merchant learning",
+                        icon = Icons.Default.Settings,
+                        tint = PurpleAccent,
+                        onClick = { onNavigate(Screen.CategorizationRules) }
+                    )
+                    HubItem(
                         title = "Backup & Data Export",
                         subtitle = "CSV ledger export, JSON backup & restore",
                         icon = Icons.Default.Download,

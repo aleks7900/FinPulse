@@ -11,7 +11,8 @@ import androidx.room.PrimaryKey
         Index("destinationAccountId"),
         Index("categoryId"),
         Index("timestamp"),
-        Index("type")
+        Index("type"),
+        Index("isCategoryConfirmed")
     ]
 )
 data class TransactionEntity(
@@ -30,5 +31,8 @@ data class TransactionEntity(
     val notes: String? = null,
     val recurringRuleId: String? = null,
     val isExcludedFromBudget: Boolean = false,
+    val isCategoryConfirmed: Boolean = true,
+    val categorizationConfidence: Float = 1.0f,
+    val matchedRuleId: String? = null,
     val createdAt: Long = System.currentTimeMillis()
 )

@@ -51,6 +51,7 @@ data class DashboardUiState(
     val selectedPeriod: TimePeriod = TimePeriod.MONTH,
     val hideBalances: Boolean = false,
     val baseCurrency: String = "USD",
+    val unreviewedCount: Int = 0,
     val isLoading: Boolean = true
 )
 
@@ -81,7 +82,8 @@ class DashboardViewModel(
         investmentRepository.getAllAssetsFlow(),
         debtRepository.getAllDebtsFlow(),
         userPreferencesDataStore.userPreferencesFlow,
-        _selectedPeriod
+        _selectedPeriod,
+        transactionRepository.getUnreviewedCountFlow()
     ) { params ->
         @Suppress("UNCHECKED_CAST")
         val accounts = params[0] as List<Account>
@@ -101,6 +103,7 @@ class DashboardViewModel(
         val debts = params[7] as List<com.finpulse.app.domain.model.Debt>
         val userPrefs = params[8] as com.finpulse.app.core.datastore.UserPreferences
         val period = params[9] as TimePeriod
+        val unreviewedCount = params[10] as Int
 
         val (startMillis, endMillis) = period.toDateRange()
         val periodTransactions = transactions.filter { it.timestamp in startMillis..endMillis }
@@ -141,6 +144,7 @@ class DashboardViewModel(
             selectedPeriod = period,
             hideBalances = userPrefs.hideBalances,
             baseCurrency = userPrefs.baseCurrencyCode,
+            unreviewedCount = unreviewedCount,
             isLoading = false
         )
     }.stateIn(

@@ -25,5 +25,8 @@ data class Transaction(
     val notes: String? = null,
     val recurringRuleId: String? = null,
     val isExcludedFromBudget: Boolean = false,
+    val isCategoryConfirmed: Boolean = true,
+    val categorizationConfidence: Float = 1.0f,
+    val matchedRuleId: String? = null,
     val createdAt: Long = System.currentTimeMillis()
 )

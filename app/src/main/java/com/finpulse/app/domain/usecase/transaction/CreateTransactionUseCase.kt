@@ -28,7 +28,10 @@ class CreateTransactionUseCase(
         description: String = "",
         tags: List<String> = emptyList(),
         notes: String? = null,
-        timestamp: Long = System.currentTimeMillis()
+        timestamp: Long = System.currentTimeMillis(),
+        isCategoryConfirmed: Boolean = true,
+        categorizationConfidence: Float = 1.0f,
+        matchedRuleId: String? = null
     ): CreateTransactionResult {
         // 1. Validation: Amount must be strictly positive
         if (amountMinor <= 0L) {
@@ -87,7 +90,10 @@ class CreateTransactionUseCase(
             description = description.trim(),
             tags = tags.map { it.trim() }.filter { it.isNotEmpty() },
             notes = notes?.trim()?.takeIf { it.isNotEmpty() },
-            timestamp = timestamp
+            timestamp = timestamp,
+            isCategoryConfirmed = isCategoryConfirmed,
+            categorizationConfidence = categorizationConfidence,
+            matchedRuleId = matchedRuleId
         )
 
         if (id != null) {

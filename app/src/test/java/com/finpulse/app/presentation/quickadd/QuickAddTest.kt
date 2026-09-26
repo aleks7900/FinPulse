@@ -356,6 +356,139 @@ class QuickAddTest {
         assertFalse(callbackCalled)
         assertEquals("Enter an amount greater than zero", viewModel.uiState.value.errorMessage)
     }
+
+    @Test
+    fun testSmartCategorization_WithRule_AutoSelectsCategory() = runTest(testDispatcher) {
+        val ruleRepo = com.finpulse.app.domain.categorization.FakeCategorizationRuleRepository()
+        val signalRepo = com.finpulse.app.domain.categorization.FakeMerchantSignalRepository()
+        val categorizeUseCase = com.finpulse.app.domain.usecase.categorization.CategorizeTransactionUseCase(
+            ruleRepository = ruleRepo,
+            signalRepository = signalRepo,
+            categoryRepository = categoryRepository
+        )
+        val correctionUseCase = com.finpulse.app.domain.usecase.categorization.RecordCategoryCorrectionUseCase(
+            transactionRepository = transactionRepository,
+            signalRepository = signalRepo
+        )
+
+        ruleRepo.saveRule(
+            com.finpulse.app.domain.model.CategorizationRule(
+                id = "rule-amazon",
+                name = "Amazon Purchases",
+                targetCategoryId = "cat-groceries",
+                priority = 10,
+                merchantPattern = "amazon"
+            )
+        )
+
+        val smartViewModel = QuickAddViewModel(
+            createTransactionUseCase = createTransactionUseCase,
+            suggestionsUseCase = suggestionsUseCase,
+            accountRepository = accountRepository,
+            categoryRepository = categoryRepository,
+            userPreferencesDataStore = userPreferencesDataStore,
+            categorizeTransactionUseCase = categorizeUseCase,
+            recordCategoryCorrectionUseCase = correctionUseCase
+        )
+
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { smartViewModel.uiState.collect() }
+        advanceUntilIdle()
+
+        smartViewModel.onMerchantTextChange("Amazon Marketplace Prime")
+        advanceUntilIdle()
+
+        assertEquals("cat-groceries", smartViewModel.uiState.value.selectedCategoryId)
+        assertEquals(com.finpulse.app.domain.model.CategorizationConfidence.EXACT_RULE, smartViewModel.uiState.value.suggestedConfidence)
+        assertFalse(smartViewModel.uiState.value.isCategoryUserLocked)
+    }
+
+    @Test
+    fun testManualCategorySelection_LocksCategory_NeverOverwrittenBySmartEngine() = runTest(testDispatcher) {
+        val ruleRepo = com.finpulse.app.domain.categorization.FakeCategorizationRuleRepository()
+        val signalRepo = com.finpulse.app.domain.categorization.FakeMerchantSignalRepository()
+        val categorizeUseCase = com.finpulse.app.domain.usecase.categorization.CategorizeTransactionUseCase(
+            ruleRepository = ruleRepo,
+            signalRepository = signalRepo,
+            categoryRepository = categoryRepository
+        )
+
+        ruleRepo.saveRule(
+            com.finpulse.app.domain.model.CategorizationRule(
+                id = "rule-starbucks",
+                name = "Starbucks",
+                targetCategoryId = "cat-food",
+                priority = 10,
+                merchantPattern = "starbucks"
+            )
+        )
+
+        val smartViewModel = QuickAddViewModel(
+            createTransactionUseCase = createTransactionUseCase,
+            suggestionsUseCase = suggestionsUseCase,
+            accountRepository = accountRepository,
+            categoryRepository = categoryRepository,
+            userPreferencesDataStore = userPreferencesDataStore,
+            categorizeTransactionUseCase = categorizeUseCase
+        )
+
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { smartViewModel.uiState.collect() }
+        advanceUntilIdle()
+
+        // User explicitly taps category "cat-groceries"
+        smartViewModel.onCategorySelected("cat-groceries")
+        advanceUntilIdle()
+        assertTrue(smartViewModel.uiState.value.isCategoryUserLocked)
+        assertEquals("cat-groceries", smartViewModel.uiState.value.selectedCategoryId)
+
+        // Then user types Starbucks (which matches rule for cat-food)
+        smartViewModel.onMerchantTextChange("Starbucks Coffee")
+        advanceUntilIdle()
+
+        // Category MUST remain cat-groceries because user manually locked it!
+        assertEquals("cat-groceries", smartViewModel.uiState.value.selectedCategoryId)
+    }
+
+    @Test
+    fun testSavingTransaction_LearnsDeterministicSignal() = runTest(testDispatcher) {
+        val ruleRepo = com.finpulse.app.domain.categorization.FakeCategorizationRuleRepository()
+        val signalRepo = com.finpulse.app.domain.categorization.FakeMerchantSignalRepository()
+        val categorizeUseCase = com.finpulse.app.domain.usecase.categorization.CategorizeTransactionUseCase(
+            ruleRepository = ruleRepo,
+            signalRepository = signalRepo,
+            categoryRepository = categoryRepository
+        )
+        val correctionUseCase = com.finpulse.app.domain.usecase.categorization.RecordCategoryCorrectionUseCase(
+            transactionRepository = transactionRepository,
+            signalRepository = signalRepo
+        )
+
+        val smartViewModel = QuickAddViewModel(
+            createTransactionUseCase = createTransactionUseCase,
+            suggestionsUseCase = suggestionsUseCase,
+            accountRepository = accountRepository,
+            categoryRepository = categoryRepository,
+            userPreferencesDataStore = userPreferencesDataStore,
+            categorizeTransactionUseCase = categorizeUseCase,
+            recordCategoryCorrectionUseCase = correctionUseCase
+        )
+
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { smartViewModel.uiState.collect() }
+        advanceUntilIdle()
+
+        smartViewModel.onNumpadDigit('5')
+        smartViewModel.onMerchantTextChange("Patagonia Apparel")
+        smartViewModel.onCategorySelected("cat-groceries")
+        advanceUntilIdle()
+
+        var saved: Transaction? = null
+        smartViewModel.save(andAddAnother = false) { tx -> saved = tx }
+        advanceUntilIdle()
+
+        assertNotNull(saved)
+        val signal = signalRepo.getSignal("patagonia apparel")
+        assertNotNull(signal)
+        assertEquals("cat-groceries", signal?.categoryId)
+    }
 }
 
 class FakeCategoryRepository : CategoryRepository {

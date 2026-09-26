@@ -91,7 +91,9 @@ fun FinPulseApp(
             suggestionsUseCase = container.getQuickAddSuggestionsUseCase,
             accountRepository = container.accountRepository,
             categoryRepository = container.categoryRepository,
-            userPreferencesDataStore = container.userPreferencesDataStore
+            userPreferencesDataStore = container.userPreferencesDataStore,
+            categorizeTransactionUseCase = container.categorizeTransactionUseCase,
+            recordCategoryCorrectionUseCase = container.recordCategoryCorrectionUseCase
         )
     }
     val quickAddState by quickAddViewModel.uiState.collectAsState()
@@ -194,7 +196,8 @@ fun FinPulseApp(
                     onNavigateToAccounts = { navController.navigate(Screen.Accounts.route) },
                     onNavigateToBudgets = { navController.navigate(Screen.Budgets.route) },
                     onNavigateToSearch = { navController.navigate(Screen.Search.route) },
-                    onNavigateToInsights = { navController.navigate(Screen.Insights.route) }
+                    onNavigateToInsights = { navController.navigate(Screen.Insights.route) },
+                    onNavigateToReviewQueue = { navController.navigate(Screen.CategorizationRules.route) }
                 )
             }
 
@@ -221,7 +224,9 @@ fun FinPulseApp(
                     onShowAddEditDialog = viewModel::showAddEditDialog,
                     onSaveTransaction = viewModel::saveTransaction,
                     onDuplicateTransaction = viewModel::duplicateTransaction,
-                    onDeleteTransaction = viewModel::deleteTransaction
+                    onDeleteTransaction = viewModel::deleteTransaction,
+                    onToggleFilterOnlyUnreviewed = viewModel::toggleFilterOnlyUnreviewed,
+                    onNavigateToReviewQueue = { navController.navigate(Screen.CategorizationRules.route) }
                 )
             }
 
@@ -446,6 +451,42 @@ fun FinPulseApp(
                     accountRepository = container.accountRepository,
                     categoryRepository = container.categoryRepository,
                     onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            // Sub-screen: Smart Categorization & Rules
+            composable(Screen.CategorizationRules.route) {
+                val viewModel: com.finpulse.app.presentation.rules.CategorizationRulesViewModel = viewModel {
+                    com.finpulse.app.presentation.rules.CategorizationRulesViewModel(
+                        ruleRepository = container.categorizationRuleRepository,
+                        categoryRepository = container.categoryRepository,
+                        accountRepository = container.accountRepository,
+                        getReviewQueueUseCase = container.getReviewQueueUseCase,
+                        recordCategoryCorrectionUseCase = container.recordCategoryCorrectionUseCase,
+                        manageRuleUseCase = container.manageCategorizationRuleUseCase,
+                        findMatchingUseCase = container.findMatchingTransactionsForRuleUseCase,
+                        applyRuleUseCase = container.applyRuleToExistingTransactionsUseCase
+                    )
+                }
+                val uiState by viewModel.uiState.collectAsState()
+
+                com.finpulse.app.presentation.rules.CategorizationRulesScreen(
+                    uiState = uiState,
+                    onNavigateBack = { navController.popBackStack() },
+                    onTabSelected = viewModel::onTabSelected,
+                    onConfirmSuggestion = viewModel::confirmSuggestion,
+                    onOpenChangeCategory = viewModel::openChangeCategoryDialog,
+                    onChangeCategory = viewModel::changeCategoryAndLearnSignal,
+                    onOpenCreateRuleFromTransaction = viewModel::openCreateRuleFromTransaction,
+                    onShowAddEditRuleDialog = viewModel::showAddEditRuleDialog,
+                    onSaveRule = viewModel::saveRule,
+                    onToggleRuleActive = viewModel::toggleRuleActive,
+                    onUpdateRulePriority = viewModel::updateRulePriority,
+                    onDeleteRule = viewModel::deleteRule,
+                    onOpenApplyRuleDialog = viewModel::openApplyRuleDialog,
+                    onSetOverrideManualOnApply = viewModel::setOverrideManualOnApply,
+                    onConfirmApplyRule = viewModel::confirmApplyRule,
+                    onDismissDialogs = viewModel::dismissDialogs
                 )
             }
         }

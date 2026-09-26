@@ -86,6 +86,9 @@ fun TransactionEntity.toDomain(): Transaction {
         notes = notes,
         recurringRuleId = recurringRuleId,
         isExcludedFromBudget = isExcludedFromBudget,
+        isCategoryConfirmed = isCategoryConfirmed,
+        categorizationConfidence = categorizationConfidence,
+        matchedRuleId = matchedRuleId,
         createdAt = createdAt
     )
 }
@@ -106,6 +109,9 @@ fun Transaction.toEntity(): TransactionEntity {
         notes = notes,
         recurringRuleId = recurringRuleId,
         isExcludedFromBudget = isExcludedFromBudget,
+        isCategoryConfirmed = isCategoryConfirmed,
+        categorizationConfidence = categorizationConfidence,
+        matchedRuleId = matchedRuleId,
         createdAt = createdAt
     )
 }
@@ -351,5 +357,65 @@ fun Debt.toEntity(): DebtEntity {
         nextPaymentDate = nextPaymentDate,
         linkedAccountId = linkedAccountId,
         notes = notes
+    )
+}
+
+// Categorization Rule Mappers
+fun com.finpulse.app.core.database.entity.CategorizationRuleEntity.toDomain(): com.finpulse.app.domain.model.CategorizationRule {
+    return com.finpulse.app.domain.model.CategorizationRule(
+        id = id,
+        name = name,
+        targetCategoryId = targetCategoryId,
+        priority = priority,
+        merchantPattern = merchantPattern,
+        merchantMatchType = try { com.finpulse.app.domain.model.MatchType.valueOf(merchantMatchType) } catch (_: Exception) { com.finpulse.app.domain.model.MatchType.CONTAINS },
+        descriptionPattern = descriptionPattern,
+        descriptionMatchType = try { com.finpulse.app.domain.model.MatchType.valueOf(descriptionMatchType) } catch (_: Exception) { com.finpulse.app.domain.model.MatchType.CONTAINS },
+        accountId = accountId,
+        minAmountMinor = minAmountMinor,
+        maxAmountMinor = maxAmountMinor,
+        transactionType = transactionType?.let { try { TransactionType.valueOf(it) } catch (_: Exception) { null } },
+        isActive = isActive,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
+}
+
+fun com.finpulse.app.domain.model.CategorizationRule.toEntity(): com.finpulse.app.core.database.entity.CategorizationRuleEntity {
+    return com.finpulse.app.core.database.entity.CategorizationRuleEntity(
+        id = id,
+        name = name,
+        targetCategoryId = targetCategoryId,
+        priority = priority,
+        merchantPattern = merchantPattern,
+        merchantMatchType = merchantMatchType.name,
+        descriptionPattern = descriptionPattern,
+        descriptionMatchType = descriptionMatchType.name,
+        accountId = accountId,
+        minAmountMinor = minAmountMinor,
+        maxAmountMinor = maxAmountMinor,
+        transactionType = transactionType?.name,
+        isActive = isActive,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
+}
+
+// Merchant Signal Mappers
+fun com.finpulse.app.core.database.entity.MerchantSignalEntity.toDomain(): com.finpulse.app.domain.model.MerchantSignal {
+    return com.finpulse.app.domain.model.MerchantSignal(
+        normalizedMerchant = normalizedMerchant,
+        categoryId = categoryId,
+        useCount = useCount,
+        lastUsedAt = lastUsedAt
+    )
+}
+
+fun com.finpulse.app.domain.model.MerchantSignal.toEntity(): com.finpulse.app.core.database.entity.MerchantSignalEntity {
+    return com.finpulse.app.core.database.entity.MerchantSignalEntity(
+        normalizedMerchant = normalizedMerchant,
+        categoryId = categoryId,
+        useCount = useCount,
+        lastUsedAt = lastUsedAt
     )
 }

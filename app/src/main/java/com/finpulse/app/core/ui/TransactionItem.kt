@@ -78,14 +78,34 @@ fun TransactionItem(
             Spacer(modifier = Modifier.width(14.dp))
 
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = transaction.merchant?.takeIf { it.isNotBlank() }
-                        ?: transaction.description.takeIf { it.isNotBlank() }
-                        ?: category?.name
-                        ?: "Transaction",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = transaction.merchant?.takeIf { it.isNotBlank() }
+                            ?: transaction.description.takeIf { it.isNotBlank() }
+                            ?: category?.name
+                            ?: "Transaction",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
+                    )
+                    if (!transaction.isCategoryConfirmed || transaction.categoryId == "cat_uncategorized") {
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Surface(
+                            shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp),
+                            color = com.finpulse.app.core.designsystem.AmberWarning.copy(alpha = 0.2f)
+                        ) {
+                            Text(
+                                text = "Needs Review",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = com.finpulse.app.core.designsystem.AmberWarning,
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                            )
+                        }
+                    }
+                }
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = "$accountName • $formattedDate",
