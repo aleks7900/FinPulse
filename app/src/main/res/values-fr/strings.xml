@@ -895,4 +895,40 @@
     <string name="security_widget_privacy_desc">Masquer les montants sensibles sur les widgets de l’écran d’accueil</string>
     <string name="security_widget_mask_lock">Masquer au verrouillage de l’application</string>
     <string name="security_widget_mask_lock_desc">Masquer automatiquement les données financières quand la biométrie ou le code PIN est activé</string>
+
+    <!-- Search, Filters & Saved Views -->
+    <string name="preset_this_month">Ce mois-ci</string>
+    <string name="preset_last_month">Le mois dernier</string>
+    <string name="preset_uncategorized">Non catégorisé</string>
+    <string name="preset_subscriptions">Abonnements</string>
+    <string name="preset_large_expenses">Grosses dépenses</string>
+    <string name="preset_transfers">Virements</string>
+    <string name="filter_account">Compte</string>
+    <string name="filter_all_accounts">Tous les comptes</string>
+    <string name="filter_category">Catégorie</string>
+    <string name="filter_type">Type d\'opération</string>
+    <string name="filter_date_range">Période</string>
+    <string name="filter_amount_range">Fourchette de montants</string>
+    <string name="filter_min_amount">Montant minimum</string>
+    <string name="filter_max_amount">Montant maximum</string>
+    <string name="filter_currency">Devise</string>
+    <string name="filter_all_currencies">Toutes les devises</string>
+    <string name="filter_status">Statut</string>
+    <string name="filter_status_all">Tous les statuts</string>
+    <string name="filter_status_confirmed">Confirmé</string>
+    <string name="filter_status_needs_review">À vérifier</string>
+    <string name="filter_status_budget_excluded">Exclu du budget</string>
+    <string name="filter_status_recurring">Abonnements &amp; Récurrent</string>
+    <string name="date_preset_all">Toute la période</string>
+    <string name="date_preset_this_month">Ce mois-ci</string>
+    <string name="date_preset_last_month">Le mois dernier</string>
+    <string name="date_preset_this_year">Cette année</string>
+    <string name="date_preset_custom">Période personnalisée</string>
+    <string name="saved_views_title">Vues enregistrées</string>
+    <string name="save_view_action">Enregistrer la vue</string>
+    <string name="save_view_dialog_title">Enregistrer la vue de filtre</string>
+    <string name="save_view_name_hint">Nom de la vue (ex. Café, Déductible)</string>
+    <string name="delete_view_action">Supprimer la vue</string>
+    <string name="filter_active_count">%1$d actifs</string>
+    <string name="filter_results_count">%1$d Opérations</string>
 </resources>

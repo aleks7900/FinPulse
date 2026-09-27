@@ -44,6 +44,17 @@ interface TransactionRepository {
     fun getUnreviewedCountFlow(): Flow<Int>
     suspend fun confirmTransactionCategory(id: String, categoryId: String, matchedRuleId: String? = null, confidence: Float = 1.0f)
     suspend fun bulkUpdateCategory(ids: List<String>, categoryId: String, isConfirmed: Boolean = true, matchedRuleId: String? = null)
+    fun filterTransactionsFlow(params: com.finpulse.app.domain.model.TransactionFilterParams): Flow<List<Transaction>> =
+        kotlinx.coroutines.flow.emptyFlow()
+    suspend fun filterTransactions(params: com.finpulse.app.domain.model.TransactionFilterParams): List<Transaction> =
+        emptyList()
+}
+
+interface SavedFilterRepository {
+    fun getAllSavedFiltersFlow(): Flow<List<com.finpulse.app.domain.model.SavedFilter>>
+    suspend fun getSavedFilterById(id: String): com.finpulse.app.domain.model.SavedFilter?
+    suspend fun saveFilter(savedFilter: com.finpulse.app.domain.model.SavedFilter)
+    suspend fun deleteFilter(id: String)
 }
 
 interface CategoryRepository {

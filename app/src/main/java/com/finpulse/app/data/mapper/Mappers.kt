@@ -427,3 +427,49 @@ fun com.finpulse.app.domain.model.MerchantSignal.toEntity(): com.finpulse.app.co
         lastUsedAt = lastUsedAt
     )
 }
+
+// Saved Filter Mappers
+fun com.finpulse.app.core.database.entity.SavedFilterEntity.toDomain(): com.finpulse.app.domain.model.SavedFilter {
+    return com.finpulse.app.domain.model.SavedFilter(
+        id = id,
+        name = name,
+        params = com.finpulse.app.domain.model.TransactionFilterParams(
+            query = searchQuery,
+            accountId = accountId,
+            categoryId = categoryId,
+            type = transactionType?.let { runCatching { com.finpulse.app.domain.model.TransactionType.valueOf(it) }.getOrNull() },
+            dateRangePreset = runCatching { com.finpulse.app.domain.model.DateRangePreset.valueOf(dateRangePreset) }.getOrDefault(com.finpulse.app.domain.model.DateRangePreset.ALL),
+            customStartDate = startDate,
+            customEndDate = endDate,
+            minAmountMinor = minAmountMinor,
+            maxAmountMinor = maxAmountMinor,
+            currencyCode = currencyCode,
+            status = runCatching { com.finpulse.app.domain.model.TransactionStatusFilter.valueOf(status) }.getOrDefault(com.finpulse.app.domain.model.TransactionStatusFilter.ALL),
+            sortOrder = runCatching { com.finpulse.app.domain.model.TransactionSort.valueOf(sortOrder) }.getOrDefault(com.finpulse.app.domain.model.TransactionSort.DATE_DESC)
+        ),
+        isPreset = isPreset,
+        createdAt = createdAt
+    )
+}
+
+fun com.finpulse.app.domain.model.SavedFilter.toEntity(): com.finpulse.app.core.database.entity.SavedFilterEntity {
+    return com.finpulse.app.core.database.entity.SavedFilterEntity(
+        id = id,
+        name = name,
+        searchQuery = params.query,
+        accountId = params.accountId,
+        categoryId = params.categoryId,
+        transactionType = params.type?.name,
+        dateRangePreset = params.dateRangePreset.name,
+        startDate = params.customStartDate,
+        endDate = params.customEndDate,
+        minAmountMinor = params.minAmountMinor,
+        maxAmountMinor = params.maxAmountMinor,
+        currencyCode = params.currencyCode,
+        status = params.status.name,
+        sortOrder = params.sortOrder.name,
+        isPreset = isPreset,
+        createdAt = createdAt
+    )
+}
+

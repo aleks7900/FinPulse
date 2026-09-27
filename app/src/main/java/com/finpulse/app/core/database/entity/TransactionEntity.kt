@@ -12,7 +12,16 @@ import androidx.room.PrimaryKey
         Index("categoryId"),
         Index("timestamp"),
         Index("type"),
-        Index("isCategoryConfirmed")
+        Index("isCategoryConfirmed"),
+        Index("merchant"),
+        Index("amountMinor"),
+        Index("currencyCode"),
+        Index("recurringRuleId"),
+        Index("isExcludedFromBudget"),
+        Index(value = ["timestamp", "amountMinor"]),
+        Index(value = ["type", "timestamp"]),
+        Index(value = ["categoryId", "timestamp"]),
+        Index(value = ["sourceAccountId", "timestamp"])
     ]
 )
 data class TransactionEntity(

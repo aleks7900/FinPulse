@@ -887,4 +887,40 @@
     <string name="security_widget_privacy_desc">ホーム画面のウィジェットで金額を非表示にする</string>
     <string name="security_widget_mask_lock">アプロック時に金額を隠す</string>
     <string name="security_widget_mask_lock_desc">生体認証やPIN設定時にウィジェットの金額を自動でマスク</string>
+
+    <!-- Search, Filters & Saved Views -->
+    <string name="preset_this_month">今月</string>
+    <string name="preset_last_month">先月</string>
+    <string name="preset_uncategorized">未分類</string>
+    <string name="preset_subscriptions">定期購入</string>
+    <string name="preset_large_expenses">高額支出</string>
+    <string name="preset_transfers">振替</string>
+    <string name="filter_account">口座</string>
+    <string name="filter_all_accounts">すべての口座</string>
+    <string name="filter_category">カテゴリー</string>
+    <string name="filter_type">取引種別</string>
+    <string name="filter_date_range">期間</string>
+    <string name="filter_amount_range">金額範囲</string>
+    <string name="filter_min_amount">最小金額</string>
+    <string name="filter_max_amount">最大金額</string>
+    <string name="filter_currency">通貨</string>
+    <string name="filter_all_currencies">すべての通貨</string>
+    <string name="filter_status">ステータス</string>
+    <string name="filter_status_all">すべてのステータス</string>
+    <string name="filter_status_confirmed">確認済み</string>
+    <string name="filter_status_needs_review">要確認</string>
+    <string name="filter_status_budget_excluded">予算から除外</string>
+    <string name="filter_status_recurring">定期・サブスク</string>
+    <string name="date_preset_all">全期間</string>
+    <string name="date_preset_this_month">今月</string>
+    <string name="date_preset_last_month">先月</string>
+    <string name="date_preset_this_year">今年</string>
+    <string name="date_preset_custom">カスタム期間</string>
+    <string name="saved_views_title">保存したビュー</string>
+    <string name="save_view_action">ビューを保存</string>
+    <string name="save_view_dialog_title">フィルタービューの保存</string>
+    <string name="save_view_name_hint">ビュー名（例：コーヒー、経費）</string>
+    <string name="delete_view_action">ビューを削除</string>
+    <string name="filter_active_count">%1$d件 適用中</string>
+    <string name="filter_results_count">%1$d件の取引</string>
 </resources>

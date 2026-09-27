@@ -895,4 +895,40 @@
     <string name="security_widget_privacy_desc">Ana ekran widget\'larında hassas tutarları gizle</string>
     <string name="security_widget_mask_lock">Uygulama Kilidinde Maskele</string>
     <string name="security_widget_mask_lock_desc">Biyometri veya PIN etkinken widget tutarlarını otomatik gizle</string>
+
+    <!-- Search, Filters & Saved Views -->
+    <string name="preset_this_month">Bu Ay</string>
+    <string name="preset_last_month">Geçen Ay</string>
+    <string name="preset_uncategorized">Kategorisiz</string>
+    <string name="preset_subscriptions">Abonelikler</string>
+    <string name="preset_large_expenses">Büyük Harcamalar</string>
+    <string name="preset_transfers">Transferler</string>
+    <string name="filter_account">Hesap</string>
+    <string name="filter_all_accounts">Tüm Hesaplar</string>
+    <string name="filter_category">Kategori</string>
+    <string name="filter_type">İşlem Türü</string>
+    <string name="filter_date_range">Tarih Aralığı</string>
+    <string name="filter_amount_range">Tutar Aralığı</string>
+    <string name="filter_min_amount">Minimum Tutar</string>
+    <string name="filter_max_amount">Maksimum Tutar</string>
+    <string name="filter_currency">Para Birimi</string>
+    <string name="filter_all_currencies">Tüm Para Birimleri</string>
+    <string name="filter_status">Durum</string>
+    <string name="filter_status_all">Tüm Durumlar</string>
+    <string name="filter_status_confirmed">Onaylandı</string>
+    <string name="filter_status_needs_review">İnceleme Gerekli</string>
+    <string name="filter_status_budget_excluded">Bütçeden Hariç</string>
+    <string name="filter_status_recurring">Abonelik ve Düzenli</string>
+    <string name="date_preset_all">Tüm Zamanlar</string>
+    <string name="date_preset_this_month">Bu Ay</string>
+    <string name="date_preset_last_month">Geçen Ay</string>
+    <string name="date_preset_this_year">Bu Yıl</string>
+    <string name="date_preset_custom">Özel Aralık</string>
+    <string name="saved_views_title">Kayıtlı Görünümler</string>
+    <string name="save_view_action">Görünümü Kaydet</string>
+    <string name="save_view_dialog_title">Filtre Görünümünü Kaydet</string>
+    <string name="save_view_name_hint">Görünüm Adı (örn. Kahve, Vergiler)</string>
+    <string name="delete_view_action">Görünümü Sil</string>
+    <string name="filter_active_count">%1$d aktif</string>
+    <string name="filter_results_count">%1$d İşlem</string>
 </resources>

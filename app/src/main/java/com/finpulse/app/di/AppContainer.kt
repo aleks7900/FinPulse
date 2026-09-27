@@ -59,11 +59,16 @@ interface AppContainer {
     val updateTransactionDetailsUseCase: com.finpulse.app.domain.usecase.review.UpdateTransactionDetailsUseCase
     val calculateSafeToSpendUseCase: com.finpulse.app.domain.usecase.budget.CalculateSafeToSpendUseCase
     val getFinancialCalendarUseCase: com.finpulse.app.domain.usecase.calendar.GetFinancialCalendarUseCase
+    val savedFilterRepository: com.finpulse.app.domain.repository.SavedFilterRepository
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
     override val database: FinPulseDatabase by lazy {
         FinPulseDatabase.getInstance(context)
+    }
+
+    override val savedFilterRepository: com.finpulse.app.domain.repository.SavedFilterRepository by lazy {
+        com.finpulse.app.data.repository.SavedFilterRepositoryImpl(database)
     }
 
     override val userPreferencesDataStore: UserPreferencesDataStore by lazy {

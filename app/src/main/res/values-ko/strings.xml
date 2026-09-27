@@ -887,4 +887,40 @@
     <string name="security_widget_privacy_desc">홈 화면 위젯에서 민감한 금융 금액 숨기기</string>
     <string name="security_widget_mask_lock">앱 잠금 시 위젯 마스킹</string>
     <string name="security_widget_mask_lock_desc">생체 인증 또는 PIN 사용 시 위젯 금액 자동 마스킹</string>
+
+    <!-- Search, Filters & Saved Views -->
+    <string name="preset_this_month">이번 달</string>
+    <string name="preset_last_month">지난달</string>
+    <string name="preset_uncategorized">미분류</string>
+    <string name="preset_subscriptions">구독</string>
+    <string name="preset_large_expenses">고액 지출</string>
+    <string name="preset_transfers">이체</string>
+    <string name="filter_account">계좌</string>
+    <string name="filter_all_accounts">모든 계좌</string>
+    <string name="filter_category">카테고리</string>
+    <string name="filter_type">거래 유형</string>
+    <string name="filter_date_range">기간</string>
+    <string name="filter_amount_range">금액 범위</string>
+    <string name="filter_min_amount">최소 금액</string>
+    <string name="filter_max_amount">최대 금액</string>
+    <string name="filter_currency">통화</string>
+    <string name="filter_all_currencies">모든 통화</string>
+    <string name="filter_status">상태</string>
+    <string name="filter_status_all">모든 상태</string>
+    <string name="filter_status_confirmed">확인됨</string>
+    <string name="filter_status_needs_review">검토 필요</string>
+    <string name="filter_status_budget_excluded">예산에서 제외됨</string>
+    <string name="filter_status_recurring">구독 및 반복</string>
+    <string name="date_preset_all">전체 기간</string>
+    <string name="date_preset_this_month">이번 달</string>
+    <string name="date_preset_last_month">지난달</string>
+    <string name="date_preset_this_year">올해</string>
+    <string name="date_preset_custom">직접 지정</string>
+    <string name="saved_views_title">저장된 보기</string>
+    <string name="save_view_action">보기 저장</string>
+    <string name="save_view_dialog_title">필터 보기 저장</string>
+    <string name="save_view_name_hint">보기 이름 (예: 커피, 경비)</string>
+    <string name="delete_view_action">보기 삭제</string>
+    <string name="filter_active_count">%1$d개 적용됨</string>
+    <string name="filter_results_count">%1$d건의 거래</string>
 </resources>

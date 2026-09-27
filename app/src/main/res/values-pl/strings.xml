@@ -911,4 +911,40 @@
     <string name="security_widget_privacy_desc">Ukrywaj wrażliwe kwoty na widżetach ekranu głównego</string>
     <string name="security_widget_mask_lock">Maskuj przy blokadzie aplikacji</string>
     <string name="security_widget_mask_lock_desc">Automatycznie ukrywaj dane finansowe na widżetach, gdy aktywna jest biometria lub PIN</string>
+
+    <!-- Search, Filters & Saved Views -->
+    <string name="preset_this_month">Ten miesiąc</string>
+    <string name="preset_last_month">Poprzedni miesiąc</string>
+    <string name="preset_uncategorized">Bez kategorii</string>
+    <string name="preset_subscriptions">Subskrypcje</string>
+    <string name="preset_large_expenses">Duże wydatki</string>
+    <string name="preset_transfers">Przelewy</string>
+    <string name="filter_account">Konto</string>
+    <string name="filter_all_accounts">Wszystkie konta</string>
+    <string name="filter_category">Kategoria</string>
+    <string name="filter_type">Typ transakcji</string>
+    <string name="filter_date_range">Zakres dat</string>
+    <string name="filter_amount_range">Zakres kwot</string>
+    <string name="filter_min_amount">Kwota minimalna</string>
+    <string name="filter_max_amount">Kwota maksymalna</string>
+    <string name="filter_currency">Waluta</string>
+    <string name="filter_all_currencies">Wszystkie waluty</string>
+    <string name="filter_status">Status</string>
+    <string name="filter_status_all">Wszystkie statusy</string>
+    <string name="filter_status_confirmed">Zatwierdzone</string>
+    <string name="filter_status_needs_review">Do weryfikacji</string>
+    <string name="filter_status_budget_excluded">Wykluczone z budżetu</string>
+    <string name="filter_status_recurring">Subskrypcje i cykliczne</string>
+    <string name="date_preset_all">Cały okres</string>
+    <string name="date_preset_this_month">Ten miesiąc</string>
+    <string name="date_preset_last_month">Poprzedni miesiąc</string>
+    <string name="date_preset_this_year">Ten rok</string>
+    <string name="date_preset_custom">Własny zakres</string>
+    <string name="saved_views_title">Zapisane widoki</string>
+    <string name="save_view_action">Zapisz widok</string>
+    <string name="save_view_dialog_title">Zapisz widok filtra</string>
+    <string name="save_view_name_hint">Nazwa widoku (np. Kawa, Koszty)</string>
+    <string name="delete_view_action">Usuń widok</string>
+    <string name="filter_active_count">%1$d aktywne</string>
+    <string name="filter_results_count">%1$d transakcji</string>
 </resources>

@@ -911,4 +911,40 @@
     <string name="security_widget_privacy_desc">Скрывать финансовые суммы на виджетах главного экрана</string>
     <string name="security_widget_mask_lock">Маскировать при блокировке</string>
     <string name="security_widget_mask_lock_desc">Автоматически скрывать суммы на виджетах при включенной биометрии или PIN</string>
+
+    <!-- Search, Filters & Saved Views -->
+    <string name="preset_this_month">Этот месяц</string>
+    <string name="preset_last_month">Прошлый месяц</string>
+    <string name="preset_uncategorized">Без категории</string>
+    <string name="preset_subscriptions">Подписки</string>
+    <string name="preset_large_expenses">Крупные траты</string>
+    <string name="preset_transfers">Переводы</string>
+    <string name="filter_account">Счет</string>
+    <string name="filter_all_accounts">Все счета</string>
+    <string name="filter_category">Категория</string>
+    <string name="filter_type">Тип операции</string>
+    <string name="filter_date_range">Период дат</string>
+    <string name="filter_amount_range">Диапазон сумм</string>
+    <string name="filter_min_amount">Минимальная сумма</string>
+    <string name="filter_max_amount">Максимальная сумма</string>
+    <string name="filter_currency">Валюта</string>
+    <string name="filter_all_currencies">Все валюты</string>
+    <string name="filter_status">Статус</string>
+    <string name="filter_status_all">Все статусы</string>
+    <string name="filter_status_confirmed">Подтверждено</string>
+    <string name="filter_status_needs_review">Требует проверки</string>
+    <string name="filter_status_budget_excluded">Исключено из бюджета</string>
+    <string name="filter_status_recurring">Подписки и регулярные</string>
+    <string name="date_preset_all">За все время</string>
+    <string name="date_preset_this_month">Этот месяц</string>
+    <string name="date_preset_last_month">Прошлый месяц</string>
+    <string name="date_preset_this_year">Этот год</string>
+    <string name="date_preset_custom">Свой период</string>
+    <string name="saved_views_title">Сохраненные виды</string>
+    <string name="save_view_action">Сохранить вид</string>
+    <string name="save_view_dialog_title">Сохранить вид фильтра</string>
+    <string name="save_view_name_hint">Название вида (напр., Кофе, Налоги)</string>
+    <string name="delete_view_action">Удалить вид</string>
+    <string name="filter_active_count">%1$d активных</string>
+    <string name="filter_results_count">%1$d операций</string>
 </resources>

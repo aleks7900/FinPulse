@@ -887,4 +887,40 @@
     <string name="security_widget_privacy_desc">在主屏幕小组件上隐藏敏感资金数额</string>
     <string name="security_widget_mask_lock">应用锁定时脱敏小组件</string>
     <string name="security_widget_mask_lock_desc">启用生物识别或密码锁定时自动隐藏小组件上的金额</string>
+
+    <!-- Search, Filters & Saved Views -->
+    <string name="preset_this_month">本月</string>
+    <string name="preset_last_month">上月</string>
+    <string name="preset_uncategorized">未分类</string>
+    <string name="preset_subscriptions">订阅与周期</string>
+    <string name="preset_large_expenses">大额支出</string>
+    <string name="preset_transfers">转账</string>
+    <string name="filter_account">账户</string>
+    <string name="filter_all_accounts">所有账户</string>
+    <string name="filter_category">分类</string>
+    <string name="filter_type">交易类型</string>
+    <string name="filter_date_range">时间范围</string>
+    <string name="filter_amount_range">金额范围</string>
+    <string name="filter_min_amount">最低金额</string>
+    <string name="filter_max_amount">最高金额</string>
+    <string name="filter_currency">币种</string>
+    <string name="filter_all_currencies">所有币种</string>
+    <string name="filter_status">状态</string>
+    <string name="filter_status_all">所有状态</string>
+    <string name="filter_status_confirmed">已确认</string>
+    <string name="filter_status_needs_review">待复核</string>
+    <string name="filter_status_budget_excluded">不计入预算</string>
+    <string name="filter_status_recurring">订阅与周期性交易</string>
+    <string name="date_preset_all">全部时间</string>
+    <string name="date_preset_this_month">本月</string>
+    <string name="date_preset_last_month">上月</string>
+    <string name="date_preset_this_year">今年</string>
+    <string name="date_preset_custom">自定义范围</string>
+    <string name="saved_views_title">已存视图</string>
+    <string name="save_view_action">保存视图</string>
+    <string name="save_view_dialog_title">保存筛选视图</string>
+    <string name="save_view_name_hint">视图名称（例如：咖啡、可报销）</string>
+    <string name="delete_view_action">删除视图</string>
+    <string name="filter_active_count">%1$d 项生效</string>
+    <string name="filter_results_count">%1$d 笔交易</string>
 </resources>

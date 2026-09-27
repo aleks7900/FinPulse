@@ -1,18 +1,24 @@
 package com.finpulse.app.presentation.search
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -33,12 +40,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.finpulse.app.R
+import com.finpulse.app.core.designsystem.AmberWarning
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.ui.TransactionItem
+import com.finpulse.app.domain.model.TransactionFilterParams
+import com.finpulse.app.domain.model.TransactionPreset
+import com.finpulse.app.domain.model.TransactionPresets
 import com.finpulse.app.domain.repository.AccountRepository
 import com.finpulse.app.domain.repository.CategoryRepository
 import com.finpulse.app.domain.repository.TransactionRepository
@@ -53,7 +65,14 @@ fun SearchScreen(
     modifier: Modifier = Modifier
 ) {
     var query by remember { mutableStateOf("") }
-    val transactions by transactionRepository.searchTransactionsFlow(query).collectAsState(initial = emptyList())
+    var selectedPreset by remember { mutableStateOf<TransactionPreset?>(null) }
+
+    val filterParams = remember(query, selectedPreset) {
+        val base = selectedPreset?.params ?: TransactionFilterParams()
+        base.copy(query = query)
+    }
+
+    val transactions by transactionRepository.filterTransactionsFlow(filterParams).collectAsState(initial = emptyList())
     val accounts by accountRepository.getAllAccountsFlow().collectAsState(initial = emptyList())
     val categories by categoryRepository.getAllCategoriesFlow().collectAsState(initial = emptyList())
 
@@ -89,6 +108,7 @@ fun SearchScreen(
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
         ) {
+            // Search Input
             OutlinedTextField(
                 value = query,
                 onValueChange = { query = it },
@@ -111,10 +131,64 @@ fun SearchScreen(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp)
+                    .padding(vertical = 8.dp)
             )
 
-            if (query.isBlank()) {
+            // Preset Quick Filter Chips
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState())
+                    .padding(bottom = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // All Chip
+                val isAll = selectedPreset == null
+                Surface(
+                    modifier = Modifier.clickable { selectedPreset = null },
+                    shape = RoundedCornerShape(14.dp),
+                    color = if (isAll) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    contentColor = if (isAll) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+                ) {
+                    Text(
+                        text = stringResource(R.string.tx_filter_all),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = if (isAll) FontWeight.Bold else FontWeight.Medium,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                    )
+                }
+
+                TransactionPresets.ALL_PRESETS.forEach { preset ->
+                    val isSelected = selectedPreset?.id == preset.id
+                    val presetName = when (preset.id) {
+                        TransactionPresets.THIS_MONTH.id -> stringResource(R.string.preset_this_month)
+                        TransactionPresets.LAST_MONTH.id -> stringResource(R.string.preset_last_month)
+                        TransactionPresets.UNCATEGORIZED.id -> stringResource(R.string.preset_uncategorized)
+                        TransactionPresets.SUBSCRIPTIONS.id -> stringResource(R.string.preset_subscriptions)
+                        TransactionPresets.LARGE_EXPENSES.id -> stringResource(R.string.preset_large_expenses)
+                        TransactionPresets.TRANSFERS.id -> stringResource(R.string.preset_transfers)
+                        else -> preset.name
+                    }
+
+                    Surface(
+                        modifier = Modifier.clickable {
+                            selectedPreset = if (isSelected) null else preset
+                        },
+                        shape = RoundedCornerShape(14.dp),
+                        color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+                    ) {
+                        Text(
+                            text = presetName,
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                        )
+                    }
+                }
+            }
+
+            if (query.isBlank() && selectedPreset == null) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()

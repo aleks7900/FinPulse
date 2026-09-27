@@ -244,7 +244,8 @@ fun FinPulseApp(
                         transactionRepository = container.transactionRepository,
                         accountRepository = container.accountRepository,
                         categoryRepository = container.categoryRepository,
-                        userPreferencesDataStore = container.userPreferencesDataStore
+                        userPreferencesDataStore = container.userPreferencesDataStore,
+                        savedFilterRepository = container.savedFilterRepository
                     )
                 }
                 val uiState by viewModel.uiState.collectAsState()
@@ -262,6 +263,16 @@ fun FinPulseApp(
                     onDuplicateTransaction = viewModel::duplicateTransaction,
                     onDeleteTransaction = viewModel::deleteTransaction,
                     onToggleFilterOnlyUnreviewed = viewModel::toggleFilterOnlyUnreviewed,
+                    onDateRangePresetChange = viewModel::onDateRangePresetChange,
+                    onAmountRangeChange = viewModel::onAmountRangeChange,
+                    onCurrencyFilterChange = viewModel::onCurrencyFilterChange,
+                    onStatusFilterChange = viewModel::onStatusFilterChange,
+                    onSelectPreset = viewModel::onSelectPreset,
+                    onSelectSavedFilter = viewModel::onSelectSavedFilter,
+                    onResetFilters = viewModel::onResetFilters,
+                    onShowSaveViewDialog = viewModel::showSaveViewDialog,
+                    onSaveCurrentView = viewModel::saveCurrentFilterAsView,
+                    onDeleteSavedView = viewModel::deleteSavedFilter,
                     onNavigateToReviewQueue = { navController.navigate(Screen.ReviewInbox.route) },
                     onNavigateToCsvImport = { navController.navigate(Screen.CsvImport.route) }
                 )

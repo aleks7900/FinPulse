@@ -895,4 +895,40 @@
     <string name="security_widget_privacy_desc">Hide sensitive balances and figures on home screen widgets</string>
     <string name="security_widget_mask_lock">Mask Widgets on App Lock</string>
     <string name="security_widget_mask_lock_desc">Automatically hide financial amounts on widgets when Biometric or PIN is enabled</string>
+
+    <!-- Search, Filters & Saved Views -->
+    <string name="preset_this_month">This Month</string>
+    <string name="preset_last_month">Last Month</string>
+    <string name="preset_uncategorized">Uncategorized</string>
+    <string name="preset_subscriptions">Subscriptions</string>
+    <string name="preset_large_expenses">Large Expenses</string>
+    <string name="preset_transfers">Transfers</string>
+    <string name="filter_account">Account</string>
+    <string name="filter_all_accounts">All Accounts</string>
+    <string name="filter_category">Category</string>
+    <string name="filter_type">Transaction Type</string>
+    <string name="filter_date_range">Date Range</string>
+    <string name="filter_amount_range">Amount Range</string>
+    <string name="filter_min_amount">Min Amount</string>
+    <string name="filter_max_amount">Max Amount</string>
+    <string name="filter_currency">Currency</string>
+    <string name="filter_all_currencies">All Currencies</string>
+    <string name="filter_status">Status</string>
+    <string name="filter_status_all">All Statuses</string>
+    <string name="filter_status_confirmed">Confirmed</string>
+    <string name="filter_status_needs_review">Needs Review</string>
+    <string name="filter_status_budget_excluded">Excluded from Budget</string>
+    <string name="filter_status_recurring">Subscriptions &amp; Recurring</string>
+    <string name="date_preset_all">All Time</string>
+    <string name="date_preset_this_month">This Month</string>
+    <string name="date_preset_last_month">Last Month</string>
+    <string name="date_preset_this_year">This Year</string>
+    <string name="date_preset_custom">Custom Range</string>
+    <string name="saved_views_title">Saved Views</string>
+    <string name="save_view_action">Save View</string>
+    <string name="save_view_dialog_title">Save Filter View</string>
+    <string name="save_view_name_hint">View Name (e.g. Coffee, Tax Deductible)</string>
+    <string name="delete_view_action">Delete View</string>
+    <string name="filter_active_count">%1$d active</string>
+    <string name="filter_results_count">%1$d Transactions</string>
 </resources>

@@ -19,9 +19,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
@@ -29,7 +31,10 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Sort
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -51,7 +56,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -79,7 +83,14 @@ import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.Category
 import com.finpulse.app.domain.model.CategoryType
+import com.finpulse.app.domain.model.DateRangePreset
+import com.finpulse.app.domain.model.SavedFilter
 import com.finpulse.app.domain.model.Transaction
+import com.finpulse.app.domain.model.TransactionFilterParams
+import com.finpulse.app.domain.model.TransactionPreset
+import com.finpulse.app.domain.model.TransactionPresets
+import com.finpulse.app.domain.model.TransactionSort
+import com.finpulse.app.domain.model.TransactionStatusFilter
 import com.finpulse.app.domain.model.TransactionType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -109,6 +120,16 @@ fun TransactionsScreen(
     onDuplicateTransaction: (Transaction) -> Unit,
     onDeleteTransaction: (String) -> Unit,
     onToggleFilterOnlyUnreviewed: () -> Unit = {},
+    onDateRangePresetChange: (DateRangePreset, Long?, Long?) -> Unit = { _, _, _ -> },
+    onAmountRangeChange: (Long?, Long?) -> Unit = { _, _ -> },
+    onCurrencyFilterChange: (String?) -> Unit = {},
+    onStatusFilterChange: (TransactionStatusFilter) -> Unit = {},
+    onSelectPreset: (TransactionPreset) -> Unit = {},
+    onSelectSavedFilter: (SavedFilter) -> Unit = {},
+    onResetFilters: () -> Unit = {},
+    onShowSaveViewDialog: (Boolean) -> Unit = {},
+    onSaveCurrentView: (String) -> Unit = {},
+    onDeleteSavedView: (String) -> Unit = {},
     onNavigateToReviewQueue: () -> Unit = {},
     onNavigateToCsvImport: () -> Unit = {},
     modifier: Modifier = Modifier
@@ -136,12 +157,30 @@ fun TransactionsScreen(
                         )
                     }
                     IconButton(onClick = { onShowFilterSheet(true) }) {
-                        Icon(
-                            imageVector = Icons.Default.FilterList,
-                            contentDescription = stringResource(R.string.action_filter),
-                            tint = if (uiState.selectedTypeFilter != null || uiState.selectedAccountFilter != null || uiState.selectedCategoryFilter != null)
-                                EmeraldPrimary else MaterialTheme.colorScheme.onSurface
-                        )
+                        if (uiState.activeFilterCount > 0) {
+                            BadgedBox(
+                                badge = {
+                                    Badge(
+                                        containerColor = EmeraldPrimary,
+                                        contentColor = Color.Black
+                                    ) {
+                                        Text(uiState.activeFilterCount.toString(), fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.FilterList,
+                                    contentDescription = stringResource(R.string.action_filter),
+                                    tint = EmeraldPrimary
+                                )
+                            }
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.FilterList,
+                                contentDescription = stringResource(R.string.action_filter),
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -191,16 +230,20 @@ fun TransactionsScreen(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 6.dp)
             )
 
-            // Quick Filter Pills Row
-            TypeFilterRow(
-                selectedType = uiState.selectedTypeFilter,
-                onTypeSelected = onTypeFilterChange,
-                filterOnlyUnreviewed = uiState.filterOnlyUnreviewed,
+            // Presets and Saved Views Row
+            PresetsAndSavedViewsRow(
+                activePresetId = uiState.activePresetId,
+                activeSavedFilterId = uiState.activeSavedFilterId,
+                savedFilters = uiState.savedFilters,
                 unreviewedCount = uiState.unreviewedCount,
-                onToggleFilterOnlyUnreviewed = onToggleFilterOnlyUnreviewed
+                hasActiveFilters = uiState.filterParams.isActive,
+                onSelectPreset = onSelectPreset,
+                onSelectSavedFilter = onSelectSavedFilter,
+                onResetFilters = onResetFilters,
+                onShowSaveViewDialog = { onShowSaveViewDialog(true) }
             )
 
             // Review Queue Alert Banner
@@ -241,7 +284,32 @@ fun TransactionsScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            // Results count and active filter summary bar
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.filter_results_count, uiState.transactions.size),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                if (uiState.filterParams.isActive) {
+                    TextButton(onClick = onResetFilters) {
+                        Text(
+                            text = stringResource(R.string.action_reset),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = EmeraldPrimary,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
 
             // Transaction List
             if (uiState.transactions.isEmpty()) {
@@ -290,25 +358,38 @@ fun TransactionsScreen(
             }
         }
 
-        // Filter Sheet
+        // Comprehensive Filter Bottom Sheet
         if (uiState.isFilterSheetVisible) {
             FilterBottomSheet(
                 accounts = uiState.accounts,
                 categories = uiState.categories,
-                selectedAccount = uiState.selectedAccountFilter,
-                selectedCategory = uiState.selectedCategoryFilter,
-                sortOrder = uiState.sortOrder,
+                filterParams = uiState.filterParams,
+                savedFilters = uiState.savedFilters,
+                activeSavedFilterId = uiState.activeSavedFilterId,
                 onAccountSelected = onAccountFilterChange,
                 onCategorySelected = onCategoryFilterChange,
+                onTypeSelected = onTypeFilterChange,
                 onSortOrderChange = onSortOrderChange,
-                onDismiss = { onShowFilterSheet(false) },
-                onReset = {
-                    onTypeFilterChange(null)
-                    onAccountFilterChange(null)
-                    onCategoryFilterChange(null)
-                    onSortOrderChange(TransactionSort.DATE_DESC)
+                onDateRangePresetChange = onDateRangePresetChange,
+                onAmountRangeChange = onAmountRangeChange,
+                onCurrencyFilterChange = onCurrencyFilterChange,
+                onStatusFilterChange = onStatusFilterChange,
+                onSelectPreset = onSelectPreset,
+                onSaveViewClick = {
                     onShowFilterSheet(false)
-                }
+                    onShowSaveViewDialog(true)
+                },
+                onDeleteSavedView = onDeleteSavedView,
+                onReset = onResetFilters,
+                onDismiss = { onShowFilterSheet(false) }
+            )
+        }
+
+        // Save View Dialog
+        if (uiState.isSaveViewDialogVisible) {
+            SaveFilterViewDialog(
+                onDismiss = { onShowSaveViewDialog(false) },
+                onSave = onSaveCurrentView
             )
         }
 
@@ -329,12 +410,16 @@ fun TransactionsScreen(
 }
 
 @Composable
-fun TypeFilterRow(
-    selectedType: TransactionType?,
-    onTypeSelected: (TransactionType?) -> Unit,
-    filterOnlyUnreviewed: Boolean = false,
-    unreviewedCount: Int = 0,
-    onToggleFilterOnlyUnreviewed: () -> Unit = {},
+fun PresetsAndSavedViewsRow(
+    activePresetId: String?,
+    activeSavedFilterId: String?,
+    savedFilters: List<SavedFilter>,
+    unreviewedCount: Int,
+    hasActiveFilters: Boolean,
+    onSelectPreset: (TransactionPreset) -> Unit,
+    onSelectSavedFilter: (SavedFilter) -> Unit,
+    onResetFilters: () -> Unit,
+    onShowSaveViewDialog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -342,53 +427,186 @@ fun TypeFilterRow(
         modifier = modifier
             .fillMaxWidth()
             .horizontalScroll(scrollState),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        if (unreviewedCount > 0) {
+        // "All" chip
+        val isAllSelected = activePresetId == null && activeSavedFilterId == null && !hasActiveFilters
+        Surface(
+            modifier = Modifier.clickable { onResetFilters() },
+            shape = RoundedCornerShape(14.dp),
+            color = if (isAllSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+            contentColor = if (isAllSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+        ) {
+            Text(
+                text = stringResource(R.string.tx_filter_all),
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = if (isAllSelected) FontWeight.Bold else FontWeight.Medium,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+            )
+        }
+
+        // Standard Presets
+        TransactionPresets.ALL_PRESETS.forEach { preset ->
+            val isSelected = activePresetId == preset.id
+            val presetName = when (preset.id) {
+                TransactionPresets.THIS_MONTH.id -> stringResource(R.string.preset_this_month)
+                TransactionPresets.LAST_MONTH.id -> stringResource(R.string.preset_last_month)
+                TransactionPresets.UNCATEGORIZED.id -> {
+                    if (unreviewedCount > 0) "${stringResource(R.string.preset_uncategorized)} ($unreviewedCount)"
+                    else stringResource(R.string.preset_uncategorized)
+                }
+                TransactionPresets.SUBSCRIPTIONS.id -> stringResource(R.string.preset_subscriptions)
+                TransactionPresets.LARGE_EXPENSES.id -> stringResource(R.string.preset_large_expenses)
+                TransactionPresets.TRANSFERS.id -> stringResource(R.string.preset_transfers)
+                else -> preset.name
+            }
+
             Surface(
-                modifier = Modifier.clickable { onToggleFilterOnlyUnreviewed() },
+                modifier = Modifier.clickable { onSelectPreset(preset) },
                 shape = RoundedCornerShape(14.dp),
-                color = if (filterOnlyUnreviewed) AmberWarning else AmberWarning.copy(alpha = 0.15f),
-                contentColor = if (filterOnlyUnreviewed) Color.Black else AmberWarning,
-                border = if (!filterOnlyUnreviewed) androidx.compose.foundation.BorderStroke(1.dp, AmberWarning.copy(alpha = 0.4f)) else null
+                color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant,
+                border = if (preset.id == TransactionPresets.UNCATEGORIZED.id && unreviewedCount > 0 && !isSelected)
+                    androidx.compose.foundation.BorderStroke(1.dp, AmberWarning.copy(alpha = 0.5f)) else null
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (preset.id == TransactionPresets.UNCATEGORIZED.id && unreviewedCount > 0) {
+                        Icon(
+                            imageVector = Icons.Default.AutoAwesome,
+                            contentDescription = null,
+                            tint = if (isSelected) Color.Black else AmberWarning,
+                            modifier = Modifier.size(12.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                    }
+                    Text(
+                        text = presetName,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                    )
+                }
+            }
+        }
+
+        // Saved Views
+        savedFilters.forEach { savedFilter ->
+            val isSelected = activeSavedFilterId == savedFilter.id
+            Surface(
+                modifier = Modifier.clickable { onSelectSavedFilter(savedFilter) },
+                shape = RoundedCornerShape(14.dp),
+                color = if (isSelected) TransferBlue else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                contentColor = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                border = androidx.compose.foundation.BorderStroke(1.dp, TransferBlue.copy(alpha = 0.4f))
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Default.AutoAwesome,
+                        imageVector = Icons.Default.Bookmark,
+                        contentDescription = null,
+                        modifier = Modifier.size(12.dp),
+                        tint = if (isSelected) Color.White else TransferBlue
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = savedFilter.name,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                    )
+                }
+            }
+        }
+
+        // Save Current View Chip
+        if (hasActiveFilters && activeSavedFilterId == null) {
+            Surface(
+                modifier = Modifier.clickable { onShowSaveViewDialog() },
+                shape = RoundedCornerShape(14.dp),
+                color = EmeraldPrimary.copy(alpha = 0.15f),
+                contentColor = EmeraldPrimary,
+                border = androidx.compose.foundation.BorderStroke(1.dp, EmeraldPrimary.copy(alpha = 0.4f))
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
                         contentDescription = null,
                         modifier = Modifier.size(12.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "${stringResource(R.string.tx_needs_review)} ($unreviewedCount)",
+                        text = stringResource(R.string.save_view_action),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
         }
+    }
+}
 
-        val types = listOf(null to stringResource(R.string.tx_filter_all)) + TransactionType.values().map { it to it.getLocalizedName() }
-        types.forEach { (type, label) ->
-            val isSelected = !filterOnlyUnreviewed && selectedType == type
-            Surface(
-                modifier = Modifier.clickable { onTypeSelected(type) },
-                shape = RoundedCornerShape(14.dp),
-                color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
-            ) {
-                Text(
-                    text = label,
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+@Composable
+fun SaveFilterViewDialog(
+    onDismiss: () -> Unit,
+    onSave: (String) -> Unit
+) {
+    var viewName by remember { mutableStateOf("") }
+    var isError by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = stringResource(R.string.save_view_dialog_title),
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = viewName,
+                    onValueChange = {
+                        viewName = it
+                        isError = false
+                    },
+                    placeholder = { Text(stringResource(R.string.save_view_name_hint)) },
+                    singleLine = true,
+                    isError = isError,
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = EmeraldPrimary
+                    ),
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    if (viewName.trim().isNotBlank()) {
+                        onSave(viewName.trim())
+                    } else {
+                        isError = true
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
+            ) {
+                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.action_cancel))
+            }
         }
-    }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -396,16 +614,25 @@ fun TypeFilterRow(
 fun FilterBottomSheet(
     accounts: List<Account>,
     categories: List<Category>,
-    selectedAccount: String?,
-    selectedCategory: String?,
-    sortOrder: TransactionSort,
+    filterParams: TransactionFilterParams,
+    savedFilters: List<SavedFilter>,
+    activeSavedFilterId: String?,
     onAccountSelected: (String?) -> Unit,
     onCategorySelected: (String?) -> Unit,
+    onTypeSelected: (TransactionType?) -> Unit,
     onSortOrderChange: (TransactionSort) -> Unit,
-    onDismiss: () -> Unit,
-    onReset: () -> Unit
+    onDateRangePresetChange: (DateRangePreset, Long?, Long?) -> Unit,
+    onAmountRangeChange: (Long?, Long?) -> Unit,
+    onCurrencyFilterChange: (String?) -> Unit,
+    onStatusFilterChange: (TransactionStatusFilter) -> Unit,
+    onSelectPreset: (TransactionPreset) -> Unit,
+    onSaveViewClick: () -> Unit,
+    onDeleteSavedView: (String) -> Unit,
+    onReset: () -> Unit,
+    onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
+    val scrollState = rememberScrollState()
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -415,8 +642,11 @@ fun FilterBottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 24.dp)
+                .verticalScroll(scrollState)
         ) {
+            // Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -428,32 +658,131 @@ fun FilterBottomSheet(
                     fontWeight = FontWeight.Bold
                 )
                 TextButton(onClick = onReset) {
-                    Text(stringResource(R.string.action_reset), color = EmeraldPrimary)
+                    Text(stringResource(R.string.action_reset), color = EmeraldPrimary, fontWeight = FontWeight.Bold)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // 1. Sort Order
+            Text(stringResource(R.string.sort_by), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(6.dp))
+            Row(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                SortChip(stringResource(R.string.sort_newest), filterParams.sortOrder == TransactionSort.DATE_DESC) {
+                    onSortOrderChange(TransactionSort.DATE_DESC)
+                }
+                SortChip(stringResource(R.string.sort_oldest), filterParams.sortOrder == TransactionSort.DATE_ASC) {
+                    onSortOrderChange(TransactionSort.DATE_ASC)
+                }
+                SortChip(stringResource(R.string.sort_highest), filterParams.sortOrder == TransactionSort.AMOUNT_DESC) {
+                    onSortOrderChange(TransactionSort.AMOUNT_DESC)
+                }
+                SortChip(stringResource(R.string.sort_lowest), filterParams.sortOrder == TransactionSort.AMOUNT_ASC) {
+                    onSortOrderChange(TransactionSort.AMOUNT_ASC)
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(stringResource(R.string.sort_by), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                SortChip(stringResource(R.string.sort_newest), sortOrder == TransactionSort.DATE_DESC) { onSortOrderChange(TransactionSort.DATE_DESC) }
-                SortChip(stringResource(R.string.sort_oldest), sortOrder == TransactionSort.DATE_ASC) { onSortOrderChange(TransactionSort.DATE_ASC) }
-                SortChip(stringResource(R.string.sort_highest), sortOrder == TransactionSort.AMOUNT_DESC) { onSortOrderChange(TransactionSort.AMOUNT_DESC) }
-                SortChip(stringResource(R.string.sort_lowest), sortOrder == TransactionSort.AMOUNT_ASC) { onSortOrderChange(TransactionSort.AMOUNT_ASC) }
+            // 2. Transaction Type
+            Text(stringResource(R.string.filter_type), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(6.dp))
+            Row(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                val types = listOf(null to stringResource(R.string.tx_filter_all)) + TransactionType.values().map { it to it.getLocalizedName() }
+                types.forEach { (type, label) ->
+                    val isSelected = filterParams.type == type
+                    SortChip(label, isSelected) {
+                        onTypeSelected(type)
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(stringResource(R.string.quick_add_select_category), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(8.dp))
-            var showFilterCategoryPicker by remember { mutableStateOf(false) }
-            val filterCategory = categories.find { it.id == selectedCategory }
+            // 3. Status Filter
+            Text(stringResource(R.string.filter_status), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(6.dp))
+            Row(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                val statuses = listOf(
+                    TransactionStatusFilter.ALL to stringResource(R.string.filter_status_all),
+                    TransactionStatusFilter.CONFIRMED to stringResource(R.string.filter_status_confirmed),
+                    TransactionStatusFilter.NEEDS_REVIEW to stringResource(R.string.filter_status_needs_review),
+                    TransactionStatusFilter.EXCLUDED_FROM_BUDGET to stringResource(R.string.filter_status_budget_excluded),
+                    TransactionStatusFilter.RECURRING to stringResource(R.string.filter_status_recurring)
+                )
+                statuses.forEach { (status, label) ->
+                    val isSelected = filterParams.status == status
+                    SortChip(label, isSelected) {
+                        onStatusFilterChange(status)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 4. Date Range
+            Text(stringResource(R.string.filter_date_range), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(6.dp))
+            Row(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                val datePresets = listOf(
+                    DateRangePreset.ALL to stringResource(R.string.date_preset_all),
+                    DateRangePreset.THIS_MONTH to stringResource(R.string.date_preset_this_month),
+                    DateRangePreset.LAST_MONTH to stringResource(R.string.date_preset_last_month),
+                    DateRangePreset.THIS_YEAR to stringResource(R.string.date_preset_this_year)
+                )
+                datePresets.forEach { (preset, label) ->
+                    val isSelected = filterParams.dateRangePreset == preset
+                    SortChip(label, isSelected) {
+                        onDateRangePresetChange(preset, null, null)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 5. Account Filter
+            Text(stringResource(R.string.filter_account), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(6.dp))
+            Row(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                val isAllAccounts = filterParams.accountId == null
+                SortChip(stringResource(R.string.filter_all_accounts), isAllAccounts) {
+                    onAccountSelected(null)
+                }
+                accounts.forEach { acc ->
+                    val isSelected = filterParams.accountId == acc.id
+                    SortChip(acc.name, isSelected) {
+                        onAccountSelected(acc.id)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 6. Category Filter
+            Text(stringResource(R.string.filter_category), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(6.dp))
+            var showCategoryPicker by remember { mutableStateOf(false) }
+            val selectedCat = categories.find { it.id == filterParams.categoryId }
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
-                    .clickable { showFilterCategoryPicker = true },
+                    .clickable { showCategoryPicker = true },
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                 border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
@@ -462,11 +791,11 @@ fun FilterBottomSheet(
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (filterCategory != null) {
-                        CategoryIconBadge(filterCategory.icon, filterCategory.colorHex, size = 24.dp, iconSize = 14.dp)
+                    if (selectedCat != null) {
+                        CategoryIconBadge(selectedCat.icon, selectedCat.colorHex, size = 24.dp, iconSize = 14.dp)
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = filterCategory.getDisplayName(),
+                            text = selectedCat.getDisplayName(),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.weight(1f)
@@ -485,26 +814,90 @@ fun FilterBottomSheet(
                     }
                 }
             }
-            if (showFilterCategoryPicker) {
+            if (showCategoryPicker) {
                 CategoryPickerDialog(
                     categories = categories,
-                    selectedCategoryId = selectedCategory,
+                    selectedCategoryId = filterParams.categoryId,
                     onCategorySelected = { cat ->
                         onCategorySelected(cat.id)
-                        showFilterCategoryPicker = false
+                        showCategoryPicker = false
                     },
-                    onDismissRequest = { showFilterCategoryPicker = false }
+                    onDismissRequest = { showCategoryPicker = false }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 7. Amount Range Filter
+            Text(stringResource(R.string.filter_amount_range), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(6.dp))
+            var minText by remember { mutableStateOf(filterParams.minAmountMinor?.let { (it / 100.0).toString() } ?: "") }
+            var maxText by remember { mutableStateOf(filterParams.maxAmountMinor?.let { (it / 100.0).toString() } ?: "") }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedTextField(
+                    value = minText,
+                    onValueChange = {
+                        minText = it
+                        val minMinor = it.toDoubleOrNull()?.let { v -> (v * 100).toLong() }
+                        onAmountRangeChange(minMinor, filterParams.maxAmountMinor)
+                    },
+                    label = { Text(stringResource(R.string.filter_min_amount)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    singleLine = true,
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.weight(1f)
+                )
+                OutlinedTextField(
+                    value = maxText,
+                    onValueChange = {
+                        maxText = it
+                        val maxMinor = it.toDoubleOrNull()?.let { v -> (v * 100).toLong() }
+                        onAmountRangeChange(filterParams.minAmountMinor, maxMinor)
+                    },
+                    label = { Text(stringResource(R.string.filter_max_amount)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    singleLine = true,
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.weight(1f)
                 )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Button(
-                onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary),
-                modifier = Modifier.fillMaxWidth()
+            // 8. Actions
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Text(stringResource(R.string.action_apply), color = Color.Black, fontWeight = FontWeight.Bold)
+                if (filterParams.isActive) {
+                    OutlinedButton(
+                        onClick = onSaveViewClick,
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(imageVector = Icons.Default.Bookmark, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(stringResource(R.string.save_view_action))
+                    }
+                }
+
+                if (activeSavedFilterId != null) {
+                    IconButton(onClick = { onDeleteSavedView(activeSavedFilterId) }) {
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete_view_action), tint = CrimsonExpense)
+                    }
+                }
+
+                Button(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(stringResource(R.string.action_apply), color = Color.Black, fontWeight = FontWeight.Bold)
+                }
             }
         }
     }
@@ -799,8 +1192,6 @@ fun AddEditTransactionDialog(
         CategoryPickerDialog(
             categories = relevantCategories,
             selectedCategoryId = categoryId,
-            initialType = catType,
-            allowedType = catType,
             onCategorySelected = { cat ->
                 categoryId = cat.id
                 showCategoryPicker = false

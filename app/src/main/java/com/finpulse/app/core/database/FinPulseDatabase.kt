@@ -28,6 +28,9 @@ import com.finpulse.app.core.database.entity.RecurringOccurrenceEntity
 import com.finpulse.app.core.database.entity.RecurringTransactionEntity
 import com.finpulse.app.core.database.entity.TransactionEntity
 
+import com.finpulse.app.core.database.dao.SavedFilterDao
+import com.finpulse.app.core.database.entity.SavedFilterEntity
+
 @Database(
     entities = [
         AccountEntity::class,
@@ -41,9 +44,10 @@ import com.finpulse.app.core.database.entity.TransactionEntity
         DebtEntity::class,
         CategorizationRuleEntity::class,
         MerchantSignalEntity::class,
-        ImportProfileEntity::class
+        ImportProfileEntity::class,
+        SavedFilterEntity::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 abstract class FinPulseDatabase : RoomDatabase() {
@@ -59,6 +63,7 @@ abstract class FinPulseDatabase : RoomDatabase() {
     abstract fun categorizationRuleDao(): CategorizationRuleDao
     abstract fun merchantSignalDao(): MerchantSignalDao
     abstract fun importProfileDao(): ImportProfileDao
+    abstract fun savedFilterDao(): SavedFilterDao
 
     companion object {
         @Volatile

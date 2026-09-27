@@ -29,7 +29,11 @@ import com.finpulse.app.domain.repository.GoalRepository
 import com.finpulse.app.domain.repository.ImportProfileRepository
 import com.finpulse.app.domain.repository.InvestmentRepository
 import com.finpulse.app.domain.repository.MerchantSignalRepository
+import com.finpulse.app.core.database.util.TransactionQueryBuilder
+import com.finpulse.app.domain.model.SavedFilter
+import com.finpulse.app.domain.model.TransactionFilterParams
 import com.finpulse.app.domain.repository.RecurringRepository
+import com.finpulse.app.domain.repository.SavedFilterRepository
 import com.finpulse.app.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -146,6 +150,16 @@ class TransactionRepositoryImpl(private val database: FinPulseDatabase) : Transa
             isConfirmed = isConfirmed,
             matchedRuleId = matchedRuleId
         )
+    }
+
+    override fun filterTransactionsFlow(params: TransactionFilterParams): Flow<List<Transaction>> {
+        val query = TransactionQueryBuilder.buildQuery(params)
+        return txDao.queryTransactionsFlow(query).map { list -> list.map { it.toDomain() } }
+    }
+
+    override suspend fun filterTransactions(params: TransactionFilterParams): List<Transaction> {
+        val query = TransactionQueryBuilder.buildQuery(params)
+        return txDao.queryTransactions(query).map { it.toDomain() }
     }
 
     private suspend fun applyTransactionBalanceChange(tx: Transaction, isReversal: Boolean) {
@@ -733,6 +747,24 @@ class ImportProfileRepositoryImpl(private val database: FinPulseDatabase) : Impo
         )
 
         dao.insertProfiles(defaults.map { com.finpulse.app.core.database.entity.ImportProfileEntity.fromDomain(it) })
+    }
+}
+
+class SavedFilterRepositoryImpl(private val database: FinPulseDatabase) : SavedFilterRepository {
+    private val dao = database.savedFilterDao()
+
+    override fun getAllSavedFiltersFlow(): Flow<List<SavedFilter>> =
+        dao.getAllSavedFiltersFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getSavedFilterById(id: String): SavedFilter? =
+        dao.getSavedFilterById(id)?.toDomain()
+
+    override suspend fun saveFilter(savedFilter: SavedFilter) {
+        dao.insertSavedFilter(savedFilter.toEntity())
+    }
+
+    override suspend fun deleteFilter(id: String) {
+        dao.deleteSavedFilterById(id)
     }
 }
 

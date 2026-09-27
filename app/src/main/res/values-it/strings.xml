@@ -895,4 +895,40 @@
     <string name="security_widget_privacy_desc">Nascondi gli importi sensibili nei widget della schermata iniziale</string>
     <string name="security_widget_mask_lock">Maschera con blocco app</string>
     <string name="security_widget_mask_lock_desc">Nascondi automaticamente i dati finanziari nei widget quando biometrico o PIN sono attivi</string>
+
+    <!-- Search, Filters & Saved Views -->
+    <string name="preset_this_month">Questo mese</string>
+    <string name="preset_last_month">Mese scorso</string>
+    <string name="preset_uncategorized">Non categorizzato</string>
+    <string name="preset_subscriptions">Abbonamenti</string>
+    <string name="preset_large_expenses">Grandi spese</string>
+    <string name="preset_transfers">Giroconti</string>
+    <string name="filter_account">Conto</string>
+    <string name="filter_all_accounts">Tutti i conti</string>
+    <string name="filter_category">Categoria</string>
+    <string name="filter_type">Tipo di transazione</string>
+    <string name="filter_date_range">Intervallo di date</string>
+    <string name="filter_amount_range">Intervallo importo</string>
+    <string name="filter_min_amount">Importo minimo</string>
+    <string name="filter_max_amount">Importo massimo</string>
+    <string name="filter_currency">Valuta</string>
+    <string name="filter_all_currencies">Tutte le valute</string>
+    <string name="filter_status">Stato</string>
+    <string name="filter_status_all">Tutti gli stati</string>
+    <string name="filter_status_confirmed">Confermato</string>
+    <string name="filter_status_needs_review">Da verificare</string>
+    <string name="filter_status_budget_excluded">Escluso dal budget</string>
+    <string name="filter_status_recurring">Abbonamenti e ricorrenti</string>
+    <string name="date_preset_all">Tutto il periodo</string>
+    <string name="date_preset_this_month">Questo mese</string>
+    <string name="date_preset_last_month">Mese scorso</string>
+    <string name="date_preset_this_year">Quest\'anno</string>
+    <string name="date_preset_custom">Intervallo personalizzato</string>
+    <string name="saved_views_title">Viste salvate</string>
+    <string name="save_view_action">Salva vista</string>
+    <string name="save_view_dialog_title">Salva vista filtro</string>
+    <string name="save_view_name_hint">Nome vista (es. Caffè, Tasse)</string>
+    <string name="delete_view_action">Elimina vista</string>
+    <string name="filter_active_count">%1$d attivi</string>
+    <string name="filter_results_count">%1$d transazioni</string>
 </resources>

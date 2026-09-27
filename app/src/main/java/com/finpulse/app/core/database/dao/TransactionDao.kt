@@ -5,7 +5,9 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.RawQuery
 import androidx.room.Update
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.finpulse.app.core.database.entity.TransactionEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -135,4 +137,10 @@ interface TransactionDao {
         isConfirmed: Boolean = true,
         matchedRuleId: String? = null
     )
+
+    @RawQuery(observedEntities = [TransactionEntity::class])
+    fun queryTransactionsFlow(query: SupportSQLiteQuery): Flow<List<TransactionEntity>>
+
+    @RawQuery
+    suspend fun queryTransactions(query: SupportSQLiteQuery): List<TransactionEntity>
 }
