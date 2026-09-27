@@ -22,8 +22,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Notifications
@@ -504,7 +504,7 @@ fun InsightBanner(
             Spacer(modifier = Modifier.width(8.dp))
 
             Icon(
-                imageVector = Icons.Default.ArrowForward,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(16.dp)
@@ -648,7 +648,7 @@ fun ReviewQueueBannerCard(
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.tx_needs_review),
+                        text = "Daily Review Inbox",
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -668,21 +668,17 @@ fun ReviewQueueBannerCard(
                     }
                 }
                 Spacer(modifier = Modifier.height(2.dp))
-                val pendingText = androidx.compose.ui.res.pluralStringResource(
-                    com.finpulse.app.R.plurals.plural_transactions,
-                    unreviewedCount,
-                    unreviewedCount
-                )
+                val pendingText = if (unreviewedCount == 1) "1 item needs your attention" else "$unreviewedCount items need your attention"
                 Text(
-                    text = "$pendingText • ${androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.tx_needs_review)}",
+                    text = "$pendingText • Clean up data quickly",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
-                imageVector = Icons.Default.ArrowForward,
-                contentDescription = androidx.compose.ui.res.stringResource(com.finpulse.app.R.string.action_search),
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                contentDescription = "Open Review Inbox",
                 tint = AmberWarning,
                 modifier = Modifier.size(20.dp)
             )

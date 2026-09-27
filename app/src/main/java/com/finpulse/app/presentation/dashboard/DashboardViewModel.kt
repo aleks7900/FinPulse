@@ -31,6 +31,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+import kotlinx.coroutines.flow.map
+
 data class DashboardUiState(
     val summary: DashboardSummary = DashboardSummary(
         totalBalance = Money.zero(),
@@ -65,6 +67,7 @@ class DashboardViewModel(
     private val investmentRepository: InvestmentRepository,
     private val debtRepository: DebtRepository,
     private val userPreferencesDataStore: UserPreferencesDataStore,
+    private val getReviewInboxUseCase: com.finpulse.app.domain.usecase.review.GetReviewInboxUseCase? = null,
     private val getDashboardSummaryUseCase: GetDashboardSummaryUseCase = GetDashboardSummaryUseCase(),
     private val evaluateBudgetStatusUseCase: EvaluateBudgetStatusUseCase = EvaluateBudgetStatusUseCase(),
     private val insightsEngine: InsightsEngine = InsightsEngine()
@@ -83,7 +86,7 @@ class DashboardViewModel(
         debtRepository.getAllDebtsFlow(),
         userPreferencesDataStore.userPreferencesFlow,
         _selectedPeriod,
-        transactionRepository.getUnreviewedCountFlow()
+        getReviewInboxUseCase?.invoke()?.map { it.totalCount } ?: transactionRepository.getUnreviewedCountFlow()
     ) { params ->
         @Suppress("UNCHECKED_CAST")
         val accounts = params[0] as List<Account>

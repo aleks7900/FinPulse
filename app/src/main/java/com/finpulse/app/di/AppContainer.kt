@@ -53,6 +53,10 @@ interface AppContainer {
     val parseCsvStatementUseCase: com.finpulse.app.domain.usecase.csv.ParseCsvStatementUseCase
     val executeCsvImportUseCase: com.finpulse.app.domain.usecase.csv.ExecuteCsvImportUseCase
     val manageImportProfilesUseCase: com.finpulse.app.domain.usecase.csv.ManageImportProfilesUseCase
+    val getReviewInboxUseCase: com.finpulse.app.domain.usecase.review.GetReviewInboxUseCase
+    val resolveDuplicateTransactionUseCase: com.finpulse.app.domain.usecase.review.ResolveDuplicateTransactionUseCase
+    val bulkCategorizeTransactionsUseCase: com.finpulse.app.domain.usecase.review.BulkCategorizeTransactionsUseCase
+    val updateTransactionDetailsUseCase: com.finpulse.app.domain.usecase.review.UpdateTransactionDetailsUseCase
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -174,6 +178,31 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val manageImportProfilesUseCase: com.finpulse.app.domain.usecase.csv.ManageImportProfilesUseCase by lazy {
         com.finpulse.app.domain.usecase.csv.ManageImportProfilesUseCase(importProfileRepository)
+    }
+
+    override val getReviewInboxUseCase: com.finpulse.app.domain.usecase.review.GetReviewInboxUseCase by lazy {
+        com.finpulse.app.domain.usecase.review.GetReviewInboxUseCase(
+            transactionRepository = transactionRepository,
+            categoryRepository = categoryRepository,
+            accountRepository = accountRepository,
+            ruleRepository = categorizationRuleRepository,
+            signalRepository = merchantSignalRepository,
+            recurringRepository = recurringRepository,
+            getUpcomingOccurrencesUseCase = getUpcomingOccurrencesUseCase,
+            userPreferencesDataStore = userPreferencesDataStore
+        )
+    }
+
+    override val resolveDuplicateTransactionUseCase: com.finpulse.app.domain.usecase.review.ResolveDuplicateTransactionUseCase by lazy {
+        com.finpulse.app.domain.usecase.review.ResolveDuplicateTransactionUseCase(transactionRepository, userPreferencesDataStore)
+    }
+
+    override val bulkCategorizeTransactionsUseCase: com.finpulse.app.domain.usecase.review.BulkCategorizeTransactionsUseCase by lazy {
+        com.finpulse.app.domain.usecase.review.BulkCategorizeTransactionsUseCase(transactionRepository, merchantSignalRepository)
+    }
+
+    override val updateTransactionDetailsUseCase: com.finpulse.app.domain.usecase.review.UpdateTransactionDetailsUseCase by lazy {
+        com.finpulse.app.domain.usecase.review.UpdateTransactionDetailsUseCase(transactionRepository, merchantSignalRepository)
     }
 }
 

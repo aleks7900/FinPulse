@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -24,7 +25,8 @@ data class UserPreferences(
     val enableScreenshotProtection: Boolean = false,
     val lastUsedAccountId: String? = null,
     val lastUsedCategoryId: String? = null,
-    val lastUsedTransactionType: String = "EXPENSE"
+    val lastUsedTransactionType: String = "EXPENSE",
+    val dismissedInboxItemIds: Set<String> = emptySet()
 )
 
 class UserPreferencesDataStore(private val context: Context) {
@@ -42,6 +44,7 @@ class UserPreferencesDataStore(private val context: Context) {
         val LAST_USED_ACCOUNT_ID = stringPreferencesKey("last_used_account_id")
         val LAST_USED_CATEGORY_ID = stringPreferencesKey("last_used_category_id")
         val LAST_USED_TX_TYPE = stringPreferencesKey("last_used_tx_type")
+        val DISMISSED_INBOX_ITEMS = stringSetPreferencesKey("dismissed_inbox_items")
     }
 
     val userPreferencesFlow: Flow<UserPreferences> = context.dataStore.data.map { preferences ->
@@ -63,7 +66,8 @@ class UserPreferencesDataStore(private val context: Context) {
             enableScreenshotProtection = preferences[PreferencesKeys.SCREENSHOT_PROTECTION] ?: false,
             lastUsedAccountId = preferences[PreferencesKeys.LAST_USED_ACCOUNT_ID],
             lastUsedCategoryId = preferences[PreferencesKeys.LAST_USED_CATEGORY_ID],
-            lastUsedTransactionType = preferences[PreferencesKeys.LAST_USED_TX_TYPE] ?: "EXPENSE"
+            lastUsedTransactionType = preferences[PreferencesKeys.LAST_USED_TX_TYPE] ?: "EXPENSE",
+            dismissedInboxItemIds = preferences[PreferencesKeys.DISMISSED_INBOX_ITEMS] ?: emptySet()
         )
     }
 
@@ -121,6 +125,26 @@ class UserPreferencesDataStore(private val context: Context) {
             preferences[PreferencesKeys.LAST_USED_ACCOUNT_ID] = accountId
             preferences[PreferencesKeys.LAST_USED_CATEGORY_ID] = categoryId
             preferences[PreferencesKeys.LAST_USED_TX_TYPE] = type
+        }
+    }
+
+    suspend fun dismissInboxItem(id: String) {
+        context.dataStore.edit { preferences ->
+            val current = preferences[PreferencesKeys.DISMISSED_INBOX_ITEMS] ?: emptySet()
+            preferences[PreferencesKeys.DISMISSED_INBOX_ITEMS] = current + id
+        }
+    }
+
+    suspend fun dismissInboxItems(ids: Collection<String>) {
+        context.dataStore.edit { preferences ->
+            val current = preferences[PreferencesKeys.DISMISSED_INBOX_ITEMS] ?: emptySet()
+            preferences[PreferencesKeys.DISMISSED_INBOX_ITEMS] = current + ids
+        }
+    }
+
+    suspend fun clearDismissedInboxItems() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(PreferencesKeys.DISMISSED_INBOX_ITEMS)
         }
     }
 

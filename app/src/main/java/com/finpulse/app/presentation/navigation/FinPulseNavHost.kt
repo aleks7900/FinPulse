@@ -179,7 +179,8 @@ fun FinPulseApp(
                         goalRepository = container.goalRepository,
                         investmentRepository = container.investmentRepository,
                         debtRepository = container.debtRepository,
-                        userPreferencesDataStore = container.userPreferencesDataStore
+                        userPreferencesDataStore = container.userPreferencesDataStore,
+                        getReviewInboxUseCase = container.getReviewInboxUseCase
                     )
                 }
                 val uiState by viewModel.uiState.collectAsState()
@@ -197,7 +198,7 @@ fun FinPulseApp(
                     onNavigateToBudgets = { navController.navigate(Screen.Budgets.route) },
                     onNavigateToSearch = { navController.navigate(Screen.Search.route) },
                     onNavigateToInsights = { navController.navigate(Screen.Insights.route) },
-                    onNavigateToReviewQueue = { navController.navigate(Screen.CategorizationRules.route) }
+                    onNavigateToReviewQueue = { navController.navigate(Screen.ReviewInbox.route) }
                 )
             }
 
@@ -226,7 +227,7 @@ fun FinPulseApp(
                     onDuplicateTransaction = viewModel::duplicateTransaction,
                     onDeleteTransaction = viewModel::deleteTransaction,
                     onToggleFilterOnlyUnreviewed = viewModel::toggleFilterOnlyUnreviewed,
-                    onNavigateToReviewQueue = { navController.navigate(Screen.CategorizationRules.route) },
+                    onNavigateToReviewQueue = { navController.navigate(Screen.ReviewInbox.route) },
                     onNavigateToCsvImport = { navController.navigate(Screen.CsvImport.route) }
                 )
             }
@@ -519,6 +520,53 @@ fun FinPulseApp(
                             popUpTo(Screen.Dashboard.route)
                         }
                     }
+                )
+            }
+
+            // Sub-screen: Daily Transaction Review Inbox
+            composable(Screen.ReviewInbox.route) {
+                val viewModel: com.finpulse.app.presentation.review.ReviewInboxViewModel = viewModel {
+                    com.finpulse.app.presentation.review.ReviewInboxViewModel(
+                        getReviewInboxUseCase = container.getReviewInboxUseCase,
+                        recordCategoryCorrectionUseCase = container.recordCategoryCorrectionUseCase,
+                        resolveDuplicateTransactionUseCase = container.resolveDuplicateTransactionUseCase,
+                        bulkCategorizeTransactionsUseCase = container.bulkCategorizeTransactionsUseCase,
+                        updateTransactionDetailsUseCase = container.updateTransactionDetailsUseCase,
+                        markOccurrencePaidUseCase = container.markOccurrencePaidUseCase,
+                        categoryRepository = container.categoryRepository,
+                        accountRepository = container.accountRepository,
+                        userPreferencesDataStore = container.userPreferencesDataStore
+                    )
+                }
+                val uiState by viewModel.uiState.collectAsState()
+
+                com.finpulse.app.presentation.review.ReviewInboxScreen(
+                    uiState = uiState,
+                    onNavigateBack = { navController.popBackStack() },
+                    onTabSelected = viewModel::onTabSelected,
+                    onToggleSelectMode = viewModel::onToggleSelectMode,
+                    onToggleItemSelection = viewModel::onToggleItemSelection,
+                    onSelectAll = viewModel::onSelectAll,
+                    onConfirmItem = viewModel::onConfirmItem,
+                    onOpenCategoryPicker = viewModel::onOpenCategoryPicker,
+                    onCategorizeItem = viewModel::onCategorizeItem,
+                    onOpenAccountPicker = viewModel::onOpenAccountPicker,
+                    onChangeAccount = viewModel::onChangeAccount,
+                    onOpenEditMerchant = viewModel::onOpenEditMerchant,
+                    onSaveMerchant = viewModel::onSaveMerchant,
+                    onOpenResolveDuplicate = viewModel::onOpenResolveDuplicate,
+                    onResolveDuplicateKeepPrimary = viewModel::onResolveDuplicateKeepPrimary,
+                    onResolveDuplicateKeepCandidate = viewModel::onResolveDuplicateKeepCandidate,
+                    onResolveDuplicateDismiss = viewModel::onResolveDuplicateDismiss,
+                    onOpenPayBill = viewModel::onOpenPayBill,
+                    onConfirmPayBill = viewModel::onConfirmPayBill,
+                    onDismissItem = viewModel::onDismissItem,
+                    onDismissAllWarnings = viewModel::onDismissAllWarnings,
+                    onApplySafeBulk = viewModel::onApplySafeBulk,
+                    onOpenBulkCategoryPicker = viewModel::onOpenBulkCategoryPicker,
+                    onConfirmBulkCategorize = viewModel::onConfirmBulkCategorize,
+                    onDismissDialogs = viewModel::onDismissDialogs,
+                    onClearMessage = viewModel::onClearMessage
                 )
             }
         }

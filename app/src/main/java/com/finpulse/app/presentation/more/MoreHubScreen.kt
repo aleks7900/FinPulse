@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.AccountBalance
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CloudUpload
@@ -246,6 +247,13 @@ fun MoreHubScreen(
                         icon = Icons.Default.Lightbulb,
                         tint = AmberWarning,
                         onClick = { onNavigate(Screen.Insights) }
+                    )
+                    HubItem(
+                        title = "Daily Review Inbox",
+                        subtitle = "Clean up uncategorized, duplicates, bills & alerts",
+                        icon = Icons.Default.AutoAwesome,
+                        tint = AmberWarning,
+                        onClick = { onNavigate(Screen.ReviewInbox) }
                     )
                     HubItem(
                         title = stringResource(R.string.categories_title),

@@ -21,5 +21,6 @@ sealed class Screen(val route: String) {
     data object CategorizationRules : Screen("categorization_rules")
     data object CsvImport : Screen("csv_import")
     data object Onboarding : Screen("onboarding")
+    data object ReviewInbox : Screen("review_inbox")
 }
 
