@@ -548,7 +548,7 @@ class CloudSyncEngine(
             } else if (!hasRemoteData && localTxCount > 0) {
                 // Initial migration of existing local user
                 migrateLocalDataToCloud(newUid)
-            } else {
+            } else if (hasRemoteData && localTxCount > 0) {
                 // Normal sync or merge
                 performFullSync()
             }

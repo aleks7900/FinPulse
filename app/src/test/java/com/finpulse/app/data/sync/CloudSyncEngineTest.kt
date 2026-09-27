@@ -17,11 +17,8 @@ import com.finpulse.app.data.cloud.CloudEntityRecord
 import com.finpulse.app.data.cloud.InMemoryCloudStorageDataSource
 import com.finpulse.app.data.mapper.toDomain
 import com.finpulse.app.domain.model.Account
-import com.finpulse.app.domain.model.AccountType
 import com.finpulse.app.domain.model.Category
-import com.finpulse.app.domain.model.CategoryType
 import com.finpulse.app.domain.model.Transaction
-import com.finpulse.app.domain.model.TransactionType
 import com.finpulse.app.domain.model.sync.CloudUser
 import com.finpulse.app.domain.model.sync.SyncStatus
 import com.finpulse.app.domain.repository.AuthRepository
@@ -104,10 +101,16 @@ class CloudSyncEngineTest {
 
     @Test
     fun `local to cloud - create transaction queues as pending and uploads cleanly`() = testScope.runTest {
-        val tx = createSampleTransactionEntity(id = "tx-1", amount = 2500L, updatedAt = 1000L)
+        val tx = createSampleTransactionEntity(id = "tx-1", amount = 2500L, createdAt = 1000L)
         fakeTransactionDao.insertTransaction(tx)
         fakeSyncDao.upsertSyncRecord(
-            SyncRecordEntity("TRANSACTION", tx.id, "PENDING_UPSERT", tx.updatedAt, null)
+            SyncRecordEntity(
+                entityType = "TRANSACTION",
+                entityId = tx.id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = 1000L,
+                cloudUpdatedAt = 0L
+            )
         )
 
         val result = syncEngine.uploadPendingChanges()
@@ -128,15 +131,19 @@ class CloudSyncEngineTest {
     @Test
     fun `local to cloud - edit transaction uploads updated payload and updates cloud`() = testScope.runTest {
         // Initial sync
-        val initialTx = createSampleTransactionEntity(id = "tx-edit", amount = 1000L, updatedAt = 1000L)
+        val initialTx = createSampleTransactionEntity(id = "tx-edit", amount = 1000L, createdAt = 1000L)
         fakeTransactionDao.insertTransaction(initialTx)
-        fakeSyncDao.upsertSyncRecord(SyncRecordEntity("TRANSACTION", initialTx.id, "PENDING_UPSERT", 1000L, null))
+        fakeSyncDao.upsertSyncRecord(
+            SyncRecordEntity("TRANSACTION", initialTx.id, "PENDING_UPSERT", 1000L, 0L)
+        )
         syncEngine.uploadPendingChanges()
 
         // Edit locally
-        val updatedTx = createSampleTransactionEntity(id = "tx-edit", amount = 1500L, updatedAt = 2000L)
+        val updatedTx = createSampleTransactionEntity(id = "tx-edit", amount = 1500L, createdAt = 2000L)
         fakeTransactionDao.insertTransaction(updatedTx)
-        fakeSyncDao.upsertSyncRecord(SyncRecordEntity("TRANSACTION", updatedTx.id, "PENDING_UPSERT", 2000L, 1000L))
+        fakeSyncDao.upsertSyncRecord(
+            SyncRecordEntity("TRANSACTION", updatedTx.id, "PENDING_UPSERT", 2000L, 1000L)
+        )
 
         val result = syncEngine.uploadPendingChanges()
         assertTrue(result.isSuccess)
@@ -149,7 +156,17 @@ class CloudSyncEngineTest {
     @Test
     fun `local to cloud - delete transaction uploads tombstone preventing resurrection`() = testScope.runTest {
         // Create tombstone locally
-        fakeSyncDao.markAsDeleted("TRANSACTION", "tx-del", 3000L)
+        fakeSyncDao.upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "TRANSACTION",
+                entityId = "tx-del",
+                syncStatus = "PENDING_DELETE",
+                localUpdatedAt = 3000L,
+                cloudUpdatedAt = 0L,
+                isDeleted = true,
+                deletedAt = 3000L
+            )
+        )
 
         val result = syncEngine.uploadPendingChanges()
         assertTrue(result.isSuccess)
@@ -165,7 +182,7 @@ class CloudSyncEngineTest {
 
     @Test
     fun `cloud to local - download remote transaction inserts into local database`() = testScope.runTest {
-        val remoteTx = createSampleTransaction(id = "tx-remote", amount = 9900L, updatedAt = 5000L)
+        val remoteTx = createSampleTransaction(id = "tx-remote", amount = 9900L, createdAt = 5000L)
         val cloudRecord = CloudEntityRecord(
             id = remoteTx.id,
             collection = "transactions",
@@ -181,15 +198,17 @@ class CloudSyncEngineTest {
 
         val localTx = fakeTransactionDao.getTransactionById("tx-remote")
         assertNotNull(localTx)
-        assertEquals(9900L, localTx?.amount)
+        assertEquals(9900L, localTx?.amountMinor)
         assertEquals("SYNCED", fakeSyncDao.getSyncRecord("TRANSACTION", "tx-remote")?.syncStatus)
     }
 
     @Test
     fun `cloud to local - remote tombstone deletes local record`() = testScope.runTest {
-        val localTx = createSampleTransactionEntity(id = "tx-peer-del", amount = 5000L, updatedAt = 1000L)
+        val localTx = createSampleTransactionEntity(id = "tx-peer-del", amount = 5000L, createdAt = 1000L)
         fakeTransactionDao.insertTransaction(localTx)
-        fakeSyncDao.upsertSyncRecord(SyncRecordEntity("TRANSACTION", localTx.id, "SYNCED", 1000L, 1000L))
+        fakeSyncDao.upsertSyncRecord(
+            SyncRecordEntity("TRANSACTION", localTx.id, "SYNCED", 1000L, 1000L)
+        )
 
         // Remote peer uploaded a tombstone with newer timestamp
         inMemoryCloud.recordTombstone(userA.uid, "transactions", "tx-peer-del", 4000L)
@@ -204,11 +223,13 @@ class CloudSyncEngineTest {
     @Test
     fun `conflict resolution - Last-Write-Wins selects newest modification`() = testScope.runTest {
         // Scenario 1: Remote is newer than local -> Remote overwrites local
-        val localTx = createSampleTransactionEntity(id = "tx-conf", amount = 1000L, updatedAt = 1000L)
+        val localTx = createSampleTransactionEntity(id = "tx-conf", amount = 1000L, createdAt = 1000L)
         fakeTransactionDao.insertTransaction(localTx)
-        fakeSyncDao.upsertSyncRecord(SyncRecordEntity("TRANSACTION", "tx-conf", "SYNCED", 1000L, 1000L))
+        fakeSyncDao.upsertSyncRecord(
+            SyncRecordEntity("TRANSACTION", "tx-conf", "SYNCED", 1000L, 1000L)
+        )
 
-        val remoteNewerTx = createSampleTransaction(id = "tx-conf", amount = 2000L, updatedAt = 3000L)
+        val remoteNewerTx = createSampleTransaction(id = "tx-conf", amount = 2000L, createdAt = 3000L)
         inMemoryCloud.uploadRecords(
             userA.uid,
             "transactions",
@@ -219,12 +240,14 @@ class CloudSyncEngineTest {
         assertTrue(downloadResult.isSuccess)
 
         val resolvedTx = fakeTransactionDao.getTransactionById("tx-conf")
-        assertEquals(2000L, resolvedTx?.amount) // Remote won
+        assertEquals(2000L, resolvedTx?.amountMinor) // Remote won
 
         // Scenario 2: Local is newer than remote -> Local overwrites remote
-        val localNewerTx = createSampleTransactionEntity(id = "tx-conf", amount = 5000L, updatedAt = 9000L)
+        val localNewerTx = createSampleTransactionEntity(id = "tx-conf", amount = 5000L, createdAt = 9000L)
         fakeTransactionDao.insertTransaction(localNewerTx)
-        fakeSyncDao.upsertSyncRecord(SyncRecordEntity("TRANSACTION", "tx-conf", "PENDING_UPSERT", 9000L, 3000L))
+        fakeSyncDao.upsertSyncRecord(
+            SyncRecordEntity("TRANSACTION", "tx-conf", "PENDING_UPSERT", 9000L, 3000L)
+        )
 
         val uploadResult = syncEngine.uploadPendingChanges()
         assertTrue(uploadResult.isSuccess)
@@ -237,14 +260,16 @@ class CloudSyncEngineTest {
     @Test
     fun `account isolation - user A data never leaks to user B`() = testScope.runTest {
         // User A uploads records
-        val txA = createSampleTransactionEntity(id = "tx-user-a", amount = 7700L, updatedAt = 1000L)
+        val txA = createSampleTransactionEntity(id = "tx-user-a", amount = 7700L, createdAt = 1000L)
         fakeTransactionDao.insertTransaction(txA)
-        fakeSyncDao.upsertSyncRecord(SyncRecordEntity("TRANSACTION", txA.id, "PENDING_UPSERT", 1000L, null))
+        fakeSyncDao.upsertSyncRecord(
+            SyncRecordEntity("TRANSACTION", txA.id, "PENDING_UPSERT", 1000L, 0L)
+        )
         syncEngine.uploadPendingChanges()
 
         // User A logs out and User B logs in
-        syncEngine.clearLocalDataAndSwitchAccount(newUid = userB.uid)
         fakeAuthRepo.setUser(userB)
+        syncEngine.handleAccountSwitch(previousUid = userA.uid, newUid = userB.uid)
 
         // Local tables should be purged of User A data
         assertNull(fakeTransactionDao.getTransactionById("tx-user-a"))
@@ -263,9 +288,28 @@ class CloudSyncEngineTest {
     @Test
     fun `initial sign-in migration - existing local data uploaded safely to cloud without loss`() = testScope.runTest {
         // User created accounts and categories locally before ever signing into Google
-        val localAccount = AccountEntity("acc-local", "Cash Wallet", "CASH", 10000L, "USD", 10000L, "USD", false, 1, 0, null, 1000L, 1000L)
-        val localCategory = CategoryEntity("cat-local", "Groceries", "EXPENSE", null, "cart", 0xFF00FF, true, 1)
-        val localTx = createSampleTransactionEntity(id = "tx-pre-auth", amount = 4200L, updatedAt = 1000L)
+        val localAccount = AccountEntity(
+            id = "acc-local",
+            name = "Cash Wallet",
+            type = "CASH",
+            balanceMinor = 10000L,
+            availableBalanceMinor = 10000L,
+            currencyCode = "USD",
+            isArchived = false,
+            createdAt = 1000L,
+            updatedAt = 1000L
+        )
+        val localCategory = CategoryEntity(
+            id = "cat-local",
+            name = "Groceries",
+            type = "EXPENSE",
+            parentCategoryId = null,
+            icon = "cart",
+            colorHex = 0xFF00FFL,
+            isDefault = true,
+            sortOrder = 1
+        )
+        val localTx = createSampleTransactionEntity(id = "tx-pre-auth", amount = 4200L, createdAt = 1000L)
 
         fakeAccountDao.insertAccount(localAccount)
         fakeCategoryDao.insertCategory(localCategory)
@@ -289,9 +333,11 @@ class CloudSyncEngineTest {
     fun `offline to online sync - offline operations queue and flush when connectivity restored`() = testScope.runTest {
         inMemoryCloud.shouldSimulateNetworkError = true
 
-        val tx = createSampleTransactionEntity(id = "tx-offline", amount = 1200L, updatedAt = 1000L)
+        val tx = createSampleTransactionEntity(id = "tx-offline", amount = 1200L, createdAt = 1000L)
         fakeTransactionDao.insertTransaction(tx)
-        fakeSyncDao.upsertSyncRecord(SyncRecordEntity("TRANSACTION", tx.id, "PENDING_UPSERT", 1000L, null))
+        fakeSyncDao.upsertSyncRecord(
+            SyncRecordEntity("TRANSACTION", tx.id, "PENDING_UPSERT", 1000L, 0L)
+        )
 
         // Sync while offline should fail gracefully without crashing or losing data
         val offlineResult = syncEngine.uploadPendingChanges()
@@ -313,9 +359,11 @@ class CloudSyncEngineTest {
 
     @Test
     fun `idempotency - repeated sync invocations do not duplicate data`() = testScope.runTest {
-        val tx = createSampleTransactionEntity(id = "tx-idempotent", amount = 3000L, updatedAt = 1000L)
+        val tx = createSampleTransactionEntity(id = "tx-idempotent", amount = 3000L, createdAt = 1000L)
         fakeTransactionDao.insertTransaction(tx)
-        fakeSyncDao.upsertSyncRecord(SyncRecordEntity("TRANSACTION", tx.id, "PENDING_UPSERT", 1000L, null))
+        fakeSyncDao.upsertSyncRecord(
+            SyncRecordEntity("TRANSACTION", tx.id, "PENDING_UPSERT", 1000L, 0L)
+        )
 
         // First sync
         syncEngine.performFullSync()
@@ -333,30 +381,29 @@ class CloudSyncEngineTest {
     }
 
     // Helper builders
-    private fun createSampleTransactionEntity(id: String, amount: Long, updatedAt: Long) = TransactionEntity(
+    private fun createSampleTransactionEntity(id: String, amount: Long, createdAt: Long) = TransactionEntity(
         id = id,
+        amountMinor = amount,
+        currencyCode = "USD",
+        type = "EXPENSE",
         sourceAccountId = "acc-1",
         destinationAccountId = null,
         categoryId = "cat-1",
-        amount = amount,
-        currency = "USD",
-        type = "EXPENSE",
-        timestamp = 1718000000000L,
         merchant = "Market",
+        timestamp = 1718000000000L,
         description = "Groceries",
-        note = null,
-        receiptUri = null,
-        isRecurring = false,
+        tags = "",
+        notes = null,
         recurringRuleId = null,
-        transferFee = null,
-        tags = emptyList(),
         isExcludedFromBudget = false,
-        createdAt = updatedAt,
-        updatedAt = updatedAt
+        isCategoryConfirmed = true,
+        categorizationConfidence = 1.0f,
+        matchedRuleId = null,
+        createdAt = createdAt
     )
 
-    private fun createSampleTransaction(id: String, amount: Long, updatedAt: Long) =
-        createSampleTransactionEntity(id, amount, updatedAt).toDomain()
+    private fun createSampleTransaction(id: String, amount: Long, createdAt: Long) =
+        createSampleTransactionEntity(id, amount, createdAt).toDomain()
 }
 
 // In-Memory Test DAOs & Fakes
@@ -381,10 +428,18 @@ private class FakeTestSyncRecordDao : SyncRecordDao {
         records.values.filter { it.syncStatus == "PENDING_UPSERT" && !it.isDeleted }
 
     override suspend fun getPendingDeletes(): List<SyncRecordEntity> =
-        records.values.filter { it.isDeleted || it.syncStatus == "PENDING_DELETE" }
+        records.values.filter { it.isDeleted && (it.syncStatus == "PENDING_DELETE" || it.syncStatus == "FAILED") }
 
-    override suspend fun getTombstones(): List<SyncRecordEntity> =
-        records.values.filter { it.isDeleted }
+    override fun getPendingCountFlow(): Flow<Int> = flow
+
+    override suspend fun getPendingCount(): Int =
+        records.values.count { it.syncStatus.startsWith("PENDING") || it.syncStatus == "FAILED" }
+
+    override suspend fun getSyncRecordsForType(entityType: String): List<SyncRecordEntity> =
+        records.values.filter { it.entityType == entityType }
+
+    override suspend fun getAllSyncRecords(): List<SyncRecordEntity> =
+        records.values.toList()
 
     override suspend fun markAsSynced(entityType: String, entityId: String, cloudUpdatedAt: Long) {
         val existing = records[entityType to entityId]
@@ -398,42 +453,26 @@ private class FakeTestSyncRecordDao : SyncRecordDao {
         }
     }
 
-    override suspend fun markAsDeleted(entityType: String, entityId: String, deletedAt: Long) {
-        val existing = records[entityType to entityId]
-        records[entityType to entityId] = (existing ?: SyncRecordEntity(
-            entityType = entityType,
-            entityId = entityId,
-            syncStatus = "PENDING_DELETE",
-            localUpdatedAt = deletedAt
-        )).copy(
-            syncStatus = "PENDING_DELETE",
-            isDeleted = true,
-            deletedAt = deletedAt
-        )
-        updatePendingCount()
-    }
-
-    override suspend fun markAsError(entityType: String, entityId: String, error: String) {
+    override suspend fun markAsFailed(entityType: String, entityId: String, error: String) {
         val existing = records[entityType to entityId]
         if (existing != null) {
             records[entityType to entityId] = existing.copy(
-                syncStatus = "SYNC_ERROR",
+                syncStatus = "FAILED",
                 errorMessage = error
             )
+            updatePendingCount()
         }
     }
-
-    override fun getPendingCountFlow(): Flow<Int> = flow
 
     override suspend fun deleteSyncRecord(entityType: String, entityId: String) {
         records.remove(entityType to entityId)
         updatePendingCount()
     }
 
-    override suspend fun purgeObsoleteTombstones(cutoffTimestamp: Long): Int {
-        val toRemove = records.filter { it.value.isDeleted && (it.value.deletedAt ?: 0) < cutoffTimestamp }
+    override suspend fun purgeObsoleteTombstones(olderThanTimestamp: Long) {
+        val toRemove = records.filter { it.value.isDeleted && (it.value.deletedAt ?: 0) < olderThanTimestamp }
         toRemove.forEach { records.remove(it.key) }
-        return toRemove.size
+        updatePendingCount()
     }
 
     override suspend fun deleteAllSyncRecords() {
@@ -442,7 +481,7 @@ private class FakeTestSyncRecordDao : SyncRecordDao {
     }
 
     private fun updatePendingCount() {
-        flow.value = records.values.count { it.syncStatus.startsWith("PENDING") }
+        flow.value = records.values.count { it.syncStatus.startsWith("PENDING") || it.syncStatus == "FAILED" }
     }
 }
 
@@ -474,32 +513,53 @@ private class FakeTestTransactionDao : TransactionDao {
     }
 
     override suspend fun getTransactionById(id: String): TransactionEntity? = storage[id]
+    override fun getTransactionByIdFlow(id: String): Flow<TransactionEntity?> = flowOf(storage[id])
     override suspend fun getAllTransactions(): List<TransactionEntity> = storage.values.toList()
 
     override fun getAllTransactionsFlow(): Flow<List<TransactionEntity>> = flowOf(storage.values.toList())
     override fun getRecentTransactionsFlow(limit: Int): Flow<List<TransactionEntity>> = flowOf(storage.values.take(limit))
-    override fun getTransactionsByAccountFlow(accountId: String): Flow<List<TransactionEntity>> = flowOf(storage.values.filter { it.sourceAccountId == accountId })
+    override fun getTransactionsByAccountFlow(accountId: String): Flow<List<TransactionEntity>> = flowOf(storage.values.filter { it.sourceAccountId == accountId || it.destinationAccountId == accountId })
     override fun getTransactionsByCategoryFlow(categoryId: String): Flow<List<TransactionEntity>> = flowOf(storage.values.filter { it.categoryId == categoryId })
     override fun getTransactionsByDateRangeFlow(startDate: Long, endDate: Long): Flow<List<TransactionEntity>> =
         flowOf(storage.values.filter { it.timestamp in startDate..endDate })
-    override fun getTransactionsByTypeFlow(type: String): Flow<List<TransactionEntity>> =
-        flowOf(storage.values.filter { it.type == type })
-    override fun getTransactionsByAccountAndDateRangeFlow(accountId: String, startDate: Long, endDate: Long): Flow<List<TransactionEntity>> =
-        flowOf(storage.values.filter { it.sourceAccountId == accountId && it.timestamp in startDate..endDate })
-    override fun getTransactionsByCategoryAndDateRangeFlow(categoryId: String, startDate: Long, endDate: Long): Flow<List<TransactionEntity>> =
-        flowOf(storage.values.filter { it.categoryId == categoryId && it.timestamp in startDate..endDate })
-    override fun searchTransactions(query: String): Flow<List<TransactionEntity>> =
-        flowOf(storage.values.filter { it.description.contains(query, true) || it.merchant.contains(query, true) })
-    override fun getTransactionsWithPendingReceipts(): Flow<List<TransactionEntity>> = flowOf(emptyList())
-    override suspend fun getTransactionCount(): Int = storage.size
-    override suspend fun getDistinctMerchants(): List<String> = storage.values.map { it.merchant }.distinct()
     override suspend fun getTransactionsByDateRange(startDate: Long, endDate: Long): List<TransactionEntity> =
         storage.values.filter { it.timestamp in startDate..endDate }
-    override suspend fun getTransactionsByAccount(accountId: String): List<TransactionEntity> =
-        storage.values.filter { it.sourceAccountId == accountId || it.destinationAccountId == accountId }
-    override suspend fun getTransactionsByCategory(categoryId: String): List<TransactionEntity> =
-        storage.values.filter { it.categoryId == categoryId }
-    override fun getAllTransactionsRaw(query: androidx.sqlite.db.SupportSQLiteQuery): List<TransactionEntity> = storage.values.toList()
+
+    override fun searchTransactionsFlow(query: String): Flow<List<TransactionEntity>> =
+        flowOf(storage.values.filter { it.description.contains(query, true) || (it.merchant?.contains(query, true) == true) })
+
+    override fun getSumByTypeAndDateRangeFlow(type: String, startDate: Long, endDate: Long): Flow<Long> =
+        flowOf(storage.values.filter { it.type == type && it.timestamp in startDate..endDate && !it.isExcludedFromBudget }.sumOf { it.amountMinor })
+
+    override fun getExpenseSumByCategoryAndDateRangeFlow(categoryId: String, startDate: Long, endDate: Long): Flow<Long> =
+        flowOf(storage.values.filter { it.categoryId == categoryId && it.type == "EXPENSE" && it.timestamp in startDate..endDate && !it.isExcludedFromBudget }.sumOf { it.amountMinor })
+
+    override fun getFrequentCategoryIdsFlow(type: String, limit: Int): Flow<List<String>> =
+        flowOf(storage.values.filter { it.type == type }.groupBy { it.categoryId }.map { it.key }.take(limit))
+
+    override fun getFrequentMerchantsFlow(limit: Int): Flow<List<String>> =
+        flowOf(storage.values.mapNotNull { it.merchant }.distinct().take(limit))
+
+    override suspend fun getSuggestedCategoryForMerchant(merchant: String): String? =
+        storage.values.firstOrNull { it.merchant == merchant }?.categoryId
+
+    override fun getUnreviewedTransactionsFlow(): Flow<List<TransactionEntity>> = flowOf(emptyList())
+    override suspend fun getUnreviewedTransactions(): List<TransactionEntity> = emptyList()
+    override fun getUnreviewedCountFlow(): Flow<Int> = flowOf(0)
+
+    override suspend fun updateTransactionCategory(id: String, categoryId: String, isConfirmed: Boolean, matchedRuleId: String?, confidence: Float) {
+        val existing = storage[id]
+        if (existing != null) {
+            storage[id] = existing.copy(categoryId = categoryId, isCategoryConfirmed = isConfirmed, matchedRuleId = matchedRuleId, categorizationConfidence = confidence)
+        }
+    }
+
+    override suspend fun bulkUpdateCategory(ids: List<String>, categoryId: String, isConfirmed: Boolean, matchedRuleId: String?) {
+        ids.forEach { id -> updateTransactionCategory(id, categoryId, isConfirmed, matchedRuleId, 1.0f) }
+    }
+
+    override fun queryTransactionsFlow(query: androidx.sqlite.db.SupportSQLiteQuery): Flow<List<TransactionEntity>> = flowOf(storage.values.toList())
+    override suspend fun queryTransactions(query: androidx.sqlite.db.SupportSQLiteQuery): List<TransactionEntity> = storage.values.toList()
 }
 
 private class FakeTestAccountDao : AccountDao {
@@ -509,20 +569,25 @@ private class FakeTestAccountDao : AccountDao {
     override suspend fun insertAccounts(accounts: List<AccountEntity>) { accounts.forEach { storage[it.id] = it } }
     override suspend fun updateAccount(account: AccountEntity) { storage[account.id] = account }
     override suspend fun deleteAccount(account: AccountEntity) { storage.remove(account.id) }
+    override suspend fun deleteAccountById(id: String) { storage.remove(id) }
     override suspend fun deleteAllAccounts() { storage.clear() }
     override suspend fun getAccountById(id: String): AccountEntity? = storage[id]
-    override suspend fun getAllAccounts(): List<AccountEntity> = storage.values.toList()
+    override fun getAccountByIdFlow(id: String): Flow<AccountEntity?> = flowOf(storage[id])
     override fun getAllAccountsFlow(): Flow<List<AccountEntity>> = flowOf(storage.values.toList())
     override fun getActiveAccountsFlow(): Flow<List<AccountEntity>> = flowOf(storage.values.filter { !it.isArchived })
-    override fun getArchivedAccountsFlow(): Flow<List<AccountEntity>> = flowOf(storage.values.filter { it.isArchived })
-    override fun getAccountByIdFlow(id: String): Flow<AccountEntity?> = flowOf(storage[id])
-    override suspend fun updateAccountBalance(accountId: String, newBalance: Long, newAvailableBalance: Long, updatedAt: Long) {
+    override suspend fun updateBalances(accountId: String, balanceMinor: Long, availableBalanceMinor: Long, updatedAt: Long) {
         val existing = storage[accountId]
         if (existing != null) {
-            storage[accountId] = existing.copy(balanceMinor = newBalance, availableBalanceMinor = newAvailableBalance, updatedAt = updatedAt)
+            storage[accountId] = existing.copy(balanceMinor = balanceMinor, availableBalanceMinor = availableBalanceMinor, updatedAt = updatedAt)
         }
     }
-    override suspend fun getAccountCount(): Int = storage.size
+    override suspend fun setArchived(accountId: String, isArchived: Boolean, updatedAt: Long) {
+        val existing = storage[accountId]
+        if (existing != null) {
+            storage[accountId] = existing.copy(isArchived = isArchived, updatedAt = updatedAt)
+        }
+    }
+    override suspend fun getAllAccounts(): List<AccountEntity> = storage.values.toList()
 }
 
 private class FakeTestCategoryDao : CategoryDao {
@@ -536,12 +601,12 @@ private class FakeTestCategoryDao : CategoryDao {
     override suspend fun deleteCategoryById(id: String) { storage.remove(id) }
     override suspend fun deleteAllCategories() { storage.clear() }
     override suspend fun getCategoryById(id: String): CategoryEntity? = storage[id]
-    override suspend fun getAllCategories(): List<CategoryEntity> = storage.values.toList()
+    override fun getCategoryByIdFlow(id: String): Flow<CategoryEntity?> = flowOf(storage[id])
     override fun getAllCategoriesFlow(): Flow<List<CategoryEntity>> = flowOf(storage.values.toList())
     override fun getCategoriesByTypeFlow(type: String): Flow<List<CategoryEntity>> = flowOf(storage.values.filter { it.type == type })
-    override fun getCategoryByIdFlow(id: String): Flow<CategoryEntity?> = flowOf(storage[id])
     override suspend fun getAllCategoryIds(): List<String> = storage.keys.toList()
     override suspend fun getCategoryCount(): Int = storage.size
+    override suspend fun getAllCategories(): List<CategoryEntity> = storage.values.toList()
 }
 
 private class FakeTestAuthRepository(currentUser: CloudUser?) : AuthRepository {
