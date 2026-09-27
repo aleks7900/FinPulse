@@ -851,4 +851,48 @@
     <string name="calendar_days_projected">%1$d days projected</string>
     <string name="calendar_deficit_risk">Deficit Risk</string>
     <string name="calendar_no_events">No obligations found for the selected filter.</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_add_expense_short">Add Expense</string>
+    <string name="shortcut_add_expense_long">Add New Expense</string>
+    <string name="shortcut_add_income_short">Add Income</string>
+    <string name="shortcut_add_income_long">Add New Income</string>
+    <string name="shortcut_add_transfer_short">Transfer</string>
+    <string name="shortcut_add_transfer_long">Account Transfer</string>
+    <string name="shortcut_review_inbox_short">Review Inbox</string>
+    <string name="shortcut_review_inbox_long">Review Pending Items</string>
+
+    <!-- Home Screen Widgets & Privacy -->
+    <string name="widget_name_balance">FinPulse: Current Balance</string>
+    <string name="widget_desc_balance">View current liquid balance and accounts overview</string>
+    <string name="widget_name_spending">FinPulse: Monthly Spending</string>
+    <string name="widget_desc_spending">View your spending for the current month</string>
+    <string name="widget_name_budget">FinPulse: Budget Remaining</string>
+    <string name="widget_desc_budget">Track remaining budget for active categories</string>
+    <string name="widget_name_bills">FinPulse: Upcoming Bills</string>
+    <string name="widget_desc_bills">View upcoming bills and scheduled obligations</string>
+    <string name="widget_name_quick_add">FinPulse: Quick Actions</string>
+    <string name="widget_desc_quick_add">Quick buttons for Expense, Income, Transfer and Inbox</string>
+    <string name="widget_name_dashboard">FinPulse: Financial Overview</string>
+    <string name="widget_desc_dashboard">Combined balance, spending and quick actions</string>
+    <string name="widget_label_current_balance">Current Balance</string>
+    <string name="widget_label_monthly_spending">Monthly Spending</string>
+    <string name="widget_label_budget_remaining">Budget Remaining</string>
+    <string name="widget_label_upcoming_bills">Upcoming Bills</string>
+    <string name="widget_label_quick_actions">Quick Actions</string>
+    <string name="widget_privacy_hidden">••••••</string>
+    <string name="widget_no_upcoming_bills">No upcoming bills</string>
+    <string name="widget_no_active_budgets">No active budgets</string>
+    <string name="widget_config_title">Configure Widget</string>
+    <string name="widget_config_save">Save Widget</string>
+    <string name="widget_config_privacy">Privacy Mode</string>
+    <string name="widget_config_privacy_system">Follow App Settings</string>
+    <string name="widget_config_privacy_hide">Always Hide Balances</string>
+    <string name="widget_config_privacy_show">Always Show Balances</string>
+    <string name="widget_config_account">Account Filter</string>
+    <string name="widget_config_all_accounts">All Accounts</string>
+    <string name="security_widget_privacy">Widget Privacy Mode</string>
+    <string name="security_widget_privacy_desc">Hide sensitive balances and figures on home screen widgets</string>
+    <string name="security_widget_mask_lock">Mask Widgets on App Lock</string>
+    <string name="security_widget_mask_lock_desc">Automatically hide financial amounts on widgets when Biometric or PIN is enabled</string>
 </resources>

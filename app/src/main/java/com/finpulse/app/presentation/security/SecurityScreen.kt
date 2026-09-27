@@ -61,6 +61,7 @@ fun SecurityScreen(
         initial = com.finpulse.app.core.datastore.UserPreferences()
     )
     val scope = rememberCoroutineScope()
+    val context = androidx.compose.ui.platform.LocalContext.current
     var isPinDialogVisible by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -141,6 +142,36 @@ fun SecurityScreen(
                         subtitle = stringResource(R.string.security_hide_balances_desc),
                         checked = userPrefs.hideBalances,
                         onCheckedChange = { scope.launch { userPreferencesDataStore.setHideBalances(it) } }
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Widget Privacy Mode
+                    SecurityRow(
+                        title = stringResource(R.string.security_widget_privacy),
+                        subtitle = stringResource(R.string.security_widget_privacy_desc),
+                        checked = userPrefs.widgetPrivacyEnabled,
+                        onCheckedChange = {
+                            scope.launch {
+                                userPreferencesDataStore.setWidgetPrivacyEnabled(it)
+                                com.finpulse.app.presentation.widget.FinPulseWidgetUpdater.updateAllWidgets(context)
+                            }
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Mask Widgets on App Lock
+                    SecurityRow(
+                        title = stringResource(R.string.security_widget_mask_lock),
+                        subtitle = stringResource(R.string.security_widget_mask_lock_desc),
+                        checked = userPrefs.widgetMaskOnAppLock,
+                        onCheckedChange = {
+                            scope.launch {
+                                userPreferencesDataStore.setWidgetMaskOnAppLock(it)
+                                com.finpulse.app.presentation.widget.FinPulseWidgetUpdater.updateAllWidgets(context)
+                            }
+                        }
                     )
                 }
             }

@@ -851,4 +851,48 @@
     <string name="calendar_days_projected">%1$d günlük tahmin</string>
     <string name="calendar_deficit_risk">Açık Riski</string>
     <string name="calendar_no_events">Seçilen filtre için yaklaşan ödeme bulunamadı.</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_add_expense_short">Gider Ekle</string>
+    <string name="shortcut_add_expense_long">Yeni Gider Kaydet</string>
+    <string name="shortcut_add_income_short">Gelir Ekle</string>
+    <string name="shortcut_add_income_long">Yeni Gelir Kaydet</string>
+    <string name="shortcut_add_transfer_short">Transfer</string>
+    <string name="shortcut_add_transfer_long">Hesaplar Arası Transfer</string>
+    <string name="shortcut_review_inbox_short">İnceleme Kutusu</string>
+    <string name="shortcut_review_inbox_long">Bekleyen İşlemleri İncele</string>
+
+    <!-- Home Screen Widgets & Privacy -->
+    <string name="widget_name_balance">FinPulse: Güncel Bakiye</string>
+    <string name="widget_desc_balance">Güncel likit bakiyeyi ve hesap özetini görüntüleyin</string>
+    <string name="widget_name_spending">FinPulse: Aylık Harcama</string>
+    <string name="widget_desc_spending">Bu ayki toplam harcamalarınızı görüntüleyin</string>
+    <string name="widget_name_budget">FinPulse: Kalan Bütçe</string>
+    <string name="widget_desc_budget">Aktif bütçeler için kalan tutarı takip edin</string>
+    <string name="widget_name_bills">FinPulse: Yaklaşan Faturalar</string>
+    <string name="widget_desc_bills">Yaklaşan fatura ve ödemelerinizi görüntüleyin</string>
+    <string name="widget_name_quick_add">FinPulse: Hızlı İşlemler</string>
+    <string name="widget_desc_quick_add">Gider, gelir, transfer ve inceleme kutusu için hızlı butonlar</string>
+    <string name="widget_name_dashboard">FinPulse: Finansal Özet</string>
+    <string name="widget_desc_dashboard">Bakiye, harcama ve hızlı işlemleri birleştiren genel bakış</string>
+    <string name="widget_label_current_balance">Güncel Bakiye</string>
+    <string name="widget_label_monthly_spending">Aylık Harcama</string>
+    <string name="widget_label_budget_remaining">Kalan Bütçe</string>
+    <string name="widget_label_upcoming_bills">Yaklaşan Faturalar</string>
+    <string name="widget_label_quick_actions">Hızlı İşlemler</string>
+    <string name="widget_privacy_hidden">••••••</string>
+    <string name="widget_no_upcoming_bills">Yaklaşan fatura yok</string>
+    <string name="widget_no_active_budgets">Aktif bütçe yok</string>
+    <string name="widget_config_title">Widget Yapılandırma</string>
+    <string name="widget_config_save">Widget\'ı Kaydet</string>
+    <string name="widget_config_privacy">Gizlilik Modu</string>
+    <string name="widget_config_privacy_system">Uygulama Ayarlarını İzle</string>
+    <string name="widget_config_privacy_hide">Tutarları Her Zaman Gizle</string>
+    <string name="widget_config_privacy_show">Tutarları Her Zaman Göster</string>
+    <string name="widget_config_account">Hesap Filtresi</string>
+    <string name="widget_config_all_accounts">Tüm Hesaplar</string>
+    <string name="security_widget_privacy">Widget Gizliliği</string>
+    <string name="security_widget_privacy_desc">Ana ekran widget\'larında hassas tutarları gizle</string>
+    <string name="security_widget_mask_lock">Uygulama Kilidinde Maskele</string>
+    <string name="security_widget_mask_lock_desc">Biyometri veya PIN etkinken widget tutarlarını otomatik gizle</string>
 </resources>

@@ -26,7 +26,9 @@ data class UserPreferences(
     val lastUsedAccountId: String? = null,
     val lastUsedCategoryId: String? = null,
     val lastUsedTransactionType: String = "EXPENSE",
-    val dismissedInboxItemIds: Set<String> = emptySet()
+    val dismissedInboxItemIds: Set<String> = emptySet(),
+    val widgetPrivacyEnabled: Boolean = false,
+    val widgetMaskOnAppLock: Boolean = true
 )
 
 class UserPreferencesDataStore(private val context: Context) {
@@ -45,6 +47,8 @@ class UserPreferencesDataStore(private val context: Context) {
         val LAST_USED_CATEGORY_ID = stringPreferencesKey("last_used_category_id")
         val LAST_USED_TX_TYPE = stringPreferencesKey("last_used_tx_type")
         val DISMISSED_INBOX_ITEMS = stringSetPreferencesKey("dismissed_inbox_items")
+        val WIDGET_PRIVACY_ENABLED = booleanPreferencesKey("widget_privacy_enabled")
+        val WIDGET_MASK_ON_APP_LOCK = booleanPreferencesKey("widget_mask_on_app_lock")
     }
 
     val userPreferencesFlow: Flow<UserPreferences> = context.dataStore.data.map { preferences ->
@@ -67,7 +71,9 @@ class UserPreferencesDataStore(private val context: Context) {
             lastUsedAccountId = preferences[PreferencesKeys.LAST_USED_ACCOUNT_ID],
             lastUsedCategoryId = preferences[PreferencesKeys.LAST_USED_CATEGORY_ID],
             lastUsedTransactionType = preferences[PreferencesKeys.LAST_USED_TX_TYPE] ?: "EXPENSE",
-            dismissedInboxItemIds = preferences[PreferencesKeys.DISMISSED_INBOX_ITEMS] ?: emptySet()
+            dismissedInboxItemIds = preferences[PreferencesKeys.DISMISSED_INBOX_ITEMS] ?: emptySet(),
+            widgetPrivacyEnabled = preferences[PreferencesKeys.WIDGET_PRIVACY_ENABLED] ?: false,
+            widgetMaskOnAppLock = preferences[PreferencesKeys.WIDGET_MASK_ON_APP_LOCK] ?: true
         )
     }
 
@@ -145,6 +151,18 @@ class UserPreferencesDataStore(private val context: Context) {
     suspend fun clearDismissedInboxItems() {
         context.dataStore.edit { preferences ->
             preferences.remove(PreferencesKeys.DISMISSED_INBOX_ITEMS)
+        }
+    }
+
+    suspend fun setWidgetPrivacyEnabled(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.WIDGET_PRIVACY_ENABLED] = enabled
+        }
+    }
+
+    suspend fun setWidgetMaskOnAppLock(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.WIDGET_MASK_ON_APP_LOCK] = enabled
         }
     }
 

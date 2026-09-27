@@ -843,4 +843,48 @@
     <string name="calendar_days_projected">预估 %1$d 天</string>
     <string name="calendar_deficit_risk">存在资金赤字风险</string>
     <string name="calendar_no_events">当前筛选条件下无收支项目。</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_add_expense_short">记一笔支出</string>
+    <string name="shortcut_add_expense_long">记录一笔新支出</string>
+    <string name="shortcut_add_income_short">记一笔收入</string>
+    <string name="shortcut_add_income_long">记录一笔新收入</string>
+    <string name="shortcut_add_transfer_short">账户转账</string>
+    <string name="shortcut_add_transfer_long">记录账户间转账</string>
+    <string name="shortcut_review_inbox_short">待审核收件箱</string>
+    <string name="shortcut_review_inbox_long">审核待处理的交易记录</string>
+
+    <!-- Home Screen Widgets & Privacy -->
+    <string name="widget_name_balance">FinPulse：当前结余</string>
+    <string name="widget_desc_balance">查看当前流动资金及账户概览</string>
+    <string name="widget_name_spending">FinPulse：本月支出</string>
+    <string name="widget_desc_spending">查看当月累计支出金额</string>
+    <string name="widget_name_budget">FinPulse：预算剩余</string>
+    <string name="widget_desc_budget">追踪活跃预算分类的剩余可用额度</string>
+    <string name="widget_name_bills">FinPulse：即将到期账单</string>
+    <string name="widget_desc_bills">查看待支付账单与周期性应付项目</string>
+    <string name="widget_name_quick_add">FinPulse：快捷操作</string>
+    <string name="widget_desc_quick_add">支出、收入、转账与待审核收件箱快捷入口</string>
+    <string name="widget_name_dashboard">FinPulse：财务概览</string>
+    <string name="widget_desc_dashboard">结余、支出与快捷操作综合小组件</string>
+    <string name="widget_label_current_balance">当前结余</string>
+    <string name="widget_label_monthly_spending">本月支出</string>
+    <string name="widget_label_budget_remaining">预算剩余</string>
+    <string name="widget_label_upcoming_bills">即将到期账单</string>
+    <string name="widget_label_quick_actions">快捷操作</string>
+    <string name="widget_privacy_hidden">••••••</string>
+    <string name="widget_no_upcoming_bills">近期无待支付账单</string>
+    <string name="widget_no_active_budgets">暂无生效中的预算</string>
+    <string name="widget_config_title">配置小组件</string>
+    <string name="widget_config_save">保存小组件</string>
+    <string name="widget_config_privacy">隐私模式</string>
+    <string name="widget_config_privacy_system">遵循应用内设置</string>
+    <string name="widget_config_privacy_hide">始终隐藏金额</string>
+    <string name="widget_config_privacy_show">始终显示金额</string>
+    <string name="widget_config_account">账户筛选</string>
+    <string name="widget_config_all_accounts">所有账户</string>
+    <string name="security_widget_privacy">小组件隐私保护</string>
+    <string name="security_widget_privacy_desc">在主屏幕小组件上隐藏敏感资金数额</string>
+    <string name="security_widget_mask_lock">应用锁定时脱敏小组件</string>
+    <string name="security_widget_mask_lock_desc">启用生物识别或密码锁定时自动隐藏小组件上的金额</string>
 </resources>

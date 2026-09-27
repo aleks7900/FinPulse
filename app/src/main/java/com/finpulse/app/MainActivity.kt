@@ -13,14 +13,18 @@ import androidx.lifecycle.lifecycleScope
 import com.finpulse.app.core.designsystem.FinPulseTheme
 import com.finpulse.app.core.locale.AppLanguage
 import com.finpulse.app.core.locale.AppLocaleManager
+import com.finpulse.app.core.util.FinPulseShortcutsManager
 import com.finpulse.app.presentation.navigation.FinPulseApp
+import com.finpulse.app.presentation.navigation.Screen
+import com.finpulse.app.presentation.widget.FinPulseWidgetUpdater
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
-    private val openQuickAddFlow = MutableStateFlow(false)
+    private val openQuickAddTypeFlow = MutableStateFlow<String?>(null)
+    private val navigationFlow = MutableStateFlow<String?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,11 +63,19 @@ class MainActivity : ComponentActivity() {
             FinPulseTheme(darkTheme = darkTheme) {
                 FinPulseApp(
                     container = container,
-                    openQuickAddTrigger = openQuickAddFlow,
-                    onQuickAddHandled = { openQuickAddFlow.value = false }
+                    openQuickAddTypeTrigger = openQuickAddTypeFlow,
+                    onQuickAddTypeHandled = { openQuickAddTypeFlow.value = null },
+                    navigationTrigger = navigationFlow,
+                    onNavigationHandled = { navigationFlow.value = null }
                 )
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        FinPulseShortcutsManager.initDynamicShortcuts(this)
+        FinPulseWidgetUpdater.updateAllWidgets(this)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -74,10 +86,45 @@ class MainActivity : ComponentActivity() {
 
     private fun handleIntent(intent: Intent?) {
         val data = intent?.data
-        if (data?.scheme == "finpulse" && data.host == "quick-add") {
-            openQuickAddFlow.value = true
-        } else if (intent?.getBooleanExtra("open_quick_add", false) == true) {
-            openQuickAddFlow.value = true
+        if (data?.scheme == "finpulse") {
+            when (data.host) {
+                "quick-add" -> {
+                    val type = data.getQueryParameter("type")
+                        ?: intent.getStringExtra("quick_add_type")
+                        ?: "EXPENSE"
+                    openQuickAddTypeFlow.value = type
+                }
+                "review-inbox" -> {
+                    navigationFlow.value = Screen.ReviewInbox.route
+                }
+                "accounts" -> {
+                    navigationFlow.value = Screen.Accounts.route
+                }
+                "budgets" -> {
+                    navigationFlow.value = Screen.Budgets.route
+                }
+                "analytics" -> {
+                    navigationFlow.value = Screen.Analytics.route
+                }
+                "calendar" -> {
+                    navigationFlow.value = Screen.Calendar.route
+                }
+            }
+        } else {
+            val destination = intent?.getStringExtra("destination_route")
+            if (destination != null) {
+                navigationFlow.value = when (destination) {
+                    "review_inbox" -> Screen.ReviewInbox.route
+                    "accounts" -> Screen.Accounts.route
+                    "budgets" -> Screen.Budgets.route
+                    "analytics" -> Screen.Analytics.route
+                    "calendar" -> Screen.Calendar.route
+                    else -> destination
+                }
+            } else if (intent?.getBooleanExtra("open_quick_add", false) == true) {
+                val type = intent.getStringExtra("quick_add_type") ?: "EXPENSE"
+                openQuickAddTypeFlow.value = type
+            }
         }
     }
 }

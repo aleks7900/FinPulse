@@ -843,4 +843,48 @@
     <string name="calendar_days_projected">%1$d日間の予測</string>
     <string name="calendar_deficit_risk">不足リスク</string>
     <string name="calendar_no_events">選択されたフィルターに該当する予定はありません。</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_add_expense_short">支出を追加</string>
+    <string name="shortcut_add_expense_long">新しい支出を記録</string>
+    <string name="shortcut_add_income_short">収入を追加</string>
+    <string name="shortcut_add_income_long">新しい収入を記録</string>
+    <string name="shortcut_add_transfer_short">振替</string>
+    <string name="shortcut_add_transfer_long">口座間振替</string>
+    <string name="shortcut_review_inbox_short">確認トレイ</string>
+    <string name="shortcut_review_inbox_long">未確認の取引を確認</string>
+
+    <!-- Home Screen Widgets & Privacy -->
+    <string name="widget_name_balance">FinPulse: 現在の残高</string>
+    <string name="widget_desc_balance">流動性残高と口座概要を表示</string>
+    <string name="widget_name_spending">FinPulse: 今月の支出</string>
+    <string name="widget_desc_spending">今月の総支出額を表示</string>
+    <string name="widget_name_budget">FinPulse: 予算の残り</string>
+    <string name="widget_desc_budget">アクティブな予算の残額を追跡</string>
+    <string name="widget_name_bills">FinPulse: 今後の支払い</string>
+    <string name="widget_desc_bills">支払予定の請求や固定費を表示</string>
+    <string name="widget_name_quick_add">FinPulse: クイック操作</string>
+    <string name="widget_desc_quick_add">支出・収入・振替・確認トレイのクイックボタン</string>
+    <string name="widget_name_dashboard">FinPulse: 財務サマリー</string>
+    <string name="widget_desc_dashboard">残高・支出・クイック操作の統合ウィジェット</string>
+    <string name="widget_label_current_balance">現在の残高</string>
+    <string name="widget_label_monthly_spending">今月の支出</string>
+    <string name="widget_label_budget_remaining">予算の残り</string>
+    <string name="widget_label_upcoming_bills">今後の支払い</string>
+    <string name="widget_label_quick_actions">クイック操作</string>
+    <string name="widget_privacy_hidden">••••••</string>
+    <string name="widget_no_upcoming_bills">支払予定の請求はありません</string>
+    <string name="widget_no_active_budgets">設定中の予算はありません</string>
+    <string name="widget_config_title">ウィジェットの設定</string>
+    <string name="widget_config_save">ウィジェットを保存</string>
+    <string name="widget_config_privacy">プライバシーモード</string>
+    <string name="widget_config_privacy_system">アプリの設定に従う</string>
+    <string name="widget_config_privacy_hide">常に金額を隠す</string>
+    <string name="widget_config_privacy_show">常に金額を表示</string>
+    <string name="widget_config_account">口座フィルター</string>
+    <string name="widget_config_all_accounts">すべての口座</string>
+    <string name="security_widget_privacy">ウィジェットのプライバシー</string>
+    <string name="security_widget_privacy_desc">ホーム画面のウィジェットで金額を非表示にする</string>
+    <string name="security_widget_mask_lock">アプロック時に金額を隠す</string>
+    <string name="security_widget_mask_lock_desc">生体認証やPIN設定時にウィジェットの金額を自動でマスク</string>
 </resources>

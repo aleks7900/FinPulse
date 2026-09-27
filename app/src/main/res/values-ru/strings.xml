@@ -867,4 +867,48 @@
     <string name="calendar_days_projected">Прогноз на %1$d дн.</string>
     <string name="calendar_deficit_risk">Риск дефицита</string>
     <string name="calendar_no_events">Нет предстоящих платежей для выбранного фильтра.</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_add_expense_short">Добавить расход</string>
+    <string name="shortcut_add_expense_long">Записать новый расход</string>
+    <string name="shortcut_add_income_short">Добавить доход</string>
+    <string name="shortcut_add_income_long">Записать новый доход</string>
+    <string name="shortcut_add_transfer_short">Перевод</string>
+    <string name="shortcut_add_transfer_long">Перевод между счетами</string>
+    <string name="shortcut_review_inbox_short">Входящие</string>
+    <string name="shortcut_review_inbox_long">Проверить операции</string>
+
+    <!-- Home Screen Widgets & Privacy -->
+    <string name="widget_name_balance">FinPulse: Текущий баланс</string>
+    <string name="widget_desc_balance">Показать ликвидный баланс и обзор счетов</string>
+    <string name="widget_name_spending">FinPulse: Расходы за месяц</string>
+    <string name="widget_desc_spending">Просмотр расходов за текущий месяц</string>
+    <string name="widget_name_budget">FinPulse: Остаток бюджета</string>
+    <string name="widget_desc_budget">Контроль остатка бюджета по категориям</string>
+    <string name="widget_name_bills">FinPulse: Предстоящие счета</string>
+    <string name="widget_desc_bills">Предстоящие платежи и регулярные списания</string>
+    <string name="widget_name_quick_add">FinPulse: Быстрые действия</string>
+    <string name="widget_desc_quick_add">Кнопки быстрого добавления расхода, дохода, перевода и входящих</string>
+    <string name="widget_name_dashboard">FinPulse: Финансовый обзор</string>
+    <string name="widget_desc_dashboard">Баланс, расходы и быстрые действия в одном виджете</string>
+    <string name="widget_label_current_balance">Текущий баланс</string>
+    <string name="widget_label_monthly_spending">Расходы за месяц</string>
+    <string name="widget_label_budget_remaining">Остаток бюджета</string>
+    <string name="widget_label_upcoming_bills">Предстоящие счета</string>
+    <string name="widget_label_quick_actions">Быстрые действия</string>
+    <string name="widget_privacy_hidden">••••••</string>
+    <string name="widget_no_upcoming_bills">Нет предстоящих счетов</string>
+    <string name="widget_no_active_budgets">Нет активных бюджетов</string>
+    <string name="widget_config_title">Настройка виджета</string>
+    <string name="widget_config_save">Сохранить виджет</string>
+    <string name="widget_config_privacy">Режим приватности</string>
+    <string name="widget_config_privacy_system">Как в настройках приложения</string>
+    <string name="widget_config_privacy_hide">Всегда скрывать суммы</string>
+    <string name="widget_config_privacy_show">Всегда показывать суммы</string>
+    <string name="widget_config_account">Фильтр счета</string>
+    <string name="widget_config_all_accounts">Все счета</string>
+    <string name="security_widget_privacy">Приватность виджетов</string>
+    <string name="security_widget_privacy_desc">Скрывать финансовые суммы на виджетах главного экрана</string>
+    <string name="security_widget_mask_lock">Маскировать при блокировке</string>
+    <string name="security_widget_mask_lock_desc">Автоматически скрывать суммы на виджетах при включенной биометрии или PIN</string>
 </resources>

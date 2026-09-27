@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- Deep-link intent-filter for finpulse://quick-add -->
+            <!-- Deep-link intent-filter for finpulse:// -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -30,12 +30,124 @@
                 <data
                     android:scheme="finpulse"
                     android:host="quick-add" />
+                <data
+                    android:scheme="finpulse"
+                    android:host="review-inbox" />
+                <data
+                    android:scheme="finpulse"
+                    android:host="accounts" />
+                <data
+                    android:scheme="finpulse"
+                    android:host="budgets" />
+                <data
+                    android:scheme="finpulse"
+                    android:host="analytics" />
+                <data
+                    android:scheme="finpulse"
+                    android:host="calendar" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
+
+        <!-- Widget Configuration Activity -->
+        <activity
+            android:name=".presentation.widget.WidgetConfigurationActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- Current Balance Widget -->
+        <receiver
+            android:name=".presentation.widget.CurrentBalanceWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_name_balance">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.finpulse.app.action.TOGGLE_WIDGET_PRIVACY" />
+                <action android:name="com.finpulse.app.action.REFRESH_WIDGETS" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_balance_info" />
+        </receiver>
+
+        <!-- Monthly Spending Widget -->
+        <receiver
+            android:name=".presentation.widget.MonthlySpendingWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_name_spending">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.finpulse.app.action.TOGGLE_WIDGET_PRIVACY" />
+                <action android:name="com.finpulse.app.action.REFRESH_WIDGETS" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_spending_info" />
+        </receiver>
+
+        <!-- Budget Remaining Widget -->
+        <receiver
+            android:name=".presentation.widget.BudgetRemainingWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_name_budget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.finpulse.app.action.TOGGLE_WIDGET_PRIVACY" />
+                <action android:name="com.finpulse.app.action.REFRESH_WIDGETS" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_budget_info" />
+        </receiver>
+
+        <!-- Upcoming Bills Widget -->
+        <receiver
+            android:name=".presentation.widget.UpcomingBillsWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_name_bills">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.finpulse.app.action.TOGGLE_WIDGET_PRIVACY" />
+                <action android:name="com.finpulse.app.action.REFRESH_WIDGETS" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_bills_info" />
+        </receiver>
+
+        <!-- Quick Add Widget -->
+        <receiver
+            android:name=".presentation.widget.QuickAddWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_name_quick_add">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_quick_add_info" />
+        </receiver>
+
+        <!-- FinPulse Dashboard Multi-Widget -->
+        <receiver
+            android:name=".presentation.widget.FinPulseDashboardWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_name_dashboard">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.finpulse.app.action.TOGGLE_WIDGET_PRIVACY" />
+                <action android:name="com.finpulse.app.action.REFRESH_WIDGETS" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_dashboard_info" />
+        </receiver>
     </application>
 
 </manifest>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_spending_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg"
+    android:padding="14dp">
+
+    <!-- Header Row -->
+    <LinearLayout
+        android:id="@+id/widget_spending_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/widget_spending_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Monthly Spending"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_btn_privacy"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:background="@drawable/widget_btn_bg"
+            android:gravity="center"
+            android:text="👁"
+            android:textColor="#E2E8F0"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Main Amount -->
+    <TextView
+        android:id="@+id/widget_spending_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/widget_spending_header"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="$0.00"
+        android:textColor="#F43F5E"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/widget_spending_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/widget_spending_amount"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Total Expenses"
+        android:textColor="#94A3B8"
+        android:textSize="11sp" />
+
+</RelativeLayout>

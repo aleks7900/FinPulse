@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_budget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg"
+    android:padding="14dp">
+
+    <!-- Header Row -->
+    <LinearLayout
+        android:id="@+id/widget_budget_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/widget_budget_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Budget Remaining"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_btn_privacy"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:background="@drawable/widget_btn_bg"
+            android:gravity="center"
+            android:text="👁"
+            android:textColor="#E2E8F0"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Main Amount -->
+    <TextView
+        android:id="@+id/widget_budget_remaining"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/widget_budget_header"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="$0.00 left"
+        android:textColor="#10B981"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/widget_budget_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_below="@id/widget_budget_remaining"
+        android:layout_marginTop="6dp"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/widget_progress_budget" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/widget_budget_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/widget_budget_progress"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Spent $0 of $0"
+        android:textColor="#94A3B8"
+        android:textSize="11sp" />
+
+</RelativeLayout>

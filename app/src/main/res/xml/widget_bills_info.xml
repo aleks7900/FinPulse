@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.finpulse.app.presentation.widget.WidgetConfigurationActivity"
+    android:description="@string/widget_desc_bills"
+    android:initialKeyguardLayout="@layout/widget_upcoming_bills"
+    android:initialLayout="@layout/widget_upcoming_bills"
+    android:minWidth="180dp"
+    android:minHeight="110dp"
+    android:previewImage="@drawable/widget_bg"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="3600000"
+    android:widgetCategory="home_screen|keyguard" />

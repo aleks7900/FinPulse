@@ -851,4 +851,48 @@
     <string name="calendar_days_projected">%1$d Tage prognostiziert</string>
     <string name="calendar_deficit_risk">Defizitrisiko</string>
     <string name="calendar_no_events">Keine Zahlungen für den gewählten Filter gefunden.</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_add_expense_short">Ausgabe hinzufügen</string>
+    <string name="shortcut_add_expense_long">Neue Ausgabe erfassen</string>
+    <string name="shortcut_add_income_short">Einnahme hinzufügen</string>
+    <string name="shortcut_add_income_long">Neue Einnahme erfassen</string>
+    <string name="shortcut_add_transfer_short">Umbuchung</string>
+    <string name="shortcut_add_transfer_long">Kontoübertrag</string>
+    <string name="shortcut_review_inbox_short">Posteingang prüfen</string>
+    <string name="shortcut_review_inbox_long">Ausstehende Buchungen prüfen</string>
+
+    <!-- Home Screen Widgets & Privacy -->
+    <string name="widget_name_balance">FinPulse: Aktueller Kontostand</string>
+    <string name="widget_desc_balance">Aktuelles liquides Guthaben und Kontenübersicht anzeigen</string>
+    <string name="widget_name_spending">FinPulse: Monatliche Ausgaben</string>
+    <string name="widget_desc_spending">Ausgaben des aktuellen Monats anzeigen</string>
+    <string name="widget_name_budget">FinPulse: Verbleibendes Budget</string>
+    <string name="widget_desc_budget">Verbleibendes Budget für aktive Kategorien verfolgen</string>
+    <string name="widget_name_bills">FinPulse: Anstehende Rechnungen</string>
+    <string name="widget_desc_bills">Anstehende Rechnungen und Zahlungsverpflichtungen anzeigen</string>
+    <string name="widget_name_quick_add">FinPulse: Schnellaktionen</string>
+    <string name="widget_desc_quick_add">Schnellschaltflächen für Ausgaben, Einnahmen, Überträge und Posteingang</string>
+    <string name="widget_name_dashboard">FinPulse: Finanzübersicht</string>
+    <string name="widget_desc_dashboard">Kombinierte Übersicht aus Guthaben, Ausgaben und Schnellaktionen</string>
+    <string name="widget_label_current_balance">Aktueller Kontostand</string>
+    <string name="widget_label_monthly_spending">Monatliche Ausgaben</string>
+    <string name="widget_label_budget_remaining">Verbleibendes Budget</string>
+    <string name="widget_label_upcoming_bills">Anstehende Rechnungen</string>
+    <string name="widget_label_quick_actions">Schnellaktionen</string>
+    <string name="widget_privacy_hidden">••••••</string>
+    <string name="widget_no_upcoming_bills">Keine anstehenden Rechnungen</string>
+    <string name="widget_no_active_budgets">Keine aktiven Budgets</string>
+    <string name="widget_config_title">Widget konfigurieren</string>
+    <string name="widget_config_save">Widget speichern</string>
+    <string name="widget_config_privacy">Privatsphäre-Modus</string>
+    <string name="widget_config_privacy_system">App-Einstellungen folgen</string>
+    <string name="widget_config_privacy_hide">Beträge immer verbergen</string>
+    <string name="widget_config_privacy_show">Beträge immer anzeigen</string>
+    <string name="widget_config_account">Kontofilter</string>
+    <string name="widget_config_all_accounts">Alle Konten</string>
+    <string name="security_widget_privacy">Widget-Privatsphäre</string>
+    <string name="security_widget_privacy_desc">Sensible Beträge auf Startbildschirm-Widgets ausblenden</string>
+    <string name="security_widget_mask_lock">Widgets bei App-Sperre maskieren</string>
+    <string name="security_widget_mask_lock_desc">Finanzbeträge auf Widgets automatisch verbergen, wenn Biometrie oder PIN aktiv ist</string>
 </resources>

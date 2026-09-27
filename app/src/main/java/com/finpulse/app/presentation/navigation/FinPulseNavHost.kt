@@ -66,10 +66,15 @@ fun FinPulseApp(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     openQuickAddTrigger: StateFlow<Boolean>? = null,
-    onQuickAddHandled: () -> Unit = {}
+    onQuickAddHandled: () -> Unit = {},
+    openQuickAddTypeTrigger: StateFlow<String?>? = null,
+    onQuickAddTypeHandled: () -> Unit = {},
+    navigationTrigger: StateFlow<String?>? = null,
+    onNavigationHandled: () -> Unit = {}
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     val userPrefs by container.userPreferencesDataStore.userPreferencesFlow.collectAsState(
         initial = com.finpulse.app.core.datastore.UserPreferences()
@@ -108,6 +113,35 @@ fun FinPulseApp(
                 quickAddViewModel.reset()
                 showQuickAddSheet = true
                 onQuickAddHandled()
+            }
+        }
+    }
+
+    openQuickAddTypeTrigger?.let { triggerFlow ->
+        val triggerType by triggerFlow.collectAsState()
+        LaunchedEffect(triggerType) {
+            triggerType?.let { typeStr ->
+                quickAddViewModel.reset()
+                val txType = when (typeStr.uppercase()) {
+                    "INCOME" -> com.finpulse.app.domain.model.TransactionType.INCOME
+                    "TRANSFER" -> com.finpulse.app.domain.model.TransactionType.TRANSFER
+                    else -> com.finpulse.app.domain.model.TransactionType.EXPENSE
+                }
+                quickAddViewModel.onTypeSelected(txType)
+                showQuickAddSheet = true
+                onQuickAddTypeHandled()
+            }
+        }
+    }
+
+    navigationTrigger?.let { navFlow ->
+        val targetRoute by navFlow.collectAsState()
+        LaunchedEffect(targetRoute) {
+            targetRoute?.let { route ->
+                navController.navigate(route) {
+                    launchSingleTop = true
+                }
+                onNavigationHandled()
             }
         }
     }
@@ -646,6 +680,7 @@ fun FinPulseApp(
                 if (!andAddAnother) {
                     showQuickAddSheet = false
                 }
+                com.finpulse.app.presentation.widget.FinPulseWidgetUpdater.updateAllWidgets(context)
                 scope.launch {
                     val action = snackbarHostState.showSnackbar(
                         message = "${tx.type.displayName} of ${tx.amount.formatted()} saved",

@@ -843,4 +843,48 @@
     <string name="calendar_days_projected">%1$d일 예측</string>
     <string name="calendar_deficit_risk">잔액 부족 위험</string>
     <string name="calendar_no_events">선택한 조건에 해당하는 일정이 없습니다.</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_add_expense_short">지출 추가</string>
+    <string name="shortcut_add_expense_long">새 지출 기록하기</string>
+    <string name="shortcut_add_income_short">수입 추가</string>
+    <string name="shortcut_add_income_long">새 수입 기록하기</string>
+    <string name="shortcut_add_transfer_short">이체</string>
+    <string name="shortcut_add_transfer_long">계좌 간 이체</string>
+    <string name="shortcut_review_inbox_short">검토함</string>
+    <string name="shortcut_review_inbox_long">미확인 내역 검토</string>
+
+    <!-- Home Screen Widgets & Privacy -->
+    <string name="widget_name_balance">FinPulse: 현재 잔액</string>
+    <string name="widget_desc_balance">현재 유동 잔액 및 계좌 요약 보기</string>
+    <string name="widget_name_spending">FinPulse: 이번 달 지출</string>
+    <string name="widget_desc_spending">이번 달 총 지출액 확인</string>
+    <string name="widget_name_budget">FinPulse: 남은 예산</string>
+    <string name="widget_desc_budget">활성 예산의 남은 금액 추적</string>
+    <string name="widget_name_bills">FinPulse: 다가오는 청구서</string>
+    <string name="widget_desc_bills">예정된 청구서 및 정기 결제 확인</string>
+    <string name="widget_name_quick_add">FinPulse: 빠른 작업</string>
+    <string name="widget_desc_quick_add">지출, 수입, 이체 및 검토함 빠른 버튼</string>
+    <string name="widget_name_dashboard">FinPulse: 금융 요약</string>
+    <string name="widget_desc_dashboard">잔액, 지출 및 빠른 작업 통합 위젯</string>
+    <string name="widget_label_current_balance">현재 잔액</string>
+    <string name="widget_label_monthly_spending">이번 달 지출</string>
+    <string name="widget_label_budget_remaining">남은 예산</string>
+    <string name="widget_label_upcoming_bills">다가오는 청구서</string>
+    <string name="widget_label_quick_actions">빠른 작업</string>
+    <string name="widget_privacy_hidden">••••••</string>
+    <string name="widget_no_upcoming_bills">예정된 청구서가 없습니다</string>
+    <string name="widget_no_active_budgets">설정된 예산이 없습니다</string>
+    <string name="widget_config_title">위젯 설정</string>
+    <string name="widget_config_save">위젯 저장</string>
+    <string name="widget_config_privacy">개인정보 보호 모드</string>
+    <string name="widget_config_privacy_system">앱 설정 따르기</string>
+    <string name="widget_config_privacy_hide">항상 금액 숨기기</string>
+    <string name="widget_config_privacy_show">항상 금액 표시</string>
+    <string name="widget_config_account">계좌 필터</string>
+    <string name="widget_config_all_accounts">모든 계좌</string>
+    <string name="security_widget_privacy">위젯 개인정보 보호</string>
+    <string name="security_widget_privacy_desc">홈 화면 위젯에서 민감한 금융 금액 숨기기</string>
+    <string name="security_widget_mask_lock">앱 잠금 시 위젯 마스킹</string>
+    <string name="security_widget_mask_lock_desc">생체 인증 또는 PIN 사용 시 위젯 금액 자동 마스킹</string>
 </resources>

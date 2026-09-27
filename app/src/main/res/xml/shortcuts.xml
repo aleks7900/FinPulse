@@ -1,16 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
     <shortcut
-        android:shortcutId="quick_add_transaction"
+        android:shortcutId="add_expense"
         android:enabled="true"
         android:icon="@android:drawable/ic_input_add"
-        android:shortcutShortLabel="@string/shortcut_quick_add_short"
-        android:shortcutLongLabel="@string/shortcut_quick_add_long">
+        android:shortcutShortLabel="@string/shortcut_add_expense_short"
+        android:shortcutLongLabel="@string/shortcut_add_expense_long">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="com.finpulse.app"
             android:targetClass="com.finpulse.app.MainActivity"
-            android:data="finpulse://quick-add" />
+            android:data="finpulse://quick-add?type=expense" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="add_income"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_input_add"
+        android:shortcutShortLabel="@string/shortcut_add_income_short"
+        android:shortcutLongLabel="@string/shortcut_add_income_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.finpulse.app"
+            android:targetClass="com.finpulse.app.MainActivity"
+            android:data="finpulse://quick-add?type=income" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="add_transfer"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:shortcutShortLabel="@string/shortcut_add_transfer_short"
+        android:shortcutLongLabel="@string/shortcut_add_transfer_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.finpulse.app"
+            android:targetClass="com.finpulse.app.MainActivity"
+            android:data="finpulse://quick-add?type=transfer" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="review_inbox"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:shortcutShortLabel="@string/shortcut_review_inbox_short"
+        android:shortcutLongLabel="@string/shortcut_review_inbox_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.finpulse.app"
+            android:targetClass="com.finpulse.app.MainActivity"
+            android:data="finpulse://review-inbox" />
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
 </shortcuts>
