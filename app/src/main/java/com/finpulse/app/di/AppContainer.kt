@@ -60,6 +60,11 @@ interface AppContainer {
     val calculateSafeToSpendUseCase: com.finpulse.app.domain.usecase.budget.CalculateSafeToSpendUseCase
     val getFinancialCalendarUseCase: com.finpulse.app.domain.usecase.calendar.GetFinancialCalendarUseCase
     val savedFilterRepository: com.finpulse.app.domain.repository.SavedFilterRepository
+    val backupRepository: com.finpulse.app.domain.repository.BackupRepository
+    val createBackupUseCase: com.finpulse.app.domain.usecase.backup.CreateBackupUseCase
+    val validateBackupUseCase: com.finpulse.app.domain.usecase.backup.ValidateBackupUseCase
+    val restoreBackupUseCase: com.finpulse.app.domain.usecase.backup.RestoreBackupUseCase
+    val exportTransactionsUseCase: com.finpulse.app.domain.usecase.backup.ExportTransactionsUseCase
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -226,6 +231,26 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
             transactionRepository = transactionRepository,
             userPreferencesDataStore = userPreferencesDataStore
         )
+    }
+
+    override val backupRepository: com.finpulse.app.domain.repository.BackupRepository by lazy {
+        com.finpulse.app.data.repository.BackupRepositoryImpl(database)
+    }
+
+    override val createBackupUseCase: com.finpulse.app.domain.usecase.backup.CreateBackupUseCase by lazy {
+        com.finpulse.app.domain.usecase.backup.CreateBackupUseCase(backupRepository, userPreferencesDataStore)
+    }
+
+    override val validateBackupUseCase: com.finpulse.app.domain.usecase.backup.ValidateBackupUseCase by lazy {
+        com.finpulse.app.domain.usecase.backup.ValidateBackupUseCase()
+    }
+
+    override val restoreBackupUseCase: com.finpulse.app.domain.usecase.backup.RestoreBackupUseCase by lazy {
+        com.finpulse.app.domain.usecase.backup.RestoreBackupUseCase(backupRepository)
+    }
+
+    override val exportTransactionsUseCase: com.finpulse.app.domain.usecase.backup.ExportTransactionsUseCase by lazy {
+        com.finpulse.app.domain.usecase.backup.ExportTransactionsUseCase(backupRepository, accountRepository, categoryRepository)
     }
 }
 

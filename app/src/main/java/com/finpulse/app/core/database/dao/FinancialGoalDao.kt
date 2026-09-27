@@ -35,4 +35,13 @@ interface FinancialGoalDao {
 
     @Query("UPDATE financial_goals SET currentAmountMinor = :currentAmountMinor, isCompleted = :isCompleted WHERE id = :id")
     suspend fun updateProgress(id: String, currentAmountMinor: Long, isCompleted: Boolean)
+
+    @Query("SELECT * FROM financial_goals")
+    suspend fun getAllGoals(): List<FinancialGoalEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertGoals(goals: List<FinancialGoalEntity>)
+
+    @Query("DELETE FROM financial_goals")
+    suspend fun deleteAllGoals()
 }

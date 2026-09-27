@@ -509,10 +509,19 @@ fun FinPulseApp(
 
             // Sub-screen: Data Export
             composable(Screen.Export.route) {
+                val viewModel: com.finpulse.app.presentation.export.ExportViewModel = viewModel {
+                    com.finpulse.app.presentation.export.ExportViewModel(
+                        createBackupUseCase = container.createBackupUseCase,
+                        validateBackupUseCase = container.validateBackupUseCase,
+                        restoreBackupUseCase = container.restoreBackupUseCase,
+                        exportTransactionsUseCase = container.exportTransactionsUseCase,
+                        accountRepository = container.accountRepository,
+                        categoryRepository = container.categoryRepository,
+                        userPreferencesDataStore = container.userPreferencesDataStore
+                    )
+                }
                 ExportScreen(
-                    transactionRepository = container.transactionRepository,
-                    accountRepository = container.accountRepository,
-                    categoryRepository = container.categoryRepository,
+                    viewModel = viewModel,
                     onNavigateBack = { navController.popBackStack() }
                 )
             }

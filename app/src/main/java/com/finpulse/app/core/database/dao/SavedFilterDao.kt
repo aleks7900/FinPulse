@@ -32,4 +32,10 @@ interface SavedFilterDao {
 
     @Query("SELECT * FROM saved_filters ORDER BY createdAt DESC")
     suspend fun getAllSavedFilters(): List<SavedFilterEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSavedFilters(savedFilters: List<SavedFilterEntity>)
+
+    @Query("DELETE FROM saved_filters")
+    suspend fun deleteAllSavedFilters()
 }

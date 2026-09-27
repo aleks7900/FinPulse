@@ -1,5 +1,8 @@
 package com.finpulse.app.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class SavedFilter(
     val id: String,
     val name: String,

@@ -38,4 +38,10 @@ interface BudgetDao {
 
     @Query("SELECT * FROM budgets WHERE categoryId = :categoryId AND isArchived = 0")
     fun getBudgetsByCategoryFlow(categoryId: String): Flow<List<BudgetEntity>>
+
+    @Query("SELECT * FROM budgets")
+    suspend fun getAllBudgets(): List<BudgetEntity>
+
+    @Query("DELETE FROM budgets")
+    suspend fun deleteAllBudgets()
 }

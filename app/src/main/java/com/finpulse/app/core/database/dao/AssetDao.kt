@@ -35,4 +35,13 @@ interface AssetDao {
 
     @Query("UPDATE assets SET currentPriceMinor = :priceMinor, lastUpdated = :timestamp WHERE id = :id")
     suspend fun updatePrice(id: String, priceMinor: Long, timestamp: Long = System.currentTimeMillis())
+
+    @Query("SELECT * FROM assets")
+    suspend fun getAllAssets(): List<AssetEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAssets(assets: List<AssetEntity>)
+
+    @Query("DELETE FROM assets")
+    suspend fun deleteAllAssets()
 }

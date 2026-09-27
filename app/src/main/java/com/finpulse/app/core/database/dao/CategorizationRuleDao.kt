@@ -43,4 +43,10 @@ interface CategorizationRuleDao {
 
     @Query("UPDATE categorization_rules SET priority = :priority, updatedAt = :updatedAt WHERE id = :id")
     suspend fun updateRulePriority(id: String, priority: Int, updatedAt: Long = System.currentTimeMillis())
+
+    @Query("SELECT * FROM categorization_rules")
+    suspend fun getAllRules(): List<CategorizationRuleEntity>
+
+    @Query("DELETE FROM categorization_rules")
+    suspend fun deleteAllRules()
 }

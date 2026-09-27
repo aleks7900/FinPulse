@@ -35,4 +35,13 @@ interface DebtDao {
 
     @Query("UPDATE debts SET remainingBalanceMinor = :remainingMinor WHERE id = :id")
     suspend fun updateBalance(id: String, remainingMinor: Long)
+
+    @Query("SELECT * FROM debts")
+    suspend fun getAllDebts(): List<DebtEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDebts(debts: List<DebtEntity>)
+
+    @Query("DELETE FROM debts")
+    suspend fun deleteAllDebts()
 }

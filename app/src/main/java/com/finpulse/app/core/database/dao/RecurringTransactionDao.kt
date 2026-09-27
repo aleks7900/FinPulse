@@ -82,4 +82,16 @@ interface RecurringTransactionDao {
 
     @Query("UPDATE recurring_occurrences SET status = :status, paidDate = :paidDate, transactionId = :transactionId WHERE id = :id")
     suspend fun markOccurrenceStatus(id: String, status: String, paidDate: Long?, transactionId: String?)
+
+    @Query("SELECT * FROM recurring_transactions")
+    suspend fun getAllRecurring(): List<RecurringTransactionEntity>
+
+    @Query("SELECT * FROM recurring_occurrences")
+    suspend fun getAllOccurrences(): List<RecurringOccurrenceEntity>
+
+    @Query("DELETE FROM recurring_transactions")
+    suspend fun deleteAllRecurring()
+
+    @Query("DELETE FROM recurring_occurrences")
+    suspend fun deleteAllOccurrences()
 }

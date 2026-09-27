@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.preferences.core.stringSetPreferencesKey
@@ -28,7 +29,10 @@ data class UserPreferences(
     val lastUsedTransactionType: String = "EXPENSE",
     val dismissedInboxItemIds: Set<String> = emptySet(),
     val widgetPrivacyEnabled: Boolean = false,
-    val widgetMaskOnAppLock: Boolean = true
+    val widgetMaskOnAppLock: Boolean = true,
+    val lastBackupTimestamp: Long? = null,
+    val backupReminderInterval: String = "OFF",
+    val lastBackupReminderDismissedMillis: Long = 0L
 )
 
 class UserPreferencesDataStore(private val context: Context) {
@@ -49,6 +53,9 @@ class UserPreferencesDataStore(private val context: Context) {
         val DISMISSED_INBOX_ITEMS = stringSetPreferencesKey("dismissed_inbox_items")
         val WIDGET_PRIVACY_ENABLED = booleanPreferencesKey("widget_privacy_enabled")
         val WIDGET_MASK_ON_APP_LOCK = booleanPreferencesKey("widget_mask_on_app_lock")
+        val LAST_BACKUP_TIMESTAMP = longPreferencesKey("last_backup_timestamp")
+        val BACKUP_REMINDER_INTERVAL = stringPreferencesKey("backup_reminder_interval")
+        val LAST_BACKUP_REMINDER_DISMISSED = longPreferencesKey("last_backup_reminder_dismissed")
     }
 
     val userPreferencesFlow: Flow<UserPreferences> = context.dataStore.data.map { preferences ->
@@ -73,7 +80,10 @@ class UserPreferencesDataStore(private val context: Context) {
             lastUsedTransactionType = preferences[PreferencesKeys.LAST_USED_TX_TYPE] ?: "EXPENSE",
             dismissedInboxItemIds = preferences[PreferencesKeys.DISMISSED_INBOX_ITEMS] ?: emptySet(),
             widgetPrivacyEnabled = preferences[PreferencesKeys.WIDGET_PRIVACY_ENABLED] ?: false,
-            widgetMaskOnAppLock = preferences[PreferencesKeys.WIDGET_MASK_ON_APP_LOCK] ?: true
+            widgetMaskOnAppLock = preferences[PreferencesKeys.WIDGET_MASK_ON_APP_LOCK] ?: true,
+            lastBackupTimestamp = preferences[PreferencesKeys.LAST_BACKUP_TIMESTAMP],
+            backupReminderInterval = preferences[PreferencesKeys.BACKUP_REMINDER_INTERVAL] ?: "OFF",
+            lastBackupReminderDismissedMillis = preferences[PreferencesKeys.LAST_BACKUP_REMINDER_DISMISSED] ?: 0L
         )
     }
 
@@ -163,6 +173,24 @@ class UserPreferencesDataStore(private val context: Context) {
     suspend fun setWidgetMaskOnAppLock(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.WIDGET_MASK_ON_APP_LOCK] = enabled
+        }
+    }
+
+    suspend fun setLastBackupTimestamp(timestamp: Long) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.LAST_BACKUP_TIMESTAMP] = timestamp
+        }
+    }
+
+    suspend fun setBackupReminderInterval(interval: String) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.BACKUP_REMINDER_INTERVAL] = interval
+        }
+    }
+
+    suspend fun setLastBackupReminderDismissedMillis(timestamp: Long) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.LAST_BACKUP_REMINDER_DISMISSED] = timestamp
         }
     }
 

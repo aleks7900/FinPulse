@@ -143,4 +143,10 @@ interface TransactionDao {
 
     @RawQuery
     suspend fun queryTransactions(query: SupportSQLiteQuery): List<TransactionEntity>
+
+    @Query("SELECT * FROM transactions")
+    suspend fun getAllTransactions(): List<TransactionEntity>
+
+    @Query("DELETE FROM transactions")
+    suspend fun deleteAllTransactions()
 }

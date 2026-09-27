@@ -44,4 +44,10 @@ interface AccountDao {
 
     @Query("UPDATE accounts SET isArchived = :isArchived, updatedAt = :updatedAt WHERE id = :accountId")
     suspend fun setArchived(accountId: String, isArchived: Boolean, updatedAt: Long = System.currentTimeMillis())
+
+    @Query("SELECT * FROM accounts")
+    suspend fun getAllAccounts(): List<AccountEntity>
+
+    @Query("DELETE FROM accounts")
+    suspend fun deleteAllAccounts()
 }

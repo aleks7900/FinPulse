@@ -1,8 +1,10 @@
 package com.finpulse.app.domain.model
 
+import kotlinx.serialization.Serializable
 import java.time.YearMonth
 import java.time.ZoneId
 
+@Serializable
 enum class TransactionSort(val displayName: String) {
     DATE_DESC("Newest"),
     DATE_ASC("Oldest"),
@@ -10,6 +12,7 @@ enum class TransactionSort(val displayName: String) {
     AMOUNT_ASC("Lowest Amount")
 }
 
+@Serializable
 enum class TransactionStatusFilter(val displayName: String) {
     ALL("All"),
     CONFIRMED("Confirmed"),
@@ -18,6 +21,7 @@ enum class TransactionStatusFilter(val displayName: String) {
     RECURRING("Subscriptions & Recurring")
 }
 
+@Serializable
 enum class DateRangePreset(val displayName: String) {
     ALL("All Time"),
     THIS_MONTH("This Month"),
@@ -26,6 +30,7 @@ enum class DateRangePreset(val displayName: String) {
     CUSTOM("Custom Range")
 }
 
+@Serializable
 data class TransactionFilterParams(
     val query: String = "",
     val accountId: String? = null,

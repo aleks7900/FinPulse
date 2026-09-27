@@ -275,6 +275,13 @@ class CategoryCatalogTest {
         }
 
         override suspend fun getCategoryCount(): Int = storage.size
+
+        override suspend fun getAllCategories(): List<CategoryEntity> = storage.values.toList()
+
+        override suspend fun deleteAllCategories() {
+            storage.clear()
+            flow.value = emptyList()
+        }
     }
 
     private fun CategoryEntity.toDomain() = Category(
