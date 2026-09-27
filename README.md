@@ -198,10 +198,33 @@ The compiled APK will be located at:
 app/build/outputs/apk/debug/app-debug.apk
 ```
 
+### Build Production Release Android App Bundle (AAB)
+```bash
+.\gradlew.bat bundleRelease
+```
+The optimized, R8-minified AAB will be located at:
+```
+app/build/outputs/bundle/release/app-release.aab
+```
+
 ### Install onto Device or Emulator
 ```bash
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
+
+---
+
+## 📦 Google Play Publication & Store Assets
+
+Complete publication materials, legal compliance documents, and graphical assets are prepared and ready for submission:
+
+- **Publication Guide:** [docs/GOOGLE_PLAY_PUBLICATION_GUIDE.md](file:///c:/Users/aleks/.gemini/antigravity-ide/scratch/FinPulse/docs/GOOGLE_PLAY_PUBLICATION_GUIDE.md)
+- **Data Safety Form Answers:** [docs/DATA_SAFETY_SPECIFICATION.md](file:///c:/Users/aleks/.gemini/antigravity-ide/scratch/FinPulse/docs/DATA_SAFETY_SPECIFICATION.md)
+- **Privacy Policy:** [docs/PRIVACY_POLICY.md](file:///c:/Users/aleks/.gemini/antigravity-ide/scratch/FinPulse/docs/PRIVACY_POLICY.md)
+- **Terms of Service:** [docs/TERMS_OF_SERVICE.md](file:///c:/Users/aleks/.gemini/antigravity-ide/scratch/FinPulse/docs/TERMS_OF_SERVICE.md)
+- **Store Listing Copy:** [distribution/play_store/listing/](file:///c:/Users/aleks/.gemini/antigravity-ide/scratch/FinPulse/distribution/play_store/listing/) (Title, short description, full description, release notes)
+- **Store Graphics:** [distribution/play_store/graphics/](file:///c:/Users/aleks/.gemini/antigravity-ide/scratch/FinPulse/distribution/play_store/graphics/) (512x512 App Icon, 1024x500 Feature Graphic)
+- **Promotional Screenshots:** [distribution/play_store/screenshots/phone/](file:///c:/Users/aleks/.gemini/antigravity-ide/scratch/FinPulse/distribution/play_store/screenshots/phone/) (5 high-res 1080x1920 phone screenshots)
 
 ---
 

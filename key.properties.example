@@ -1,0 +1,8 @@
+# Google Play Release Keystore Configuration
+# Copy this file to 'key.properties' and fill with your actual keystore credentials.
+# NEVER commit 'key.properties' or your .keystore/.jks file to source control.
+
+storeFile=../release.keystore
+storePassword=your_keystore_password_here
+keyAlias=finpulse_release_key
+keyPassword=your_key_password_here

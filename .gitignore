@@ -36,6 +36,7 @@ output-metadata.json
 *.key
 keystore.properties
 signing.properties
+key.properties
 
 # Secrets / Environment configuration
 .env

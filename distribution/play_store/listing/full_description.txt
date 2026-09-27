@@ -1,0 +1,61 @@
+Take complete control of your financial life with Fin Pulse — the smart, secure, and privacy-first personal finance tracker. Whether you are tracking daily coffee runs, organizing household budgets, planning savings goals, or monitoring multi-currency accounts, Fin Pulse makes personal money management fast, intuitive, and stress-free.
+
+Unlike other finance apps that trap your data behind forced cloud walls or sell your financial habits to advertisers, Fin Pulse is built with an offline-first philosophy. Your data stays securely stored in an encrypted database on your device, and you choose when and how to synchronize across your Android devices using your private Google Account.
+
+━━━━━━━━━━━━━━━━━━━━━
+🌟 KEY FEATURES AT A GLANCE
+━━━━━━━━━━━━━━━━━━━━━
+
+📊 FAST & INTUITIVE EXPENSE TRACKING
+• Record expenses, income, and transfers between accounts in seconds.
+• Categorize transactions with clean, customizable categories and icons.
+• Add detailed merchant notes, tags, and timestamps.
+• Filter and search transaction history effortlessly.
+
+💳 MULTI-ACCOUNT & WALLET MANAGEMENT
+• Track checking accounts, savings accounts, credit cards, cash wallets, and investment portfolios in one unified dashboard.
+• Real-time net worth calculation and cash flow monitoring.
+• Account-to-account transfers with automatic balance adjustments.
+
+🎯 SMART BUDGETS & SPENDING LIMITS
+• Set monthly or custom budgets for individual categories or overall spending.
+• Visual progress bars and proactive alerts when you approach your budget limits.
+• Stay disciplined and eliminate surprise month-end expenses.
+
+📈 VISUAL ANALYTICS & INSIGHTS
+• Interactive category breakdown charts to visualize where every dollar goes.
+• Monthly cash flow trends comparing income against expenditures.
+• Identify spending leaks and spot opportunities to increase your savings rate.
+
+🔄 RECURRING BILLS & SUBSCRIPTION MANAGER
+• Manage repeating subscriptions (Netflix, Spotify, gym memberships) and utility bills.
+• Never miss a payment deadline or incur unexpected overdraft fees.
+
+🛡️ BANK-GRADE PRIVACY & BIOMETRIC SECURITY
+• Biometric Lock: Protect your private financial records with Fingerprint, Face Unlock, or Device PIN.
+• Privacy Mode: Instantly mask balances and sensitive figures on demand when in public places.
+• Screenshot Protection: Optional FLAG_SECURE shields your sensitive screens from screen recorders and recents previews.
+• Android Keystore: Sensitive credentials and tokens are protected by hardware-backed security.
+
+☁️ SEAMLESS GOOGLE CLOUD SYNC & BACKUP
+• 100% Offline-First: Add transactions anytime, anywhere without an active internet connection.
+• Instant Multi-Device Restore: Sign in with your Google account to automatically synchronize data across your phones and tablets.
+• Conflict-Free Synchronization: Sophisticated last-write-wins synchronization ensures your data is never lost or duplicated.
+• Isolated Cloud Storage: Data is stored securely and isolated strictly under your private Google UID.
+
+━━━━━━━━━━━━━━━━━━━━━
+🔒 YOUR DATA, YOUR PRIVACY
+━━━━━━━━━━━━━━━━━━━━━
+We believe your personal financial data belongs solely to you.
+• No ads.
+• No tracking or selling of your financial habits to third-party data brokers.
+• No unsolicited marketing emails.
+
+━━━━━━━━━━━━━━━━━━━━━
+📱 PERMISSIONS & TRANSPARENCY
+━━━━━━━━━━━━━━━━━━━━━
+• BIOMETRIC / FINGERPRINT: Used solely for authenticating you locally when opening the app.
+• INTERNET & NETWORK STATE: Used solely for optional Google Account cloud sync and Firestore backup.
+• POST NOTIFICATIONS (Android 13+): Used for local budget warnings and recurring bill reminders.
+
+Download Fin Pulse today and experience personal finance management the way it was meant to be — fast, private, and empowering!
