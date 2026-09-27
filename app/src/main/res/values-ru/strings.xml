@@ -834,4 +834,37 @@
     <string name="cat_transfer">Перевод между счетами</string>
     <string name="cat_transfer_withdrawal">Снятие наличных</string>
     <string name="cat_transfer_deposit">Внесение наличных</string>
+
+    <!-- Financial Calendar & Cash Flow -->
+    <string name="calendar_title">Финансовый календарь</string>
+    <string name="calendar_tab_month">Месяц</string>
+    <string name="calendar_tab_agenda">Повестка</string>
+    <string name="calendar_filter_7_days">Следующие 7 дней</string>
+    <string name="calendar_filter_30_days">Следующие 30 дней</string>
+    <string name="calendar_filter_month">Месяц</string>
+    <string name="calendar_filter_90_days">Следующие 90 дней</string>
+    <string name="calendar_cash_flow_title">Предстоящий денежный поток</string>
+    <string name="calendar_projected_balance">Прогнозируемый баланс</string>
+    <string name="calendar_starting_liquid">Начальная ликвидность</string>
+    <string name="calendar_lowest_projected">Минимальный баланс</string>
+    <string name="calendar_projected_end">Итог прогноза</string>
+    <string name="calendar_expected_inflow">Ожидаемые поступления</string>
+    <string name="calendar_expected_outflow">Ожидаемые списания</string>
+    <string name="calendar_net_cash_flow">Чистый денежный поток</string>
+    <string name="calendar_deterministic_disclaimer">Детерминированный прогноз: строго на основе запланированных событий.</string>
+    <string name="calendar_status_upcoming">Предстоит</string>
+    <string name="calendar_status_paid">Оплачено</string>
+    <string name="calendar_status_overdue">Просрочено</string>
+    <string name="calendar_status_skipped">Пропущено</string>
+    <string name="calendar_action_mark_paid">Отметить как оплаченное</string>
+    <string name="calendar_action_skip">Пропустить</string>
+    <string name="calendar_action_edit_occurrence">Изменить событие</string>
+    <string name="calendar_action_open_rule">Открыть регулярное правило</string>
+    <string name="calendar_reminder_alerts">Уведомления и напоминания</string>
+    <string name="calendar_test_alert">Тестовое напоминание</string>
+    <string name="calendar_reminder_notif_title">Предстоящий платёж: %1$s</string>
+    <string name="calendar_reminder_notif_body">Платёж на сумму %1$s запланирован на %2$s</string>
+    <string name="calendar_days_projected">Прогноз на %1$d дн.</string>
+    <string name="calendar_deficit_risk">Риск дефицита</string>
+    <string name="calendar_no_events">Нет предстоящих платежей для выбранного фильтра.</string>
 </resources>

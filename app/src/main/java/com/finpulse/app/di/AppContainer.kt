@@ -58,6 +58,7 @@ interface AppContainer {
     val bulkCategorizeTransactionsUseCase: com.finpulse.app.domain.usecase.review.BulkCategorizeTransactionsUseCase
     val updateTransactionDetailsUseCase: com.finpulse.app.domain.usecase.review.UpdateTransactionDetailsUseCase
     val calculateSafeToSpendUseCase: com.finpulse.app.domain.usecase.budget.CalculateSafeToSpendUseCase
+    val getFinancialCalendarUseCase: com.finpulse.app.domain.usecase.calendar.GetFinancialCalendarUseCase
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -208,6 +209,18 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val calculateSafeToSpendUseCase: com.finpulse.app.domain.usecase.budget.CalculateSafeToSpendUseCase by lazy {
         com.finpulse.app.domain.usecase.budget.CalculateSafeToSpendUseCase()
+    }
+
+    override val getFinancialCalendarUseCase: com.finpulse.app.domain.usecase.calendar.GetFinancialCalendarUseCase by lazy {
+        com.finpulse.app.domain.usecase.calendar.GetFinancialCalendarUseCase(
+            accountRepository = accountRepository,
+            recurringRepository = recurringRepository,
+            debtRepository = debtRepository,
+            goalRepository = goalRepository,
+            categoryRepository = categoryRepository,
+            transactionRepository = transactionRepository,
+            userPreferencesDataStore = userPreferencesDataStore
+        )
     }
 }
 

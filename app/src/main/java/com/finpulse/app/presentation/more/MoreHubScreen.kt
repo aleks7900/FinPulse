@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CloudUpload
@@ -193,6 +194,13 @@ fun MoreHubScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    HubItem(
+                        title = "Financial Calendar & Cash Flow",
+                        subtitle = "Forecast upcoming bills, income, loans & balance timeline",
+                        icon = Icons.Default.CalendarMonth,
+                        tint = EmeraldPrimary,
+                        onClick = { onNavigate(Screen.Calendar) }
+                    )
                     HubItem(
                         title = stringResource(R.string.accounts_title),
                         subtitle = stringResource(R.string.account_empty_desc),

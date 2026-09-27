@@ -198,7 +198,8 @@ fun FinPulseApp(
                     onNavigateToBudgets = { navController.navigate(Screen.Budgets.route) },
                     onNavigateToSearch = { navController.navigate(Screen.Search.route) },
                     onNavigateToInsights = { navController.navigate(Screen.Insights.route) },
-                    onNavigateToReviewQueue = { navController.navigate(Screen.ReviewInbox.route) }
+                    onNavigateToReviewQueue = { navController.navigate(Screen.ReviewInbox.route) },
+                    onNavigateToCalendar = { navController.navigate(Screen.Calendar.route) }
                 )
             }
 
@@ -573,6 +574,51 @@ fun FinPulseApp(
                     onConfirmBulkCategorize = viewModel::onConfirmBulkCategorize,
                     onDismissDialogs = viewModel::onDismissDialogs,
                     onClearMessage = viewModel::onClearMessage
+                )
+            }
+
+            // Sub-screen: Financial Calendar & Cash Flow
+            composable(Screen.Calendar.route) {
+                val context = androidx.compose.ui.platform.LocalContext.current
+                val viewModel: com.finpulse.app.presentation.calendar.FinancialCalendarViewModel = viewModel {
+                    com.finpulse.app.presentation.calendar.FinancialCalendarViewModel(
+                        getFinancialCalendarUseCase = container.getFinancialCalendarUseCase,
+                        recurringRepository = container.recurringRepository,
+                        accountRepository = container.accountRepository,
+                        categoryRepository = container.categoryRepository,
+                        userPreferencesDataStore = container.userPreferencesDataStore,
+                        markOccurrencePaidUseCase = container.markOccurrencePaidUseCase,
+                        skipOccurrenceUseCase = container.skipOccurrenceUseCase,
+                        editOccurrenceUseCase = container.editOccurrenceUseCase,
+                        manageRecurringRuleUseCase = container.manageRecurringRuleUseCase
+                    )
+                }
+                val uiState by viewModel.uiState.collectAsState()
+
+                com.finpulse.app.presentation.calendar.FinancialCalendarScreen(
+                    uiState = uiState,
+                    onViewModeChange = viewModel::setViewMode,
+                    onPeriodPresetChange = viewModel::setPeriodPreset,
+                    onPreviousMonth = viewModel::selectPreviousMonth,
+                    onNextMonth = viewModel::selectNextMonth,
+                    onTodayClick = viewModel::selectToday,
+                    onDateSelect = viewModel::selectDate,
+                    onFilterChange = viewModel::setTypeFilter,
+                    onEventClick = viewModel::onEventClicked,
+                    onDismissEventDetails = viewModel::dismissEventDetails,
+                    onShowMarkPaid = viewModel::showMarkPaidDialog,
+                    onDismissMarkPaid = viewModel::dismissMarkPaidDialog,
+                    onConfirmMarkPaid = viewModel::confirmMarkPaid,
+                    onSkipEvent = viewModel::skipEvent,
+                    onShowEditOccurrence = viewModel::showEditOccurrenceDialog,
+                    onDismissEditOccurrence = viewModel::dismissEditOccurrenceDialog,
+                    onSaveEditedOccurrence = viewModel::saveEditedOccurrence,
+                    onSetReminder = { event, days, instant ->
+                        viewModel.setEventReminder(context = context, event = event, reminderDaysBefore = days, sendInstantNotification = instant)
+                    },
+                    onClearReminderMessage = viewModel::clearReminderMessage,
+                    onNavigateBack = { navController.popBackStack() },
+                    onOpenRecurringScreen = { navController.navigate(Screen.Recurring.route) }
                 )
             }
         }

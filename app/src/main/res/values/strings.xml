@@ -818,4 +818,37 @@
     <string name="cat_transfer">Account Transfer</string>
     <string name="cat_transfer_withdrawal">Cash Withdrawal</string>
     <string name="cat_transfer_deposit">Cash Deposit</string>
+
+    <!-- Financial Calendar & Cash Flow -->
+    <string name="calendar_title">Financial Calendar</string>
+    <string name="calendar_tab_month">Month</string>
+    <string name="calendar_tab_agenda">Agenda</string>
+    <string name="calendar_filter_7_days">Next 7 Days</string>
+    <string name="calendar_filter_30_days">Next 30 Days</string>
+    <string name="calendar_filter_month">Month</string>
+    <string name="calendar_filter_90_days">Next 90 Days</string>
+    <string name="calendar_cash_flow_title">Upcoming Cash Flow</string>
+    <string name="calendar_projected_balance">Projected Balance</string>
+    <string name="calendar_starting_liquid">Starting Liquid</string>
+    <string name="calendar_lowest_projected">Lowest Projected</string>
+    <string name="calendar_projected_end">Projected End</string>
+    <string name="calendar_expected_inflow">Expected Inflow</string>
+    <string name="calendar_expected_outflow">Expected Outflow</string>
+    <string name="calendar_net_cash_flow">Net Cash Flow</string>
+    <string name="calendar_deterministic_disclaimer">Deterministic Projection: Strictly based on scheduled events.</string>
+    <string name="calendar_status_upcoming">Upcoming</string>
+    <string name="calendar_status_paid">Paid</string>
+    <string name="calendar_status_overdue">Overdue</string>
+    <string name="calendar_status_skipped">Skipped</string>
+    <string name="calendar_action_mark_paid">Mark Paid</string>
+    <string name="calendar_action_skip">Skip</string>
+    <string name="calendar_action_edit_occurrence">Edit Occurrence</string>
+    <string name="calendar_action_open_rule">Open Recurring Rule</string>
+    <string name="calendar_reminder_alerts">Reminder Alerts</string>
+    <string name="calendar_test_alert">Test Alert</string>
+    <string name="calendar_reminder_notif_title">Upcoming Payment: %1$s</string>
+    <string name="calendar_reminder_notif_body">Payment of %1$s is due on %2$s</string>
+    <string name="calendar_days_projected">%1$d days projected</string>
+    <string name="calendar_deficit_risk">Deficit Risk</string>
+    <string name="calendar_no_events">No obligations found for the selected filter.</string>
 </resources>

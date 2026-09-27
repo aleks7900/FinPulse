@@ -818,4 +818,37 @@
     <string name="cat_transfer">Transferência entre contas</string>
     <string name="cat_transfer_withdrawal">Saque de dinheiro</string>
     <string name="cat_transfer_deposit">Depósito em dinheiro</string>
+
+    <!-- Financial Calendar & Cash Flow -->
+    <string name="calendar_title">Calendário Financeiro</string>
+    <string name="calendar_tab_month">Mês</string>
+    <string name="calendar_tab_agenda">Agenda</string>
+    <string name="calendar_filter_7_days">Próximos 7 dias</string>
+    <string name="calendar_filter_30_days">Próximos 30 dias</string>
+    <string name="calendar_filter_month">Mês</string>
+    <string name="calendar_filter_90_days">Próximos 90 dias</string>
+    <string name="calendar_cash_flow_title">Fluxo de Caixa Futuro</string>
+    <string name="calendar_projected_balance">Saldo Projetado</string>
+    <string name="calendar_starting_liquid">Liquidez Inicial</string>
+    <string name="calendar_lowest_projected">Menor Saldo</string>
+    <string name="calendar_projected_end">Fim Projetado</string>
+    <string name="calendar_expected_inflow">Entradas Esperadas</string>
+    <string name="calendar_expected_outflow">Saídas Esperadas</string>
+    <string name="calendar_net_cash_flow">Fluxo de Caixa Líquido</string>
+    <string name="calendar_deterministic_disclaimer">Projeção Determinística: Baseada estritamente em eventos agendados.</string>
+    <string name="calendar_status_upcoming">Previsto</string>
+    <string name="calendar_status_paid">Pago</string>
+    <string name="calendar_status_overdue">Atrasado</string>
+    <string name="calendar_status_skipped">Ignorado</string>
+    <string name="calendar_action_mark_paid">Marcar como Pago</string>
+    <string name="calendar_action_skip">Ignorar</string>
+    <string name="calendar_action_edit_occurrence">Editar Ocorrência</string>
+    <string name="calendar_action_open_rule">Abrir Regra Recorrente</string>
+    <string name="calendar_reminder_alerts">Alertas de Lembrete</string>
+    <string name="calendar_test_alert">Alerta de Teste</string>
+    <string name="calendar_reminder_notif_title">Pagamento Próximo: %1$s</string>
+    <string name="calendar_reminder_notif_body">O pagamento de %1$s vence em %2$s</string>
+    <string name="calendar_days_projected">%1$d dias projetados</string>
+    <string name="calendar_deficit_risk">Risco de Déficit</string>
+    <string name="calendar_no_events">Nenhuma obrigação encontrada para o filtro selecionado.</string>
 </resources>

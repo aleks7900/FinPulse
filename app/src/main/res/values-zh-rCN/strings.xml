@@ -810,4 +810,37 @@
     <string name="cat_transfer">账户间转账</string>
     <string name="cat_transfer_withdrawal">现金取款</string>
     <string name="cat_transfer_deposit">现金存款</string>
+
+    <!-- Financial Calendar & Cash Flow -->
+    <string name="calendar_title">财务日历</string>
+    <string name="calendar_tab_month">月视图</string>
+    <string name="calendar_tab_agenda">议程</string>
+    <string name="calendar_filter_7_days">未来 7 天</string>
+    <string name="calendar_filter_30_days">未来 30 天</string>
+    <string name="calendar_filter_month">本月</string>
+    <string name="calendar_filter_90_days">未来 90 天</string>
+    <string name="calendar_cash_flow_title">即将到来的现金流</string>
+    <string name="calendar_projected_balance">预估结余</string>
+    <string name="calendar_starting_liquid">期初流动资金</string>
+    <string name="calendar_lowest_projected">最低预估结余</string>
+    <string name="calendar_projected_end">期末预估</string>
+    <string name="calendar_expected_inflow">预计流入</string>
+    <string name="calendar_expected_outflow">预计流出</string>
+    <string name="calendar_net_cash_flow">净现金流</string>
+    <string name="calendar_deterministic_disclaimer">确定性预测：严格基于已安排的已知收支事件。</string>
+    <string name="calendar_status_upcoming">待处理</string>
+    <string name="calendar_status_paid">已支付</string>
+    <string name="calendar_status_overdue">逾期</string>
+    <string name="calendar_status_skipped">已跳过</string>
+    <string name="calendar_action_mark_paid">标记为已付</string>
+    <string name="calendar_action_skip">跳过</string>
+    <string name="calendar_action_edit_occurrence">编辑该期账单</string>
+    <string name="calendar_action_open_rule">查看周期规则</string>
+    <string name="calendar_reminder_alerts">提醒通知</string>
+    <string name="calendar_test_alert">发送测试提醒</string>
+    <string name="calendar_reminder_notif_title">待支付账单：%1$s</string>
+    <string name="calendar_reminder_notif_body">金额 %1$s 的账单应于 %2$s 支付</string>
+    <string name="calendar_days_projected">预估 %1$d 天</string>
+    <string name="calendar_deficit_risk">存在资金赤字风险</string>
+    <string name="calendar_no_events">当前筛选条件下无收支项目。</string>
 </resources>

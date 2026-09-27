@@ -818,4 +818,37 @@
     <string name="cat_transfer">Hesaplar Arası Transfer</string>
     <string name="cat_transfer_withdrawal">Nakit Para Çekme</string>
     <string name="cat_transfer_deposit">Nakit Para Yatırma</string>
+
+    <!-- Financial Calendar & Cash Flow -->
+    <string name="calendar_title">Finansal Takvim</string>
+    <string name="calendar_tab_month">Ay</string>
+    <string name="calendar_tab_agenda">Ajanda</string>
+    <string name="calendar_filter_7_days">Gelecek 7 Gün</string>
+    <string name="calendar_filter_30_days">Gelecek 30 Gün</string>
+    <string name="calendar_filter_month">Ay</string>
+    <string name="calendar_filter_90_days">Gelecek 90 Gün</string>
+    <string name="calendar_cash_flow_title">Gelecek Nakit Akışı</string>
+    <string name="calendar_projected_balance">Tahmini Bakiye</string>
+    <string name="calendar_starting_liquid">Başlangıç Likiditesi</string>
+    <string name="calendar_lowest_projected">En Düşük Bakiye</string>
+    <string name="calendar_projected_end">Tahmini Bitiş</string>
+    <string name="calendar_expected_inflow">Beklenen Gelir</string>
+    <string name="calendar_expected_outflow">Beklenen Gider</string>
+    <string name="calendar_net_cash_flow">Net Nakit Akışı</string>
+    <string name="calendar_deterministic_disclaimer">Belirleyici Projeksiyon: Yalnızca planlanmış işlemlere dayanır.</string>
+    <string name="calendar_status_upcoming">Gelecek</string>
+    <string name="calendar_status_paid">Ödendi</string>
+    <string name="calendar_status_overdue">Gecikmiş</string>
+    <string name="calendar_status_skipped">Atlandı</string>
+    <string name="calendar_action_mark_paid">Ödendi Olarak İşaretle</string>
+    <string name="calendar_action_skip">Atla</string>
+    <string name="calendar_action_edit_occurrence">İşlemi Düzenle</string>
+    <string name="calendar_action_open_rule">Tekrarlayan Kuralı Aç</string>
+    <string name="calendar_reminder_alerts">Hatırlatıcı Bildirimleri</string>
+    <string name="calendar_test_alert">Test Bildirimi</string>
+    <string name="calendar_reminder_notif_title">Yaklaşan Ödeme: %1$s</string>
+    <string name="calendar_reminder_notif_body">%1$s tutarındaki ödemenin son tarihi: %2$s</string>
+    <string name="calendar_days_projected">%1$d günlük tahmin</string>
+    <string name="calendar_deficit_risk">Açık Riski</string>
+    <string name="calendar_no_events">Seçilen filtre için yaklaşan ödeme bulunamadı.</string>
 </resources>

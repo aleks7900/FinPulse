@@ -810,4 +810,37 @@
     <string name="cat_transfer">口座間振替</string>
     <string name="cat_transfer_withdrawal">ATM現金引出し</string>
     <string name="cat_transfer_deposit">ATM現金預入れ</string>
+
+    <!-- Financial Calendar & Cash Flow -->
+    <string name="calendar_title">財務カレンダー</string>
+    <string name="calendar_tab_month">月</string>
+    <string name="calendar_tab_agenda">アジェンダ</string>
+    <string name="calendar_filter_7_days">今後7日間</string>
+    <string name="calendar_filter_30_days">今後30日間</string>
+    <string name="calendar_filter_month">月</string>
+    <string name="calendar_filter_90_days">今後90日間</string>
+    <string name="calendar_cash_flow_title">今後のキャッシュフロー</string>
+    <string name="calendar_projected_balance">予測残高</string>
+    <string name="calendar_starting_liquid">初期流動資産</string>
+    <string name="calendar_lowest_projected">最低予測残高</string>
+    <string name="calendar_projected_end">期間末予測</string>
+    <string name="calendar_expected_inflow">予想収入</string>
+    <string name="calendar_expected_outflow">予想支出</string>
+    <string name="calendar_net_cash_flow">純キャッシュフロー</string>
+    <string name="calendar_deterministic_disclaimer">確定的一貫予測：予定された定期取引と目標のみに基づきます。</string>
+    <string name="calendar_status_upcoming">予定</string>
+    <string name="calendar_status_paid">支払済</string>
+    <string name="calendar_status_overdue">期限超過</string>
+    <string name="calendar_status_skipped">スキップ</string>
+    <string name="calendar_action_mark_paid">支払済にする</string>
+    <string name="calendar_action_skip">スキップ</string>
+    <string name="calendar_action_edit_occurrence">予定の編集</string>
+    <string name="calendar_action_open_rule">定期ルールを開く</string>
+    <string name="calendar_reminder_alerts">リマインダー通知</string>
+    <string name="calendar_test_alert">テスト通知</string>
+    <string name="calendar_reminder_notif_title">支払予定：%1$s</string>
+    <string name="calendar_reminder_notif_body">%1$s の支払期限は %2$s です</string>
+    <string name="calendar_days_projected">%1$d日間の予測</string>
+    <string name="calendar_deficit_risk">不足リスク</string>
+    <string name="calendar_no_events">選択されたフィルターに該当する予定はありません。</string>
 </resources>

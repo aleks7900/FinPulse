@@ -810,4 +810,37 @@
     <string name="cat_transfer">계좌 간 이체</string>
     <string name="cat_transfer_withdrawal">현금 인출</string>
     <string name="cat_transfer_deposit">현금 입금</string>
+
+    <!-- Financial Calendar & Cash Flow -->
+    <string name="calendar_title">금융 캘린더</string>
+    <string name="calendar_tab_month">월</string>
+    <string name="calendar_tab_agenda">일정</string>
+    <string name="calendar_filter_7_days">향후 7일</string>
+    <string name="calendar_filter_30_days">향후 30일</string>
+    <string name="calendar_filter_month">선택한 월</string>
+    <string name="calendar_filter_90_days">향후 90일</string>
+    <string name="calendar_cash_flow_title">예정된 현금 흐름</string>
+    <string name="calendar_projected_balance">예상 잔액</string>
+    <string name="calendar_starting_liquid">시작 유동 잔액</string>
+    <string name="calendar_lowest_projected">최저 예상 잔액</string>
+    <string name="calendar_projected_end">예상 기말 잔액</string>
+    <string name="calendar_expected_inflow">예상 유입</string>
+    <string name="calendar_expected_outflow">예상 유출</string>
+    <string name="calendar_net_cash_flow">순 현금 흐름</string>
+    <string name="calendar_deterministic_disclaimer">결정론적 예측: 예정된 일정 및 규칙에만 기반합니다.</string>
+    <string name="calendar_status_upcoming">예정</string>
+    <string name="calendar_status_paid">완료</string>
+    <string name="calendar_status_overdue">연체</string>
+    <string name="calendar_status_skipped">건너뜀</string>
+    <string name="calendar_action_mark_paid">결제 완료 표시</string>
+    <string name="calendar_action_skip">건너뛰기</string>
+    <string name="calendar_action_edit_occurrence">항목 수정</string>
+    <string name="calendar_action_open_rule">반복 규칙 열기</string>
+    <string name="calendar_reminder_alerts">알림 설정</string>
+    <string name="calendar_test_alert">테스트 알림</string>
+    <string name="calendar_reminder_notif_title">예정된 결제: %1$s</string>
+    <string name="calendar_reminder_notif_body">%1$s 결제일은 %2$s입니다</string>
+    <string name="calendar_days_projected">%1$d일 예측</string>
+    <string name="calendar_deficit_risk">잔액 부족 위험</string>
+    <string name="calendar_no_events">선택한 조건에 해당하는 일정이 없습니다.</string>
 </resources>

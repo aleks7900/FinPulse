@@ -834,4 +834,37 @@
     <string name="cat_transfer">Przelew między kontami</string>
     <string name="cat_transfer_withdrawal">Wypłata gotówki</string>
     <string name="cat_transfer_deposit">Wpłata gotówki</string>
+
+    <!-- Financial Calendar & Cash Flow -->
+    <string name="calendar_title">Kalendarz Finansowy</string>
+    <string name="calendar_tab_month">Miesiąc</string>
+    <string name="calendar_tab_agenda">Plan</string>
+    <string name="calendar_filter_7_days">Następne 7 dni</string>
+    <string name="calendar_filter_30_days">Następne 30 dni</string>
+    <string name="calendar_filter_month">Miesiąc</string>
+    <string name="calendar_filter_90_days">Następne 90 dni</string>
+    <string name="calendar_cash_flow_title">Nadchodzące Przepływy Finansowe</string>
+    <string name="calendar_projected_balance">Prognozowane Saldo</string>
+    <string name="calendar_starting_liquid">Początkowa Płynność</string>
+    <string name="calendar_lowest_projected">Najniższe Saldo</string>
+    <string name="calendar_projected_end">Koniec Prognozy</string>
+    <string name="calendar_expected_inflow">Oczekiwane Wpływy</string>
+    <string name="calendar_expected_outflow">Oczekiwane Wydatki</string>
+    <string name="calendar_net_cash_flow">Przepływy Netto</string>
+    <string name="calendar_deterministic_disclaimer">Prognoza Deterministyczna: Oparta wyłącznie na zaplanowanych zdarzeniach.</string>
+    <string name="calendar_status_upcoming">Nadchodzące</string>
+    <string name="calendar_status_paid">Opłacone</string>
+    <string name="calendar_status_overdue">Zaległe</string>
+    <string name="calendar_status_skipped">Pominięte</string>
+    <string name="calendar_action_mark_paid">Oznacz jako opłacone</string>
+    <string name="calendar_action_skip">Pomiń</string>
+    <string name="calendar_action_edit_occurrence">Edytuj wystąpienie</string>
+    <string name="calendar_action_open_rule">Otwórz regułę cykliczną</string>
+    <string name="calendar_reminder_alerts">Powiadomienia i Przypomnienia</string>
+    <string name="calendar_test_alert">Powiadomienie testowe</string>
+    <string name="calendar_reminder_notif_title">Nadchodząca płatność: %1$s</string>
+    <string name="calendar_reminder_notif_body">Płatność %1$s jest wymagalna w dniu %2$s</string>
+    <string name="calendar_days_projected">Prognoza na %1$d dni</string>
+    <string name="calendar_deficit_risk">Ryzyko Deficytu</string>
+    <string name="calendar_no_events">Brak zobowiązań dla wybranego filtra.</string>
 </resources>
