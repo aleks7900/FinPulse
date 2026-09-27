@@ -43,7 +43,7 @@ import com.finpulse.app.core.database.entity.TransactionEntity
         MerchantSignalEntity::class,
         ImportProfileEntity::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class FinPulseDatabase : RoomDatabase() {

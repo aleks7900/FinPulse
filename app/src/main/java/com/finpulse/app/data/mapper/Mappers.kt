@@ -156,7 +156,11 @@ fun BudgetEntity.toDomain(): Budget {
         notifyAt70 = notifyAt70,
         notifyAt90 = notifyAt90,
         notifyAt100 = notifyAt100,
-        isArchived = isArchived
+        isArchived = isArchived,
+        isOverall = isOverall,
+        isRolloverEnabled = isRolloverEnabled,
+        rolloverAmountMinor = rolloverAmountMinor,
+        alertThresholdPercent = alertThresholdPercent
     )
 }
 
@@ -173,7 +177,11 @@ fun Budget.toEntity(): BudgetEntity {
         notifyAt70 = notifyAt70,
         notifyAt90 = notifyAt90,
         notifyAt100 = notifyAt100,
-        isArchived = isArchived
+        isArchived = isArchived,
+        isOverall = isOverall,
+        isRolloverEnabled = isRolloverEnabled,
+        rolloverAmountMinor = rolloverAmountMinor,
+        alertThresholdPercent = alertThresholdPercent
     )
 }
 

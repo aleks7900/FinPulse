@@ -23,5 +23,9 @@ data class BudgetEntity(
     val notifyAt70: Boolean = true,
     val notifyAt90: Boolean = true,
     val notifyAt100: Boolean = true,
-    val isArchived: Boolean = false
+    val isArchived: Boolean = false,
+    val isOverall: Boolean = false,
+    val isRolloverEnabled: Boolean = false,
+    val rolloverAmountMinor: Long = 0L,
+    val alertThresholdPercent: Int = 85
 )

@@ -6,14 +6,22 @@ import com.finpulse.app.core.datastore.UserPreferencesDataStore
 import com.finpulse.app.core.model.Money
 import com.finpulse.app.core.model.TimePeriod
 import com.finpulse.app.domain.model.Budget
+import com.finpulse.app.domain.model.BudgetAlertLevel
 import com.finpulse.app.domain.model.BudgetPeriod
 import com.finpulse.app.domain.model.BudgetStatus
 import com.finpulse.app.domain.model.Category
+import com.finpulse.app.domain.model.FinancialGoal
+import com.finpulse.app.domain.model.RecurringOccurrence
+import com.finpulse.app.domain.model.SafeToSpendBreakdown
 import com.finpulse.app.domain.model.Transaction
+import com.finpulse.app.domain.repository.AccountRepository
 import com.finpulse.app.domain.repository.BudgetRepository
 import com.finpulse.app.domain.repository.CategoryRepository
+import com.finpulse.app.domain.repository.GoalRepository
+import com.finpulse.app.domain.repository.RecurringRepository
 import com.finpulse.app.domain.repository.TransactionRepository
 import com.finpulse.app.domain.usecase.EvaluateBudgetStatusUseCase
+import com.finpulse.app.domain.usecase.budget.CalculateSafeToSpendUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +31,15 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.UUID
 
+enum class BudgetFilter(val label: String) {
+    ALL("All Budgets"),
+    WARNING("Near Limit"),
+    EXCEEDED("Overspent")
+}
+
 data class BudgetsUiState(
+    val overallBudgetStatus: BudgetStatus? = null,
+    val categoryBudgetStatuses: List<BudgetStatus> = emptyList(),
     val budgetStatuses: List<BudgetStatus> = emptyList(),
     val categories: List<Category> = emptyList(),
     val totalBudgeted: Money = Money.zero(),
@@ -31,60 +47,118 @@ data class BudgetsUiState(
     val hideBalances: Boolean = false,
     val baseCurrency: String = "USD",
     val isAddEditDialogVisible: Boolean = false,
-    val editingBudget: Budget? = null
+    val editingBudget: Budget? = null,
+    val safeToSpendBreakdown: SafeToSpendBreakdown? = null,
+    val isAssumptionsDialogVisible: Boolean = false,
+    val selectedFilter: BudgetFilter = BudgetFilter.ALL
 )
 
 class BudgetsViewModel(
     private val budgetRepository: BudgetRepository,
     private val categoryRepository: CategoryRepository,
     private val transactionRepository: TransactionRepository,
+    private val accountRepository: AccountRepository,
+    private val recurringRepository: RecurringRepository,
+    private val goalRepository: GoalRepository,
     private val userPreferencesDataStore: UserPreferencesDataStore,
-    private val evaluateBudgetStatusUseCase: EvaluateBudgetStatusUseCase = EvaluateBudgetStatusUseCase()
+    private val evaluateBudgetStatusUseCase: EvaluateBudgetStatusUseCase = EvaluateBudgetStatusUseCase(),
+    private val calculateSafeToSpendUseCase: CalculateSafeToSpendUseCase = CalculateSafeToSpendUseCase()
 ) : ViewModel() {
 
     private val _isAddEditDialogVisible = MutableStateFlow(false)
     private val _editingBudget = MutableStateFlow<Budget?>(null)
+    private val _isAssumptionsDialogVisible = MutableStateFlow(false)
+    private val _selectedFilter = MutableStateFlow(BudgetFilter.ALL)
 
-    val uiState: StateFlow<BudgetsUiState> = combine(
+    // Current month date range
+    private val currentMonthRange = TimePeriod.MONTH.toDateRange()
+
+    private val baseDataFlow = combine(
         budgetRepository.getAllActiveBudgetsFlow(),
         categoryRepository.getAllCategoriesFlow(),
         transactionRepository.getAllTransactionsFlow(),
-        userPreferencesDataStore.userPreferencesFlow,
-        _isAddEditDialogVisible,
-        _editingBudget
-    ) { params ->
-        @Suppress("UNCHECKED_CAST")
-        val budgets = params[0] as List<Budget>
-        @Suppress("UNCHECKED_CAST")
-        val categories = params[1] as List<Category>
-        @Suppress("UNCHECKED_CAST")
-        val transactions = params[2] as List<Transaction>
-        val userPrefs = params[3] as com.finpulse.app.core.datastore.UserPreferences
-        val isAddVisible = params[4] as Boolean
-        val editingB = params[5] as Budget?
+        accountRepository.getActiveAccountsFlow()
+    ) { budgets, categories, transactions, accounts ->
+        Quadruple(budgets, categories, transactions, accounts)
+    }
 
-        val (startMillis, endMillis) = TimePeriod.MONTH.toDateRange()
+    private val obligationsFlow = combine(
+        recurringRepository.getOccurrencesInRangeFlow(currentMonthRange.first, currentMonthRange.second),
+        goalRepository.getAllGoalsFlow(),
+        userPreferencesDataStore.userPreferencesFlow
+    ) { occurrences, goals, userPrefs ->
+        Triple(occurrences, goals, userPrefs)
+    }
+
+    private val uiControlFlow = combine(
+        _isAddEditDialogVisible,
+        _editingBudget,
+        _isAssumptionsDialogVisible,
+        _selectedFilter
+    ) { isAddVisible, editingB, showAssumptions, filter ->
+        FilterState(isAddVisible, editingB, showAssumptions, filter)
+    }
+
+    val uiState: StateFlow<BudgetsUiState> = combine(
+        baseDataFlow,
+        obligationsFlow,
+        uiControlFlow
+    ) { (budgets, categories, transactions, accounts), (occurrences, goals, userPrefs), control ->
+        val (startMillis, endMillis) = currentMonthRange
         val periodTransactions = transactions.filter { it.timestamp in startMillis..endMillis }
 
-        val statuses = evaluateBudgetStatusUseCase(
+        val allStatuses = evaluateBudgetStatusUseCase(
             budgets = budgets,
             categories = categories,
             transactions = periodTransactions,
             currentDate = LocalDate.now()
         )
 
-        val totalBudgetedMinor = budgets.sumOf { it.limitAmount.amountMinor }
-        val totalSpentMinor = statuses.sumOf { it.spentAmount.amountMinor }
+        val overallStatus = allStatuses.firstOrNull { it.isOverall }
+        val categoryStatuses = allStatuses.filter { !it.isOverall }
+
+        val safeToSpend = calculateSafeToSpendUseCase(
+            accounts = accounts,
+            upcomingOccurrences = occurrences,
+            goals = goals,
+            overallBudgetStatus = overallStatus,
+            baseCurrency = userPrefs.baseCurrencyCode,
+            currentDate = LocalDate.now(),
+            periodEndMillis = endMillis
+        )
+
+        val filteredCategoryStatuses = when (control.filter) {
+            BudgetFilter.ALL -> categoryStatuses
+            BudgetFilter.WARNING -> categoryStatuses.filter { it.isWarning || it.alertLevel != BudgetAlertLevel.NORMAL }
+            BudgetFilter.EXCEEDED -> categoryStatuses.filter { it.isExceeded }
+        }
+
+        val totalBudgetedMinor = if (overallStatus != null) {
+            overallStatus.budget.effectiveLimit.amountMinor
+        } else {
+            categoryStatuses.sumOf { it.budget.effectiveLimit.amountMinor }
+        }
+
+        val totalSpentMinor = if (overallStatus != null) {
+            overallStatus.spentAmount.amountMinor
+        } else {
+            categoryStatuses.sumOf { it.spentAmount.amountMinor }
+        }
 
         BudgetsUiState(
-            budgetStatuses = statuses,
+            overallBudgetStatus = overallStatus,
+            categoryBudgetStatuses = filteredCategoryStatuses,
+            budgetStatuses = allStatuses,
             categories = categories,
             totalBudgeted = Money(totalBudgetedMinor, userPrefs.baseCurrencyCode),
             totalSpent = Money(totalSpentMinor, userPrefs.baseCurrencyCode),
             hideBalances = userPrefs.hideBalances,
             baseCurrency = userPrefs.baseCurrencyCode,
-            isAddEditDialogVisible = isAddVisible,
-            editingBudget = editingB
+            isAddEditDialogVisible = control.isAddVisible,
+            editingBudget = control.editingBudget,
+            safeToSpendBreakdown = safeToSpend,
+            isAssumptionsDialogVisible = control.showAssumptions,
+            selectedFilter = control.filter
         )
     }.stateIn(
         scope = viewModelScope,
@@ -97,12 +171,24 @@ class BudgetsViewModel(
         _isAddEditDialogVisible.value = show
     }
 
+    fun toggleAssumptionsDialog(show: Boolean) {
+        _isAssumptionsDialogVisible.value = show
+    }
+
+    fun setFilter(filter: BudgetFilter) {
+        _selectedFilter.value = filter
+    }
+
     fun saveBudget(
         id: String?,
         categoryId: String,
         name: String,
         limitAmountMinor: Long,
-        period: BudgetPeriod
+        period: BudgetPeriod = BudgetPeriod.MONTHLY,
+        isOverall: Boolean = false,
+        isRolloverEnabled: Boolean = false,
+        rolloverAmountMinor: Long = 0L,
+        alertThresholdPercent: Int = 85
     ) {
         viewModelScope.launch {
             val (startMillis, endMillis) = when (period) {
@@ -113,12 +199,16 @@ class BudgetsViewModel(
 
             val b = Budget(
                 id = id ?: UUID.randomUUID().toString(),
-                categoryId = categoryId,
-                name = name,
+                categoryId = if (isOverall) "overall" else categoryId,
+                name = name.ifBlank { if (isOverall) "Overall Monthly Budget" else "Budget" },
                 limitAmount = Money(limitAmountMinor, uiState.value.baseCurrency),
                 periodType = period,
                 startDate = startMillis,
-                endDate = endMillis
+                endDate = endMillis,
+                isOverall = isOverall,
+                isRolloverEnabled = isRolloverEnabled,
+                rolloverAmountMinor = rolloverAmountMinor,
+                alertThresholdPercent = alertThresholdPercent
             )
             budgetRepository.saveBudget(b)
             _isAddEditDialogVisible.value = false
@@ -134,3 +224,11 @@ class BudgetsViewModel(
         }
     }
 }
+
+private data class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
+private data class FilterState(
+    val isAddVisible: Boolean,
+    val editingBudget: Budget?,
+    val showAssumptions: Boolean,
+    val filter: BudgetFilter
+)

@@ -239,7 +239,11 @@ fun FinPulseApp(
                         budgetRepository = container.budgetRepository,
                         categoryRepository = container.categoryRepository,
                         transactionRepository = container.transactionRepository,
-                        userPreferencesDataStore = container.userPreferencesDataStore
+                        accountRepository = container.accountRepository,
+                        recurringRepository = container.recurringRepository,
+                        goalRepository = container.goalRepository,
+                        userPreferencesDataStore = container.userPreferencesDataStore,
+                        calculateSafeToSpendUseCase = container.calculateSafeToSpendUseCase
                     )
                 }
                 val uiState by viewModel.uiState.collectAsState()
@@ -248,7 +252,9 @@ fun FinPulseApp(
                     uiState = uiState,
                     onShowAddEditDialog = viewModel::showAddEditDialog,
                     onSaveBudget = viewModel::saveBudget,
-                    onDeleteBudget = viewModel::deleteBudget
+                    onDeleteBudget = viewModel::deleteBudget,
+                    onToggleAssumptionsDialog = viewModel::toggleAssumptionsDialog,
+                    onSelectFilter = viewModel::setFilter
                 )
             }
 

@@ -57,6 +57,7 @@ interface AppContainer {
     val resolveDuplicateTransactionUseCase: com.finpulse.app.domain.usecase.review.ResolveDuplicateTransactionUseCase
     val bulkCategorizeTransactionsUseCase: com.finpulse.app.domain.usecase.review.BulkCategorizeTransactionsUseCase
     val updateTransactionDetailsUseCase: com.finpulse.app.domain.usecase.review.UpdateTransactionDetailsUseCase
+    val calculateSafeToSpendUseCase: com.finpulse.app.domain.usecase.budget.CalculateSafeToSpendUseCase
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -203,6 +204,10 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val updateTransactionDetailsUseCase: com.finpulse.app.domain.usecase.review.UpdateTransactionDetailsUseCase by lazy {
         com.finpulse.app.domain.usecase.review.UpdateTransactionDetailsUseCase(transactionRepository, merchantSignalRepository)
+    }
+
+    override val calculateSafeToSpendUseCase: com.finpulse.app.domain.usecase.budget.CalculateSafeToSpendUseCase by lazy {
+        com.finpulse.app.domain.usecase.budget.CalculateSafeToSpendUseCase()
     }
 }
 

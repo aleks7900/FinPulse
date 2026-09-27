@@ -9,6 +9,19 @@ enum class BudgetPeriod(val displayName: String) {
     CUSTOM("Custom")
 }
 
+enum class PacingStatus(val displayName: String) {
+    ON_TRACK("On Track"),
+    UNDER_PACE("Under Pace"),
+    AHEAD_OF_PACE("Ahead of Pace")
+}
+
+enum class BudgetAlertLevel {
+    NORMAL,
+    INFO_70,
+    WARNING_THRESHOLD,
+    EXCEEDED
+}
+
 @Serializable
 data class Budget(
     val id: String,
@@ -21,7 +34,33 @@ data class Budget(
     val notifyAt70: Boolean = true,
     val notifyAt90: Boolean = true,
     val notifyAt100: Boolean = true,
-    val isArchived: Boolean = false
+    val isArchived: Boolean = false,
+    val isOverall: Boolean = false,
+    val isRolloverEnabled: Boolean = false,
+    val rolloverAmountMinor: Long = 0L,
+    val alertThresholdPercent: Int = 85
+) {
+    val effectiveLimit: Money
+        get() {
+            val totalMinor = if (isRolloverEnabled) {
+                limitAmount.amountMinor + rolloverAmountMinor
+            } else {
+                limitAmount.amountMinor
+            }
+            return Money(maxOf(0L, totalMinor), limitAmount.currencyCode)
+        }
+}
+
+data class PacingMetrics(
+    val totalDays: Int,
+    val currentDay: Int,
+    val daysRemaining: Int,
+    val targetDailySpend: Money,
+    val actualDailySpend: Money,
+    val allowedDailyRemaining: Money,
+    val dailyPacingDelta: Money, // Positive means actual daily spend exceeds target daily spend
+    val projectedSpend: Money,
+    val pacingStatus: PacingStatus
 )
 
 data class BudgetStatus(
@@ -33,5 +72,25 @@ data class BudgetStatus(
     val percentageConsumed: Double,
     val projectedSpend: Money,
     val isExceeded: Boolean,
-    val isWarning: Boolean
+    val isWarning: Boolean,
+    val alertLevel: BudgetAlertLevel = BudgetAlertLevel.NORMAL,
+    val pacingMetrics: PacingMetrics? = null,
+    val isOverall: Boolean = false,
+    val refundsAmount: Money = Money.zero(budget.limitAmount.currencyCode)
+)
+
+data class SafeToSpendBreakdown(
+    val totalLiquidFunds: Money,
+    val upcomingObligations: Money,
+    val savingsTargets: Money,
+    val overallBudgetConstraint: Money?,
+    val discretionarySafeToSpend: Money,
+    val dailySafeToSpend: Money,
+    val weeklySafeToSpend: Money,
+    val daysRemaining: Int,
+    val assumptions: List<String>,
+    val liquidAccountsCount: Int,
+    val upcomingBillsCount: Int,
+    val activeGoalsCount: Int,
+    val multiCurrencyWarning: Boolean = false
 )
