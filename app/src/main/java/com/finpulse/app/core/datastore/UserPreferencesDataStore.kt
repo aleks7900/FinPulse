@@ -20,6 +20,10 @@ data class UserPreferences(
     val isBiometricEnabled: Boolean = false,
     val isPinEnabled: Boolean = false,
     val pinHash: String = "",
+    val pinSalt: String = "",
+    val encryptedPinSecret: String = "",
+    val lockTimeout: String = "MINUTE_1",
+    val deviceCredentialFallbackEnabled: Boolean = true,
     val hideBalances: Boolean = false,
     val isDarkMode: Boolean? = null, // null = system default
     val isOnboardingCompleted: Boolean = false,
@@ -43,6 +47,10 @@ class UserPreferencesDataStore(private val context: Context) {
         val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
         val PIN_ENABLED = booleanPreferencesKey("pin_enabled")
         val PIN_HASH = stringPreferencesKey("pin_hash")
+        val PIN_SALT = stringPreferencesKey("pin_salt")
+        val ENCRYPTED_PIN_SECRET = stringPreferencesKey("encrypted_pin_secret")
+        val LOCK_TIMEOUT = stringPreferencesKey("lock_timeout")
+        val DEVICE_CREDENTIAL_FALLBACK = booleanPreferencesKey("device_credential_fallback")
         val HIDE_BALANCES = booleanPreferencesKey("hide_balances")
         val DARK_MODE = stringPreferencesKey("dark_mode") // "SYSTEM", "LIGHT", "DARK"
         val ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")
@@ -71,6 +79,10 @@ class UserPreferencesDataStore(private val context: Context) {
             isBiometricEnabled = preferences[PreferencesKeys.BIOMETRIC_ENABLED] ?: false,
             isPinEnabled = preferences[PreferencesKeys.PIN_ENABLED] ?: false,
             pinHash = preferences[PreferencesKeys.PIN_HASH] ?: "",
+            pinSalt = preferences[PreferencesKeys.PIN_SALT] ?: "",
+            encryptedPinSecret = preferences[PreferencesKeys.ENCRYPTED_PIN_SECRET] ?: "",
+            lockTimeout = preferences[PreferencesKeys.LOCK_TIMEOUT] ?: "MINUTE_1",
+            deviceCredentialFallbackEnabled = preferences[PreferencesKeys.DEVICE_CREDENTIAL_FALLBACK] ?: true,
             hideBalances = preferences[PreferencesKeys.HIDE_BALANCES] ?: false,
             isDarkMode = darkModeBool,
             isOnboardingCompleted = preferences[PreferencesKeys.ONBOARDING_COMPLETED] ?: false,
@@ -107,8 +119,32 @@ class UserPreferencesDataStore(private val context: Context) {
 
     suspend fun setPin(pin: String) {
         context.dataStore.edit { preferences ->
-            preferences[PreferencesKeys.PIN_ENABLED] = pin.isNotBlank()
-            preferences[PreferencesKeys.PIN_HASH] = if (pin.isNotBlank()) hashPin(pin) else ""
+            if (pin.isNotBlank()) {
+                val salt = com.finpulse.app.core.security.AppKeystoreManager.generateSalt()
+                val hash = com.finpulse.app.core.security.AppKeystoreManager.hashPinWithSalt(pin, salt)
+                val encrypted = com.finpulse.app.core.security.AppKeystoreManager.encryptSecret(pin)
+                preferences[PreferencesKeys.PIN_ENABLED] = true
+                preferences[PreferencesKeys.PIN_HASH] = hash
+                preferences[PreferencesKeys.PIN_SALT] = salt
+                preferences[PreferencesKeys.ENCRYPTED_PIN_SECRET] = encrypted
+            } else {
+                preferences[PreferencesKeys.PIN_ENABLED] = false
+                preferences[PreferencesKeys.PIN_HASH] = ""
+                preferences[PreferencesKeys.PIN_SALT] = ""
+                preferences[PreferencesKeys.ENCRYPTED_PIN_SECRET] = ""
+            }
+        }
+    }
+
+    suspend fun setLockTimeout(timeout: String) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.LOCK_TIMEOUT] = timeout
+        }
+    }
+
+    suspend fun setDeviceCredentialFallbackEnabled(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.DEVICE_CREDENTIAL_FALLBACK] = enabled
         }
     }
 

@@ -970,4 +970,37 @@
     <string name="export_format_json_tx">JSON (.json)</string>
     <string name="export_transactions_btn">絞り込んだ取引をエクスポート</string>
     <string name="export_share_dialog_title">ファイルを共有または保存</string>
+
+    <!-- App Lock &amp; Biometrics -->
+    <string name="security_biometric_title">FinPulseのロック解除</string>
+    <string name="security_biometric_subtitle">指紋または顔認証を使用してロックを解除します</string>
+    <string name="security_biometric_failed">認証に失敗しました。もう一度お試しください。</string>
+    <string name="security_unlock_biometric">生体認証でロック解除</string>
+    <string name="security_unlock_device_credential">端末のパスワードを使用</string>
+    <string name="security_lock_enter_pin">財務データにアクセスするにはPINを入力してください</string>
+    <string name="security_lock_authenticate">財務データにアクセスするには認証してください</string>
+    <string name="security_pin_incorrect">PINが正しくありません。もう一度お試しください。</string>
+    <string name="security_section_auth">認証とアプリロック</string>
+    <string name="security_section_policy">ロックポリシー</string>
+    <string name="security_section_privacy">プライバシーと画面保護</string>
+    <string name="security_device_credential">端末認証フォールバック</string>
+    <string name="security_device_credential_desc">端末のPIN、パターン、またはパスワードでのロック解除を許可</string>
+    <string name="security_timeout_title">自動ロックまでの時間</string>
+    <string name="security_timeout_desc">アプリがバックグラウンドに移動または復帰したときにロック</string>
+    <string name="security_timeout_immediately">すぐに</string>
+    <string name="security_timeout_30s">30秒後</string>
+    <string name="security_timeout_1m">1分後</string>
+    <string name="security_timeout_5m">5分後</string>
+    <string name="security_timeout_15m">15分後</string>
+    <string name="security_timeout_never">なし</string>
+    <string name="security_lock_now_btn">今すぐアプリをロック</string>
+    <string name="security_lock_now_desc">今すぐアプリをロックして設定をテストします</string>
+    <string name="security_change_pin">アプリPINの変更</string>
+    <string name="security_current_pin">現在のPIN</string>
+    <string name="security_new_pin">新しいPIN（4〜6桁）</string>
+    <string name="security_confirm_new_pin">新しいPINの確認</string>
+    <string name="security_current_pin_incorrect">現在のPINが正しくありません</string>
+    <string name="security_biometric_available">この端末で利用可能</string>
+    <string name="security_biometric_not_enrolled">システム設定で登録されていません</string>
+    <string name="security_biometric_no_hardware">生体認証センサーがありません</string>
 </resources>

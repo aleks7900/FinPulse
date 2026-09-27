@@ -970,4 +970,37 @@
     <string name="export_format_json_tx">JSON (.json)</string>
     <string name="export_transactions_btn">필터링된 거래 내보내기</string>
     <string name="export_share_dialog_title">파일 공유 또는 저장</string>
+
+    <!-- App Lock &amp; Biometrics -->
+    <string name="security_biometric_title">FinPulse 잠금 해제</string>
+    <string name="security_biometric_subtitle">지문 또는 얼굴 인식을 사용하여 잠금을 해제하세요</string>
+    <string name="security_biometric_failed">인증에 실패했습니다. 다시 시도해 주세요.</string>
+    <string name="security_unlock_biometric">생체 인식으로 잠금 해제</string>
+    <string name="security_unlock_device_credential">기기 비밀번호 사용</string>
+    <string name="security_lock_enter_pin">금융 데이터에 접근하려면 PIN을 입력하세요</string>
+    <string name="security_lock_authenticate">금융 데이터에 접근하려면 인증하세요</string>
+    <string name="security_pin_incorrect">PIN이 올바르지 않습니다. 다시 시도하세요.</string>
+    <string name="security_section_auth">인증 및 앱 잠금</string>
+    <string name="security_section_policy">잠금 정책</string>
+    <string name="security_section_privacy">개인정보 및 화면 보호</string>
+    <string name="security_device_credential">기기 자격 증명 대체</string>
+    <string name="security_device_credential_desc">기기 PIN, 패턴 또는 비밀번호로 잠금 해제 허용</string>
+    <string name="security_timeout_title">자동 잠금 대기 시간</string>
+    <string name="security_timeout_desc">앱이 백그라운드로 이동하거나 복귀할 때 잠금</string>
+    <string name="security_timeout_immediately">즉시</string>
+    <string name="security_timeout_30s">30초 후</string>
+    <string name="security_timeout_1m">1분 후</string>
+    <string name="security_timeout_5m">5분 후</string>
+    <string name="security_timeout_15m">15분 후</string>
+    <string name="security_timeout_never">안 함</string>
+    <string name="security_lock_now_btn">지금 앱 잠금</string>
+    <string name="security_lock_now_desc">설정을 테스트하기 위해 앱을 즉시 잠급니다</string>
+    <string name="security_change_pin">앱 PIN 변경</string>
+    <string name="security_current_pin">현재 PIN</string>
+    <string name="security_new_pin">새 PIN (4~6자리)</string>
+    <string name="security_confirm_new_pin">새 PIN 확인</string>
+    <string name="security_current_pin_incorrect">현재 PIN이 올바르지 않습니다</string>
+    <string name="security_biometric_available">이 기기에서 사용 가능</string>
+    <string name="security_biometric_not_enrolled">시스템 설정에 등록되지 않음</string>
+    <string name="security_biometric_no_hardware">생체 인식 센서 없음</string>
 </resources>

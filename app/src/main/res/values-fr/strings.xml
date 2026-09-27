@@ -978,4 +978,37 @@
     <string name="export_format_json_tx">JSON (.json)</string>
     <string name="export_transactions_btn">Exporter les opérations filtrées</string>
     <string name="export_share_dialog_title">Partager ou enregistrer le fichier</string>
+
+    <!-- App Lock &amp; Biometrics -->
+    <string name="security_biometric_title">Déverrouiller FinPulse</string>
+    <string name="security_biometric_subtitle">Utilisez votre empreinte ou visage pour déverrouiller</string>
+    <string name="security_biometric_failed">Échec de l\'authentification. Veuillez réessayer.</string>
+    <string name="security_unlock_biometric">Déverrouiller avec la biométrie</string>
+    <string name="security_unlock_device_credential">Utiliser le mot de passe de l\'appareil</string>
+    <string name="security_lock_enter_pin">Saisissez le code PIN pour accéder à vos finances</string>
+    <string name="security_lock_authenticate">Authentifiez-vous pour accéder à vos finances</string>
+    <string name="security_pin_incorrect">Code PIN incorrect. Veuillez réessayer.</string>
+    <string name="security_section_auth">Authentification et verrouillage</string>
+    <string name="security_section_policy">Politique de verrouillage</string>
+    <string name="security_section_privacy">Confidentialité et protection d\'écran</string>
+    <string name="security_device_credential">Secours par identifiant de l\'appareil</string>
+    <string name="security_device_credential_desc">Autoriser le déverrouillage avec le code, schéma ou mot de passe de l\'appareil</string>
+    <string name="security_timeout_title">Délai de verrouillage automatique</string>
+    <string name="security_timeout_desc">Verrouiller l\'application en arrière-plan ou au retour</string>
+    <string name="security_timeout_immediately">Immédiatement</string>
+    <string name="security_timeout_30s">Après 30 secondes</string>
+    <string name="security_timeout_1m">Après 1 minute</string>
+    <string name="security_timeout_5m">Après 5 minutes</string>
+    <string name="security_timeout_15m">Après 15 minutes</string>
+    <string name="security_timeout_never">Jamais</string>
+    <string name="security_lock_now_btn">Verrouiller maintenant</string>
+    <string name="security_lock_now_desc">Verrouillez immédiatement l\'application pour tester vos paramètres</string>
+    <string name="security_change_pin">Modifier le code PIN de l\'application</string>
+    <string name="security_current_pin">Code PIN actuel</string>
+    <string name="security_new_pin">Nouveau code PIN (4-6 chiffres)</string>
+    <string name="security_confirm_new_pin">Confirmer le nouveau code PIN</string>
+    <string name="security_current_pin_incorrect">Le code PIN actuel est incorrect</string>
+    <string name="security_biometric_available">Disponible sur cet appareil</string>
+    <string name="security_biometric_not_enrolled">Non configuré dans les paramètres système</string>
+    <string name="security_biometric_no_hardware">Aucun capteur biométrique disponible</string>
 </resources>

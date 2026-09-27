@@ -978,4 +978,37 @@
     <string name="export_format_json_tx">JSON (.json)</string>
     <string name="export_transactions_btn">Esporta transazioni filtrate</string>
     <string name="export_share_dialog_title">Condividi o salva file</string>
+
+    <!-- App Lock &amp; Biometrics -->
+    <string name="security_biometric_title">Sblocca FinPulse</string>
+    <string name="security_biometric_subtitle">Usa la tua impronta digitale o il viso per sbloccare</string>
+    <string name="security_biometric_failed">Autenticazione non riuscita. Riprova.</string>
+    <string name="security_unlock_biometric">Sblocca con biometria</string>
+    <string name="security_unlock_device_credential">Usa password del dispositivo</string>
+    <string name="security_lock_enter_pin">Inserisci il PIN per accedere alle tue finanze</string>
+    <string name="security_lock_authenticate">Autenticati per accedere alle tue finanze</string>
+    <string name="security_pin_incorrect">PIN errato. Riprova.</string>
+    <string name="security_section_auth">Autenticazione e blocco app</string>
+    <string name="security_section_policy">Politica di blocco</string>
+    <string name="security_section_privacy">Privacy e protezione schermo</string>
+    <string name="security_device_credential">Fallback credenziali dispositivo</string>
+    <string name="security_device_credential_desc">Consenti lo sblocco con PIN, sequenza o password del dispositivo</string>
+    <string name="security_timeout_title">Timeout blocco automatico</string>
+    <string name="security_timeout_desc">Blocca l\'app all\'uscita o al ritorno dal background</string>
+    <string name="security_timeout_immediately">Immediatamente</string>
+    <string name="security_timeout_30s">Dopo 30 secondi</string>
+    <string name="security_timeout_1m">Dopo 1 minuto</string>
+    <string name="security_timeout_5m">Dopo 5 minuti</string>
+    <string name="security_timeout_15m">Dopo 15 minuti</string>
+    <string name="security_timeout_never">Mai</string>
+    <string name="security_lock_now_btn">Blocca app ora</string>
+    <string name="security_lock_now_desc">Blocca immediatamente l\'app per testare le tue impostazioni</string>
+    <string name="security_change_pin">Modifica PIN dell\'app</string>
+    <string name="security_current_pin">PIN attuale</string>
+    <string name="security_new_pin">Nuovo PIN (4-6 cifre)</string>
+    <string name="security_confirm_new_pin">Conferma nuovo PIN</string>
+    <string name="security_current_pin_incorrect">Il PIN attuale non è corretto</string>
+    <string name="security_biometric_available">Disponibile su questo dispositivo</string>
+    <string name="security_biometric_not_enrolled">Non configurato nelle impostazioni di sistema</string>
+    <string name="security_biometric_no_hardware">Nessun sensore biometrico disponibile</string>
 </resources>

@@ -3,7 +3,7 @@ package com.finpulse.app
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
-import androidx.activity.ComponentActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.finpulse.app.core.designsystem.FinPulseTheme
 import com.finpulse.app.core.locale.AppLanguage
 import com.finpulse.app.core.locale.AppLocaleManager
+import com.finpulse.app.core.security.LockTimeoutPolicy
 import com.finpulse.app.core.util.FinPulseShortcutsManager
 import com.finpulse.app.presentation.navigation.FinPulseApp
 import com.finpulse.app.presentation.navigation.Screen
@@ -21,7 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
 
     private val openQuickAddTypeFlow = MutableStateFlow<String?>(null)
     private val navigationFlow = MutableStateFlow<String?>(null)
@@ -30,10 +31,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        handleIntent(intent)
-
         val app = application as FinPulseApplication
         val container = app.container
+
+        handleIntent(intent)
 
         lifecycleScope.launch {
             val prefs = container.userPreferencesDataStore.userPreferencesFlow.first()
@@ -41,15 +42,26 @@ class MainActivity : ComponentActivity() {
                 val lang = AppLanguage.fromCode(prefs.selectedLanguage)
                 AppLocaleManager.setLocale(this@MainActivity, lang)
             }
+
+            // On cold start, lock app if authentication is configured
+            val isLockEnabled = container.appLockManager.isLockConfigured(
+                isBiometricEnabled = prefs.isBiometricEnabled,
+                isPinEnabled = prefs.isPinEnabled
+            )
+            if (isLockEnabled) {
+                container.appLockManager.lockNow()
+            }
         }
 
         setContent {
             val userPrefs by container.userPreferencesDataStore.userPreferencesFlow.collectAsState(
                 initial = com.finpulse.app.core.datastore.UserPreferences()
             )
+            val isAppLocked by container.appLockManager.isAppLocked.collectAsState()
 
-            // Dynamic Screenshot Protection
-            if (userPrefs.enableScreenshotProtection) {
+            // Dynamic Screenshot & Recents Protection (FLAG_SECURE)
+            // Enable if screenshot protection is on OR if the app is currently locked
+            if (userPrefs.enableScreenshotProtection || isAppLocked) {
                 window.setFlags(
                     WindowManager.LayoutParams.FLAG_SECURE,
                     WindowManager.LayoutParams.FLAG_SECURE
@@ -69,6 +81,36 @@ class MainActivity : ComponentActivity() {
                     onNavigationHandled = { navigationFlow.value = null }
                 )
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val app = application as FinPulseApplication
+        val container = app.container
+        lifecycleScope.launch {
+            val prefs = container.userPreferencesDataStore.userPreferencesFlow.first()
+            val isLockEnabled = container.appLockManager.isLockConfigured(
+                isBiometricEnabled = prefs.isBiometricEnabled,
+                isPinEnabled = prefs.isPinEnabled
+            )
+            val policy = LockTimeoutPolicy.fromName(prefs.lockTimeout)
+            container.appLockManager.onAppForegrounded(policy, isLockEnabled)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val app = application as FinPulseApplication
+        val container = app.container
+        lifecycleScope.launch {
+            val prefs = container.userPreferencesDataStore.userPreferencesFlow.first()
+            val isLockEnabled = container.appLockManager.isLockConfigured(
+                isBiometricEnabled = prefs.isBiometricEnabled,
+                isPinEnabled = prefs.isPinEnabled
+            )
+            val policy = LockTimeoutPolicy.fromName(prefs.lockTimeout)
+            container.appLockManager.onAppBackgrounded(policy, isLockEnabled)
         }
     }
 

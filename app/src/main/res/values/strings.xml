@@ -978,4 +978,37 @@
     <string name="export_format_json_tx">JSON (.json)</string>
     <string name="export_transactions_btn">Export Filtered Transactions</string>
     <string name="export_share_dialog_title">Share or Save File</string>
+
+    <!-- App Lock &amp; Biometrics -->
+    <string name="security_biometric_title">Unlock FinPulse</string>
+    <string name="security_biometric_subtitle">Use your fingerprint or face to unlock</string>
+    <string name="security_biometric_failed">Authentication failed. Please try again.</string>
+    <string name="security_unlock_biometric">Unlock with Biometrics</string>
+    <string name="security_unlock_device_credential">Use Device Password</string>
+    <string name="security_lock_enter_pin">Enter PIN to access your finances</string>
+    <string name="security_lock_authenticate">Authenticate to access your finances</string>
+    <string name="security_pin_incorrect">Incorrect PIN. Please try again.</string>
+    <string name="security_section_auth">Authentication &amp; App Lock</string>
+    <string name="security_section_policy">Lock Policy</string>
+    <string name="security_section_privacy">Privacy &amp; Screen Protection</string>
+    <string name="security_device_credential">Device Credential Fallback</string>
+    <string name="security_device_credential_desc">Allow unlocking with your device PIN, pattern or password</string>
+    <string name="security_timeout_title">Auto-Lock Timeout</string>
+    <string name="security_timeout_desc">Lock app when leaving or returning from background</string>
+    <string name="security_timeout_immediately">Immediately</string>
+    <string name="security_timeout_30s">After 30 seconds</string>
+    <string name="security_timeout_1m">After 1 minute</string>
+    <string name="security_timeout_5m">After 5 minutes</string>
+    <string name="security_timeout_15m">After 15 minutes</string>
+    <string name="security_timeout_never">Never</string>
+    <string name="security_lock_now_btn">Lock App Now</string>
+    <string name="security_lock_now_desc">Immediately lock the app to test your settings</string>
+    <string name="security_change_pin">Change App PIN</string>
+    <string name="security_current_pin">Current PIN</string>
+    <string name="security_new_pin">New PIN (4-6 digits)</string>
+    <string name="security_confirm_new_pin">Confirm New PIN</string>
+    <string name="security_current_pin_incorrect">Current PIN is incorrect</string>
+    <string name="security_biometric_available">Available on this device</string>
+    <string name="security_biometric_not_enrolled">Not enrolled in system settings</string>
+    <string name="security_biometric_no_hardware">No biometric sensor available</string>
 </resources>

@@ -62,7 +62,8 @@ fun SearchScreen(
     accountRepository: AccountRepository,
     categoryRepository: CategoryRepository,
     onNavigateBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    hideBalances: Boolean = false
 ) {
     var query by remember { mutableStateOf("") }
     var selectedPreset by remember { mutableStateOf<TransactionPreset?>(null) }
@@ -235,7 +236,7 @@ fun SearchScreen(
                             transaction = tx,
                             category = cat,
                             accountName = acc,
-                            hideBalances = false,
+                            hideBalances = hideBalances,
                             onClick = {}
                         )
                     }

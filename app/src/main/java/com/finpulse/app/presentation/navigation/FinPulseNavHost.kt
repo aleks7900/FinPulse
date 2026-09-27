@@ -1,5 +1,6 @@
 package com.finpulse.app.presentation.navigation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -106,10 +107,12 @@ fun FinPulseApp(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
+    val isAppLocked by container.appLockManager.isAppLocked.collectAsState()
+
     openQuickAddTrigger?.let { triggerFlow ->
         val shouldOpen by triggerFlow.collectAsState()
-        LaunchedEffect(shouldOpen) {
-            if (shouldOpen) {
+        LaunchedEffect(shouldOpen, isAppLocked) {
+            if (shouldOpen && !isAppLocked) {
                 quickAddViewModel.reset()
                 showQuickAddSheet = true
                 onQuickAddHandled()
@@ -119,35 +122,40 @@ fun FinPulseApp(
 
     openQuickAddTypeTrigger?.let { triggerFlow ->
         val triggerType by triggerFlow.collectAsState()
-        LaunchedEffect(triggerType) {
-            triggerType?.let { typeStr ->
-                quickAddViewModel.reset()
-                val txType = when (typeStr.uppercase()) {
-                    "INCOME" -> com.finpulse.app.domain.model.TransactionType.INCOME
-                    "TRANSFER" -> com.finpulse.app.domain.model.TransactionType.TRANSFER
-                    else -> com.finpulse.app.domain.model.TransactionType.EXPENSE
+        LaunchedEffect(triggerType, isAppLocked) {
+            if (!isAppLocked) {
+                triggerType?.let { typeStr ->
+                    quickAddViewModel.reset()
+                    val txType = when (typeStr.uppercase()) {
+                        "INCOME" -> com.finpulse.app.domain.model.TransactionType.INCOME
+                        "TRANSFER" -> com.finpulse.app.domain.model.TransactionType.TRANSFER
+                        else -> com.finpulse.app.domain.model.TransactionType.EXPENSE
+                    }
+                    quickAddViewModel.onTypeSelected(txType)
+                    showQuickAddSheet = true
+                    onQuickAddTypeHandled()
                 }
-                quickAddViewModel.onTypeSelected(txType)
-                showQuickAddSheet = true
-                onQuickAddTypeHandled()
             }
         }
     }
 
     navigationTrigger?.let { navFlow ->
         val targetRoute by navFlow.collectAsState()
-        LaunchedEffect(targetRoute) {
-            targetRoute?.let { route ->
-                navController.navigate(route) {
-                    launchSingleTop = true
+        LaunchedEffect(targetRoute, isAppLocked) {
+            if (!isAppLocked) {
+                targetRoute?.let { route ->
+                    navController.navigate(route) {
+                        launchSingleTop = true
+                    }
+                    onNavigationHandled()
                 }
-                onNavigationHandled()
             }
         }
     }
 
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
+    Box(modifier = modifier.fillMaxSize()) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         floatingActionButton = {
             if (isTopLevelRoute) {
@@ -495,7 +503,8 @@ fun FinPulseApp(
                     transactionRepository = container.transactionRepository,
                     accountRepository = container.accountRepository,
                     categoryRepository = container.categoryRepository,
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = { navController.popBackStack() },
+                    hideBalances = userPrefs.hideBalances
                 )
             }
 
@@ -503,6 +512,7 @@ fun FinPulseApp(
             composable(Screen.Security.route) {
                 SecurityScreen(
                     userPreferencesDataStore = container.userPreferencesDataStore,
+                    appLockManager = container.appLockManager,
                     onNavigateBack = { navController.popBackStack() }
                 )
             }
@@ -715,4 +725,16 @@ fun FinPulseApp(
             }
         )
     }
+
+    // Lock Screen Full-Screen Blocking Overlay
+    if (isAppLocked) {
+        com.finpulse.app.presentation.security.LockScreen(
+            userPrefs = userPrefs,
+            appLockManager = container.appLockManager,
+            onUnlockSuccess = {
+                container.appLockManager.unlock()
+            }
+        )
+    }
+}
 }

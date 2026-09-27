@@ -65,11 +65,16 @@ interface AppContainer {
     val validateBackupUseCase: com.finpulse.app.domain.usecase.backup.ValidateBackupUseCase
     val restoreBackupUseCase: com.finpulse.app.domain.usecase.backup.RestoreBackupUseCase
     val exportTransactionsUseCase: com.finpulse.app.domain.usecase.backup.ExportTransactionsUseCase
+    val appLockManager: com.finpulse.app.core.security.AppLockManager
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
     override val database: FinPulseDatabase by lazy {
         FinPulseDatabase.getInstance(context)
+    }
+
+    override val appLockManager: com.finpulse.app.core.security.AppLockManager by lazy {
+        com.finpulse.app.core.security.AppLockManager()
     }
 
     override val savedFilterRepository: com.finpulse.app.domain.repository.SavedFilterRepository by lazy {

@@ -978,4 +978,37 @@
     <string name="export_format_json_tx">JSON (.json)</string>
     <string name="export_transactions_btn">Filtrelenmiş İşlemleri Dışa Aktar</string>
     <string name="export_share_dialog_title">Dosyayı Paylaş veya Kaydet</string>
+
+    <!-- App Lock &amp; Biometrics -->
+    <string name="security_biometric_title">FinPulse Kilidini Aç</string>
+    <string name="security_biometric_subtitle">Kilidi açmak için parmak izinizi veya yüzünüzü kullanın</string>
+    <string name="security_biometric_failed">Kimlik doğrulama başarısız oldu. Lütfen tekrar deneyin.</string>
+    <string name="security_unlock_biometric">Biyometri ile Kilidi Aç</string>
+    <string name="security_unlock_device_credential">Cihaz Parolasını Kullan</string>
+    <string name="security_lock_enter_pin">Finansal verilerinize erişmek için PIN girin</string>
+    <string name="security_lock_authenticate">Finansal verilerinize erişmek için kimliğinizi doğrulayın</string>
+    <string name="security_pin_incorrect">Yanlış PIN. Lütfen tekrar deneyin.</string>
+    <string name="security_section_auth">Kimlik Doğrulama ve Uygulama Kilidi</string>
+    <string name="security_section_policy">Kilit Politikası</string>
+    <string name="security_section_privacy">Gizlilik ve Ekran Koruması</string>
+    <string name="security_device_credential">Cihaz Kimlik Bilgisi Yedeği</string>
+    <string name="security_device_credential_desc">Cihaz PIN\'i, deseni veya parolası ile kilit açmaya izin ver</string>
+    <string name="security_timeout_title">Otomatik Kilit Zaman Aşımı</string>
+    <string name="security_timeout_desc">Uygulamadan ayrılırken veya arka plandan dönerken kilitle</string>
+    <string name="security_timeout_immediately">Hemen</string>
+    <string name="security_timeout_30s">30 saniye sonra</string>
+    <string name="security_timeout_1m">1 dakika sonra</string>
+    <string name="security_timeout_5m">5 dakika sonra</string>
+    <string name="security_timeout_15m">15 dakika sonra</string>
+    <string name="security_timeout_never">Asla</string>
+    <string name="security_lock_now_btn">Uygulamayı Şimdi Kilitle</string>
+    <string name="security_lock_now_desc">Ayarlarınızı test etmek için uygulamayı hemen kilitleyin</string>
+    <string name="security_change_pin">Uygulama PIN\'ini Değiştir</string>
+    <string name="security_current_pin">Mevcut PIN</string>
+    <string name="security_new_pin">Yeni PIN (4-6 hane)</string>
+    <string name="security_confirm_new_pin">Yeni PIN\'i Onayla</string>
+    <string name="security_current_pin_incorrect">Mevcut PIN yanlış</string>
+    <string name="security_biometric_available">Bu cihazda mevcut</string>
+    <string name="security_biometric_not_enrolled">Sistem ayarlarında kayıtlı değil</string>
+    <string name="security_biometric_no_hardware">Biyometrik sensör bulunamadı</string>
 </resources>

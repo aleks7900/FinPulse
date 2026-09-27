@@ -970,4 +970,37 @@
     <string name="export_format_json_tx">JSON 数据 (.json)</string>
     <string name="export_transactions_btn">导出筛选后的交易</string>
     <string name="export_share_dialog_title">分享或保存文件</string>
+
+    <!-- App Lock &amp; Biometrics -->
+    <string name="security_biometric_title">解锁 FinPulse</string>
+    <string name="security_biometric_subtitle">使用指纹或面部识别进行解锁</string>
+    <string name="security_biometric_failed">身份验证失败，请重试。</string>
+    <string name="security_unlock_biometric">使用生物识别解锁</string>
+    <string name="security_unlock_device_credential">使用设备密码</string>
+    <string name="security_lock_enter_pin">请输入 PIN 码以访问您的财务数据</string>
+    <string name="security_lock_authenticate">请验证身份以访问您的财务数据</string>
+    <string name="security_pin_incorrect">PIN 码不正确，请重试。</string>
+    <string name="security_section_auth">身份验证与应用锁定</string>
+    <string name="security_section_policy">锁定策略</string>
+    <string name="security_section_privacy">隐私与屏幕保护</string>
+    <string name="security_device_credential">备用设备凭据</string>
+    <string name="security_device_credential_desc">允许使用设备的 PIN、图案或密码解锁</string>
+    <string name="security_timeout_title">自动锁定超时</string>
+    <string name="security_timeout_desc">离开或从后台返回应用时锁定</string>
+    <string name="security_timeout_immediately">立即</string>
+    <string name="security_timeout_30s">30 秒后</string>
+    <string name="security_timeout_1m">1 分钟后</string>
+    <string name="security_timeout_5m">5 分钟后</string>
+    <string name="security_timeout_15m">15 分钟后</string>
+    <string name="security_timeout_never">从不</string>
+    <string name="security_lock_now_btn">立即锁定应用</string>
+    <string name="security_lock_now_desc">立即锁定应用以测试您的安全设置</string>
+    <string name="security_change_pin">更改应用 PIN 码</string>
+    <string name="security_current_pin">当前 PIN 码</string>
+    <string name="security_new_pin">新 PIN 码 (4-6 位)</string>
+    <string name="security_confirm_new_pin">确认新 PIN 码</string>
+    <string name="security_current_pin_incorrect">当前 PIN 码不正确</string>
+    <string name="security_biometric_available">此设备支持</string>
+    <string name="security_biometric_not_enrolled">系统设置中未录入生物识别</string>
+    <string name="security_biometric_no_hardware">无生物识别传感器</string>
 </resources>
