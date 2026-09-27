@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:translateX="0"
+        android:translateY="0">
+        <!-- Bar 1 -->
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M 28,62 L 36,62 A 4,4 0 0 1 40,66 L 40,74 A 4,4 0 0 1 36,78 L 28,78 A 4,4 0 0 1 24,74 L 24,66 A 4,4 0 0 1 28,62 Z" />
+        <!-- Bar 2 -->
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M 42,50 L 50,50 A 4,4 0 0 1 54,54 L 54,74 A 4,4 0 0 1 50,78 L 42,78 A 4,4 0 0 1 38,74 L 38,54 A 4,4 0 0 1 42,50 Z" />
+        <!-- Bar 3 -->
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M 56,40 L 64,40 A 4,4 0 0 1 68,44 L 68,74 A 4,4 0 0 1 64,78 L 56,78 A 4,4 0 0 1 52,74 L 52,44 A 4,4 0 0 1 56,40 Z" />
+        <!-- Bar 4 -->
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M 70,28 L 78,28 A 4,4 0 0 1 82,32 L 82,74 A 4,4 0 0 1 78,78 L 70,78 A 4,4 0 0 1 66,74 L 66,32 A 4,4 0 0 1 70,28 Z" />
+        <!-- Pulse Wave Line -->
+        <path
+            android:strokeColor="#FFFFFFFF"
+            android:strokeWidth="4"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M 22,74 L 38,74 C 44,74 48,60 54,60 C 60,60 62,69 68,66 C 74,63 80,48 86,46" />
+    </group>
+</vector>
