@@ -1003,4 +1003,41 @@
     <string name="security_biometric_available">이 기기에서 사용 가능</string>
     <string name="security_biometric_not_enrolled">시스템 설정에 등록되지 않음</string>
     <string name="security_biometric_no_hardware">생체 인식 센서 없음</string>
+
+    <!-- Google Account &amp; Cloud Sync -->
+    <string name="account_title">Google 계정 및 동기화</string>
+    <string name="account_sync_hero_title">자산 데이터를 항상 동기화</string>
+    <string name="account_sync_hero_subtitle">Google 계정으로 로그인하여 Android 기기간에 거래 내역, 예산, 계좌 및 설정을 동기화하세요.</string>
+    <string name="account_continue_with_google">Google 계정으로 계속</string>
+    <string name="account_features_title">클라우드 동기화 기능</string>
+    <string name="account_feature_multi_device_title">다중 기기 동기화</string>
+    <string name="account_feature_multi_device_desc">스마트폰과 태블릿을 실시간으로 원활하게 동기화합니다.</string>
+    <string name="account_feature_offline_title">완벽한 오프라인 지원</string>
+    <string name="account_feature_offline_desc">네트워크 연결 없이 거래를 추가하고 편집하며 연결 시 자동 동기화됩니다.</string>
+    <string name="account_feature_restore_title">즉각적인 클라우드 복원</string>
+    <string name="account_feature_restore_desc">다른 Android 기기에서 로그인하면 모든 금융 기록이 복원됩니다.</string>
+    <string name="account_feature_security_title">격리 및 완벽한 보안</string>
+    <string name="account_feature_security_desc">데이터는 인증된 고유 Google UID별로 엄격히 보호 및 분리됩니다.</string>
+    <string name="account_default_username">FinPulse 사용자</string>
+    <string name="account_google_connected_badge">Google 계정 연결됨</string>
+    <string name="account_cloud_sync_section">클라우드 동기화</string>
+    <string name="account_last_synced_label">최근 동기화</string>
+    <string name="account_pending_changes_count">%1$d개의 대기 중인 변경사항</string>
+    <string name="account_sync_now">지금 동기화</string>
+    <string name="account_syncing">동기화 중...</string>
+    <string name="account_security_header">개인정보 보호 및 클라우드 보안</string>
+    <string name="account_security_body">금융 데이터는 Firestore 보안 규칙에 의해 보호되며 인증된 Google 계정으로만 접근할 수 있습니다.</string>
+    <string name="account_sign_out">로그아웃</string>
+    <string name="account_status_synced">동기화됨</string>
+    <string name="account_status_syncing">동기화 중...</string>
+    <string name="account_status_waiting_network">인터넷 연결 대기 중</string>
+    <string name="account_status_error">동기화 오류</string>
+    <string name="account_status_idle">대기 중</string>
+    <string name="account_unsynced_dialog_title">동기화되지 않은 변경사항</string>
+    <string name="account_unsynced_dialog_desc">%1$d개의 변경사항이 아직 클라우드에 업로드되지 않았습니다. 로그아웃하기 전에 지금 동기화하시겠습니까?</string>
+    <string name="account_sync_and_sign_out">동기화 후 로그아웃</string>
+    <string name="account_sign_out_anyway">동기화하지 않고 로그아웃</string>
+    <string name="more_account_sync_title">Google 계정 및 클라우드 동기화</string>
+    <string name="more_account_sync_connected">Google 계정과 연결 및 동기화됨</string>
+    <string name="more_account_sync_disconnected">기기 간 동기화를 위해 로그인하세요</string>
 </resources>

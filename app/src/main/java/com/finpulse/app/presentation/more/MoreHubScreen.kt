@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Download
@@ -174,6 +175,13 @@ fun MoreHubScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    HubItem(
+                        title = stringResource(R.string.more_account_sync_title),
+                        subtitle = stringResource(R.string.more_account_sync_disconnected),
+                        icon = Icons.Default.CloudSync,
+                        tint = EmeraldPrimary,
+                        onClick = { onNavigate(Screen.Account) }
+                    )
                     HubItem(
                         title = stringResource(R.string.more_language_title),
                         subtitle = "${currentAppLanguage.displayName} (${stringResource(currentAppLanguage.localizedNameRes)})",

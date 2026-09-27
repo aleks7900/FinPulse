@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.withTransaction
 import com.finpulse.app.core.database.dao.AccountDao
 import com.finpulse.app.core.database.dao.AssetDao
 import com.finpulse.app.core.database.dao.BudgetDao
@@ -29,7 +30,11 @@ import com.finpulse.app.core.database.entity.RecurringTransactionEntity
 import com.finpulse.app.core.database.entity.TransactionEntity
 
 import com.finpulse.app.core.database.dao.SavedFilterDao
+import com.finpulse.app.core.database.dao.SyncRecordDao
 import com.finpulse.app.core.database.entity.SavedFilterEntity
+import com.finpulse.app.core.database.entity.SyncRecordEntity
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
     entities = [
@@ -45,9 +50,10 @@ import com.finpulse.app.core.database.entity.SavedFilterEntity
         CategorizationRuleEntity::class,
         MerchantSignalEntity::class,
         ImportProfileEntity::class,
-        SavedFilterEntity::class
+        SavedFilterEntity::class,
+        SyncRecordEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class FinPulseDatabase : RoomDatabase() {
@@ -64,10 +70,35 @@ abstract class FinPulseDatabase : RoomDatabase() {
     abstract fun merchantSignalDao(): MerchantSignalDao
     abstract fun importProfileDao(): ImportProfileDao
     abstract fun savedFilterDao(): SavedFilterDao
+    abstract fun syncRecordDao(): SyncRecordDao
 
     companion object {
         @Volatile
         private var INSTANCE: FinPulseDatabase? = null
+
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `sync_records` (
+                        `entityType` TEXT NOT NULL,
+                        `entityId` TEXT NOT NULL,
+                        `syncStatus` TEXT NOT NULL,
+                        `localUpdatedAt` INTEGER NOT NULL,
+                        `cloudUpdatedAt` INTEGER NOT NULL,
+                        `isDeleted` INTEGER NOT NULL,
+                        `deletedAt` INTEGER,
+                        `errorMessage` TEXT,
+                        PRIMARY KEY(`entityType`, `entityId`)
+                    )
+                    """.trimIndent()
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_sync_records_syncStatus` ON `sync_records` (`syncStatus`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_sync_records_entityType` ON `sync_records` (`entityType`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_sync_records_localUpdatedAt` ON `sync_records` (`localUpdatedAt`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_sync_records_isDeleted` ON `sync_records` (`isDeleted`)")
+            }
+        }
 
         fun getInstance(context: Context): FinPulseDatabase {
             return INSTANCE ?: synchronized(this) {
@@ -75,7 +106,8 @@ abstract class FinPulseDatabase : RoomDatabase() {
                     context.applicationContext,
                     FinPulseDatabase::class.java,
                     "finpulse.db"
-                ).fallbackToDestructiveMigration()
+                ).addMigrations(MIGRATION_6_7)
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

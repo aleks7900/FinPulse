@@ -66,6 +66,10 @@ interface AppContainer {
     val restoreBackupUseCase: com.finpulse.app.domain.usecase.backup.RestoreBackupUseCase
     val exportTransactionsUseCase: com.finpulse.app.domain.usecase.backup.ExportTransactionsUseCase
     val appLockManager: com.finpulse.app.core.security.AppLockManager
+    val googleAuthManager: com.finpulse.app.core.auth.GoogleAuthManager
+    val authRepository: com.finpulse.app.domain.repository.AuthRepository
+    val cloudStorageDataSource: com.finpulse.app.data.cloud.CloudStorageDataSource
+    val cloudSyncRepository: com.finpulse.app.domain.repository.CloudSyncRepository
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -256,6 +260,27 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val exportTransactionsUseCase: com.finpulse.app.domain.usecase.backup.ExportTransactionsUseCase by lazy {
         com.finpulse.app.domain.usecase.backup.ExportTransactionsUseCase(backupRepository, accountRepository, categoryRepository)
+    }
+
+    override val googleAuthManager: com.finpulse.app.core.auth.GoogleAuthManager by lazy {
+        com.finpulse.app.core.auth.GoogleAuthManager(context)
+    }
+
+    override val authRepository: com.finpulse.app.domain.repository.AuthRepository by lazy {
+        com.finpulse.app.data.repository.FirebaseAuthRepositoryImpl(userPreferencesDataStore)
+    }
+
+    override val cloudStorageDataSource: com.finpulse.app.data.cloud.CloudStorageDataSource by lazy {
+        com.finpulse.app.data.cloud.FirestoreCloudStorageDataSource()
+    }
+
+    override val cloudSyncRepository: com.finpulse.app.domain.repository.CloudSyncRepository by lazy {
+        com.finpulse.app.data.sync.CloudSyncEngine(
+            database = database,
+            cloudStorage = cloudStorageDataSource,
+            userPreferencesDataStore = userPreferencesDataStore,
+            authRepository = authRepository
+        )
     }
 }
 

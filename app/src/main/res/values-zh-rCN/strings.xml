@@ -1003,4 +1003,41 @@
     <string name="security_biometric_available">此设备支持</string>
     <string name="security_biometric_not_enrolled">系统设置中未录入生物识别</string>
     <string name="security_biometric_no_hardware">无生物识别传感器</string>
+
+    <!-- Google Account &amp; Cloud Sync -->
+    <string name="account_title">Google 账号与同步</string>
+    <string name="account_sync_hero_title">随时同步您的财务数据</string>
+    <string name="account_sync_hero_subtitle">使用 Google 账号登录，在 Android 设备之间同步交易、预算、账户和设置。</string>
+    <string name="account_continue_with_google">通过 Google 继续</string>
+    <string name="account_features_title">云同步功能</string>
+    <string name="account_feature_multi_device_title">多设备同步</string>
+    <string name="account_feature_multi_device_desc">手机和平板电脑实时无缝同步。</string>
+    <string name="account_feature_offline_title">完善的离线支持</string>
+    <string name="account_feature_offline_desc">无网络时也可添加和编辑交易，联网后自动同步。</string>
+    <string name="account_feature_restore_title">云端即时恢复</string>
+    <string name="account_feature_restore_desc">在另一台 Android 设备上登录即可恢复所有财务记录。</string>
+    <string name="account_feature_security_title">隔离且安全</string>
+    <string name="account_feature_security_desc">数据根据经过验证的唯一 Google UID 严格隔离保护。</string>
+    <string name="account_default_username">FinPulse 用户</string>
+    <string name="account_google_connected_badge">Google 账号已连接</string>
+    <string name="account_cloud_sync_section">云同步</string>
+    <string name="account_last_synced_label">上次同步</string>
+    <string name="account_pending_changes_count">%1$d 项待同步更改</string>
+    <string name="account_sync_now">立即同步</string>
+    <string name="account_syncing">正在同步...</string>
+    <string name="account_security_header">隐私与云端安全</string>
+    <string name="account_security_body">您的财务数据受 Firestore 安全规则保护，仅供您经过身份验证的 Google 账号访问。</string>
+    <string name="account_sign_out">退出登录</string>
+    <string name="account_status_synced">已同步</string>
+    <string name="account_status_syncing">正在同步...</string>
+    <string name="account_status_waiting_network">等待网络连接</string>
+    <string name="account_status_error">同步错误</string>
+    <string name="account_status_idle">空闲</string>
+    <string name="account_unsynced_dialog_title">未同步的更改</string>
+    <string name="account_unsynced_dialog_desc">您有 %1$d 项更改尚未上传到云端。退出登录前要立即同步吗？</string>
+    <string name="account_sync_and_sign_out">同步并退出</string>
+    <string name="account_sign_out_anyway">直接退出</string>
+    <string name="more_account_sync_title">Google 账号与云同步</string>
+    <string name="more_account_sync_connected">已连接并与 Google 同步</string>
+    <string name="more_account_sync_disconnected">登录以在设备间同步</string>
 </resources>

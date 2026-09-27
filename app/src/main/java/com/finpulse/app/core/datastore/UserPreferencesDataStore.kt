@@ -36,7 +36,14 @@ data class UserPreferences(
     val widgetMaskOnAppLock: Boolean = true,
     val lastBackupTimestamp: Long? = null,
     val backupReminderInterval: String = "OFF",
-    val lastBackupReminderDismissedMillis: Long = 0L
+    val lastBackupReminderDismissedMillis: Long = 0L,
+    val currentUserId: String? = null,
+    val userEmail: String? = null,
+    val userDisplayName: String? = null,
+    val userPhotoUrl: String? = null,
+    val lastSyncTimestamp: Long = 0L,
+    val syncStatus: String = "IDLE",
+    val syncErrorMessage: String? = null
 )
 
 class UserPreferencesDataStore(private val context: Context) {
@@ -64,6 +71,13 @@ class UserPreferencesDataStore(private val context: Context) {
         val LAST_BACKUP_TIMESTAMP = longPreferencesKey("last_backup_timestamp")
         val BACKUP_REMINDER_INTERVAL = stringPreferencesKey("backup_reminder_interval")
         val LAST_BACKUP_REMINDER_DISMISSED = longPreferencesKey("last_backup_reminder_dismissed")
+        val CURRENT_USER_ID = stringPreferencesKey("current_user_id")
+        val USER_EMAIL = stringPreferencesKey("user_email")
+        val USER_DISPLAY_NAME = stringPreferencesKey("user_display_name")
+        val USER_PHOTO_URL = stringPreferencesKey("user_photo_url")
+        val LAST_SYNC_TIMESTAMP = longPreferencesKey("last_sync_timestamp")
+        val SYNC_STATUS = stringPreferencesKey("sync_status")
+        val SYNC_ERROR_MESSAGE = stringPreferencesKey("sync_error_message")
     }
 
     val userPreferencesFlow: Flow<UserPreferences> = context.dataStore.data.map { preferences ->
@@ -95,7 +109,14 @@ class UserPreferencesDataStore(private val context: Context) {
             widgetMaskOnAppLock = preferences[PreferencesKeys.WIDGET_MASK_ON_APP_LOCK] ?: true,
             lastBackupTimestamp = preferences[PreferencesKeys.LAST_BACKUP_TIMESTAMP],
             backupReminderInterval = preferences[PreferencesKeys.BACKUP_REMINDER_INTERVAL] ?: "OFF",
-            lastBackupReminderDismissedMillis = preferences[PreferencesKeys.LAST_BACKUP_REMINDER_DISMISSED] ?: 0L
+            lastBackupReminderDismissedMillis = preferences[PreferencesKeys.LAST_BACKUP_REMINDER_DISMISSED] ?: 0L,
+            currentUserId = preferences[PreferencesKeys.CURRENT_USER_ID],
+            userEmail = preferences[PreferencesKeys.USER_EMAIL],
+            userDisplayName = preferences[PreferencesKeys.USER_DISPLAY_NAME],
+            userPhotoUrl = preferences[PreferencesKeys.USER_PHOTO_URL],
+            lastSyncTimestamp = preferences[PreferencesKeys.LAST_SYNC_TIMESTAMP] ?: 0L,
+            syncStatus = preferences[PreferencesKeys.SYNC_STATUS] ?: "IDLE",
+            syncErrorMessage = preferences[PreferencesKeys.SYNC_ERROR_MESSAGE]
         )
     }
 
@@ -227,6 +248,40 @@ class UserPreferencesDataStore(private val context: Context) {
     suspend fun setLastBackupReminderDismissedMillis(timestamp: Long) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.LAST_BACKUP_REMINDER_DISMISSED] = timestamp
+        }
+    }
+
+    suspend fun setUserSession(uid: String, email: String?, displayName: String?, photoUrl: String?) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.CURRENT_USER_ID] = uid
+            if (email != null) preferences[PreferencesKeys.USER_EMAIL] = email else preferences.remove(PreferencesKeys.USER_EMAIL)
+            if (displayName != null) preferences[PreferencesKeys.USER_DISPLAY_NAME] = displayName else preferences.remove(PreferencesKeys.USER_DISPLAY_NAME)
+            if (photoUrl != null) preferences[PreferencesKeys.USER_PHOTO_URL] = photoUrl else preferences.remove(PreferencesKeys.USER_PHOTO_URL)
+        }
+    }
+
+    suspend fun clearUserSession() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(PreferencesKeys.CURRENT_USER_ID)
+            preferences.remove(PreferencesKeys.USER_EMAIL)
+            preferences.remove(PreferencesKeys.USER_DISPLAY_NAME)
+            preferences.remove(PreferencesKeys.USER_PHOTO_URL)
+            preferences[PreferencesKeys.SYNC_STATUS] = "IDLE"
+            preferences.remove(PreferencesKeys.SYNC_ERROR_MESSAGE)
+        }
+    }
+
+    suspend fun setSyncState(status: String, timestamp: Long, errorMessage: String? = null) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.SYNC_STATUS] = status
+            if (timestamp > 0L) {
+                preferences[PreferencesKeys.LAST_SYNC_TIMESTAMP] = timestamp
+            }
+            if (errorMessage != null) {
+                preferences[PreferencesKeys.SYNC_ERROR_MESSAGE] = errorMessage
+            } else {
+                preferences.remove(PreferencesKeys.SYNC_ERROR_MESSAGE)
+            }
         }
     }
 

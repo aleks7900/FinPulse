@@ -1011,4 +1011,41 @@
     <string name="security_biometric_available">Bu cihazda mevcut</string>
     <string name="security_biometric_not_enrolled">Sistem ayarlarında kayıtlı değil</string>
     <string name="security_biometric_no_hardware">Biyometrik sensör bulunamadı</string>
+
+    <!-- Google Account &amp; Cloud Sync -->
+    <string name="account_title">Google Hesabı ve Senkronizasyon</string>
+    <string name="account_sync_hero_title">Finansınızı her zaman senkronize tutun</string>
+    <string name="account_sync_hero_subtitle">İşlemleri, bütçeleri, hesapları ve ayarları Android cihazlarınız arasında senkronize etmek için Google ile giriş yapın.</string>
+    <string name="account_continue_with_google">Google ile devam et</string>
+    <string name="account_features_title">Bulut Senkronizasyon Özellikleri</string>
+    <string name="account_feature_multi_device_title">Çoklu Cihaz Senkronizasyonu</string>
+    <string name="account_feature_multi_device_desc">Telefon ve tabletleri gerçek zamanlı olarak güncel tutun.</string>
+    <string name="account_feature_offline_title">Tam Çevrimdışı Desteği</string>
+    <string name="account_feature_offline_desc">İnternet olmadan işlem ekleyin ve düzenleyin; bağlandığında eşitlenir.</string>
+    <string name="account_feature_restore_title">Anında Bulut Geri Yükleme</string>
+    <string name="account_feature_restore_desc">Başka bir Android cihazda giriş yapmak tüm finansal geçmişinizi geri yükler.</string>
+    <string name="account_feature_security_title">Yalıtılmış ve Güvenli</string>
+    <string name="account_feature_security_desc">Veriler, benzersiz kimliği doğrulanmış Google UID altında kesin olarak ayrılmıştır.</string>
+    <string name="account_default_username">FinPulse Kullanıcısı</string>
+    <string name="account_google_connected_badge">Google Hesabı Bağlandı</string>
+    <string name="account_cloud_sync_section">Bulut Senkronizasyonu</string>
+    <string name="account_last_synced_label">Son senkronizasyon</string>
+    <string name="account_pending_changes_count">%1$d bekleyen değişiklik</string>
+    <string name="account_sync_now">Şimdi Senkronize Et</string>
+    <string name="account_syncing">Senkronize ediliyor...</string>
+    <string name="account_security_header">Gizlilik ve Bulut Güvenliği</string>
+    <string name="account_security_body">Finansal verileriniz Firestore güvenlik kurallarıyla korunur ve yalnızca kimliği doğrulanmış Google hesabınıza aittir.</string>
+    <string name="account_sign_out">Çıkış Yap</string>
+    <string name="account_status_synced">Senkronize Edildi</string>
+    <string name="account_status_syncing">Senkronize ediliyor...</string>
+    <string name="account_status_waiting_network">İnternet bağlantısı bekleniyor</string>
+    <string name="account_status_error">Senkronizasyon Hatası</string>
+    <string name="account_status_idle">Boşta</string>
+    <string name="account_unsynced_dialog_title">Senkronize Edilmemiş Değişiklikler</string>
+    <string name="account_unsynced_dialog_desc">Henüz buluta yüklenmemiş %1$d değişikliğiniz var. Çıkış yapmadan önce şimdi senkronize etmek ister misiniz?</string>
+    <string name="account_sync_and_sign_out">Senkronize Et ve Çık</string>
+    <string name="account_sign_out_anyway">Yine de Çıkış Yap</string>
+    <string name="more_account_sync_title">Google Hesabı ve Senkronizasyon</string>
+    <string name="more_account_sync_connected">Bağlandı ve Google ile senkronize edildi</string>
+    <string name="more_account_sync_disconnected">Cihazlar arasında senkronize etmek için giriş yapın</string>
 </resources>

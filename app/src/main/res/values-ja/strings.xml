@@ -1003,4 +1003,41 @@
     <string name="security_biometric_available">この端末で利用可能</string>
     <string name="security_biometric_not_enrolled">システム設定で登録されていません</string>
     <string name="security_biometric_no_hardware">生体認証センサーがありません</string>
+
+    <!-- Google Account &amp; Cloud Sync -->
+    <string name="account_title">Google アカウントと同期</string>
+    <string name="account_sync_hero_title">財務データを常に同期</string>
+    <string name="account_sync_hero_subtitle">Google アカウントでサインインして、取引、予算、口座、設定を Android 端末間で同期します。</string>
+    <string name="account_continue_with_google">Google で続行</string>
+    <string name="account_features_title">クラウド同期の機能</string>
+    <string name="account_feature_multi_device_title">複数端末での同期</string>
+    <string name="account_feature_multi_device_desc">スマートフォンやタブレットをリアルタイムでシームレスに同期。</string>
+    <string name="account_feature_offline_title">完全なオフライン対応</string>
+    <string name="account_feature_offline_desc">ネットワークなしで取引を追加・編集でき、接続時に自動同期されます。</string>
+    <string name="account_feature_restore_title">クラウドからの即時復元</string>
+    <string name="account_feature_restore_desc">別の Android 端末でログインすると、すべての財務履歴が復元されます。</string>
+    <string name="account_feature_security_title">安全かつ分離されたデータ</string>
+    <string name="account_feature_security_desc">データは認証された Google UID ごとに厳重に保護・分離されます。</string>
+    <string name="account_default_username">FinPulse ユーザー</string>
+    <string name="account_google_connected_badge">Google アカウント接続済み</string>
+    <string name="account_cloud_sync_section">クラウド同期</string>
+    <string name="account_last_synced_label">最終同期</string>
+    <string name="account_pending_changes_count">%1$d 件の未同期データ</string>
+    <string name="account_sync_now">今すぐ同期</string>
+    <string name="account_syncing">同期中...</string>
+    <string name="account_security_header">プライバシーとクラウドセキュリティ</string>
+    <string name="account_security_body">財務データは Firestore セキュリティルールによって保護され、認証された Google アカウントにのみ限定されます。</string>
+    <string name="account_sign_out">サインアウト</string>
+    <string name="account_status_synced">同期完了</string>
+    <string name="account_status_syncing">同期中...</string>
+    <string name="account_status_waiting_network">ネットワーク待機中</string>
+    <string name="account_status_error">同期エラー</string>
+    <string name="account_status_idle">待機中</string>
+    <string name="account_unsynced_dialog_title">未同期の変更</string>
+    <string name="account_unsynced_dialog_desc">%1$d 件の変更がまだクラウドにアップロードされていません。サインアウトする前に今すぐ同期しますか？</string>
+    <string name="account_sync_and_sign_out">同期してサインアウト</string>
+    <string name="account_sign_out_anyway">同期せずにサインアウト</string>
+    <string name="more_account_sync_title">Google アカウントとクラウド同期</string>
+    <string name="more_account_sync_connected">Google アカウントと接続・同期済み</string>
+    <string name="more_account_sync_disconnected">端末間で同期するにはサインインしてください</string>
 </resources>

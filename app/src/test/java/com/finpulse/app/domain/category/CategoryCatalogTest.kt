@@ -274,6 +274,11 @@ class CategoryCatalogTest {
             flow.value = storage.values.toList()
         }
 
+        override suspend fun deleteCategoryById(id: String) {
+            storage.remove(id)
+            flow.value = storage.values.toList()
+        }
+
         override suspend fun getCategoryCount(): Int = storage.size
 
         override suspend fun getAllCategories(): List<CategoryEntity> = storage.values.toList()

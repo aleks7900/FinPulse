@@ -517,6 +517,22 @@ fun FinPulseApp(
                 )
             }
 
+            // Sub-screen: Google Account & Cloud Sync
+            composable(Screen.Account.route) {
+                val accountViewModel: com.finpulse.app.presentation.account.AccountViewModel = viewModel {
+                    com.finpulse.app.presentation.account.AccountViewModel(
+                        authRepository = container.authRepository,
+                        cloudSyncRepository = container.cloudSyncRepository,
+                        googleAuthManager = container.googleAuthManager,
+                        userPreferencesDataStore = container.userPreferencesDataStore
+                    )
+                }
+                com.finpulse.app.presentation.account.AccountScreen(
+                    viewModel = accountViewModel,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
             // Sub-screen: Data Export
             composable(Screen.Export.route) {
                 val viewModel: com.finpulse.app.presentation.export.ExportViewModel = viewModel {

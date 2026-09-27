@@ -1011,4 +1011,41 @@
     <string name="security_biometric_available">Disponible sur cet appareil</string>
     <string name="security_biometric_not_enrolled">Non configuré dans les paramètres système</string>
     <string name="security_biometric_no_hardware">Aucun capteur biométrique disponible</string>
+
+    <!-- Google Account &amp; Cloud Sync -->
+    <string name="account_title">Compte Google et Synchronisation</string>
+    <string name="account_sync_hero_title">Gardez vos finances synchronisées</string>
+    <string name="account_sync_hero_subtitle">Connectez-vous avec Google pour synchroniser transactions, budgets, comptes et paramètres sur vos appareils Android.</string>
+    <string name="account_continue_with_google">Continuer avec Google</string>
+    <string name="account_features_title">Fonctionnalités de synchronisation cloud</string>
+    <string name="account_feature_multi_device_title">Synchronisation multi-appareils</string>
+    <string name="account_feature_multi_device_desc">Maintenez smartphones et tablettes à jour en temps réel en toute fluidité.</string>
+    <string name="account_feature_offline_title">Prise en charge hors ligne complète</string>
+    <string name="account_feature_offline_desc">Ajoutez et modifiez des opérations sans réseau; synchronisation dès la connexion.</string>
+    <string name="account_feature_restore_title">Restauration cloud instantanée</string>
+    <string name="account_feature_restore_desc">Connectez-vous sur un autre appareil Android pour récupérer tout votre historique financier.</string>
+    <string name="account_feature_security_title">Isolé et sécurisé</string>
+    <string name="account_feature_security_desc">Les données sont strictement partitionnées sous votre UID Google authentifié.</string>
+    <string name="account_default_username">Utilisateur FinPulse</string>
+    <string name="account_google_connected_badge">Compte Google connecté</string>
+    <string name="account_cloud_sync_section">Synchronisation Cloud</string>
+    <string name="account_last_synced_label">Dernière synchronisation</string>
+    <string name="account_pending_changes_count">%1$d modifications en attente</string>
+    <string name="account_sync_now">Synchroniser maintenant</string>
+    <string name="account_syncing">Synchronisation en cours...</string>
+    <string name="account_security_header">Confidentialité et sécurité cloud</string>
+    <string name="account_security_body">Vos données financières sont protégées par les règles de sécurité Firestore et réservées exclusivement à votre compte Google.</string>
+    <string name="account_sign_out">Se déconnecter</string>
+    <string name="account_status_synced">Synchronisé</string>
+    <string name="account_status_syncing">Synchronisation...</string>
+    <string name="account_status_waiting_network">En attente de connexion internet</string>
+    <string name="account_status_error">Erreur de synchronisation</string>
+    <string name="account_status_idle">Inactif</string>
+    <string name="account_unsynced_dialog_title">Modifications non synchronisées</string>
+    <string name="account_unsynced_dialog_desc">Vous avez %1$d modifications qui n\'ont pas encore été synchronisées dans le cloud. Voulez-vous les synchroniser avant de vous déconnecter?</string>
+    <string name="account_sync_and_sign_out">Synchroniser et se déconnecter</string>
+    <string name="account_sign_out_anyway">Se déconnecter quand même</string>
+    <string name="more_account_sync_title">Compte Google et Synchronisation</string>
+    <string name="more_account_sync_connected">Connecté et synchronisé avec Google</string>
+    <string name="more_account_sync_disconnected">Connectez-vous pour synchroniser entre vos appareils</string>
 </resources>
