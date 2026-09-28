@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Quick Add</string>
     <string name="shortcut_quick_add_long">Quick Add Transaction</string>
@@ -1341,7 +1341,7 @@
     <string name="notif_channel_digest_name">Financial Digest</string>
     <string name="notif_channel_digest_desc">Daily and weekly habit-forming financial summaries and alerts</string>
     <string name="digest_notif_privacy_title">%1$s Financial Digest</string>
-    <string name="digest_notif_privacy_body">%1$d transactions recorded вЂў %2$d upcoming bills вЂў Tap to view summary</string>
+    <string name="digest_notif_privacy_body">%1$d transactions recorded • %2$d upcoming bills • Tap to view summary</string>
     <string name="digest_notif_privacy_expanded">%1$s Digest ready: %2$d transactions logged, %3$d upcoming obligations, and %4$d items to review. Open FinPulse to review full details.</string>
     <string name="digest_notif_detailed_title_trend">%1$s Digest: %2$s spent (%3$s)</string>
     <string name="digest_notif_detailed_title">%1$s Digest: %2$s spent</string>

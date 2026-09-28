@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Adicionar Rápido</string>
     <string name="shortcut_quick_add_long">Adicionar Transação Rápida</string>
@@ -1309,39 +1309,39 @@
 
     <!-- Financial Digest & Habit Insights -->
     <string name="digest_screen_title">Resumo Financeiro</string>
-    <string name="digest_more_desc">Resumos diГЎrios e semanais, contas e tendГЄncias de gastos</string>
-    <string name="digest_card_summary_desc">Resumo diГЎrio e semanal de hГЎbitos, contas e despesas</string>
-    <string name="digest_badge_daily_weekly">DiГЎrio &amp; Semanal</string>
-    <string name="digest_period_daily">DiГЎrio</string>
+    <string name="digest_more_desc">Resumos diários e semanais, contas e tendências de gastos</string>
+    <string name="digest_card_summary_desc">Resumo diário e semanal de hábitos, contas e despesas</string>
+    <string name="digest_badge_daily_weekly">Diário &amp; Semanal</string>
+    <string name="digest_period_daily">Diário</string>
     <string name="digest_period_weekly">Semanal</string>
-    <string name="digest_period_daily_desc">Panorama financeiro de hoje em comparaГ§ГЈo a ontem</string>
-    <string name="digest_period_weekly_desc">Panorama desta semana em comparaГ§ГЈo Г  anterior</string>
+    <string name="digest_period_daily_desc">Panorama financeiro de hoje em comparação a ontem</string>
+    <string name="digest_period_weekly_desc">Panorama desta semana em comparação à anterior</string>
     <string name="digest_frequency_off">Desativado</string>
     <string name="digest_pulse_badge_daily">Pulso de Hoje</string>
     <string name="digest_pulse_badge_weekly">Pulso da Semana</string>
-    <string name="digest_trend_down">em relaГ§ГЈo ao perГ­odo anterior</string>
-    <string name="digest_trend_up">em relaГ§ГЈo ao perГ­odo anterior</string>
+    <string name="digest_trend_down">em relação ao período anterior</string>
+    <string name="digest_trend_up">em relação ao período anterior</string>
     <string name="digest_total_spent_label">Total Gasto</string>
-    <string name="digest_stat_transactions">TransaГ§Гµes</string>
-    <string name="digest_stat_bills_due">Contas PrГіximas</string>
+    <string name="digest_stat_transactions">Transações</string>
+    <string name="digest_stat_bills_due">Contas Próximas</string>
     <string name="digest_stat_review_items">Para Revisar</string>
-    <string name="digest_section_priority_alerts">Alertas PrioritГЎrios &amp; AГ§Гµes</string>
+    <string name="digest_section_priority_alerts">Alertas Prioritários &amp; Ações</string>
     <string name="digest_action_review">Revisar Agora</string>
     <string name="digest_section_top_expenses">Maiores Despesas</string>
-    <string name="digest_section_budgets">SaГєde dos OrГ§amentos</string>
-    <string name="digest_section_upcoming_bills">PrГіximos Vencimentos &amp; Contas</string>
+    <string name="digest_section_budgets">Saúde dos Orçamentos</string>
+    <string name="digest_section_upcoming_bills">Próximos Vencimentos &amp; Contas</string>
     <string name="digest_section_savings_goals">Progresso das Metas de Reserva</string>
-    <string name="digest_settings_title">PreferГЄncias do Resumo</string>
-    <string name="digest_settings_frequency_label">FrequГЄncia do Resumo</string>
+    <string name="digest_settings_title">Preferências do Resumo</string>
+    <string name="digest_settings_frequency_label">Frequência do Resumo</string>
     <string name="digest_settings_privacy_mode">Modo Privativo na Tela de Bloqueio</string>
-    <string name="digest_settings_privacy_desc">Ocultar valores monetГЎrios exatos nas notificaГ§Гµes para proteger sua privacidade em locais pГєblicos</string>
-    <string name="digest_settings_delivery_time">HorГЎrio de Entrega</string>
-    <string name="digest_action_test_notification">Enviar NotificaГ§ГЈo de Teste</string>
+    <string name="digest_settings_privacy_desc">Ocultar valores monetários exatos nas notificações para proteger sua privacidade em locais públicos</string>
+    <string name="digest_settings_delivery_time">Horário de Entrega</string>
+    <string name="digest_action_test_notification">Enviar Notificação de Teste</string>
     <string name="notif_channel_digest_name">Resumo Financeiro</string>
-    <string name="notif_channel_digest_desc">Resumos periГіdicos e hГЎbitos financeiros saudГЎveis</string>
+    <string name="notif_channel_digest_desc">Resumos periódicos e hábitos financeiros saudáveis</string>
     <string name="digest_notif_privacy_title">Resumo Financeiro %1$s</string>
-    <string name="digest_notif_privacy_body">%1$d transaГ§Гµes registradas вЂў %2$d contas a vencer вЂў Toque para ver</string>
-    <string name="digest_notif_privacy_expanded">Resumo %1$s pronto: %2$d transaГ§Гµes, %3$d obrigaГ§Гµes prГіximas e %4$d itens para revisar.</string>
+    <string name="digest_notif_privacy_body">%1$d transações registradas • %2$d contas a vencer • Toque para ver</string>
+    <string name="digest_notif_privacy_expanded">Resumo %1$s pronto: %2$d transações, %3$d obrigações próximas e %4$d itens para revisar.</string>
     <string name="digest_notif_detailed_title_trend">Resumo %1$s: %2$s gastos (%3$s)</string>
     <string name="digest_notif_detailed_title">Resumo %1$s: %2$s gastos</string>
     <string name="digest_notif_detailed_top_expense">Destaque: %1$s (%2$s)</string>

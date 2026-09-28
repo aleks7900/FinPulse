@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Añadir rápido</string>
     <string name="shortcut_quick_add_long">Añadir transacción rápida</string>
@@ -1309,12 +1309,12 @@
 
     <!-- Financial Digest & Habit Insights -->
     <string name="digest_screen_title">Resumen financiero</string>
-    <string name="digest_more_desc">ResГєmenes diarios y semanales, facturas y tendencias de gasto</string>
+    <string name="digest_more_desc">Resúmenes diarios y semanales, facturas y tendencias de gasto</string>
     <string name="digest_card_summary_desc">Resumen diario y semanal, facturas y tendencias de gasto</string>
     <string name="digest_badge_daily_weekly">Diario y Semanal</string>
     <string name="digest_period_daily">Diario</string>
     <string name="digest_period_weekly">Semanal</string>
-    <string name="digest_period_daily_desc">Foto financiera de hoy en comparaciГіn con ayer</string>
+    <string name="digest_period_daily_desc">Foto financiera de hoy en comparación con ayer</string>
     <string name="digest_period_weekly_desc">Foto financiera de esta semana comparada con la anterior</string>
     <string name="digest_frequency_off">Desactivado</string>
     <string name="digest_pulse_badge_daily">Pulso de hoy</string>
@@ -1323,25 +1323,25 @@
     <string name="digest_trend_up">frente al periodo anterior</string>
     <string name="digest_total_spent_label">Gasto total</string>
     <string name="digest_stat_transactions">Transacciones</string>
-    <string name="digest_stat_bills_due">Facturas prГіximas</string>
+    <string name="digest_stat_bills_due">Facturas próximas</string>
     <string name="digest_stat_review_items">Por revisar</string>
     <string name="digest_section_priority_alerts">Alertas prioritarias y acciones</string>
     <string name="digest_action_review">Revisar ahora</string>
     <string name="digest_section_top_expenses">Mayores gastos</string>
     <string name="digest_section_budgets">Estado del presupuesto</string>
-    <string name="digest_section_upcoming_bills">Facturas y compromisos prГіximos</string>
+    <string name="digest_section_upcoming_bills">Facturas y compromisos próximos</string>
     <string name="digest_section_savings_goals">Progreso de metas de ahorro</string>
     <string name="digest_settings_title">Preferencias de resumen</string>
     <string name="digest_settings_frequency_label">Frecuencia del resumen</string>
     <string name="digest_settings_privacy_mode">Modo privado en pantalla de bloqueo</string>
     <string name="digest_settings_privacy_desc">Ocultar importes exactos en notificaciones para proteger tu privacidad</string>
     <string name="digest_settings_delivery_time">Hora de entrega</string>
-    <string name="digest_action_test_notification">Enviar notificaciГіn de prueba</string>
+    <string name="digest_action_test_notification">Enviar notificación de prueba</string>
     <string name="notif_channel_digest_name">Resumen financiero</string>
-    <string name="notif_channel_digest_desc">ResГєmenes financieros periГіdicos y hГЎbitos de gasto</string>
+    <string name="notif_channel_digest_desc">Resúmenes financieros periódicos y hábitos de gasto</string>
     <string name="digest_notif_privacy_title">Resumen financiero %1$s</string>
-    <string name="digest_notif_privacy_body">%1$d transacciones вЂў %2$d facturas prГіximas вЂў Toca para ver el resumen</string>
-    <string name="digest_notif_privacy_expanded">Resumen %1$s listo: %2$d movimientos, %3$d obligaciones prГіximas y %4$d pendientes de revisiГіn.</string>
+    <string name="digest_notif_privacy_body">%1$d transacciones • %2$d facturas próximas • Toca para ver el resumen</string>
+    <string name="digest_notif_privacy_expanded">Resumen %1$s listo: %2$d movimientos, %3$d obligaciones próximas y %4$d pendientes de revisión.</string>
     <string name="digest_notif_detailed_title_trend">Resumen %1$s: %2$s gastados (%3$s)</string>
     <string name="digest_notif_detailed_title">Resumen %1$s: %2$s gastados</string>
     <string name="digest_notif_detailed_top_expense">Mayor gasto: %1$s (%2$s)</string>

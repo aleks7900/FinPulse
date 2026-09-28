@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Aggiunta rapida</string>
     <string name="shortcut_quick_add_long">Registra transazione rapida</string>
@@ -1333,14 +1333,14 @@
     <string name="digest_section_savings_goals">Avanzamento obiettivi di risparmio</string>
     <string name="digest_settings_title">Preferenze riepilogo</string>
     <string name="digest_settings_frequency_label">Frequenza del riepilogo</string>
-    <string name="digest_settings_privacy_mode">ModalitГ  privacy schermata di blocco</string>
+    <string name="digest_settings_privacy_mode">Modalità privacy schermata di blocco</string>
     <string name="digest_settings_privacy_desc">Nascondi gli importi esatti nelle notifiche per proteggere la tua privacy</string>
     <string name="digest_settings_delivery_time">Orario di consegna</string>
     <string name="digest_action_test_notification">Invia notifica di prova</string>
     <string name="notif_channel_digest_name">Riepilogo finanziario</string>
     <string name="notif_channel_digest_desc">Riepiloghi finanziari periodici e abitudini di spesa</string>
     <string name="digest_notif_privacy_title">Riepilogo finanziario %1$s</string>
-    <string name="digest_notif_privacy_body">%1$d transazioni registrate вЂў %2$d pagamenti imminenti вЂў Tocca per visualizzare</string>
+    <string name="digest_notif_privacy_body">%1$d transazioni registrate • %2$d pagamenti imminenti • Tocca per visualizzare</string>
     <string name="digest_notif_privacy_expanded">Riepilogo %1$s pronto: %2$d movimenti, %3$d scadenze e %4$d voci da verificare.</string>
     <string name="digest_notif_detailed_title_trend">Riepilogo %1$s: %2$s spesi (%3$s)</string>
     <string name="digest_notif_detailed_title">Riepilogo %1$s: %2$s spesi</string>
