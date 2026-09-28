@@ -17,6 +17,25 @@ fun Category.getDisplayName(): String {
     return if (resId != null) stringResource(resId) else name
 }
 
+@Composable
+fun getCategoryDisplayName(categoryId: String?, fallback: String = ""): String {
+    val resId = categoryId?.let { getCategoryStringRes(it) }
+    return if (resId != null) {
+        stringResource(resId)
+    } else {
+        fallback.ifEmpty { categoryId?.replace("cat_", "")?.replaceFirstChar { it.uppercase() } ?: "" }
+    }
+}
+
+fun getCategoryDisplayName(categoryId: String?, fallback: String = "", context: Context): String {
+    val resId = categoryId?.let { getCategoryStringRes(it) }
+    return if (resId != null) {
+        context.getString(resId)
+    } else {
+        fallback.ifEmpty { categoryId?.replace("cat_", "")?.replaceFirstChar { it.uppercase() } ?: "" }
+    }
+}
+
 fun getCategoryStringRes(categoryId: String): Int? {
     return when (categoryId) {
         "cat_housing" -> R.string.cat_housing

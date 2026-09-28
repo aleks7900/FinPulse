@@ -81,10 +81,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.AmberWarning
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.DebtOrange
@@ -92,6 +93,8 @@ import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.InvestmentPurple
 import com.finpulse.app.core.designsystem.SapphireAccent
 import com.finpulse.app.core.designsystem.TealSavings
+import com.finpulse.app.core.ui.getCategoryDisplayName
+import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.Category
 import com.finpulse.app.domain.model.ReviewInboxItem
@@ -152,7 +155,7 @@ fun ReviewInboxScreen(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "Review Inbox",
+                            text = stringResource(R.string.review_inbox_title),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -177,7 +180,7 @@ fun ReviewInboxScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.action_back)
                         )
                     }
                 },
@@ -185,14 +188,14 @@ fun ReviewInboxScreen(
                     IconButton(onClick = onToggleSelectMode) {
                         Icon(
                             imageVector = if (uiState.isSelectionMode) Icons.Default.Close else Icons.Default.DoneAll,
-                            contentDescription = if (uiState.isSelectionMode) "Cancel Selection" else "Multi-select",
+                            contentDescription = stringResource(if (uiState.isSelectionMode) R.string.review_inbox_cancel_selection else R.string.review_inbox_multiselect),
                             tint = if (uiState.isSelectionMode) EmeraldPrimary else MaterialTheme.colorScheme.onSurface
                         )
                     }
                     IconButton(onClick = { showOverflowMenu = true }) {
                         Icon(
                             imageVector = Icons.Default.MoreVert,
-                            contentDescription = "More actions"
+                            contentDescription = stringResource(R.string.review_inbox_more_actions)
                         )
                     }
                     DropdownMenu(
@@ -200,7 +203,7 @@ fun ReviewInboxScreen(
                         onDismissRequest = { showOverflowMenu = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Dismiss All Warnings") },
+                            text = { Text(stringResource(R.string.review_inbox_dismiss_all_warnings)) },
                             leadingIcon = { Icon(Icons.Default.Clear, contentDescription = null) },
                             onClick = {
                                 onDismissAllWarnings()
@@ -209,7 +212,7 @@ fun ReviewInboxScreen(
                         )
                         if (uiState.isSelectionMode) {
                             DropdownMenuItem(
-                                text = { Text("Select All in Tab") },
+                                text = { Text(stringResource(R.string.review_inbox_select_all)) },
                                 leadingIcon = { Icon(Icons.Default.CheckCircle, contentDescription = null) },
                                 onClick = {
                                     onSelectAll(true)
@@ -217,7 +220,7 @@ fun ReviewInboxScreen(
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Deselect All") },
+                                text = { Text(stringResource(R.string.review_inbox_deselect_all)) },
                                 leadingIcon = { Icon(Icons.Default.Close, contentDescription = null) },
                                 onClick = {
                                     onSelectAll(false)
@@ -254,7 +257,7 @@ fun ReviewInboxScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "${uiState.selectedItemIds.size} selected",
+                            text = stringResource(R.string.review_inbox_selected_count, uiState.selectedItemIds.size),
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -264,7 +267,7 @@ fun ReviewInboxScreen(
                                 onClick = { onSelectAll(false) },
                                 shape = RoundedCornerShape(12.dp)
                             ) {
-                                Text("Clear", style = MaterialTheme.typography.labelMedium)
+                                Text(stringResource(R.string.review_inbox_clear_selection), style = MaterialTheme.typography.labelMedium)
                             }
                             Button(
                                 onClick = onOpenBulkCategoryPicker,
@@ -278,7 +281,7 @@ fun ReviewInboxScreen(
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
-                                Text("Bulk Categorize", color = Color.Black, fontWeight = FontWeight.Bold)
+                                Text(stringResource(R.string.review_inbox_bulk_categorize), color = Color.Black, fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -449,7 +452,7 @@ fun ReviewInboxTabRow(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = tab.label,
+                        text = tab.getLocalizedName(),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                     )
@@ -507,13 +510,14 @@ fun SafeBulkBannerCard(
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Safe Bulk Suggestion",
+                    text = stringResource(R.string.review_inbox_safe_bulk_title),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
                     color = EmeraldPrimary
                 )
+                val localizedCatName = getCategoryDisplayName(suggestion.suggestedCategoryId, suggestion.suggestedCategoryName)
                 Text(
-                    text = "Categorize ${suggestion.count} '${suggestion.merchant}' transactions as ${suggestion.suggestedCategoryName}",
+                    text = stringResource(R.string.review_inbox_safe_bulk_desc, suggestion.count, suggestion.merchant, localizedCatName),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface
@@ -526,7 +530,7 @@ fun SafeBulkBannerCard(
                 shape = RoundedCornerShape(12.dp),
                 contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 12.dp, vertical = 6.dp)
             ) {
-                Text("Categorize All (${suggestion.count})", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                Text(stringResource(R.string.review_inbox_categorize_all, suggestion.count), color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 12.sp)
             }
         }
     }
@@ -603,7 +607,7 @@ fun ReviewItemCard(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = item.type.displayName,
+                            text = item.type.getLocalizedName(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = badgeColor
@@ -629,7 +633,7 @@ fun ReviewItemCard(
                     ) {
                         Icon(
                             imageVector = Icons.Default.MoreVert,
-                            contentDescription = "Actions",
+                            contentDescription = stringResource(R.string.review_inbox_actions),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(18.dp)
                         )
@@ -640,7 +644,7 @@ fun ReviewItemCard(
                     ) {
                         if (item.transaction != null) {
                             DropdownMenuItem(
-                                text = { Text("Change Account") },
+                                text = { Text(stringResource(R.string.review_inbox_change_account)) },
                                 leadingIcon = { Icon(Icons.Default.SwapHoriz, contentDescription = null) },
                                 onClick = {
                                     showMenu = false
@@ -648,7 +652,7 @@ fun ReviewItemCard(
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Edit Merchant") },
+                                text = { Text(stringResource(R.string.review_inbox_edit_merchant)) },
                                 leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) },
                                 onClick = {
                                     showMenu = false
@@ -658,7 +662,7 @@ fun ReviewItemCard(
                         }
                         if (item.isDismissible) {
                             DropdownMenuItem(
-                                text = { Text("Dismiss Warning") },
+                                text = { Text(stringResource(R.string.review_inbox_dismiss_warning)) },
                                 leadingIcon = { Icon(Icons.Default.Close, contentDescription = null) },
                                 onClick = {
                                     showMenu = false
@@ -740,8 +744,9 @@ fun ReviewItemCard(
                             ) {
                                 Icon(Icons.Default.Check, contentDescription = null, tint = Color.Black, modifier = Modifier.size(16.dp))
                                 Spacer(modifier = Modifier.width(6.dp))
+                                val targetCategoryName = getCategoryDisplayName(item.suggestedCategoryId, item.suggestedCategoryName ?: stringResource(R.string.review_inbox_confirm_category_fallback))
                                 Text(
-                                    text = "Confirm ${item.suggestedCategoryName ?: "Category"}",
+                                    text = stringResource(R.string.review_inbox_confirm_category, targetCategoryName),
                                     color = Color.Black,
                                     fontWeight = FontWeight.Bold,
                                     maxLines = 1
@@ -755,7 +760,7 @@ fun ReviewItemCard(
                         ) {
                             Icon(Icons.Default.Category, contentDescription = null, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Categorize")
+                            Text(stringResource(R.string.review_inbox_categorize))
                         }
                     }
                     ReviewItemType.SUSPECTED_DUPLICATE -> {
@@ -767,13 +772,13 @@ fun ReviewItemCard(
                         ) {
                             Icon(Icons.Default.ContentCopy, contentDescription = null, tint = Color.Black, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Resolve Duplicate", color = Color.Black, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.review_inbox_resolve_duplicate), color = Color.Black, fontWeight = FontWeight.Bold)
                         }
                         OutlinedButton(
                             onClick = onDismiss,
                             shape = RoundedCornerShape(12.dp)
                         ) {
-                            Text("Not Duplicate")
+                            Text(stringResource(R.string.review_inbox_not_duplicate))
                         }
                     }
                     ReviewItemType.OVERDUE_BILL -> {
@@ -785,13 +790,13 @@ fun ReviewItemCard(
                         ) {
                             Icon(Icons.Default.CheckCircle, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Mark Bill Paid", color = Color.White, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.review_inbox_mark_bill_paid), color = Color.White, fontWeight = FontWeight.Bold)
                         }
                         OutlinedButton(
                             onClick = onDismiss,
                             shape = RoundedCornerShape(12.dp)
                         ) {
-                            Text("Dismiss")
+                            Text(stringResource(R.string.review_inbox_dismiss))
                         }
                     }
                     ReviewItemType.FAILED_RECURRING -> {
@@ -801,13 +806,13 @@ fun ReviewItemCard(
                             shape = RoundedCornerShape(12.dp),
                             modifier = Modifier.weight(1f)
                         ) {
-                            Text("Process Now / Pay", color = Color.White, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.review_inbox_pay_now), color = Color.White, fontWeight = FontWeight.Bold)
                         }
                         OutlinedButton(
                             onClick = onDismiss,
                             shape = RoundedCornerShape(12.dp)
                         ) {
-                            Text("Dismiss")
+                            Text(stringResource(R.string.review_inbox_dismiss))
                         }
                     }
                     ReviewItemType.MISSING_MERCHANT -> {
@@ -819,13 +824,13 @@ fun ReviewItemCard(
                         ) {
                             Icon(Icons.Default.Edit, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Add Merchant", color = Color.White, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.review_inbox_add_merchant), color = Color.White, fontWeight = FontWeight.Bold)
                         }
                         OutlinedButton(
                             onClick = onConfirm,
                             shape = RoundedCornerShape(12.dp)
                         ) {
-                            Text("Keep As-Is")
+                            Text(stringResource(R.string.review_inbox_keep_as_is))
                         }
                     }
                     ReviewItemType.UNUSUAL_AMOUNT -> {
@@ -837,13 +842,13 @@ fun ReviewItemCard(
                         ) {
                             Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Looks Correct (Dismiss)")
+                            Text(stringResource(R.string.review_inbox_looks_correct))
                         }
                         OutlinedButton(
                             onClick = onCategorize,
                             shape = RoundedCornerShape(12.dp)
                         ) {
-                            Text("Edit")
+                            Text(stringResource(R.string.review_inbox_edit))
                         }
                     }
                 }
@@ -870,7 +875,7 @@ fun DuplicateComparisonBox(
     ) {
         Column(modifier = Modifier.padding(10.dp)) {
             Text(
-                text = "Comparing Detected Twin Pair:",
+                text = stringResource(R.string.review_inbox_comparing_twin),
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
                 color = AmberWarning
@@ -881,12 +886,12 @@ fun DuplicateComparisonBox(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Original (ID: ...${txA.id.takeLast(6)})", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.review_inbox_twin_original, txA.id.takeLast(6)), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
                     Text("$dateA • ${txA.merchant ?: txA.description}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Candidate (ID: ...${txB.id.takeLast(6)})", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.review_inbox_twin_candidate, txB.id.takeLast(6)), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
                     Text("$dateB • ${txB.merchant ?: txB.description}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
@@ -926,14 +931,14 @@ fun EmptyInboxState(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = if (selectedTab == ReviewInboxTab.ALL) "All Caught Up! 🎉" else "No ${selectedTab.label} to Review",
+                text = if (selectedTab == ReviewInboxTab.ALL) stringResource(R.string.review_inbox_all_caught_up) else stringResource(R.string.review_inbox_no_items_tab, selectedTab.getLocalizedName()),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Your financial data is completely clean and verified. No duplicates, uncategorized transactions, or overdue bills.",
+                text = stringResource(R.string.review_inbox_empty_detail),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -944,7 +949,7 @@ fun EmptyInboxState(
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary),
                 shape = RoundedCornerShape(14.dp)
             ) {
-                Text("Return to Dashboard", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.review_inbox_return_dashboard), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -969,7 +974,7 @@ fun CategoryPickerDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text("Assign Category", fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.review_inbox_assign_category), fontWeight = FontWeight.Bold)
         },
         text = {
             Column(
@@ -980,7 +985,7 @@ fun CategoryPickerDialog(
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    placeholder = { Text("Search categories…") },
+                    placeholder = { Text(stringResource(R.string.review_inbox_search_categories)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -1006,7 +1011,7 @@ fun CategoryPickerDialog(
                                 )
                                 Spacer(modifier = Modifier.width(10.dp))
                                 Text(
-                                    text = cat.name,
+                                    text = getCategoryDisplayName(cat.id, cat.name),
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = if (cat.id == currentItem.suggestedCategoryId) FontWeight.Bold else FontWeight.Normal
                                 )
@@ -1018,7 +1023,7 @@ fun CategoryPickerDialog(
         },
         confirmButton = {},
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 }
@@ -1032,7 +1037,7 @@ fun AccountPickerDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Reassign Account", fontWeight = FontWeight.Bold) },
+        title = { Text(stringResource(R.string.review_inbox_reassign_account), fontWeight = FontWeight.Bold) },
         text = {
             Column(
                 modifier = Modifier
@@ -1058,7 +1063,7 @@ fun AccountPickerDialog(
                             Spacer(modifier = Modifier.width(12.dp))
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(acc.name, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-                                Text("Balance: ${acc.balance.formatted()}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(stringResource(R.string.review_inbox_account_balance, acc.balance.formatted()), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                             if (isCurrent) {
                                 Icon(Icons.Default.Check, contentDescription = null, tint = EmeraldPrimary)
@@ -1069,7 +1074,7 @@ fun AccountPickerDialog(
             }
         },
         confirmButton = {},
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } }
     )
 }
 
@@ -1083,18 +1088,18 @@ fun EditMerchantDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Edit Merchant Name", fontWeight = FontWeight.Bold) },
+        title = { Text(stringResource(R.string.review_inbox_edit_merchant_title), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "Assign a clean merchant name for this ${item.amount.formatted()} transaction:",
+                    text = stringResource(R.string.review_inbox_edit_merchant_prompt, item.amount.formatted()),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 OutlinedTextField(
                     value = merchantText,
                     onValueChange = { merchantText = it },
-                    label = { Text("Merchant / Payee") },
+                    label = { Text(stringResource(R.string.review_inbox_merchant_payee)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -1105,11 +1110,11 @@ fun EditMerchantDialog(
                 onClick = { onSave(merchantText) },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Save", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 }
@@ -1127,14 +1132,14 @@ fun ResolveDuplicateDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Resolve Duplicate Pair", fontWeight = FontWeight.Bold) },
+        title = { Text(stringResource(R.string.review_inbox_resolve_duplicate_title), fontWeight = FontWeight.Bold) },
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = "Two transactions have identical details (${txA.amount.formatted()}). Choose which one to keep in your ledger:",
+                    text = stringResource(R.string.review_inbox_duplicate_prompt, txA.amount.formatted()),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1149,9 +1154,9 @@ fun ResolveDuplicateDialog(
                     border = BorderStroke(1.dp, EmeraldPrimary.copy(alpha = 0.4f))
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("Keep Original & Delete Candidate", fontWeight = FontWeight.Bold, color = EmeraldPrimary)
+                        Text(stringResource(R.string.review_inbox_keep_original), fontWeight = FontWeight.Bold, color = EmeraldPrimary)
                         Text(
-                            text = "Original: ${txA.merchant ?: txA.description} (ID: ...${txA.id.takeLast(6)})",
+                            text = "${stringResource(R.string.review_inbox_original)}: ${txA.merchant ?: txA.description} (ID: ...${txA.id.takeLast(6)})",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1168,9 +1173,9 @@ fun ResolveDuplicateDialog(
                     border = BorderStroke(1.dp, SapphireAccent.copy(alpha = 0.4f))
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("Keep Candidate & Delete Original", fontWeight = FontWeight.Bold, color = SapphireAccent)
+                        Text(stringResource(R.string.review_inbox_keep_candidate), fontWeight = FontWeight.Bold, color = SapphireAccent)
                         Text(
-                            text = "Candidate: ${txB.merchant ?: txB.description} (ID: ...${txB.id.takeLast(6)})",
+                            text = "${stringResource(R.string.review_inbox_candidate)}: ${txB.merchant ?: txB.description} (ID: ...${txB.id.takeLast(6)})",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1186,9 +1191,9 @@ fun ResolveDuplicateDialog(
                     color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("Both are Legitimate (Not a Duplicate)", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                        Text(stringResource(R.string.review_inbox_both_legitimate), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                         Text(
-                            text = "Dismiss warning and keep both transactions in ledger.",
+                            text = stringResource(R.string.review_inbox_empty_desc),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1197,7 +1202,7 @@ fun ResolveDuplicateDialog(
             }
         },
         confirmButton = {},
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } }
     )
 }
 
@@ -1212,20 +1217,20 @@ fun PayBillDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Confirm Bill Payment", fontWeight = FontWeight.Bold) },
+        title = { Text(stringResource(R.string.review_inbox_confirm_payment), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    text = "Record payment of ${item.amount.formatted()} for '${item.title}'?",
+                    text = stringResource(R.string.review_inbox_pay_bill_prompt, item.amount.formatted(), item.title),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "This will generate a ledger transaction and advance the recurring schedule.",
+                    text = stringResource(R.string.review_inbox_pay_bill_desc),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text("Paying from account:", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.review_inbox_paying_from), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
                 accounts.filter { !it.isArchived }.forEach { acc ->
                     val isSelected = acc.id == selectedAccountId
                     Surface(
@@ -1249,11 +1254,11 @@ fun PayBillDialog(
                 onClick = { onConfirmPay(null, selectedAccountId) },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Record Payment", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.review_inbox_record_payment), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 }
@@ -1270,7 +1275,7 @@ fun BulkCategoryPickerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Bulk Categorize $selectedCount Transactions", fontWeight = FontWeight.Bold) },
+        title = { Text(stringResource(R.string.review_inbox_bulk_categorize_title, selectedCount), fontWeight = FontWeight.Bold) },
         text = {
             Column(
                 modifier = Modifier
@@ -1280,7 +1285,7 @@ fun BulkCategoryPickerDialog(
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    placeholder = { Text("Search category…") },
+                    placeholder = { Text(stringResource(R.string.review_inbox_search_categories)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -1301,7 +1306,7 @@ fun BulkCategoryPickerDialog(
                                         .background(Color(cat.colorHex))
                                 )
                                 Spacer(modifier = Modifier.width(10.dp))
-                                Text(cat.name, style = MaterialTheme.typography.bodyMedium)
+                                Text(getCategoryDisplayName(cat.id, cat.name), style = MaterialTheme.typography.bodyMedium)
                             }
                         }
                     }
@@ -1309,6 +1314,6 @@ fun BulkCategoryPickerDialog(
             }
         },
         confirmButton = {},
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } }
     )
 }

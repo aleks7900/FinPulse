@@ -101,6 +101,7 @@ import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.PurpleAccent
 import com.finpulse.app.core.designsystem.SapphireAccent
 import com.finpulse.app.core.ui.DateFormatterUtils
+import com.finpulse.app.core.ui.getCategoryDisplayName
 import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.AmountMode
 import com.finpulse.app.domain.model.CsvColumnMapping
@@ -437,14 +438,14 @@ private fun SelectFileView(
                 }
 
                 Text(
-                    text = "Import Bank Statement CSV",
+                    text = stringResource(R.string.csv_import_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
 
                 Text(
-                    text = "Upload bank or credit card statements exported in CSV format. FinPulse will automatically detect date formats, amounts, and column structures.",
+                    text = stringResource(R.string.csv_intro_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
@@ -482,7 +483,7 @@ private fun SelectFileView(
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
-                        text = "100% On-Device & Private. Never sent to the cloud.",
+                        text = stringResource(R.string.csv_on_device_privacy),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -511,37 +512,37 @@ private fun SelectFileView(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Quick Demo Statements",
+                        text = stringResource(R.string.csv_quick_demo),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold
                     )
                 }
 
                 Text(
-                    text = "Don't have a file ready? Load a sample bank statement to test mapping, duplicate detection, and categorization:",
+                    text = stringResource(R.string.csv_quick_demo_desc),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 DemoButton(
-                    title = "Standard Bank Export (US Style)",
-                    description = "Date, Description, Amount (negative for expense)",
+                    title = stringResource(R.string.csv_template_us),
+                    description = stringResource(R.string.csv_template_us_desc),
                     onClick = {
                         onLoadDemoData("demo_us_statement.csv", DemoDataSets.US_STANDARD_CSV)
                     }
                 )
 
                 DemoButton(
-                    title = "European Statement (Semicolon & Comma Decimal)",
-                    description = "dd.MM.yyyy, German format, 12,50 EUR",
+                    title = stringResource(R.string.csv_template_eu),
+                    description = stringResource(R.string.csv_template_eu_desc),
                     onClick = {
                         onLoadDemoData("demo_european_statement.csv", DemoDataSets.EUROPEAN_CSV)
                     }
                 )
 
                 DemoButton(
-                    title = "Split Debit / Credit Columns",
-                    description = "Separate columns for Outflow vs Inflow",
+                    title = stringResource(R.string.csv_template_split),
+                    description = stringResource(R.string.csv_template_split_desc),
                     onClick = {
                         onLoadDemoData("demo_split_columns.csv", DemoDataSets.SPLIT_DEBIT_CREDIT_CSV)
                     }
@@ -671,7 +672,7 @@ private fun MappingConfigView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Import Profile",
+                        text = stringResource(R.string.csv_import_profile),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -682,7 +683,7 @@ private fun MappingConfigView(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Save Profile")
+                        Text(stringResource(R.string.csv_save_profile))
                     }
                 }
 
@@ -694,7 +695,7 @@ private fun MappingConfigView(
                     onExpandedChange = { profileExpanded = !profileExpanded }
                 ) {
                     OutlinedTextField(
-                        value = currentProfile?.name ?: "Auto-Detected Format",
+                        value = currentProfile?.name ?: stringResource(R.string.csv_auto_detected_format),
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = profileExpanded) },
@@ -801,7 +802,7 @@ private fun MappingConfigView(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "CSV Format Settings",
+                    text = stringResource(R.string.csv_format_settings),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold
                 )
@@ -814,7 +815,7 @@ private fun MappingConfigView(
                 ) {
                     Column {
                         Text(stringResource(R.string.csv_has_header), fontWeight = FontWeight.Medium)
-                        Text("First line contains column names", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(stringResource(R.string.csv_first_line_headers), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     Switch(
                         checked = formatConfig.hasHeader,
@@ -825,9 +826,14 @@ private fun MappingConfigView(
 
                 // Delimiter selector
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Delimiter", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.csv_delimiter), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        listOf(',' to "Comma (,)", ';' to "Semicolon (;)", '\t' to "Tab (\\t)", '|' to "Pipe (|)").forEach { (delim, label) ->
+                        listOf(
+                            ',' to stringResource(R.string.csv_delimiter_comma),
+                            ';' to stringResource(R.string.csv_delimiter_semicolon),
+                            '\t' to stringResource(R.string.csv_delimiter_tab),
+                            '|' to stringResource(R.string.csv_delimiter_pipe)
+                        ).forEach { (delim, label) ->
                             FilterChip(
                                 selected = formatConfig.delimiter == delim,
                                 onClick = { onFormatConfigChange(formatConfig.copy(delimiter = delim)) },
@@ -843,9 +849,12 @@ private fun MappingConfigView(
 
                 // Decimal separator
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Decimal Separator", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.csv_decimal_separator), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        listOf('.' to "Dot (12.50)", ',' to "Comma (12,50)").forEach { (sep, label) ->
+                        listOf(
+                            '.' to stringResource(R.string.csv_decimal_dot),
+                            ',' to stringResource(R.string.csv_decimal_comma)
+                        ).forEach { (sep, label) ->
                             FilterChip(
                                 selected = formatConfig.decimalSeparator == sep,
                                 onClick = { onFormatConfigChange(formatConfig.copy(decimalSeparator = sep)) },
@@ -887,7 +896,7 @@ private fun MappingConfigView(
 
                 // Amount Mode
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Amount Column Mode", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.csv_amount_mode), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         FilterChip(
                             selected = formatConfig.amountMode == AmountMode.SINGLE_AMOUNT,
@@ -917,9 +926,9 @@ private fun MappingConfigView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Reverse Outflow / Inflow Signs", fontWeight = FontWeight.Medium)
+                        Text(stringResource(R.string.csv_reverse_signs), fontWeight = FontWeight.Medium)
                         Text(
-                            text = "Enable if debits/expenses are shown as positive in statement",
+                            text = stringResource(R.string.csv_reverse_signs_desc),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -944,14 +953,14 @@ private fun MappingConfigView(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Column Mappings",
+                    text = stringResource(R.string.csv_column_mappings),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold
                 )
 
                 // Date
                 ColumnDropdownField(
-                    label = "Transaction Date *",
+                    label = stringResource(R.string.csv_col_tx_date),
                     selectedIndex = mapping.dateColumnIndex,
                     headers = headers,
                     onSelectIndex = { onColumnMappingChange(mapping.copy(dateColumnIndex = it)) }
@@ -959,7 +968,7 @@ private fun MappingConfigView(
 
                 // Description
                 ColumnDropdownField(
-                    label = "Description / Narrative *",
+                    label = stringResource(R.string.csv_col_desc),
                     selectedIndex = mapping.descriptionColumnIndex,
                     headers = headers,
                     onSelectIndex = { onColumnMappingChange(mapping.copy(descriptionColumnIndex = it)) }
@@ -968,20 +977,20 @@ private fun MappingConfigView(
                 // Amount columns
                 if (formatConfig.amountMode == AmountMode.SINGLE_AMOUNT) {
                     ColumnDropdownField(
-                        label = "Amount *",
+                        label = stringResource(R.string.csv_col_amount),
                         selectedIndex = mapping.amountColumnIndex,
                         headers = headers,
                         onSelectIndex = { onColumnMappingChange(mapping.copy(amountColumnIndex = it)) }
                     )
                 } else {
                     ColumnDropdownField(
-                        label = "Debit (Money Out)",
+                        label = stringResource(R.string.csv_col_debit),
                         selectedIndex = mapping.debitColumnIndex,
                         headers = headers,
                         onSelectIndex = { onColumnMappingChange(mapping.copy(debitColumnIndex = it)) }
                     )
                     ColumnDropdownField(
-                        label = "Credit (Money In)",
+                        label = stringResource(R.string.csv_col_credit),
                         selectedIndex = mapping.creditColumnIndex,
                         headers = headers,
                         onSelectIndex = { onColumnMappingChange(mapping.copy(creditColumnIndex = it)) }
@@ -990,7 +999,7 @@ private fun MappingConfigView(
 
                 // Merchant
                 ColumnDropdownField(
-                    label = "Merchant / Payee (Optional)",
+                    label = stringResource(R.string.csv_col_merchant),
                     selectedIndex = mapping.merchantColumnIndex,
                     headers = headers,
                     onSelectIndex = { onColumnMappingChange(mapping.copy(merchantColumnIndex = it)) }
@@ -998,7 +1007,7 @@ private fun MappingConfigView(
 
                 // Category
                 ColumnDropdownField(
-                    label = "Category (Optional)",
+                    label = stringResource(R.string.csv_col_category),
                     selectedIndex = mapping.categoryColumnIndex,
                     headers = headers,
                     onSelectIndex = { onColumnMappingChange(mapping.copy(categoryColumnIndex = it)) }
@@ -1006,7 +1015,7 @@ private fun MappingConfigView(
 
                 // Currency
                 ColumnDropdownField(
-                    label = "Currency (Optional)",
+                    label = stringResource(R.string.csv_col_currency),
                     selectedIndex = mapping.currencyColumnIndex,
                     headers = headers,
                     onSelectIndex = { onColumnMappingChange(mapping.copy(currencyColumnIndex = it)) }
@@ -1014,7 +1023,7 @@ private fun MappingConfigView(
 
                 // Balance
                 ColumnDropdownField(
-                    label = "Balance (Optional)",
+                    label = stringResource(R.string.csv_col_balance),
                     selectedIndex = mapping.balanceColumnIndex,
                     headers = headers,
                     onSelectIndex = { onColumnMappingChange(mapping.copy(balanceColumnIndex = it)) }
@@ -1032,7 +1041,7 @@ private fun MappingConfigView(
                 .height(52.dp)
         ) {
             Text(
-                text = "Preview Statement Rows",
+                text = stringResource(R.string.csv_step_preview),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleSmall
             )
@@ -1054,7 +1063,7 @@ private fun ColumnDropdownField(
     val displayValue = if (selectedIndex in headers.indices) {
         "Col ${selectedIndex + 1}: ${headers[selectedIndex]}"
     } else {
-        "Not Mapped"
+        stringResource(R.string.csv_not_mapped)
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -1082,7 +1091,7 @@ private fun ColumnDropdownField(
                 onDismissRequest = { expanded = false }
             ) {
                 DropdownMenuItem(
-                    text = { Text("Not Mapped", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                    text = { Text(stringResource(R.string.csv_not_mapped), color = MaterialTheme.colorScheme.onSurfaceVariant) },
                     onClick = {
                         onSelectIndex(-1)
                         expanded = false
@@ -1092,7 +1101,7 @@ private fun ColumnDropdownField(
                     DropdownMenuItem(
                         text = {
                             Text(
-                                text = "Col ${index + 1}: $header",
+                                text = stringResource(R.string.csv_col_header_label, index + 1, header),
                                 fontWeight = if (index == selectedIndex) FontWeight.Bold else FontWeight.Normal
                             )
                         },
@@ -1147,8 +1156,9 @@ private fun PreviewReviewView(
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
+                        val destAccount = uiState.accounts.find { it.id == uiState.selectedAccountId }?.name ?: stringResource(R.string.csv_destination_default)
                         Text(
-                            text = "Destination: ${uiState.accounts.find { it.id == uiState.selectedAccountId }?.name ?: "Account"}",
+                            text = stringResource(R.string.csv_destination_label, destAccount),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1179,20 +1189,20 @@ private fun PreviewReviewView(
                             onClick = onExcludeAllDuplicates,
                             shape = RoundedCornerShape(8.dp)
                         ) {
-                            Text("Exclude All Duplicates (${uiState.duplicatesCount})")
+                            Text(stringResource(R.string.csv_exclude_duplicates, uiState.duplicatesCount))
                         }
                     }
                     OutlinedButton(
                         onClick = onIncludeAll,
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text("Include All Valid")
+                        Text(stringResource(R.string.csv_include_valid))
                     }
                     OutlinedButton(
                         onClick = onExcludeAll,
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text("Exclude All")
+                        Text(stringResource(R.string.csv_exclude_all))
                     }
                 }
             }
@@ -1221,7 +1231,7 @@ private fun PreviewReviewView(
                     onClick = { onTabSelected(tab) },
                     text = {
                         Text(
-                            text = "${tab.title} ($count)",
+                            text = "${tab.getLocalizedName()} ($count)",
                             fontWeight = if (uiState.currentPreviewTab == tab) FontWeight.Bold else FontWeight.Normal,
                             color = if (uiState.currentPreviewTab == tab) EmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1239,7 +1249,7 @@ private fun PreviewReviewView(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "No rows in this tab",
+                    text = stringResource(R.string.csv_no_rows_tab),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1406,8 +1416,9 @@ private fun ParsedRowCard(
                     shape = RoundedCornerShape(6.dp),
                     color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
                 ) {
+                    val categoryName = getCategoryDisplayName(row.predictedCategoryId)
                     Text(
-                        text = "Category: ${row.predictedCategoryId?.replace("cat_", "")?.replaceFirstChar { it.uppercase() }}",
+                        text = stringResource(R.string.csv_category_label, categoryName),
                         style = MaterialTheme.typography.labelSmall,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -1476,21 +1487,21 @@ private fun ImportSummaryView(
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                SummaryStatRow("Total CSV Rows", "${summary.totalRows}")
+                SummaryStatRow(stringResource(R.string.csv_stat_total_rows), "${summary.totalRows}")
                 SummaryStatRow(
-                    label = stringResource(R.string.csv_summary_imported, summary.importedCount).substringBefore(":").ifEmpty { "Successfully Imported" },
+                    label = stringResource(R.string.csv_stat_imported),
                     value = "${summary.importedCount}",
                     valueColor = EmeraldPrimary
                 )
-                SummaryStatRow("Total Inflow Added", "+$${"%.2f".format(summary.totalIncomeMinor / 100.0)}", EmeraldPrimary)
-                SummaryStatRow("Total Outflow Added", "-$${"%.2f".format(summary.totalExpenseMinor / 100.0)}", CrimsonExpense)
+                SummaryStatRow(stringResource(R.string.csv_stat_inflow), "+$${"%.2f".format(summary.totalIncomeMinor / 100.0)}", EmeraldPrimary)
+                SummaryStatRow(stringResource(R.string.csv_stat_outflow), "-$${"%.2f".format(summary.totalExpenseMinor / 100.0)}", CrimsonExpense)
                 SummaryStatRow(
-                    label = stringResource(R.string.csv_summary_skipped, summary.skippedDuplicateCount).substringBefore(":").ifEmpty { "Duplicates Skipped" },
+                    label = stringResource(R.string.csv_stat_duplicates),
                     value = "${summary.skippedDuplicateCount}",
                     valueColor = AmberWarning
                 )
-                SummaryStatRow("Excluded by User", "${summary.excludedCount}")
-                SummaryStatRow("Invalid Rows Ignored", "${summary.invalidCount}")
+                SummaryStatRow(stringResource(R.string.csv_stat_excluded), "${summary.excludedCount}")
+                SummaryStatRow(stringResource(R.string.csv_stat_invalid), "${summary.invalidCount}")
             }
         }
 
@@ -1521,7 +1532,7 @@ private fun ImportSummaryView(
                     .fillMaxWidth()
                     .height(52.dp)
             ) {
-                Text("Import Another Statement")
+                Text(stringResource(R.string.csv_import_another))
             }
         }
     }
@@ -1549,24 +1560,24 @@ private fun SaveProfileDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Save Import Profile") },
+        title = { Text(stringResource(R.string.csv_save_import_profile)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    text = "Save this format and column mapping so future statements from this bank can be imported in one tap.",
+                    text = stringResource(R.string.csv_save_profile_desc),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 OutlinedTextField(
                     value = profileName,
                     onValueChange = { profileName = it },
-                    label = { Text("Profile Name (e.g. Chase Checking)") },
+                    label = { Text(stringResource(R.string.csv_profile_name_hint)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = institution,
                     onValueChange = { institution = it },
-                    label = { Text("Bank / Institution (Optional)") },
+                    label = { Text(stringResource(R.string.csv_bank_institution_hint)) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }

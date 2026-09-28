@@ -245,8 +245,8 @@ fun MoreHubScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     HubItem(
-                        title = "Financial Calendar & Cash Flow",
-                        subtitle = "Forecast upcoming bills, income, loans & balance timeline",
+                        title = stringResource(R.string.more_calendar_title),
+                        subtitle = stringResource(R.string.more_calendar_desc),
                         icon = Icons.Default.CalendarMonth,
                         tint = EmeraldPrimary,
                         onClick = { onNavigate(Screen.Calendar) }
@@ -307,8 +307,8 @@ fun MoreHubScreen(
                         onClick = { onNavigate(Screen.Insights) }
                     )
                     HubItem(
-                        title = "Daily Review Inbox",
-                        subtitle = "Clean up uncategorized, duplicates, bills & alerts",
+                        title = stringResource(R.string.more_review_inbox_title),
+                        subtitle = stringResource(R.string.more_review_inbox_desc),
                         icon = Icons.Default.AutoAwesome,
                         tint = AmberWarning,
                         onClick = { onNavigate(Screen.ReviewInbox) }

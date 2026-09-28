@@ -106,6 +106,7 @@ import com.finpulse.app.core.designsystem.TealSavings
 import com.finpulse.app.core.designsystem.TransferBlue
 import com.finpulse.app.core.model.Money
 import com.finpulse.app.core.ui.CategoryIconBadge
+import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.CalendarEvent
 import com.finpulse.app.domain.model.CalendarEventStatus
@@ -353,13 +354,13 @@ private fun FinancialCalendarTopBar(
                 Row(modifier = Modifier.padding(3.dp)) {
                     ViewModeChip(
                         selected = viewMode == CalendarViewMode.MONTH,
-                        label = "Month",
+                        label = stringResource(R.string.cal_tab_month),
                         icon = Icons.Default.CalendarMonth,
                         onClick = { onViewModeChange(CalendarViewMode.MONTH) }
                     )
                     ViewModeChip(
                         selected = viewMode == CalendarViewMode.AGENDA,
-                        label = "Agenda",
+                        label = stringResource(R.string.cal_tab_agenda),
                         icon = Icons.Default.DateRange,
                         onClick = { onViewModeChange(CalendarViewMode.AGENDA) }
                     )
@@ -368,13 +369,13 @@ private fun FinancialCalendarTopBar(
 
             if (viewMode == CalendarViewMode.MONTH) {
                 IconButton(onClick = onPreviousMonth) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous Month")
+                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cal_prev_month))
                 }
                 IconButton(onClick = onTodayClick) {
-                    Icon(imageVector = Icons.Default.Today, contentDescription = "Today", tint = EmeraldPrimary)
+                    Icon(imageVector = Icons.Default.Today, contentDescription = stringResource(R.string.cal_today), tint = EmeraldPrimary)
                 }
                 IconButton(onClick = onNextMonth) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Month")
+                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = stringResource(R.string.cal_next_month))
                 }
             }
         },
@@ -442,7 +443,7 @@ private fun PeriodAndFilterSection(
                     modifier = Modifier.clickable { onPresetSelected(preset) }
                 ) {
                     Text(
-                        text = preset.displayName,
+                        text = preset.getLocalizedName(),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                         color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
@@ -464,7 +465,7 @@ private fun PeriodAndFilterSection(
                 FilterChip(
                     selected = isSelected,
                     onClick = { onFilterSelected(filter) },
-                    label = { Text(text = filter.displayName, style = MaterialTheme.typography.labelSmall) },
+                    label = { Text(text = filter.getLocalizedName(), style = MaterialTheme.typography.labelSmall) },
                     colors = FilterChipDefaults.filterChipColors(
                         selectedContainerColor = EmeraldPrimary.copy(alpha = 0.15f),
                         selectedLabelColor = EmeraldPrimary
@@ -1020,7 +1021,7 @@ private fun CalendarEventItem(
                         Spacer(modifier = Modifier.width(6.dp))
                         Icon(
                             imageVector = Icons.Default.NotificationsActive,
-                            contentDescription = "Reminder active",
+                            contentDescription = stringResource(R.string.cal_reminder_active),
                             tint = AmberWarning,
                             modifier = Modifier.size(13.dp)
                         )
@@ -1031,7 +1032,7 @@ private fun CalendarEventItem(
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = event.type.displayName,
+                        text = event.type.getLocalizedName(),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -1111,22 +1112,22 @@ private fun StatusPill(status: CalendarEventStatus) {
         CalendarEventStatus.COMPLETED -> Triple(
             EmeraldPrimary.copy(alpha = 0.18f),
             EmeraldPrimary,
-            "Paid ✓"
+            "${stringResource(R.string.occ_paid)} ✓"
         )
         CalendarEventStatus.EXPECTED -> Triple(
             SapphireAccent.copy(alpha = 0.14f),
             SapphireAccent,
-            "Upcoming"
+            stringResource(R.string.occ_upcoming)
         )
         CalendarEventStatus.OVERDUE -> Triple(
             CrimsonExpense.copy(alpha = 0.18f),
             CrimsonExpense,
-            "Overdue !"
+            "${stringResource(R.string.occ_overdue)} !"
         )
         CalendarEventStatus.SKIPPED -> Triple(
             Color.Gray.copy(alpha = 0.15f),
             Color.Gray,
-            "Skipped"
+            stringResource(R.string.occ_skipped)
         )
     }
 
@@ -1243,7 +1244,7 @@ private fun EventDetailBottomSheet(
                     color = SapphireAccent.copy(alpha = 0.12f)
                 ) {
                     Text(
-                        text = event.type.displayName,
+                        text = event.type.getLocalizedName(),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
                         color = SapphireAccent,
@@ -1263,16 +1264,16 @@ private fun EventDetailBottomSheet(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     event.categoryName?.let { cat ->
-                        DetailRow(label = "Category", value = cat)
+                        DetailRow(label = stringResource(R.string.tx_category), value = cat)
                     }
                     event.sourceAccountName?.let { acc ->
-                        DetailRow(label = "Account", value = acc)
+                        DetailRow(label = stringResource(R.string.tx_account), value = acc)
                     }
                     event.destinationAccountName?.let { dest ->
-                        DetailRow(label = "Destination Account", value = dest)
+                        DetailRow(label = stringResource(R.string.tx_dest_account), value = dest)
                     }
                     event.notes?.let { n ->
-                        DetailRow(label = "Notes", value = n)
+                        DetailRow(label = stringResource(R.string.tx_notes), value = n)
                     }
                 }
             }
@@ -1298,7 +1299,7 @@ private fun EventDetailBottomSheet(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Reminder Alerts",
+                                text = stringResource(R.string.calendar_reminder_alerts),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.SemiBold
                             )
@@ -1307,10 +1308,10 @@ private fun EventDetailBottomSheet(
                         TextButton(
                             onClick = {
                                 onSetReminder(reminderDays, true)
-                                Toast.makeText(context, "Test notification dispatched!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.cal_test_notification_dispatched), Toast.LENGTH_SHORT).show()
                             }
                         ) {
-                            Text("Test Alert", style = MaterialTheme.typography.labelSmall)
+                            Text(stringResource(R.string.cal_test_alert), style = MaterialTheme.typography.labelSmall)
                         }
                     }
 
@@ -1318,11 +1319,11 @@ private fun EventDetailBottomSheet(
 
                     // Reminder Days Selector Chips
                     val reminderOptions = listOf(
-                        0 to "Due Day",
-                        1 to "1 Day Before",
-                        2 to "2 Days Before",
-                        3 to "3 Days Before",
-                        7 to "1 Week Before"
+                        0 to stringResource(R.string.cal_reminder_due_day),
+                        1 to stringResource(R.string.cal_reminder_1d_before),
+                        2 to stringResource(R.string.cal_reminder_2d_before),
+                        3 to stringResource(R.string.cal_reminder_3d_before),
+                        7 to stringResource(R.string.cal_reminder_1w_before)
                     )
 
                     Row(
@@ -1363,7 +1364,7 @@ private fun EventDetailBottomSheet(
                     ) {
                         Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = Color.Black)
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Mark Paid", color = Color.Black, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.cal_mark_paid), color = Color.Black, fontWeight = FontWeight.Bold)
                     }
 
                     OutlinedButton(
@@ -1372,7 +1373,7 @@ private fun EventDetailBottomSheet(
                     ) {
                         Icon(imageVector = Icons.Default.SkipNext, contentDescription = null)
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Skip")
+                        Text(stringResource(R.string.cal_skip))
                     }
                 }
 
@@ -1386,14 +1387,14 @@ private fun EventDetailBottomSheet(
                     ) {
                         Icon(imageVector = Icons.Default.Edit, contentDescription = null)
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Edit Amount/Date")
+                        Text(stringResource(R.string.cal_edit_amount_date))
                     }
 
                     OutlinedButton(
                         onClick = onOpenRule,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Open Rule")
+                        Text(stringResource(R.string.cal_open_rule))
                     }
                 }
             } else if (event.underlyingRecurringRuleId != null && event.isCompleted) {
@@ -1401,7 +1402,7 @@ private fun EventDetailBottomSheet(
                     onClick = onOpenRule,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("View Recurring Rule")
+                    Text(stringResource(R.string.cal_view_rule))
                 }
             }
         }
@@ -1441,19 +1442,19 @@ private fun ConfirmPayDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = "Confirm Payment", fontWeight = FontWeight.Bold)
+            Text(text = stringResource(R.string.cal_confirm_payment), fontWeight = FontWeight.Bold)
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    text = "Mark '${event.title}' as paid. An actual transaction will be recorded.",
+                    text = stringResource(R.string.cal_confirm_pay_desc, event.title),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
                 OutlinedTextField(
                     value = amountInput,
                     onValueChange = { amountInput = it },
-                    label = { Text("Amount Paid (${event.amount.currencyCode})") },
+                    label = { Text(stringResource(R.string.cal_amount_paid, event.amount.currencyCode)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -1468,12 +1469,12 @@ private fun ConfirmPayDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Confirm Paid", color = Color.Black)
+                Text(stringResource(R.string.cal_confirm_paid), color = Color.Black)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.action_cancel))
             }
         }
     )
@@ -1491,12 +1492,12 @@ private fun EditOccurrenceDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = "Edit Occurrence", fontWeight = FontWeight.Bold)
+            Text(text = stringResource(R.string.cal_edit_occurrence), fontWeight = FontWeight.Bold)
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    text = "Override the amount or notes for this specific occurrence without altering the master recurring rule.",
+                    text = stringResource(R.string.cal_edit_occurrence_desc),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1504,7 +1505,7 @@ private fun EditOccurrenceDialog(
                 OutlinedTextField(
                     value = amountInput,
                     onValueChange = { amountInput = it },
-                    label = { Text("Amount (${occurrence.amount.currencyCode})") },
+                    label = { Text(stringResource(R.string.cal_amount, occurrence.amount.currencyCode)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -1512,7 +1513,7 @@ private fun EditOccurrenceDialog(
                 OutlinedTextField(
                     value = notesInput,
                     onValueChange = { notesInput = it },
-                    label = { Text("Notes (optional)") },
+                    label = { Text(stringResource(R.string.cal_notes_optional)) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -1526,12 +1527,12 @@ private fun EditOccurrenceDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Save Changes", color = Color.Black)
+                Text(stringResource(R.string.cal_save_changes), color = Color.Black)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.action_cancel))
             }
         }
     )

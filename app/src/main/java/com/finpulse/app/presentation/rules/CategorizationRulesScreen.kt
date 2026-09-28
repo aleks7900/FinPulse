@@ -89,7 +89,9 @@ import com.finpulse.app.core.designsystem.TransferBlue
 import com.finpulse.app.core.ui.CategoryIconBadge
 import com.finpulse.app.core.ui.CategoryPickerDialog
 import com.finpulse.app.core.ui.DateFormatterUtils
+import com.finpulse.app.core.ui.getCategoryDisplayName
 import com.finpulse.app.core.ui.getDisplayName
+import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.CategorizationConfidence
 import com.finpulse.app.domain.model.CategorizationRule
@@ -414,10 +416,10 @@ private fun ReviewQueueItemCard(
     }
 
     val confidenceLabel = when (suggestion.confidence) {
-        CategorizationConfidence.EXACT_RULE -> "100% Rule Match"
-        CategorizationConfidence.HIGH -> "${(suggestion.confidenceScore * 100).toInt()}% Confident"
-        CategorizationConfidence.MEDIUM -> "Keyword Match"
-        CategorizationConfidence.LOW -> "Low Confidence"
+        CategorizationConfidence.EXACT_RULE -> stringResource(R.string.rules_match_exact)
+        CategorizationConfidence.HIGH -> stringResource(R.string.rules_match_confident, (suggestion.confidenceScore * 100).toInt())
+        CategorizationConfidence.MEDIUM -> stringResource(R.string.rules_match_keyword)
+        CategorizationConfidence.LOW -> stringResource(R.string.rules_match_low)
         CategorizationConfidence.NONE -> stringResource(R.string.cat_uncategorized)
     }
 
@@ -620,7 +622,7 @@ private fun RulesTabContent(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Create rules to automatically classify transactions by merchant, description keywords, and accounts.",
+                    text = stringResource(R.string.rules_empty_rules_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
@@ -637,7 +639,7 @@ private fun RulesTabContent(
             item {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Rules are evaluated in order of priority (highest first)",
+                    text = stringResource(R.string.rules_eval_order_hint),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -705,7 +707,7 @@ private fun RuleCard(
                         contentColor = PurpleAccent
                     ) {
                         Text(
-                            text = "Priority ${rule.priority}",
+                            text = stringResource(R.string.rules_priority_badge, rule.priority),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
@@ -729,7 +731,7 @@ private fun RuleCard(
             category?.let { cat ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "Assign to: ",
+                        text = stringResource(R.string.rules_assign_to),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -742,7 +744,7 @@ private fun RuleCard(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = cat.getDisplayName(),
+                        text = getCategoryDisplayName(cat.id, cat.name),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -764,25 +766,25 @@ private fun RuleCard(
             ) {
                 if (!rule.merchantPattern.isNullOrBlank()) {
                     Text(
-                        text = "• Merchant ${rule.merchantMatchType.name.lowercase()}: \"${rule.merchantPattern}\"",
+                        text = stringResource(R.string.rules_cond_merchant, rule.merchantMatchType.name.lowercase(), rule.merchantPattern ?: ""),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
                 if (!rule.descriptionPattern.isNullOrBlank()) {
                     Text(
-                        text = "• Description ${rule.descriptionMatchType.name.lowercase()}: \"${rule.descriptionPattern}\"",
+                        text = stringResource(R.string.rules_cond_description, rule.descriptionMatchType.name.lowercase(), rule.descriptionPattern ?: ""),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
                 account?.let {
                     Text(
-                        text = "• Source Account: ${it.name}",
+                        text = stringResource(R.string.rules_cond_account, it.name),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
                 if (rule.transactionType != null) {
                     Text(
-                        text = "• Type: ${rule.transactionType.displayName}",
+                        text = stringResource(R.string.rules_cond_type, rule.transactionType.getLocalizedName()),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
@@ -798,10 +800,10 @@ private fun RuleCard(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = onIncreasePriority, modifier = Modifier.size(32.dp)) {
-                        Icon(Icons.Default.ArrowUpward, contentDescription = "Increase Priority", modifier = Modifier.size(18.dp))
+                        Icon(Icons.Default.ArrowUpward, contentDescription = stringResource(R.string.rules_increase_priority), modifier = Modifier.size(18.dp))
                     }
                     IconButton(onClick = onDecreasePriority, modifier = Modifier.size(32.dp)) {
-                        Icon(Icons.Default.ArrowDownward, contentDescription = "Decrease Priority", modifier = Modifier.size(18.dp))
+                        Icon(Icons.Default.ArrowDownward, contentDescription = stringResource(R.string.rules_decrease_priority), modifier = Modifier.size(18.dp))
                     }
                 }
 
@@ -815,15 +817,15 @@ private fun RuleCard(
                     ) {
                         Icon(Icons.Default.FlashOn, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Apply to Existing", fontSize = 12.sp)
+                        Text(stringResource(R.string.rules_apply_to_existing), fontSize = 12.sp)
                     }
 
                     IconButton(onClick = onEdit, modifier = Modifier.size(32.dp)) {
-                        Icon(Icons.Default.Edit, contentDescription = "Edit Rule", modifier = Modifier.size(18.dp))
+                        Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.rules_edit_rule), modifier = Modifier.size(18.dp))
                     }
 
                     IconButton(onClick = onDelete, modifier = Modifier.size(32.dp)) {
-                        Icon(Icons.Default.Delete, contentDescription = "Delete Rule", tint = CrimsonExpense, modifier = Modifier.size(18.dp))
+                        Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.rules_delete_rule), tint = CrimsonExpense, modifier = Modifier.size(18.dp))
                     }
                 }
             }
@@ -882,7 +884,7 @@ private fun AddEditRuleDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = if (rule != null) "Edit Categorization Rule" else "New Categorization Rule",
+                text = stringResource(if (rule != null) R.string.rules_edit_title else R.string.rules_create_title),
                 fontWeight = FontWeight.Bold
             )
         },
@@ -897,8 +899,8 @@ private fun AddEditRuleDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Rule Name") },
-                    placeholder = { Text("e.g. Starbucks Coffee") },
+                    label = { Text(stringResource(R.string.rules_rule_name)) },
+                    placeholder = { Text(stringResource(R.string.rules_rule_name_hint)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -906,10 +908,10 @@ private fun AddEditRuleDialog(
                 // Target Category Selector
                 Box(modifier = Modifier.fillMaxWidth()) {
                     OutlinedTextField(
-                        value = selectedCategory?.name ?: "Select Category",
+                        value = selectedCategory?.let { getCategoryDisplayName(it.id, it.name) } ?: stringResource(R.string.rules_select_category),
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Target Category") },
+                        label = { Text(stringResource(R.string.rules_target_category)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { categoryDropdownExpanded = true }
@@ -924,7 +926,7 @@ private fun AddEditRuleDialog(
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         CategoryIconBadge(cat.icon, cat.colorHex, size = 24.dp, iconSize = 14.dp)
                                         Spacer(modifier = Modifier.width(8.dp))
-                                        Text(cat.name)
+                                        Text(getCategoryDisplayName(cat.id, cat.name))
                                     }
                                 },
                                 onClick = {
@@ -940,7 +942,7 @@ private fun AddEditRuleDialog(
                 OutlinedTextField(
                     value = priority,
                     onValueChange = { priority = it.filter { ch -> ch.isDigit() } },
-                    label = { Text("Priority (Higher evaluated first)") },
+                    label = { Text(stringResource(R.string.rules_priority)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -950,8 +952,8 @@ private fun AddEditRuleDialog(
                 OutlinedTextField(
                     value = merchantPattern,
                     onValueChange = { merchantPattern = it },
-                    label = { Text("Merchant Pattern (Optional)") },
-                    placeholder = { Text("e.g. Uber, Netflix") },
+                    label = { Text(stringResource(R.string.rules_merchant_pattern)) },
+                    placeholder = { Text(stringResource(R.string.rules_merchant_pattern_hint)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -962,7 +964,7 @@ private fun AddEditRuleDialog(
                         value = merchantMatchType.name,
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Merchant Match Type") },
+                        label = { Text(stringResource(R.string.rules_merchant_match_type)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { matchTypeDropdownExpanded = true }
@@ -987,8 +989,8 @@ private fun AddEditRuleDialog(
                 OutlinedTextField(
                     value = descriptionPattern,
                     onValueChange = { descriptionPattern = it },
-                    label = { Text("Description Pattern (Optional)") },
-                    placeholder = { Text("e.g. Salary, Rent") },
+                    label = { Text(stringResource(R.string.rules_desc_pattern)) },
+                    placeholder = { Text(stringResource(R.string.rules_desc_pattern_hint)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -996,10 +998,10 @@ private fun AddEditRuleDialog(
                 // Account Constraint (Optional: Account + Merchant -> Category)
                 Box(modifier = Modifier.fillMaxWidth()) {
                     OutlinedTextField(
-                        value = selectedAccount?.name ?: "Any Account",
+                        value = selectedAccount?.name ?: stringResource(R.string.rules_any_account),
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Specific Account (Optional)") },
+                        label = { Text(stringResource(R.string.rules_specific_account)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { accountDropdownExpanded = true }
@@ -1009,7 +1011,7 @@ private fun AddEditRuleDialog(
                         onDismissRequest = { accountDropdownExpanded = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Any Account") },
+                            text = { Text(stringResource(R.string.rules_any_account)) },
                             onClick = {
                                 selectedAccountId = null
                                 accountDropdownExpanded = false
@@ -1049,12 +1051,12 @@ private fun AddEditRuleDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Save Rule")
+                Text(stringResource(R.string.rules_save_rule))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.action_cancel))
             }
         }
     )
@@ -1081,7 +1083,7 @@ private fun ApplyRuleConfirmationDialog(
         },
         title = {
             Text(
-                text = "Apply \"${preview.rule.name}\" to Existing?",
+                text = stringResource(R.string.rules_apply_title, preview.rule.name),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
@@ -1091,8 +1093,9 @@ private fun ApplyRuleConfirmationDialog(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                val targetCatName = targetCat?.let { getCategoryDisplayName(it.id, it.name) } ?: stringResource(R.string.rules_select_category)
                 Text(
-                    text = "Assigns target category \"${targetCat?.name ?: "Selected"}\" to matching historical transactions.",
+                    text = stringResource(R.string.rules_apply_desc, targetCatName),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -1104,19 +1107,19 @@ private fun ApplyRuleConfirmationDialog(
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
                         Text(
-                            text = "Matching Breakdown:",
+                            text = stringResource(R.string.rules_matching_breakdown),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "• Safe (Uncategorized / Unreviewed): ${preview.safeMatches.size}",
+                            text = stringResource(R.string.rules_safe_matches, preview.safeMatches.size),
                             style = MaterialTheme.typography.bodySmall,
                             color = EmeraldPrimary,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
-                            text = "• Previously Manual Categorized: ${preview.manualMatches.size}",
+                            text = stringResource(R.string.rules_manual_matches, preview.manualMatches.size),
                             style = MaterialTheme.typography.bodySmall,
                             color = if (preview.manualMatches.isNotEmpty()) AmberWarning else MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1138,14 +1141,14 @@ private fun ApplyRuleConfirmationDialog(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Explicitly overwrite ${preview.manualMatches.size} manually categorized transactions",
+                            text = stringResource(R.string.rules_overwrite_manual, preview.manualMatches.size),
                             style = MaterialTheme.typography.bodySmall,
                             color = if (overrideManual) CrimsonExpense else MaterialTheme.colorScheme.onSurface
                         )
                     }
                 } else {
                     Text(
-                        text = "All ${preview.safeMatches.size} matching transactions are unreviewed and safe to update.",
+                        text = stringResource(R.string.rules_safe_only_note, preview.safeMatches.size),
                         style = MaterialTheme.typography.bodySmall,
                         color = EmeraldPrimary
                     )
@@ -1157,12 +1160,12 @@ private fun ApplyRuleConfirmationDialog(
                 onClick = onConfirmApply,
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Confirm & Apply")
+                Text(stringResource(R.string.rules_confirm_apply))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.action_cancel))
             }
         }
     )

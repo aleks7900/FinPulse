@@ -135,12 +135,17 @@ fun AccountScreen(
         if (resId != 0) context.getString(resId) else "100000000001-abcdefghijklmnopqrstuvwxyz012345.apps.googleusercontent.com"
     }
 
-    LaunchedEffect(uiState.errorMessage, uiState.successMessage) {
-        uiState.errorMessage?.let {
+    LaunchedEffect(uiState.errorMessage, uiState.successMessage, uiState.errorMessageRes, uiState.successMessageRes) {
+        val error = uiState.errorMessage ?: uiState.errorMessageRes?.let { context.getString(it) }
+        val success = uiState.successMessage ?: uiState.successMessageRes?.let { resId ->
+            if (uiState.successMessageArgs.isNotEmpty()) context.getString(resId, *uiState.successMessageArgs.toTypedArray())
+            else context.getString(resId)
+        }
+        error?.let {
             snackbarHostState.showSnackbar(it)
             onDismissMessages()
         }
-        uiState.successMessage?.let {
+        success?.let {
             snackbarHostState.showSnackbar(it)
             onDismissMessages()
         }

@@ -182,3 +182,100 @@ fun com.finpulse.app.presentation.recurring.RecurringTab.getStringRes(): Int = w
 fun com.finpulse.app.presentation.recurring.RecurringTab.getLocalizedName(): String = stringResource(getStringRes())
 fun com.finpulse.app.presentation.recurring.RecurringTab.getLocalizedName(context: Context): String = context.getString(getStringRes())
 
+fun com.finpulse.app.domain.model.CalendarEventType.getStringRes(): Int = when (this) {
+    com.finpulse.app.domain.model.CalendarEventType.INCOME -> R.string.tx_type_income
+    com.finpulse.app.domain.model.CalendarEventType.BILL -> R.string.cal_event_bill
+    com.finpulse.app.domain.model.CalendarEventType.SUBSCRIPTION -> R.string.cal_event_subscription
+    com.finpulse.app.domain.model.CalendarEventType.LOAN_PAYMENT -> R.string.cal_event_loan_payment
+    com.finpulse.app.domain.model.CalendarEventType.RECURRING_TRANSFER -> R.string.tx_type_transfer
+    com.finpulse.app.domain.model.CalendarEventType.GOAL_CONTRIBUTION -> R.string.cal_event_goal_contribution
+    com.finpulse.app.domain.model.CalendarEventType.TRANSACTION -> R.string.tx_default_title
+}
+
+@Composable
+fun com.finpulse.app.domain.model.CalendarEventType.getLocalizedName(): String = stringResource(getStringRes())
+fun com.finpulse.app.domain.model.CalendarEventType.getLocalizedName(context: Context): String = context.getString(getStringRes())
+
+fun com.finpulse.app.domain.model.CalendarEventStatus.getStringRes(): Int = when (this) {
+    com.finpulse.app.domain.model.CalendarEventStatus.EXPECTED -> R.string.occ_upcoming
+    com.finpulse.app.domain.model.CalendarEventStatus.OVERDUE -> R.string.occ_overdue
+    com.finpulse.app.domain.model.CalendarEventStatus.COMPLETED -> R.string.occ_paid
+    com.finpulse.app.domain.model.CalendarEventStatus.SKIPPED -> R.string.occ_skipped
+}
+
+@Composable
+fun com.finpulse.app.domain.model.CalendarEventStatus.getLocalizedName(): String = stringResource(getStringRes())
+fun com.finpulse.app.domain.model.CalendarEventStatus.getLocalizedName(context: Context): String = context.getString(getStringRes())
+
+fun com.finpulse.app.presentation.calendar.PeriodPreset.getStringRes(): Int = when (this) {
+    com.finpulse.app.presentation.calendar.PeriodPreset.NEXT_7_DAYS -> R.string.cal_preset_7d
+    com.finpulse.app.presentation.calendar.PeriodPreset.NEXT_30_DAYS -> R.string.cal_preset_30d
+    com.finpulse.app.presentation.calendar.PeriodPreset.SELECTED_MONTH -> R.string.cal_preset_month
+    com.finpulse.app.presentation.calendar.PeriodPreset.NEXT_90_DAYS -> R.string.cal_preset_90d
+}
+
+@Composable
+fun com.finpulse.app.presentation.calendar.PeriodPreset.getLocalizedName(): String = stringResource(getStringRes())
+fun com.finpulse.app.presentation.calendar.PeriodPreset.getLocalizedName(context: Context): String = context.getString(getStringRes())
+
+fun com.finpulse.app.presentation.calendar.CalendarFilterType.getStringRes(): Int = when (this) {
+    com.finpulse.app.presentation.calendar.CalendarFilterType.ALL -> R.string.cal_filter_all
+    com.finpulse.app.presentation.calendar.CalendarFilterType.INCOME -> R.string.cal_filter_income
+    com.finpulse.app.presentation.calendar.CalendarFilterType.BILLS -> R.string.cal_filter_bills
+    com.finpulse.app.presentation.calendar.CalendarFilterType.LOANS -> R.string.cal_filter_loans
+    com.finpulse.app.presentation.calendar.CalendarFilterType.TRANSFERS -> R.string.cal_filter_transfers
+    com.finpulse.app.presentation.calendar.CalendarFilterType.GOALS -> R.string.cal_filter_goals
+}
+
+@Composable
+fun com.finpulse.app.presentation.calendar.CalendarFilterType.getLocalizedName(): String = stringResource(getStringRes())
+fun com.finpulse.app.presentation.calendar.CalendarFilterType.getLocalizedName(context: Context): String = context.getString(getStringRes())
+ 
+fun com.finpulse.app.presentation.review.ReviewInboxTab.getStringRes(): Int = when (this) {
+    com.finpulse.app.presentation.review.ReviewInboxTab.ALL -> R.string.review_inbox_tab_all
+    com.finpulse.app.presentation.review.ReviewInboxTab.UNCATEGORIZED -> R.string.review_inbox_tab_uncat
+    com.finpulse.app.presentation.review.ReviewInboxTab.DUPLICATES -> R.string.review_inbox_tab_dup
+    com.finpulse.app.presentation.review.ReviewInboxTab.BILLS -> R.string.review_inbox_tab_bills
+    com.finpulse.app.presentation.review.ReviewInboxTab.WARNINGS -> R.string.review_inbox_tab_anomalies
+}
+
+@Composable
+fun com.finpulse.app.presentation.review.ReviewInboxTab.getLocalizedName(): String = stringResource(getStringRes())
+fun com.finpulse.app.presentation.review.ReviewInboxTab.getLocalizedName(context: Context): String = context.getString(getStringRes())
+
+fun com.finpulse.app.domain.model.ReviewItemType.getStringRes(): Int = when (this) {
+    com.finpulse.app.domain.model.ReviewItemType.UNCATEGORIZED -> R.string.review_type_uncat
+    com.finpulse.app.domain.model.ReviewItemType.IMPORTED_CONFIRMATION -> R.string.review_type_needs_confirm
+    com.finpulse.app.domain.model.ReviewItemType.SUSPECTED_DUPLICATE -> R.string.review_type_suspected_dup
+    com.finpulse.app.domain.model.ReviewItemType.MISSING_MERCHANT -> R.string.review_type_missing_merchant
+    com.finpulse.app.domain.model.ReviewItemType.UNUSUAL_AMOUNT -> R.string.review_type_unusual_amount
+    com.finpulse.app.domain.model.ReviewItemType.OVERDUE_BILL -> R.string.review_type_overdue_bill
+    com.finpulse.app.domain.model.ReviewItemType.FAILED_RECURRING -> R.string.review_type_failed_recurring
+}
+
+@Composable
+fun com.finpulse.app.domain.model.ReviewItemType.getLocalizedName(): String = stringResource(getStringRes())
+fun com.finpulse.app.domain.model.ReviewItemType.getLocalizedName(context: Context): String = context.getString(getStringRes())
+
+fun com.finpulse.app.presentation.budgets.BudgetFilter.getStringRes(): Int = when (this) {
+    com.finpulse.app.presentation.budgets.BudgetFilter.ALL -> R.string.budget_filter_all
+    com.finpulse.app.presentation.budgets.BudgetFilter.WARNING -> R.string.budget_filter_alerts
+    com.finpulse.app.presentation.budgets.BudgetFilter.EXCEEDED -> R.string.budget_filter_exceeded
+}
+
+@Composable
+fun com.finpulse.app.presentation.budgets.BudgetFilter.getLocalizedName(): String = stringResource(getStringRes())
+fun com.finpulse.app.presentation.budgets.BudgetFilter.getLocalizedName(context: Context): String = context.getString(getStringRes())
+
+fun com.finpulse.app.presentation.csvimport.PreviewTab.getStringRes(): Int = when (this) {
+    com.finpulse.app.presentation.csvimport.PreviewTab.ALL -> R.string.csv_tab_all
+    com.finpulse.app.presentation.csvimport.PreviewTab.NEW -> R.string.csv_tab_new
+    com.finpulse.app.presentation.csvimport.PreviewTab.DUPLICATES -> R.string.csv_tab_duplicates
+    com.finpulse.app.presentation.csvimport.PreviewTab.INVALID -> R.string.csv_tab_invalid
+}
+
+@Composable
+fun com.finpulse.app.presentation.csvimport.PreviewTab.getLocalizedName(): String = stringResource(getStringRes())
+fun com.finpulse.app.presentation.csvimport.PreviewTab.getLocalizedName(context: Context): String = context.getString(getStringRes())
+
+

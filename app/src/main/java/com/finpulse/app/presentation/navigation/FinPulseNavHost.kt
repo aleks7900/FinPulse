@@ -52,7 +52,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.EmeraldPrimary
+import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.presentation.quickadd.QuickAddBottomSheet
 import com.finpulse.app.presentation.quickadd.QuickAddViewModel
 import com.finpulse.app.presentation.security.SecurityScreen
@@ -728,9 +730,10 @@ fun FinPulseApp(
                 }
                 com.finpulse.app.presentation.widget.FinPulseWidgetUpdater.updateAllWidgets(context)
                 scope.launch {
+                    val typeName = tx.type.getLocalizedName(context)
                     val action = snackbarHostState.showSnackbar(
-                        message = "${tx.type.displayName} of ${tx.amount.formatted()} saved",
-                        actionLabel = "Edit",
+                        message = context.getString(R.string.quick_add_saved_detailed, typeName, tx.amount.formatted()),
+                        actionLabel = context.getString(R.string.action_edit),
                         duration = SnackbarDuration.Short
                     )
                     if (action == SnackbarResult.ActionPerformed) {

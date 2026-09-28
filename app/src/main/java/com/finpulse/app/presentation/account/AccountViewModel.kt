@@ -3,6 +3,7 @@ package com.finpulse.app.presentation.account
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.finpulse.app.R
 import com.finpulse.app.core.auth.GoogleAuthManager
 import com.finpulse.app.core.datastore.UserPreferencesDataStore
 import com.finpulse.app.core.work.SyncWorker
@@ -25,6 +26,9 @@ data class AccountUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val successMessage: String? = null,
+    val errorMessageRes: Int? = null,
+    val successMessageRes: Int? = null,
+    val successMessageArgs: List<String> = emptyList(),
     val showSignOutConfirmDialog: Boolean = false
 )
 
@@ -88,14 +92,16 @@ class AccountViewModel(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        successMessage = "Signed in as ${user.displayName ?: user.email ?: user.uid}"
+                        successMessageRes = R.string.account_signed_in_as,
+                        successMessageArgs = listOf(user.displayName ?: user.email ?: user.uid)
                     )
                 }
             } catch (t: Throwable) {
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = t.localizedMessage ?: "Failed to sign in with Google"
+                        errorMessage = t.localizedMessage,
+                        errorMessageRes = if (t.localizedMessage == null) R.string.account_signin_failed else null
                     )
                 }
             }
@@ -104,13 +110,14 @@ class AccountViewModel(
 
     fun performSync(context: Context? = null) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            _uiState.update { it.copy(isLoading = true, errorMessage = null, errorMessageRes = null) }
             val result = cloudSyncRepository.performFullSync()
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    successMessage = if (result.isSuccess) "Synchronized successfully" else null,
-                    errorMessage = if (result.isFailure) result.exceptionOrNull()?.localizedMessage ?: "Sync failed" else null
+                    successMessageRes = if (result.isSuccess) R.string.account_sync_success else null,
+                    errorMessage = if (result.isFailure) result.exceptionOrNull()?.localizedMessage else null,
+                    errorMessageRes = if (result.isFailure && result.exceptionOrNull()?.localizedMessage == null) R.string.account_sync_failed else null
                 )
             }
             if (context != null) {
@@ -138,7 +145,7 @@ class AccountViewModel(
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    successMessage = "Signed out successfully"
+                    successMessageRes = R.string.account_signout_success
                 )
             }
         }
@@ -160,14 +167,22 @@ class AccountViewModel(
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    successMessage = "Synchronized and signed out successfully"
+                    successMessageRes = R.string.account_sync_signout_success
                 )
             }
         }
     }
 
     fun dismissMessages() {
-        _uiState.update { it.copy(errorMessage = null, successMessage = null) }
+        _uiState.update {
+            it.copy(
+                errorMessage = null,
+                successMessage = null,
+                errorMessageRes = null,
+                successMessageRes = null,
+                successMessageArgs = emptyList()
+            )
+        }
     }
 
     fun clearMessages() {

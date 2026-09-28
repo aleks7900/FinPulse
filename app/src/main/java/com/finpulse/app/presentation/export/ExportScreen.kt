@@ -593,7 +593,7 @@ fun ExportScreen(
                         Text(stringResource(R.string.backup_restore_inspect_version, metadata.backupVersion, metadata.schemaVersion), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text("Records to restore:", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.export_records_to_restore), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
                         Text("• " + stringResource(R.string.backup_restore_count_accounts, metadata.counts.accountsCount), style = MaterialTheme.typography.bodySmall)
                         Text("• " + stringResource(R.string.backup_restore_count_categories, metadata.counts.categoriesCount), style = MaterialTheme.typography.bodySmall)
                         Text("• " + stringResource(R.string.backup_restore_count_transactions, metadata.counts.transactionsCount), style = MaterialTheme.typography.bodySmall)

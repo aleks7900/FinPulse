@@ -73,6 +73,7 @@ import com.finpulse.app.core.model.Money
 import com.finpulse.app.core.ui.BudgetProgressBar
 import com.finpulse.app.core.ui.CategoryIconBadge
 import com.finpulse.app.core.ui.CategoryPickerDialog
+import com.finpulse.app.core.ui.getCategoryDisplayName
 import com.finpulse.app.core.ui.getDisplayName
 import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Budget
@@ -204,7 +205,7 @@ fun BudgetsScreen(
                             FilterChip(
                                 selected = isSelected,
                                 onClick = { onSelectFilter(filter) },
-                                label = { Text(filter.label, style = MaterialTheme.typography.labelSmall) },
+                                label = { Text(filter.getLocalizedName(), style = MaterialTheme.typography.labelSmall) },
                                 colors = FilterChipDefaults.filterChipColors(
                                     selectedContainerColor = EmeraldPrimary.copy(alpha = 0.2f),
                                     selectedLabelColor = EmeraldPrimary
@@ -620,7 +621,7 @@ fun OverallBudgetSection(
                     onClick = onAddOverallBudget,
                     colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
                 ) {
-                    Text("Set Limit", color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.budget_set_limit), color = Color.Black, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -660,7 +661,7 @@ fun CategoryBudgetCard(
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = status.categoryName,
+                        text = getCategoryDisplayName(status.budget.categoryId, status.categoryName),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -1293,7 +1294,7 @@ fun SafeToSpendAssumptionsDialog(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text("Got It", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_got_it), color = Color.Black, fontWeight = FontWeight.Bold)
             }
         }
     )

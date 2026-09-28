@@ -608,7 +608,7 @@ fun AllRulesSection(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
-                            Text("Monthly commitment", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(stringResource(R.string.recurring_monthly_commitment), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         Column(horizontalAlignment = Alignment.End) {
                             Text(
@@ -617,7 +617,7 @@ fun AllRulesSection(
                                 fontWeight = FontWeight.Bold,
                                 color = PurpleAccent
                             )
-                            Text("Annualized", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(stringResource(R.string.recurring_annualized), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 }
@@ -632,7 +632,7 @@ fun AllRulesSection(
                         .padding(vertical = 40.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("No recurring rules configured yet.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.recurring_rules_empty), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         } else {
@@ -799,7 +799,7 @@ fun SubscriptionsSection(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
-                            Text("Monthly cost", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(stringResource(R.string.recurring_monthly_cost), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         Column(horizontalAlignment = Alignment.End) {
                             Text(
@@ -808,7 +808,7 @@ fun SubscriptionsSection(
                                 fontWeight = FontWeight.Bold,
                                 color = PurpleAccent
                             )
-                            Text("Annualized spend", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(stringResource(R.string.recurring_annualized_spend), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 }
@@ -823,7 +823,7 @@ fun SubscriptionsSection(
                         .padding(vertical = 40.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("No active subscriptions tracked.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.recurring_subs_empty), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         } else {
@@ -1074,7 +1074,7 @@ fun ConfirmPaymentDialog(
                 OutlinedTextField(
                     value = amountInput,
                     onValueChange = { amountInput = it },
-                    label = { Text("Actual Paid Amount (${occurrence.amount.currencyCode})") },
+                    label = { Text(stringResource(R.string.recurring_actual_amount, occurrence.amount.currencyCode)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -1114,12 +1114,12 @@ fun EditOccurrenceDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = "Edit Occurrence: ${occurrence.ruleTitle}", fontWeight = FontWeight.Bold)
+            Text(text = "${stringResource(R.string.action_edit)}: ${occurrence.ruleTitle}", fontWeight = FontWeight.Bold)
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    text = "Changes apply only to this upcoming cycle without modifying the recurring rule.",
+                    text = stringResource(R.string.recurring_changes_apply_cycle),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1127,7 +1127,7 @@ fun EditOccurrenceDialog(
                 OutlinedTextField(
                     value = amountInput,
                     onValueChange = { amountInput = it },
-                    label = { Text("Expected Amount (${occurrence.amount.currencyCode})") },
+                    label = { Text(stringResource(R.string.recurring_expected_amount, occurrence.amount.currencyCode)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -1136,7 +1136,7 @@ fun EditOccurrenceDialog(
                 OutlinedTextField(
                     value = notes,
                     onValueChange = { notes = it },
-                    label = { Text("Note for this occurrence") },
+                    label = { Text(stringResource(R.string.recurring_note_hint)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )

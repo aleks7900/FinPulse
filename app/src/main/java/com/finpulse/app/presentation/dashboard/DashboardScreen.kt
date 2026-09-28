@@ -49,9 +49,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.finpulse.app.core.designsystem.AmberWarning
+import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.DebtOrange
 import com.finpulse.app.core.designsystem.EmeraldPrimary
@@ -62,6 +64,8 @@ import com.finpulse.app.core.model.TimePeriod
 import com.finpulse.app.core.ui.BalanceCard
 import com.finpulse.app.core.ui.BudgetProgressBar
 import com.finpulse.app.core.ui.TransactionItem
+import com.finpulse.app.core.ui.getCategoryDisplayName
+import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.FinancialInsight
 import com.finpulse.app.domain.model.InsightType
 
@@ -351,7 +355,7 @@ fun TimeRangeSelector(
                 contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
             ) {
                 Text(
-                    text = period.label,
+                    text = period.getLocalizedName(),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                     modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
@@ -590,7 +594,7 @@ fun BudgetProgressCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = status.categoryName,
+                    text = getCategoryDisplayName(status.budget.categoryId, status.categoryName),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -707,7 +711,7 @@ fun ReviewQueueBannerCard(
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "Daily Review Inbox",
+                        text = stringResource(R.string.review_inbox_title),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -727,9 +731,13 @@ fun ReviewQueueBannerCard(
                     }
                 }
                 Spacer(modifier = Modifier.height(2.dp))
-                val pendingText = if (unreviewedCount == 1) "1 item needs your attention" else "$unreviewedCount items need your attention"
+                val pendingText = if (unreviewedCount == 1) {
+                    stringResource(R.string.dashboard_review_queue_pending_one)
+                } else {
+                    stringResource(R.string.dashboard_review_queue_pending_many, unreviewedCount)
+                }
                 Text(
-                    text = "$pendingText • Clean up data quickly",
+                    text = "$pendingText • ${stringResource(R.string.dashboard_review_queue_clean_up)}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -737,7 +745,7 @@ fun ReviewQueueBannerCard(
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = "Open Review Inbox",
+                contentDescription = stringResource(R.string.review_inbox_open),
                 tint = AmberWarning,
                 modifier = Modifier.size(20.dp)
             )
