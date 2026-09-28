@@ -12,14 +12,68 @@ object TransactionQueryBuilder {
         val whereClauses = mutableListOf<String>()
         val bindArgs = mutableListOf<Any>()
 
-        // 1. Full text search across merchant, description, notes, and tags
+        // 1. Search across description, merchant, notes, tags, category name/id, account name, and amount
         if (params.query.isNotBlank()) {
-            val q = "%${params.query.trim()}%"
-            whereClauses.add("(description LIKE ? OR merchant LIKE ? OR notes LIKE ? OR tags LIKE ?)")
+            val rawQuery = params.query.trim()
+            val q = "%$rawQuery%"
+            val searchConditions = mutableListOf<String>()
+
+            // Case-insensitive full-text search across core transaction fields
+            searchConditions.add("LOWER(COALESCE(description, '')) LIKE LOWER(?)")
+            bindArgs.add(q)
+
+            searchConditions.add("LOWER(COALESCE(merchant, '')) LIKE LOWER(?)")
+            bindArgs.add(q)
+
+            searchConditions.add("LOWER(COALESCE(notes, '')) LIKE LOWER(?)")
+            bindArgs.add(q)
+
+            searchConditions.add("LOWER(COALESCE(tags, '')) LIKE LOWER(?)")
+            bindArgs.add(q)
+
+            // Category name & category ID matching
+            searchConditions.add("categoryId IN (SELECT id FROM categories WHERE LOWER(name) LIKE LOWER(?) OR LOWER(id) LIKE LOWER(?))")
             bindArgs.add(q)
             bindArgs.add(q)
+
+            // Account name matching (source or destination account)
+            searchConditions.add("sourceAccountId IN (SELECT id FROM accounts WHERE LOWER(name) LIKE LOWER(?))")
             bindArgs.add(q)
+
+            searchConditions.add("destinationAccountId IN (SELECT id FROM accounts WHERE LOWER(name) LIKE LOWER(?))")
             bindArgs.add(q)
+
+            // Numeric amount matching (supports major and minor amounts with or without currency symbols)
+            val cleanedNumeric = rawQuery.replace("$", "")
+                .replace("€", "")
+                .replace("£", "")
+                .replace("¥", "")
+                .replace("L", "")
+                .replace("lei", "")
+                .replace("₴", "")
+                .replace("zł", "")
+                .replace("Ft", "")
+                .replace("kr", "")
+                .replace("Kč", "")
+                .replace("лв", "")
+                .replace("₪", "")
+                .replace("R", "")
+                .replace(",", "")
+                .trim()
+
+            val doubleVal = cleanedNumeric.toDoubleOrNull()
+            if (doubleVal != null && doubleVal > 0.0) {
+                val minor2 = (doubleVal * 100).toLong()
+                val minor0 = doubleVal.toLong()
+                val minor3 = (doubleVal * 1000).toLong()
+
+                searchConditions.add("(amountMinor = ? OR amountMinor = ? OR amountMinor = ?)")
+                bindArgs.add(minor2)
+                bindArgs.add(minor0)
+                bindArgs.add(minor3)
+            }
+
+            whereClauses.add("(${searchConditions.joinToString(" OR ")})")
         }
 
         // 2. Account filter (matches either source or destination for transfers)

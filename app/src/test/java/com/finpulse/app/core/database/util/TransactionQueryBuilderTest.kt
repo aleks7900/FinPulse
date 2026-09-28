@@ -22,13 +22,36 @@ class TransactionQueryBuilderTest {
     }
 
     @Test
-    fun testSearchQuery_MatchesMerchantDescriptionNotesAndTags() {
+    fun testSearchQuery_MatchesMerchantDescriptionNotesTagsCategoryAndAccount() {
         val params = TransactionFilterParams(query = "coffee")
         val query = TransactionQueryBuilder.buildQuery(params)
 
-        assertTrue(query.sql.contains("WHERE (description LIKE ? OR merchant LIKE ? OR notes LIKE ? OR tags LIKE ?)"))
+        assertTrue(query.sql.contains("LOWER(COALESCE(description, '')) LIKE LOWER(?)"))
+        assertTrue(query.sql.contains("LOWER(COALESCE(merchant, '')) LIKE LOWER(?)"))
+        assertTrue(query.sql.contains("LOWER(COALESCE(notes, '')) LIKE LOWER(?)"))
+        assertTrue(query.sql.contains("LOWER(COALESCE(tags, '')) LIKE LOWER(?)"))
+        assertTrue(query.sql.contains("categoryId IN (SELECT id FROM categories WHERE LOWER(name) LIKE LOWER(?) OR LOWER(id) LIKE LOWER(?))"))
+        assertTrue(query.sql.contains("sourceAccountId IN (SELECT id FROM accounts WHERE LOWER(name) LIKE LOWER(?))"))
+        assertTrue(query.sql.contains("destinationAccountId IN (SELECT id FROM accounts WHERE LOWER(name) LIKE LOWER(?))"))
         assertTrue(query.sql.endsWith("ORDER BY timestamp DESC"))
-        assertEquals(4, query.argCount)
+        assertEquals(8, query.argCount)
+    }
+
+    @Test
+    fun testSearchQuery_WhitespaceTolerant() {
+        val paramsWithSpaces = TransactionFilterParams(query = "   coffee   ")
+        val query = TransactionQueryBuilder.buildQuery(paramsWithSpaces)
+        assertEquals(8, query.argCount)
+    }
+
+    @Test
+    fun testSearchQuery_NumericAmountWithCurrency() {
+        val params = TransactionFilterParams(query = "$45.00")
+        val query = TransactionQueryBuilder.buildQuery(params)
+
+        assertTrue(query.sql.contains("(amountMinor = ? OR amountMinor = ? OR amountMinor = ?)"))
+        // 8 text search args + 3 amount args = 11 args
+        assertEquals(11, query.argCount)
     }
 
     @Test
@@ -127,7 +150,7 @@ class TransactionQueryBuilderTest {
         )
         val query = TransactionQueryBuilder.buildQuery(params)
 
-        assertTrue(query.sql.contains("description LIKE ?"))
+        assertTrue(query.sql.contains("LOWER(COALESCE(description, '')) LIKE LOWER(?)"))
         assertTrue(query.sql.contains("(sourceAccountId = ? OR destinationAccountId = ?)"))
         assertTrue(query.sql.contains("categoryId = ?"))
         assertTrue(query.sql.contains("type = ?"))

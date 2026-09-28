@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
@@ -73,9 +74,10 @@ class TransactionsViewModel(
     private val _isAddEditDialogVisible = MutableStateFlow(false)
     private val _editingTransaction = MutableStateFlow<Transaction?>(null)
 
-    private val _filteredTransactionsFlow = _filterParams.flatMapLatest { params ->
-        transactionRepository.filterTransactionsFlow(params)
-    }
+    private val _filteredTransactionsFlow = _filterParams
+        .flatMapLatest { params ->
+            transactionRepository.filterTransactionsFlow(params)
+        }
 
     private val _savedFiltersFlow = savedFilterRepository?.getAllSavedFiltersFlow() ?: flowOf(emptyList())
 
@@ -139,8 +141,6 @@ class TransactionsViewModel(
 
     fun onSearchQueryChange(query: String) {
         _filterParams.value = _filterParams.value.copy(query = query)
-        _activePresetId.value = null
-        _activeSavedFilterId.value = null
     }
 
     fun onTypeFilterChange(type: TransactionType?) {
@@ -224,24 +224,28 @@ class TransactionsViewModel(
     }
 
     fun onSelectPreset(preset: TransactionPreset) {
+        val currentQuery = _filterParams.value.query
         if (_activePresetId.value == preset.id) {
-            // Deselect preset -> reset to default
-            _filterParams.value = TransactionFilterParams()
+            // Deselect preset -> reset to default, preserving active search query
+            _filterParams.value = TransactionFilterParams(query = currentQuery)
             _activePresetId.value = null
         } else {
-            _filterParams.value = preset.params
+            // Select preset -> apply preset filters, preserving active search query
+            _filterParams.value = preset.params.copy(query = currentQuery)
             _activePresetId.value = preset.id
             _activeSavedFilterId.value = null
         }
     }
 
     fun onSelectSavedFilter(savedFilter: SavedFilter) {
+        val currentQuery = _filterParams.value.query
         if (_activeSavedFilterId.value == savedFilter.id) {
-            // Deselect saved filter -> reset to default
-            _filterParams.value = TransactionFilterParams()
+            // Deselect saved filter -> reset to default, preserving active search query
+            _filterParams.value = TransactionFilterParams(query = currentQuery)
             _activeSavedFilterId.value = null
         } else {
-            _filterParams.value = savedFilter.params
+            val resolvedQuery = savedFilter.params.query.ifBlank { currentQuery }
+            _filterParams.value = savedFilter.params.copy(query = resolvedQuery)
             _activeSavedFilterId.value = savedFilter.id
             _activePresetId.value = null
         }

@@ -8,6 +8,8 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.finpulse.app.core.database.entity.AccountEntity
+import com.finpulse.app.core.database.entity.CategoryEntity
 import com.finpulse.app.core.database.entity.TransactionEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -141,7 +143,7 @@ interface TransactionDao {
         matchedRuleId: String? = null
     )
 
-    @RawQuery(observedEntities = [TransactionEntity::class])
+    @RawQuery(observedEntities = [TransactionEntity::class, CategoryEntity::class, AccountEntity::class])
     fun queryTransactionsFlow(query: SupportSQLiteQuery): Flow<List<TransactionEntity>>
 
     @RawQuery
