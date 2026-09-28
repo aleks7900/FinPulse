@@ -1298,4 +1298,45 @@
     <string name="budget_set_limit">и®ѕзЅ®й™ђйўќ</string>
     <string name="action_got_it">зџҐйЃ“дє†</string>
     <string name="export_records_to_restore">еѕ…жЃўе¤Ќи®°еЅ•ж•°пјљ</string>
+
+    <!-- Financial Digest & Habit Insights -->
+    <string name="digest_screen_title">иґўеЉЎз®ЂжЉҐ</string>
+    <string name="digest_more_desc">жЇЏж—ҐдёЋжЇЏе‘Ёд№ жѓЇж‘и¦ЃгЂЃиґ¦еЌ•жЏђй†’еЏЉж”Їе‡єи¶‹еЉї</string>
+    <string name="digest_card_summary_desc">жЇЏж—ҐдёЋжЇЏе‘Ёз®ЂжЉҐгЂЃиґ¦еЌ•дёЋж”Їе‡єи¶‹еЉї</string>
+    <string name="digest_badge_daily_weekly">жЇЏж—Ґ &amp; жЇЏе‘Ё</string>
+    <string name="digest_period_daily">жЇЏж—Ґ</string>
+    <string name="digest_period_weekly">жЇЏе‘Ё</string>
+    <string name="digest_period_daily_desc">д»Љж—ҐиґўеЉЎж¦‚и§€пј€еЇ№жЇ”жЁж—Ґпј‰</string>
+    <string name="digest_period_weekly_desc">жњ¬е‘ЁиґўеЉЎж¦‚и§€пј€еЇ№жЇ”дёЉе‘Ёпј‰</string>
+    <string name="digest_frequency_off">е·Іе…ій—­</string>
+    <string name="digest_pulse_badge_daily">д»Љж—Ґи„‰жђЏ</string>
+    <string name="digest_pulse_badge_weekly">жњ¬е‘Ёи„‰жђЏ</string>
+    <string name="digest_trend_down">иѕѓдёЉдёЂе‘Ёжњџ</string>
+    <string name="digest_trend_up">иѕѓдёЉдёЂе‘Ёжњџ</string>
+    <string name="digest_total_spent_label">ж”Їе‡єжЂ»и®Ў</string>
+    <string name="digest_stat_transactions">дє¤ж“з¬”ж•°</string>
+    <string name="digest_stat_bills_due">еѕ…д»иґ¦еЌ•</string>
+    <string name="digest_stat_review_items">еѕ…е®ЎжџҐ</string>
+    <string name="digest_section_priority_alerts">й‡Ќз‚№жЏђй†’дёЋж“ЌдЅњ</string>
+    <string name="digest_action_review">з«‹еЌіжџҐзњ‹</string>
+    <string name="digest_section_top_expenses">жњЂе¤§ж”Їе‡єйЎ№</string>
+    <string name="digest_section_budgets">йў„з®—еЃҐеє·еє¦дёЋиЉ‚еҐЏ</string>
+    <string name="digest_section_upcoming_bills">иї‘жњџиґ¦еЌ•дёЋж‰їиЇє</string>
+    <string name="digest_section_savings_goals">е­й’±з›®ж ‡иї›еє¦</string>
+    <string name="digest_settings_title">з®ЂжЉҐеЃЏеҐЅи®ѕзЅ®</string>
+    <string name="digest_settings_frequency_label">з®ЂжЉҐйў‘зЋ‡</string>
+    <string name="digest_settings_privacy_mode">й”Ѓе±Џйљђз§ЃжЁЎејЏ</string>
+    <string name="digest_settings_privacy_desc">ењЁйЂљзџҐдё­йљђи—Џе…·дЅ“й‡‘йўќж•°е­—пјЊд»ҐењЁе…¬е…±ењєж‰ЂдїќжЉ¤ж‚Ёзљ„йљђз§Ѓ</string>
+    <string name="digest_settings_delivery_time">жЋЁйЂЃж—¶й—ґ</string>
+    <string name="digest_action_test_notification">еЏ‘йЂЃжµ‹иЇ•йЂљзџҐ</string>
+    <string name="notif_channel_digest_name">иґўеЉЎз®ЂжЉҐ</string>
+    <string name="notif_channel_digest_desc">жЇЏж—ҐдёЋжЇЏе‘Ёд№ жѓЇе…»ж€ђиґўеЉЎз®ЂжЉҐдёЋжЏђй†’</string>
+    <string name="digest_notif_privacy_title">%1$sиґўеЉЎз®ЂжЉҐ</string>
+    <string name="digest_notif_privacy_body">е·Іи®°еЅ• %1$d з¬”дє¤ж“ вЂў %2$d з¬”еѕ…д»иґ¦еЌ• вЂў з‚№е‡»жџҐзњ‹ж‘и¦Ѓ</string>
+    <string name="digest_notif_privacy_expanded">%1$sз®ЂжЉҐе·Із”џж€ђпјљи®°иґ¦ %2$d з¬”пјЊиї‘жњџиґ¦еЌ• %3$d з¬”пјЊ%4$d йЎ№еѕ…ж•ґзђ†гЂ‚з‚№е‡»ж‰“ејЂ FinPulse жџҐзњ‹е…ЁйѓЁиЇ¦жѓ…гЂ‚</string>
+    <string name="digest_notif_detailed_title_trend">%1$sз®ЂжЉҐпјљж”Їе‡є %2$s (%3$s)</string>
+    <string name="digest_notif_detailed_title">%1$sз®ЂжЉҐпјљж”Їе‡є %2$s</string>
+    <string name="digest_notif_detailed_top_expense">жњЂе¤§ж”Їе‡єпјљ%1$s (%2$s)</string>
+    <string name="digest_notif_detailed_bills">%1$d з¬”иґ¦еЌ•еЌіе°†е€°жњџ</string>
+    <string name="digest_notif_action_open">жџҐзњ‹з®ЂжЉҐ</string>
 </resources>

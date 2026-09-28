@@ -151,6 +151,9 @@ class MainActivity : FragmentActivity() {
                 "calendar" -> {
                     navigationFlow.value = Screen.Calendar.route
                 }
+                "digest" -> {
+                    navigationFlow.value = Screen.Digest.route
+                }
             }
         } else {
             val destination = intent?.getStringExtra("destination_route")
@@ -161,6 +164,7 @@ class MainActivity : FragmentActivity() {
                     "budgets" -> Screen.Budgets.route
                     "analytics" -> Screen.Analytics.route
                     "calendar" -> Screen.Calendar.route
+                    "digest" -> Screen.Digest.route
                     else -> destination
                 }
             } else if (intent?.getBooleanExtra("open_quick_add", false) == true) {

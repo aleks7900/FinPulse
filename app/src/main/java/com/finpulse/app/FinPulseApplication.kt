@@ -31,5 +31,8 @@ class FinPulseApplication : Application() {
 
         // Schedule periodic background cloud synchronization
         com.finpulse.app.core.work.SyncWorker.schedulePeriodicSync(this)
+
+        // Schedule periodic financial digest checks
+        com.finpulse.app.core.work.FinancialDigestWorker.schedulePeriodicDigest(this)
     }
 }

@@ -70,6 +70,7 @@ interface AppContainer {
     val authRepository: com.finpulse.app.domain.repository.AuthRepository
     val cloudStorageDataSource: com.finpulse.app.data.cloud.CloudStorageDataSource
     val cloudSyncRepository: com.finpulse.app.domain.repository.CloudSyncRepository
+    val getFinancialDigestUseCase: com.finpulse.app.domain.usecase.digest.GetFinancialDigestUseCase
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -280,6 +281,18 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
             cloudStorage = cloudStorageDataSource,
             userPreferencesDataStore = userPreferencesDataStore,
             authRepository = authRepository
+        )
+    }
+
+    override val getFinancialDigestUseCase: com.finpulse.app.domain.usecase.digest.GetFinancialDigestUseCase by lazy {
+        com.finpulse.app.domain.usecase.digest.GetFinancialDigestUseCase(
+            transactionRepository = transactionRepository,
+            categoryRepository = categoryRepository,
+            budgetRepository = budgetRepository,
+            recurringRepository = recurringRepository,
+            goalRepository = goalRepository,
+            userPreferencesDataStore = userPreferencesDataStore,
+            getReviewInboxUseCase = getReviewInboxUseCase
         )
     }
 }

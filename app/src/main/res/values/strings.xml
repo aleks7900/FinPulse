@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Quick Add</string>
     <string name="shortcut_quick_add_long">Quick Add Transaction</string>
@@ -1307,4 +1307,45 @@
     <string name="budget_set_limit">Set Limit</string>
     <string name="action_got_it">Got It</string>
     <string name="export_records_to_restore">Records to restore:</string>
+
+    <!-- Financial Digest & Habit Insights -->
+    <string name="digest_screen_title">Financial Digest</string>
+    <string name="digest_more_desc">Daily &amp; weekly habit-forming summaries, bills and spending trends</string>
+    <string name="digest_card_summary_desc">Daily &amp; weekly habit summary, bills &amp; spending trends</string>
+    <string name="digest_badge_daily_weekly">Daily &amp; Weekly</string>
+    <string name="digest_period_daily">Daily</string>
+    <string name="digest_period_weekly">Weekly</string>
+    <string name="digest_period_daily_desc">Today\'s financial snapshot vs yesterday</string>
+    <string name="digest_period_weekly_desc">This week\'s financial snapshot vs last week</string>
+    <string name="digest_frequency_off">Disabled</string>
+    <string name="digest_pulse_badge_daily">Today\'s Pulse</string>
+    <string name="digest_pulse_badge_weekly">This Week\'s Pulse</string>
+    <string name="digest_trend_down">vs previous period</string>
+    <string name="digest_trend_up">vs previous period</string>
+    <string name="digest_total_spent_label">Total Spending</string>
+    <string name="digest_stat_transactions">Transactions</string>
+    <string name="digest_stat_bills_due">Upcoming Bills</string>
+    <string name="digest_stat_review_items">Needs Review</string>
+    <string name="digest_section_priority_alerts">Priority Alerts &amp; Actions</string>
+    <string name="digest_action_review">Review Now</string>
+    <string name="digest_section_top_expenses">Largest Expenses</string>
+    <string name="digest_section_budgets">Budget Health &amp; Pacing</string>
+    <string name="digest_section_upcoming_bills">Upcoming Bills &amp; Commitments</string>
+    <string name="digest_section_savings_goals">Savings Goals Progress</string>
+    <string name="digest_settings_title">Digest Preferences</string>
+    <string name="digest_settings_frequency_label">Digest Frequency</string>
+    <string name="digest_settings_privacy_mode">Lock Screen Privacy Mode</string>
+    <string name="digest_settings_privacy_desc">Mask exact monetary amounts in notifications to protect your privacy in public places</string>
+    <string name="digest_settings_delivery_time">Delivery Time</string>
+    <string name="digest_action_test_notification">Send Test Notification</string>
+    <string name="notif_channel_digest_name">Financial Digest</string>
+    <string name="notif_channel_digest_desc">Daily and weekly habit-forming financial summaries and alerts</string>
+    <string name="digest_notif_privacy_title">%1$s Financial Digest</string>
+    <string name="digest_notif_privacy_body">%1$d transactions recorded вЂў %2$d upcoming bills вЂў Tap to view summary</string>
+    <string name="digest_notif_privacy_expanded">%1$s Digest ready: %2$d transactions logged, %3$d upcoming obligations, and %4$d items to review. Open FinPulse to review full details.</string>
+    <string name="digest_notif_detailed_title_trend">%1$s Digest: %2$s spent (%3$s)</string>
+    <string name="digest_notif_detailed_title">%1$s Digest: %2$s spent</string>
+    <string name="digest_notif_detailed_top_expense">Top: %1$s (%2$s)</string>
+    <string name="digest_notif_detailed_bills">%1$d bill(s) due soon</string>
+    <string name="digest_notif_action_open">View Digest</string>
 </resources>

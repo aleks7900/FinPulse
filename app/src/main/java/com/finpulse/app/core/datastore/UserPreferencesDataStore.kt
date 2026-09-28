@@ -43,7 +43,11 @@ data class UserPreferences(
     val userPhotoUrl: String? = null,
     val lastSyncTimestamp: Long = 0L,
     val syncStatus: String = "IDLE",
-    val syncErrorMessage: String? = null
+    val syncErrorMessage: String? = null,
+    val digestFrequency: String = "DAILY", // "DAILY", "WEEKLY", "OFF"
+    val digestPrivacyEnabled: Boolean = false,
+    val digestDeliveryHour: Int = 20, // 8 PM default
+    val lastDigestSentMillis: Long = 0L
 )
 
 class UserPreferencesDataStore(private val context: Context) {
@@ -78,6 +82,10 @@ class UserPreferencesDataStore(private val context: Context) {
         val LAST_SYNC_TIMESTAMP = longPreferencesKey("last_sync_timestamp")
         val SYNC_STATUS = stringPreferencesKey("sync_status")
         val SYNC_ERROR_MESSAGE = stringPreferencesKey("sync_error_message")
+        val DIGEST_FREQUENCY = stringPreferencesKey("digest_frequency")
+        val DIGEST_PRIVACY_ENABLED = booleanPreferencesKey("digest_privacy_enabled")
+        val DIGEST_DELIVERY_HOUR = androidx.datastore.preferences.core.intPreferencesKey("digest_delivery_hour")
+        val LAST_DIGEST_SENT_MILLIS = longPreferencesKey("last_digest_sent_millis")
     }
 
     val userPreferencesFlow: Flow<UserPreferences> = context.dataStore.data.map { preferences ->
@@ -116,8 +124,36 @@ class UserPreferencesDataStore(private val context: Context) {
             userPhotoUrl = preferences[PreferencesKeys.USER_PHOTO_URL],
             lastSyncTimestamp = preferences[PreferencesKeys.LAST_SYNC_TIMESTAMP] ?: 0L,
             syncStatus = preferences[PreferencesKeys.SYNC_STATUS] ?: "IDLE",
-            syncErrorMessage = preferences[PreferencesKeys.SYNC_ERROR_MESSAGE]
+            syncErrorMessage = preferences[PreferencesKeys.SYNC_ERROR_MESSAGE],
+            digestFrequency = preferences[PreferencesKeys.DIGEST_FREQUENCY] ?: "DAILY",
+            digestPrivacyEnabled = preferences[PreferencesKeys.DIGEST_PRIVACY_ENABLED] ?: false,
+            digestDeliveryHour = preferences[PreferencesKeys.DIGEST_DELIVERY_HOUR] ?: 20,
+            lastDigestSentMillis = preferences[PreferencesKeys.LAST_DIGEST_SENT_MILLIS] ?: 0L
         )
+    }
+
+    suspend fun setDigestFrequency(frequency: String) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.DIGEST_FREQUENCY] = frequency
+        }
+    }
+
+    suspend fun setDigestPrivacyEnabled(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.DIGEST_PRIVACY_ENABLED] = enabled
+        }
+    }
+
+    suspend fun setDigestDeliveryHour(hour: Int) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.DIGEST_DELIVERY_HOUR] = hour
+        }
+    }
+
+    suspend fun setLastDigestSentMillis(timestamp: Long) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.LAST_DIGEST_SENT_MILLIS] = timestamp
+        }
     }
 
     suspend fun setSelectedLanguage(code: String) {

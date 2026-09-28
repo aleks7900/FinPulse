@@ -1298,4 +1298,45 @@
     <string name="budget_set_limit">н•њлЏ„ м„¤м •</string>
     <string name="action_got_it">н™•мќё</string>
     <string name="export_records_to_restore">ліµм›ђн•  н•­лЄ© м€:</string>
+
+    <!-- Financial Digest & Habit Insights -->
+    <string name="digest_screen_title">кё€мњµ л‹¤мќґм њмЉ¤нЉё</string>
+    <string name="digest_more_desc">мќјмќј л°Џ мЈјк°„ мЉµкґЂ н•м„± мљ”м•Ѕ, мІ­кµ¬м„њ л°Џ м§Ђм¶њ м¶”мќґ</string>
+    <string name="digest_card_summary_desc">мќјмќј л°Џ мЈјк°„ мЉµкґЂ мљ”м•Ѕ, мІ­кµ¬м„њ &amp; м§Ђм¶њ м¶”мќґ</string>
+    <string name="digest_badge_daily_weekly">мќјмќј &amp; мЈјк°„</string>
+    <string name="digest_period_daily">мќјмќј</string>
+    <string name="digest_period_weekly">мЈјк°„</string>
+    <string name="digest_period_daily_desc">м–ґм њм™Ђ л№„кµђн•њ м¤лЉмќ кё€мњµ н„н™©</string>
+    <string name="digest_period_weekly_desc">м§Ђл‚њмЈјм™Ђ л№„кµђн•њ мќґлІ€ мЈј кё€мњµ н„н™©</string>
+    <string name="digest_frequency_off">м‚¬мљ© м•€ н•Ё</string>
+    <string name="digest_pulse_badge_daily">м¤лЉмќ нЋ„мЉ¤</string>
+    <string name="digest_pulse_badge_weekly">мќґлІ€ мЈј нЋ„мЉ¤</string>
+    <string name="digest_trend_down">мќґм „ кё°к°„ лЊЂл№„</string>
+    <string name="digest_trend_up">мќґм „ кё°к°„ лЊЂл№„</string>
+    <string name="digest_total_spent_label">мґќ м§Ђм¶њ</string>
+    <string name="digest_stat_transactions">к±°лћ к±ґм€</string>
+    <string name="digest_stat_bills_due">м€м •лђњ мІ­кµ¬м„њ</string>
+    <string name="digest_stat_review_items">кІЂн†  н•„мљ”</string>
+    <string name="digest_section_priority_alerts">мљ°м„  м•Њл¦ј л°Џ к¶ЊмћҐ мЎ°м№</string>
+    <string name="digest_action_review">м§Ђкё€ н™•мќё</string>
+    <string name="digest_section_top_expenses">мµњлЊЂ м§Ђм¶њ н•­лЄ©</string>
+    <string name="digest_section_budgets">м€м‚° к±ґм „м„± л°Џ м†Њм§„ м¶”мќґ</string>
+    <string name="digest_section_upcoming_bills">м€м •лђњ мІ­кµ¬м„њ &amp; м•Ѕм •</string>
+    <string name="digest_section_savings_goals">м Ђм¶• лЄ©н‘њ м§„н–‰лҐ </string>
+    <string name="digest_settings_title">л‹¤мќґм њмЉ¤нЉё м„¤м •</string>
+    <string name="digest_settings_frequency_label">л‹¤мќґм њмЉ¤нЉё мЈјкё°</string>
+    <string name="digest_settings_privacy_mode">мћ кё€н™”л©ґ к°њмќём •ліґ ліґнё лЄЁл“њ</string>
+    <string name="digest_settings_privacy_desc">кіµкіµмћҐм†Њм—ђм„њ к°њмќём •ліґ ліґнёлҐј мњ„н•ґ м•Њл¦ј л‚ґ м •н™•н•њ кё€м•Ўмќ„ м€Ёк№Ѓл‹€л‹¤</string>
+    <string name="digest_settings_delivery_time">м „м†Ў м‹њк°„</string>
+    <string name="digest_action_test_notification">н…ЊмЉ¤нЉё м•Њл¦ј ліґл‚ґкё°</string>
+    <string name="notif_channel_digest_name">кё€мњµ л‹¤мќґм њмЉ¤нЉё</string>
+    <string name="notif_channel_digest_desc">мќјмќј л°Џ мЈјк°„ м •кё° кё€мњµ мљ”м•Ѕкіј мЉµкґЂ м•Њл¦ј</string>
+    <string name="digest_notif_privacy_title">%1$s кё€мњµ л‹¤мќґм њмЉ¤нЉё</string>
+    <string name="digest_notif_privacy_body">к±°лћ %1$dк±ґ кё°лЎќлђЁ вЂў м€м •лђњ мІ­кµ¬м„њ %2$dк±ґ вЂў нѓ­н•м—¬ мљ”м•Ѕ ліґкё°</string>
+    <string name="digest_notif_privacy_expanded">%1$s л‹¤мќґм њмЉ¤нЉё м¤Ђл№„ м™„лЈЊ: к±°лћ %2$dк±ґ, м€м •лђњ мІ­кµ¬м„њ %3$dк±ґ, кІЂн†  н•­лЄ© %4$dк±ґ. нѓ­н•м—¬ мѓЃм„ё л‚ґмљ©мќ„ н™•мќён•м„ёмљ”.</string>
+    <string name="digest_notif_detailed_title_trend">%1$s л‹¤мќґм њмЉ¤нЉё: %2$s м§Ђм¶њ (%3$s)</string>
+    <string name="digest_notif_detailed_title">%1$s л‹¤мќґм њмЉ¤нЉё: %2$s м§Ђм¶њ</string>
+    <string name="digest_notif_detailed_top_expense">мµњлЊЂ м§Ђм¶њ: %1$s (%2$s)</string>
+    <string name="digest_notif_detailed_bills">кі§ л§€к°ђлђлЉ” мІ­кµ¬м„њ %1$dк±ґ</string>
+    <string name="digest_notif_action_open">л‹¤мќґм њмЉ¤нЉё м—ґкё°</string>
 </resources>

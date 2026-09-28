@@ -1306,4 +1306,45 @@
     <string name="budget_set_limit">Imposta limite</string>
     <string name="action_got_it">Ho capito</string>
     <string name="export_records_to_restore">Record da ripristinare:</string>
+
+    <!-- Financial Digest & Habit Insights -->
+    <string name="digest_screen_title">Riepilogo finanziario</string>
+    <string name="digest_more_desc">Riepiloghi giornalieri e settimanali, bollette e tendenze di spesa</string>
+    <string name="digest_card_summary_desc">Riepilogo giornaliero e settimanale, bollette e tendenze di spesa</string>
+    <string name="digest_badge_daily_weekly">Giornaliero e Settimanale</string>
+    <string name="digest_period_daily">Giornaliero</string>
+    <string name="digest_period_weekly">Settimanale</string>
+    <string name="digest_period_daily_desc">Istantanea finanziaria di oggi rispetto a ieri</string>
+    <string name="digest_period_weekly_desc">Istantanea finanziaria di questa settimana rispetto alla precedente</string>
+    <string name="digest_frequency_off">Disattivato</string>
+    <string name="digest_pulse_badge_daily">Polso di oggi</string>
+    <string name="digest_pulse_badge_weekly">Polso della settimana</string>
+    <string name="digest_trend_down">rispetto al periodo precedente</string>
+    <string name="digest_trend_up">rispetto al periodo precedente</string>
+    <string name="digest_total_spent_label">Spesa totale</string>
+    <string name="digest_stat_transactions">Transazioni</string>
+    <string name="digest_stat_bills_due">Scadenze imminenti</string>
+    <string name="digest_stat_review_items">Da verificare</string>
+    <string name="digest_section_priority_alerts">Avvisi prioritari e azioni</string>
+    <string name="digest_action_review">Verifica ora</string>
+    <string name="digest_section_top_expenses">Spese principali</string>
+    <string name="digest_section_budgets">Stato e ritmo dei budget</string>
+    <string name="digest_section_upcoming_bills">Bollette e impegni futuri</string>
+    <string name="digest_section_savings_goals">Avanzamento obiettivi di risparmio</string>
+    <string name="digest_settings_title">Preferenze riepilogo</string>
+    <string name="digest_settings_frequency_label">Frequenza del riepilogo</string>
+    <string name="digest_settings_privacy_mode">ModalitГ  privacy schermata di blocco</string>
+    <string name="digest_settings_privacy_desc">Nascondi gli importi esatti nelle notifiche per proteggere la tua privacy</string>
+    <string name="digest_settings_delivery_time">Orario di consegna</string>
+    <string name="digest_action_test_notification">Invia notifica di prova</string>
+    <string name="notif_channel_digest_name">Riepilogo finanziario</string>
+    <string name="notif_channel_digest_desc">Riepiloghi finanziari periodici e abitudini di spesa</string>
+    <string name="digest_notif_privacy_title">Riepilogo finanziario %1$s</string>
+    <string name="digest_notif_privacy_body">%1$d transazioni registrate вЂў %2$d pagamenti imminenti вЂў Tocca per visualizzare</string>
+    <string name="digest_notif_privacy_expanded">Riepilogo %1$s pronto: %2$d movimenti, %3$d scadenze e %4$d voci da verificare.</string>
+    <string name="digest_notif_detailed_title_trend">Riepilogo %1$s: %2$s spesi (%3$s)</string>
+    <string name="digest_notif_detailed_title">Riepilogo %1$s: %2$s spesi</string>
+    <string name="digest_notif_detailed_top_expense">Maggiore spesa: %1$s (%2$s)</string>
+    <string name="digest_notif_detailed_bills">%1$d scadenza/e imminente/i</string>
+    <string name="digest_notif_action_open">Visualizza riepilogo</string>
 </resources>

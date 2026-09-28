@@ -1306,4 +1306,45 @@
     <string name="budget_set_limit">Definir Limite</string>
     <string name="action_got_it">Entendi</string>
     <string name="export_records_to_restore">Registros a restaurar:</string>
+
+    <!-- Financial Digest & Habit Insights -->
+    <string name="digest_screen_title">Resumo Financeiro</string>
+    <string name="digest_more_desc">Resumos diГЎrios e semanais, contas e tendГЄncias de gastos</string>
+    <string name="digest_card_summary_desc">Resumo diГЎrio e semanal de hГЎbitos, contas e despesas</string>
+    <string name="digest_badge_daily_weekly">DiГЎrio &amp; Semanal</string>
+    <string name="digest_period_daily">DiГЎrio</string>
+    <string name="digest_period_weekly">Semanal</string>
+    <string name="digest_period_daily_desc">Panorama financeiro de hoje em comparaГ§ГЈo a ontem</string>
+    <string name="digest_period_weekly_desc">Panorama desta semana em comparaГ§ГЈo Г  anterior</string>
+    <string name="digest_frequency_off">Desativado</string>
+    <string name="digest_pulse_badge_daily">Pulso de Hoje</string>
+    <string name="digest_pulse_badge_weekly">Pulso da Semana</string>
+    <string name="digest_trend_down">em relaГ§ГЈo ao perГ­odo anterior</string>
+    <string name="digest_trend_up">em relaГ§ГЈo ao perГ­odo anterior</string>
+    <string name="digest_total_spent_label">Total Gasto</string>
+    <string name="digest_stat_transactions">TransaГ§Гµes</string>
+    <string name="digest_stat_bills_due">Contas PrГіximas</string>
+    <string name="digest_stat_review_items">Para Revisar</string>
+    <string name="digest_section_priority_alerts">Alertas PrioritГЎrios &amp; AГ§Гµes</string>
+    <string name="digest_action_review">Revisar Agora</string>
+    <string name="digest_section_top_expenses">Maiores Despesas</string>
+    <string name="digest_section_budgets">SaГєde dos OrГ§amentos</string>
+    <string name="digest_section_upcoming_bills">PrГіximos Vencimentos &amp; Contas</string>
+    <string name="digest_section_savings_goals">Progresso das Metas de Reserva</string>
+    <string name="digest_settings_title">PreferГЄncias do Resumo</string>
+    <string name="digest_settings_frequency_label">FrequГЄncia do Resumo</string>
+    <string name="digest_settings_privacy_mode">Modo Privativo na Tela de Bloqueio</string>
+    <string name="digest_settings_privacy_desc">Ocultar valores monetГЎrios exatos nas notificaГ§Гµes para proteger sua privacidade em locais pГєblicos</string>
+    <string name="digest_settings_delivery_time">HorГЎrio de Entrega</string>
+    <string name="digest_action_test_notification">Enviar NotificaГ§ГЈo de Teste</string>
+    <string name="notif_channel_digest_name">Resumo Financeiro</string>
+    <string name="notif_channel_digest_desc">Resumos periГіdicos e hГЎbitos financeiros saudГЎveis</string>
+    <string name="digest_notif_privacy_title">Resumo Financeiro %1$s</string>
+    <string name="digest_notif_privacy_body">%1$d transaГ§Гµes registradas вЂў %2$d contas a vencer вЂў Toque para ver</string>
+    <string name="digest_notif_privacy_expanded">Resumo %1$s pronto: %2$d transaГ§Гµes, %3$d obrigaГ§Гµes prГіximas e %4$d itens para revisar.</string>
+    <string name="digest_notif_detailed_title_trend">Resumo %1$s: %2$s gastos (%3$s)</string>
+    <string name="digest_notif_detailed_title">Resumo %1$s: %2$s gastos</string>
+    <string name="digest_notif_detailed_top_expense">Destaque: %1$s (%2$s)</string>
+    <string name="digest_notif_detailed_bills">%1$d conta(s) a vencer em breve</string>
+    <string name="digest_notif_action_open">Ver Resumo</string>
 </resources>

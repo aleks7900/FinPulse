@@ -243,7 +243,8 @@ fun FinPulseApp(
                     onNavigateToSearch = { navController.navigate(Screen.Search.route) },
                     onNavigateToInsights = { navController.navigate(Screen.Insights.route) },
                     onNavigateToReviewQueue = { navController.navigate(Screen.ReviewInbox.route) },
-                    onNavigateToCalendar = { navController.navigate(Screen.Calendar.route) }
+                    onNavigateToCalendar = { navController.navigate(Screen.Calendar.route) },
+                    onNavigateToDigest = { navController.navigate(Screen.Digest.route) }
                 )
             }
 
@@ -701,6 +702,31 @@ fun FinPulseApp(
                     onClearReminderMessage = viewModel::clearReminderMessage,
                     onNavigateBack = { navController.popBackStack() },
                     onOpenRecurringScreen = { navController.navigate(Screen.Recurring.route) }
+                )
+            }
+
+            // Financial Digest Screen
+            composable(Screen.Digest.route) {
+                val viewModel: com.finpulse.app.presentation.digest.DigestViewModel = viewModel {
+                    com.finpulse.app.presentation.digest.DigestViewModel(
+                        getFinancialDigestUseCase = container.getFinancialDigestUseCase,
+                        userPreferencesDataStore = container.userPreferencesDataStore
+                    )
+                }
+                com.finpulse.app.presentation.digest.DigestScreen(
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToRoute = { route ->
+                        when (route) {
+                            "transactions" -> navController.navigate(Screen.Transactions.route)
+                            "budgets" -> navController.navigate(Screen.Budgets.route)
+                            "calendar" -> navController.navigate(Screen.Calendar.route)
+                            "review_inbox" -> navController.navigate(Screen.ReviewInbox.route)
+                            "goals" -> navController.navigate(Screen.Goals.route)
+                            "analytics" -> navController.navigate(Screen.Analytics.route)
+                            else -> navController.navigate(route)
+                        }
+                    }
                 )
             }
         }

@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Быстрое добавление</string>
     <string name="shortcut_quick_add_long">Добавить операцию</string>
@@ -1323,4 +1323,45 @@
     <string name="budget_set_limit">Установить лимит</string>
     <string name="action_got_it">Понятно</string>
     <string name="export_records_to_restore">Записи для восстановления:</string>
+
+    <!-- Financial Digest & Habit Insights -->
+    <string name="digest_screen_title">Р¤РёРЅР°РЅСЃРѕРІС‹Р№ РґР°Р№РґР¶РµСЃС‚</string>
+    <string name="digest_more_desc">Р•Р¶РµРґРЅРµРІРЅС‹Рµ Рё РµР¶РµРЅРµРґРµР»СЊРЅС‹Рµ СЃРІРѕРґРєРё, СЃС‡РµС‚Р° Рё РґРёРЅР°РјРёРєР° СЂР°СЃС…РѕРґРѕРІ</string>
+    <string name="digest_card_summary_desc">РЎРІРѕРґРєР° Р·Р° РґРµРЅСЊ Рё РЅРµРґРµР»СЋ, СЃС‡РµС‚Р° Рё РґРёРЅР°РјРёРєР° С‚СЂР°С‚</string>
+    <string name="digest_badge_daily_weekly">Р”РµРЅСЊ Рё РЅРµРґРµР»СЏ</string>
+    <string name="digest_period_daily">Р”РµРЅСЊ</string>
+    <string name="digest_period_weekly">РќРµРґРµР»СЏ</string>
+    <string name="digest_period_daily_desc">Р¤РёРЅР°РЅСЃРѕРІС‹Р№ СЃСЂРµР· Р·Р° СЃРµРіРѕРґРЅСЏ РїРѕ СЃСЂР°РІРЅРµРЅРёСЋ СЃРѕ РІС‡РµСЂР°</string>
+    <string name="digest_period_weekly_desc">Р¤РёРЅР°РЅСЃРѕРІС‹Р№ СЃСЂРµР· Р·Р° РЅРµРґРµР»СЋ РїРѕ СЃСЂР°РІРЅРµРЅРёСЋ СЃ РїСЂРѕС€Р»РѕР№</string>
+    <string name="digest_frequency_off">РћС‚РєР»СЋС‡РµРЅРѕ</string>
+    <string name="digest_pulse_badge_daily">РџСѓР»СЊСЃ Р·Р° СЃРµРіРѕРґРЅСЏ</string>
+    <string name="digest_pulse_badge_weekly">РџСѓР»СЊСЃ Р·Р° РЅРµРґРµР»СЋ</string>
+    <string name="digest_trend_down">Рє РїСЂРѕС€Р»РѕРјСѓ РїРµСЂРёРѕРґСѓ</string>
+    <string name="digest_trend_up">Рє РїСЂРѕС€Р»РѕРјСѓ РїРµСЂРёРѕРґСѓ</string>
+    <string name="digest_total_spent_label">Р’СЃРµРіРѕ РїРѕС‚СЂР°С‡РµРЅРѕ</string>
+    <string name="digest_stat_transactions">РћРїРµСЂР°С†РёР№</string>
+    <string name="digest_stat_bills_due">РЎРєРѕСЂРѕ Рє РѕРїР»Р°С‚Рµ</string>
+    <string name="digest_stat_review_items">РќР° РїСЂРѕРІРµСЂРєСѓ</string>
+    <string name="digest_section_priority_alerts">Р’Р°Р¶РЅС‹Рµ РѕРїРѕРІРµС‰РµРЅРёСЏ Рё РґРµР№СЃС‚РІРёСЏ</string>
+    <string name="digest_action_review">РџСЂРѕРІРµСЂРёС‚СЊ</string>
+    <string name="digest_section_top_expenses">РљСЂСѓРїРЅРµР№С€РёРµ С‚СЂР°С‚С‹</string>
+    <string name="digest_section_budgets">РЎРѕСЃС‚РѕСЏРЅРёРµ Р±СЋРґР¶РµС‚РѕРІ</string>
+    <string name="digest_section_upcoming_bills">РџСЂРµРґСЃС‚РѕСЏС‰РёРµ СЃС‡РµС‚Р° Рё РїР»Р°С‚РµР¶Рё</string>
+    <string name="digest_section_savings_goals">РџСЂРѕРіСЂРµСЃСЃ РїРѕ С†РµР»СЏРј РЅР°РєРѕРїР»РµРЅРёР№</string>
+    <string name="digest_settings_title">РќР°СЃС‚СЂРѕР№РєРё РґР°Р№РґР¶РµСЃС‚Р°</string>
+    <string name="digest_settings_frequency_label">РџРµСЂРёРѕРґРёС‡РЅРѕСЃС‚СЊ РґР°Р№РґР¶РµСЃС‚Р°</string>
+    <string name="digest_settings_privacy_mode">Р РµР¶РёРј РєРѕРЅС„РёРґРµРЅС†РёР°Р»СЊРЅРѕСЃС‚Рё</string>
+    <string name="digest_settings_privacy_desc">РЎРєСЂС‹РІР°С‚СЊ С‚РѕС‡РЅС‹Рµ СЃСѓРјРјС‹ РІ СѓРІРµРґРѕРјР»РµРЅРёСЏС… РґР»СЏ Р·Р°С‰РёС‚С‹ РґР°РЅРЅС‹С… РЅР° СЌРєСЂР°РЅРµ Р±Р»РѕРєРёСЂРѕРІРєРё</string>
+    <string name="digest_settings_delivery_time">Р’СЂРµРјСЏ РґРѕСЃС‚Р°РІРєРё</string>
+    <string name="digest_action_test_notification">РћС‚РїСЂР°РІРёС‚СЊ С‚РµСЃС‚РѕРІРѕРµ СѓРІРµРґРѕРјР»РµРЅРёРµ</string>
+    <string name="notif_channel_digest_name">Р¤РёРЅР°РЅСЃРѕРІС‹Р№ РґР°Р№РґР¶РµСЃС‚</string>
+    <string name="notif_channel_digest_desc">Р РµРіСѓР»СЏСЂРЅС‹Рµ С„РёРЅР°РЅСЃРѕРІС‹Рµ СЃРІРѕРґРєРё Рё РїРѕР»РµР·РЅС‹Рµ РїСЂРёРІС‹С‡РєРё</string>
+    <string name="digest_notif_privacy_title">%1$s С„РёРЅР°РЅСЃРѕРІС‹Р№ РґР°Р№РґР¶РµСЃС‚</string>
+    <string name="digest_notif_privacy_body">%1$d РѕРїРµСЂР°С†РёР№ вЂў %2$d РїСЂРµРґСЃС‚РѕСЏС‰РёС… СЃС‡РµС‚РѕРІ вЂў РќР°Р¶РјРёС‚Рµ РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°</string>
+    <string name="digest_notif_privacy_expanded">%1$s РґР°Р№РґР¶РµСЃС‚ РіРѕС‚РѕРІ: %2$d РѕРїРµСЂР°С†РёР№, %3$d РїСЂРµРґСЃС‚РѕСЏС‰РёС… РїР»Р°С‚РµР¶РµР№ Рё %4$d РЅР° РїСЂРѕРІРµСЂРєСѓ. РћС‚РєСЂРѕР№С‚Рµ FinPulse РґР»СЏ РїРѕРґСЂРѕР±РЅРѕСЃС‚РµР№.</string>
+    <string name="digest_notif_detailed_title_trend">%1$s РґР°Р№РґР¶РµСЃС‚: РїРѕС‚СЂР°С‡РµРЅРѕ %2$s (%3$s)</string>
+    <string name="digest_notif_detailed_title">%1$s РґР°Р№РґР¶РµСЃС‚: РїРѕС‚СЂР°С‡РµРЅРѕ %2$s</string>
+    <string name="digest_notif_detailed_top_expense">Р“Р»Р°РІРЅР°СЏ С‚СЂР°С‚Р°: %1$s (%2$s)</string>
+    <string name="digest_notif_detailed_bills">РЎС‡РµС‚РѕРІ Рє РѕРїР»Р°С‚Рµ: %1$d</string>
+    <string name="digest_notif_action_open">РћС‚РєСЂС‹С‚СЊ РґР°Р№РґР¶РµСЃС‚</string>
 </resources>

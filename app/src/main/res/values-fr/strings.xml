@@ -1306,4 +1306,45 @@
     <string name="budget_set_limit">DГ©finir une limite</string>
     <string name="action_got_it">Compris</string>
     <string name="export_records_to_restore">Enregistrements Г  restaurer :</string>
+
+    <!-- Financial Digest & Habit Insights -->
+    <string name="digest_screen_title">Bilan financier</string>
+    <string name="digest_more_desc">SynthГЁses quotidiennes et hebdomadaires, factures et tendances</string>
+    <string name="digest_card_summary_desc">SynthГЁse quotidienne et hebdomadaire, factures et tendances</string>
+    <string name="digest_badge_daily_weekly">Quotidien &amp; Hebdo</string>
+    <string name="digest_period_daily">Quotidien</string>
+    <string name="digest_period_weekly">Hebdomadaire</string>
+    <string name="digest_period_daily_desc">AperГ§u financier d\'aujourd\'hui par rapport Г  hier</string>
+    <string name="digest_period_weekly_desc">AperГ§u financier de la semaine comparГ© Г  la prГ©cГ©dente</string>
+    <string name="digest_frequency_off">DГ©sactivГ©</string>
+    <string name="digest_pulse_badge_daily">Pouls du jour</string>
+    <string name="digest_pulse_badge_weekly">Pouls de la semaine</string>
+    <string name="digest_trend_down">par rapport Г  la pГ©riode prГ©cГ©dente</string>
+    <string name="digest_trend_up">par rapport Г  la pГ©riode prГ©cГ©dente</string>
+    <string name="digest_total_spent_label">DГ©penses totales</string>
+    <string name="digest_stat_transactions">Transactions</string>
+    <string name="digest_stat_bills_due">Factures Г  venir</string>
+    <string name="digest_stat_review_items">ГЂ vГ©rifier</string>
+    <string name="digest_section_priority_alerts">Alertes prioritaires &amp; Actions</string>
+    <string name="digest_action_review">VГ©rifier</string>
+    <string name="digest_section_top_expenses">Principales dГ©penses</string>
+    <string name="digest_section_budgets">Г‰tat des budgets &amp; Rythme</string>
+    <string name="digest_section_upcoming_bills">Factures &amp; Г‰chГ©ances Г  venir</string>
+    <string name="digest_section_savings_goals">Progression des objectifs d\'Г©pargne</string>
+    <string name="digest_settings_title">PrГ©fГ©rences du bilan</string>
+    <string name="digest_settings_frequency_label">FrГ©quence du bilan</string>
+    <string name="digest_settings_privacy_mode">Mode de confidentialitГ© sur Г©cran verrouillГ©</string>
+    <string name="digest_settings_privacy_desc">Masquer les montants exacts dans les notifications pour protГ©ger votre vie privГ©e</string>
+    <string name="digest_settings_delivery_time">Heure de rГ©ception</string>
+    <string name="digest_action_test_notification">Envoyer une notification de test</string>
+    <string name="notif_channel_digest_name">Bilan financier</string>
+    <string name="notif_channel_digest_desc">RГ©sumГ©s financiers rГ©guliers et bonnes habitudes</string>
+    <string name="digest_notif_privacy_title">Bilan financier %1$s</string>
+    <string name="digest_notif_privacy_body">%1$d transactions enregistrГ©es вЂў %2$d factures Г  venir вЂў Appuyez pour voir le rГ©sumГ©</string>
+    <string name="digest_notif_privacy_expanded">Bilan %1$s prГЄt : %2$d transactions, %3$d Г©chГ©ances et %4$d Г©lГ©ments Г  vГ©rifier. Ouvrez FinPulse pour voir le dГ©tail.</string>
+    <string name="digest_notif_detailed_title_trend">Bilan %1$s : %2$s dГ©pensГ©s (%3$s)</string>
+    <string name="digest_notif_detailed_title">Bilan %1$s : %2$s dГ©pensГ©s</string>
+    <string name="digest_notif_detailed_top_expense">Top : %1$s (%2$s)</string>
+    <string name="digest_notif_detailed_bills">%1$d facture(s) bientГґt Г  Г©chГ©ance</string>
+    <string name="digest_notif_action_open">Voir le bilan</string>
 </resources>

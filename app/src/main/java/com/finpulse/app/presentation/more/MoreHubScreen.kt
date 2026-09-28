@@ -245,6 +245,13 @@ fun MoreHubScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     HubItem(
+                        title = stringResource(R.string.digest_screen_title),
+                        subtitle = stringResource(R.string.digest_more_desc),
+                        icon = Icons.Default.AutoAwesome,
+                        tint = SapphireAccent,
+                        onClick = { onNavigate(Screen.Digest) }
+                    )
+                    HubItem(
                         title = stringResource(R.string.more_calendar_title),
                         subtitle = stringResource(R.string.more_calendar_desc),
                         icon = Icons.Default.CalendarMonth,

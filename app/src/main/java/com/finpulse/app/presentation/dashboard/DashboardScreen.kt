@@ -83,6 +83,7 @@ fun DashboardScreen(
     onNavigateToInsights: () -> Unit,
     onNavigateToReviewQueue: () -> Unit = {},
     onNavigateToCalendar: () -> Unit = {},
+    onNavigateToDigest: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val categoryMap = uiState.categories.associateBy { it.id }
@@ -242,6 +243,11 @@ fun DashboardScreen(
                     savingsRate = uiState.summary.savingsRatePercentage,
                     hideBalances = uiState.hideBalances
                 )
+            }
+
+            // Financial Digest Glance Banner
+            item {
+                FinancialDigestBannerCard(onClick = onNavigateToDigest)
             }
 
             // 5. Smart Insights Feed Card (if available)
@@ -748,6 +754,86 @@ fun ReviewQueueBannerCard(
                 contentDescription = stringResource(R.string.review_inbox_open),
                 tint = AmberWarning,
                 modifier = Modifier.size(20.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun FinancialDigestBannerCard(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .border(
+                1.dp,
+                com.finpulse.app.core.designsystem.SapphireAccent.copy(alpha = 0.4f),
+                RoundedCornerShape(16.dp)
+            ),
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+    ) {
+        Row(
+            modifier = Modifier.padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(38.dp)
+                    .clip(CircleShape)
+                    .background(com.finpulse.app.core.designsystem.SapphireAccent.copy(alpha = 0.15f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AutoAwesome,
+                    contentDescription = null,
+                    tint = com.finpulse.app.core.designsystem.SapphireAccent,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(R.string.digest_screen_title),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Surface(
+                        shape = RoundedCornerShape(6.dp),
+                        color = com.finpulse.app.core.designsystem.SapphireAccent.copy(alpha = 0.15f)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.digest_badge_daily_weekly),
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = com.finpulse.app.core.designsystem.SapphireAccent
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = stringResource(R.string.digest_card_summary_desc),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                )
+            }
+
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(16.dp)
             )
         }
     }
