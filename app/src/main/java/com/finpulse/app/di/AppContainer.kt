@@ -133,8 +133,15 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
         com.finpulse.app.data.repository.MerchantSignalRepositoryImpl(database)
     }
 
+    val onlineExchangeRateClient: com.finpulse.app.data.remote.currency.OnlineExchangeRateClient by lazy {
+        com.finpulse.app.data.remote.currency.GlobalOnlineExchangeRateClient()
+    }
+
     override val exchangeRateProvider: com.finpulse.app.domain.repository.ExchangeRateProvider by lazy {
-        com.finpulse.app.data.repository.ExchangeRateProviderImpl(database.exchangeRateDao())
+        com.finpulse.app.data.repository.ExchangeRateProviderImpl(
+            dao = database.exchangeRateDao(),
+            onlineClient = onlineExchangeRateClient
+        )
     }
 
     override val currencyConverter: com.finpulse.app.domain.engine.CurrencyConverter by lazy {

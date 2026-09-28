@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class ExchangeRateProviderImpl(
-    private val dao: ExchangeRateDao
+    private val dao: ExchangeRateDao,
+    private val onlineClient: com.finpulse.app.data.remote.currency.OnlineExchangeRateClient = com.finpulse.app.data.remote.currency.GlobalOnlineExchangeRateClient()
 ) : ExchangeRateProvider {
 
     companion object {
@@ -198,19 +199,69 @@ class ExchangeRateProviderImpl(
     }
 
     override suspend fun refreshRates(): Result<Unit> {
-        // Can be connected to remote financial API when available;
-        // currently seeds the initial market timestamps cleanly in the database
-        val now = System.currentTimeMillis()
-        val entities = DEFAULT_USD_RATES.filterKeys { it != "USD" }.map { (code, rate) ->
-            ExchangeRate(
-                fromCurrency = "USD",
-                toCurrency = code,
-                rate = rate,
-                timestamp = now,
-                isManual = false
-            ).toEntity()
+        return try {
+            val onlineResult = onlineClient.fetchLatestRates("USD")
+            if (onlineResult.isSuccess) {
+                val data = onlineResult.getOrThrow()
+                val existingRates = dao.getAllRates().associateBy { Pair(it.fromCurrency, it.toCurrency) }
+
+                val entitiesToInsert = mutableListOf<com.finpulse.app.core.database.entity.ExchangeRateEntity>()
+
+                for (code in com.finpulse.app.core.model.CurrencyConfig.supportedCurrencyCodes) {
+                    if (code == "USD") continue
+                    val rateVal = data.rates[code] ?: DEFAULT_USD_RATES[code] ?: continue
+
+                    val key = Pair("USD", code)
+                    val existing = existingRates[key]
+                    // Do NOT overwrite user's manual override
+                    if (existing != null && existing.isManual) {
+                        continue
+                    }
+
+                    entitiesToInsert.add(
+                        ExchangeRate(
+                            fromCurrency = "USD",
+                            toCurrency = code,
+                            rate = rateVal,
+                            timestamp = data.timestamp,
+                            isManual = false
+                        ).toEntity()
+                    )
+                }
+
+                if (entitiesToInsert.isNotEmpty()) {
+                    dao.insertRates(entitiesToInsert)
+                }
+                Result.success(Unit)
+            } else {
+                seedOfflineDefaults()
+                Result.success(Unit)
+            }
+        } catch (_: Exception) {
+            seedOfflineDefaults()
+            Result.success(Unit)
         }
-        dao.insertRates(entities)
-        return Result.success(Unit)
+    }
+
+    private suspend fun seedOfflineDefaults() {
+        val now = System.currentTimeMillis()
+        val existingRates = dao.getAllRates().associateBy { Pair(it.fromCurrency, it.toCurrency) }
+        val entities = DEFAULT_USD_RATES.filterKeys { it != "USD" }.mapNotNull { (code, rate) ->
+            val existing = existingRates[Pair("USD", code)]
+            if (existing != null && existing.isManual) {
+                null
+            } else {
+                ExchangeRate(
+                    fromCurrency = "USD",
+                    toCurrency = code,
+                    rate = rate,
+                    timestamp = now,
+                    isManual = false
+                ).toEntity()
+            }
+        }
+        if (entities.isNotEmpty()) {
+            dao.insertRates(entities)
+        }
     }
 }

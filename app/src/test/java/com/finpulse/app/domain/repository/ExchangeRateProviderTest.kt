@@ -132,14 +132,81 @@ class ExchangeRateProviderTest {
     }
 
     @Test
-    fun `refreshRates populates market rates and updates last update timestamp`() = runBlocking {
-        val result = provider.refreshRates()
+    fun `refreshRates populates market rates from online provider`() = runBlocking {
+        val fakeOnlineClient = object : com.finpulse.app.data.remote.currency.OnlineExchangeRateClient {
+            override suspend fun fetchLatestRates(baseCurrency: String): Result<com.finpulse.app.data.remote.currency.OnlineRatesResult> {
+                return Result.success(
+                    com.finpulse.app.data.remote.currency.OnlineRatesResult(
+                        baseCurrency = "USD",
+                        timestamp = 1727500000000L,
+                        rates = mapOf("EUR" to 0.895, "JPY" to 143.25),
+                        providerSource = "open.er-api.com"
+                    )
+                )
+            }
+        }
+
+        val onlineProvider = ExchangeRateProviderImpl(fakeDao, fakeOnlineClient)
+        val result = onlineProvider.refreshRates()
         assertTrue(result.isSuccess)
 
-        val allRates = fakeDao.getAllRates()
-        assertTrue(allRates.isNotEmpty())
+        val usdEur = fakeDao.getRate("USD", "EUR")
+        assertNotNull(usdEur)
+        assertEquals(0.895, usdEur!!.rate, 0.0001)
 
-        val usdEur = allRates.find { it.fromCurrency == "USD" && it.toCurrency == "EUR" }
+        val usdJpy = fakeDao.getRate("USD", "JPY")
+        assertNotNull(usdJpy)
+        assertEquals(143.25, usdJpy!!.rate, 0.0001)
+    }
+
+    @Test
+    fun `refreshRates does not overwrite user manual overrides with online rates`() = runBlocking {
+        // User has a custom manual rate
+        provider.setManualRate("USD", "EUR", 0.99)
+        assertEquals(0.99, provider.getRate("USD", "EUR").rate, 0.0)
+
+        val fakeOnlineClient = object : com.finpulse.app.data.remote.currency.OnlineExchangeRateClient {
+            override suspend fun fetchLatestRates(baseCurrency: String): Result<com.finpulse.app.data.remote.currency.OnlineRatesResult> {
+                return Result.success(
+                    com.finpulse.app.data.remote.currency.OnlineRatesResult(
+                        baseCurrency = "USD",
+                        timestamp = 1727500000000L,
+                        rates = mapOf("EUR" to 0.88, "JPY" to 140.0),
+                        providerSource = "open.er-api.com"
+                    )
+                )
+            }
+        }
+
+        val onlineProvider = ExchangeRateProviderImpl(fakeDao, fakeOnlineClient)
+        onlineProvider.refreshRates()
+
+        // User manual override for EUR is strictly preserved!
+        val preservedEur = fakeDao.getRate("USD", "EUR")
+        assertNotNull(preservedEur)
+        assertEquals(0.99, preservedEur!!.rate, 0.0)
+        assertTrue(preservedEur.isManual)
+
+        // Non-manual rate JPY was updated
+        val updatedJpy = fakeDao.getRate("USD", "JPY")
+        assertNotNull(updatedJpy)
+        assertEquals(140.0, updatedJpy!!.rate, 0.0001)
+    }
+
+    @Test
+    fun `refreshRates falls back to offline default rates when online client fails`() = runBlocking {
+        val failingOnlineClient = object : com.finpulse.app.data.remote.currency.OnlineExchangeRateClient {
+            override suspend fun fetchLatestRates(baseCurrency: String): Result<com.finpulse.app.data.remote.currency.OnlineRatesResult> {
+                return Result.failure(java.io.IOException("No internet connection"))
+            }
+        }
+
+        val fallbackProvider = ExchangeRateProviderImpl(fakeDao, failingOnlineClient)
+        val result = fallbackProvider.refreshRates()
+        assertTrue(result.isSuccess)
+
+        // Fallback rates were populated
+        val usdEur = fakeDao.getRate("USD", "EUR")
         assertNotNull(usdEur)
         assertEquals(0.92, usdEur!!.rate, 0.0001)
     }

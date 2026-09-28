@@ -34,5 +34,8 @@ class FinPulseApplication : Application() {
 
         // Schedule periodic financial digest checks
         com.finpulse.app.core.work.FinancialDigestWorker.schedulePeriodicDigest(this)
+
+        // Schedule periodic global currency exchange rate sync
+        com.finpulse.app.core.work.ExchangeRateSyncWorker.schedulePeriodicSync(this)
     }
 }
