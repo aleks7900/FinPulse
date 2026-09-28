@@ -1377,4 +1377,14 @@
     <string name="currencies_edit_rate_desc">Установите собственный курс между %1$s и %2$s для точного учета банковских комиссий и спредов.</string>
     <string name="currencies_reset_default">Сбросить на эталонный курс</string>
     <string name="currencies_more_desc">Основная валюта: %1$s • Настройка курсов и оффлайн-конвертации</string>
+    <string name="currency_label">Валюта</string>
+    <string name="currency_picker_title">Выберите валюту</string>
+    <string name="currency_picker_search_hint">Поиск по коду, названию или символу…</string>
+    <string name="currency_picker_no_results">Совпадающих валют не найдено</string>
+    <string name="default_currency_title">Основная валюта</string>
+    <string name="account_currency_label">Валюта счета</string>
+    <string name="budget_currency_label">Валюта бюджета</string>
+    <string name="account_currency_locked_desc">Нельзя изменить валюту счета с существующими транзакциями.</string>
+    <string name="different_currencies_desc">Счета используют разные валюты. Прямое сложение без конвертации исключено.</string>
+    <string name="currencies_change_currency">Сменить валюту</string>
 </resources>

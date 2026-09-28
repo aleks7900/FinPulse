@@ -494,7 +494,7 @@ class BudgetAndSafeToSpendTest {
 
         val transactions = listOf(
             Transaction("t_usd", Money(5000L, "USD"), TransactionType.EXPENSE, "a1", null, "cat_food", timestamp = 2000L),
-            // Foreign currency transaction should be ignored safely
+            // Foreign currency transaction safely converted using exchange rate
             Transaction("t_eur", Money(5000L, "EUR"), TransactionType.EXPENSE, "a1", null, "cat_food", timestamp = 3000L)
         )
 
@@ -505,8 +505,9 @@ class BudgetAndSafeToSpendTest {
             currentDate = sept15Date
         ).first()
 
-        // Only $50.00 USD should be counted
-        assertEquals(5000L, status.spentAmount.amountMinor)
+        // $50.00 USD + €50.00 EUR (~$54.35 USD at fallback rate) = $104.35 USD (10435 minor)
+        assertEquals(10435L, status.spentAmount.amountMinor)
+        assertEquals("USD", status.spentAmount.currencyCode)
     }
 
     @Test

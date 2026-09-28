@@ -21,6 +21,8 @@ object CurrencyConfig {
         val fractionDigits: Int,
         val flagEmoji: String
     ) {
+        val name: String get() = displayName
+        val decimals: Int get() = fractionDigits
         val minorMultiplier: Long = when (fractionDigits) {
             0 -> 1L
             1 -> 10L
@@ -35,27 +37,36 @@ object CurrencyConfig {
         CurrencyMetadata("USD", "US Dollar", "$", 2, "🇺🇸"),
         CurrencyMetadata("EUR", "Euro", "€", 2, "🇪🇺"),
         CurrencyMetadata("GBP", "British Pound", "£", 2, "🇬🇧"),
+        CurrencyMetadata("MDL", "Moldovan Leu", "L", 2, "🇲🇩"),
+        CurrencyMetadata("RON", "Romanian Leu", "lei", 2, "🇷🇴"),
+        CurrencyMetadata("UAH", "Ukrainian Hryvnia", "₴", 2, "🇺🇦"),
+        CurrencyMetadata("PLN", "Polish Zloty", "zł", 2, "🇵🇱"),
+        CurrencyMetadata("CHF", "Swiss Franc", "CHF", 2, "🇨🇭"),
         CurrencyMetadata("JPY", "Japanese Yen", "¥", 0, "🇯🇵"),
+        CurrencyMetadata("CNY", "Chinese Yuan", "¥", 2, "🇨🇳"),
         CurrencyMetadata("CAD", "Canadian Dollar", "CA$", 2, "🇨🇦"),
         CurrencyMetadata("AUD", "Australian Dollar", "A$", 2, "🇦🇺"),
-        CurrencyMetadata("CHF", "Swiss Franc", "CHF", 2, "🇨🇭"),
-        CurrencyMetadata("CNY", "Chinese Yuan", "¥", 2, "🇨🇳"),
         CurrencyMetadata("BRL", "Brazilian Real", "R$", 2, "🇧🇷"),
-        CurrencyMetadata("PLN", "Polish Zloty", "zł", 2, "🇵🇱"),
         CurrencyMetadata("TRY", "Turkish Lira", "₺", 2, "🇹🇷"),
         CurrencyMetadata("KRW", "South Korean Won", "₩", 0, "🇰🇷"),
         CurrencyMetadata("INR", "Indian Rupee", "₹", 2, "🇮🇳"),
         CurrencyMetadata("MXN", "Mexican Peso", "Mex$", 2, "🇲🇽"),
-        CurrencyMetadata("BHD", "Bahraini Dinar", "BD", 3, "🇧🇭"),
-        CurrencyMetadata("KWD", "Kuwaiti Dinar", "KD", 3, "🇰🇼"),
-        CurrencyMetadata("OMR", "Omani Rial", "OMR", 3, "🇴🇲"),
         CurrencyMetadata("SEK", "Swedish Krona", "kr", 2, "🇸🇪"),
         CurrencyMetadata("NOK", "Norwegian Krone", "kr", 2, "🇳🇴"),
+        CurrencyMetadata("DKK", "Danish Krone", "kr", 2, "🇩🇰"),
+        CurrencyMetadata("CZK", "Czech Koruna", "Kč", 2, "🇨🇿"),
+        CurrencyMetadata("HUF", "Hungarian Forint", "Ft", 0, "🇭🇺"),
+        CurrencyMetadata("BGN", "Bulgarian Lev", "лв", 2, "🇧🇬"),
         CurrencyMetadata("SGD", "Singapore Dollar", "S$", 2, "🇸🇬"),
         CurrencyMetadata("HKD", "Hong Kong Dollar", "HK$", 2, "🇭🇰"),
         CurrencyMetadata("NZD", "New Zealand Dollar", "NZ$", 2, "🇳🇿"),
         CurrencyMetadata("AED", "UAE Dirham", "AED", 2, "🇦🇪"),
-        CurrencyMetadata("SAR", "Saudi Riyal", "SAR", 2, "🇸🇦")
+        CurrencyMetadata("SAR", "Saudi Riyal", "SAR", 2, "🇸🇦"),
+        CurrencyMetadata("ILS", "Israeli New Shekel", "₪", 2, "🇮🇱"),
+        CurrencyMetadata("ZAR", "South African Rand", "R", 2, "🇿🇦"),
+        CurrencyMetadata("BHD", "Bahraini Dinar", "BD", 3, "🇧🇭"),
+        CurrencyMetadata("KWD", "Kuwaiti Dinar", "KD", 3, "🇰🇼"),
+        CurrencyMetadata("OMR", "Omani Rial", "OMR", 3, "🇴🇲")
     )
 
     val supportedCurrencyCodes: List<String> = supportedCurrencies.map { it.code }
@@ -131,19 +142,71 @@ object CurrencyConfig {
         locale: Locale = Locale.getDefault()
     ): String {
         val decimals = decimalsFor(money.currencyCode)
+        val symbol = getMetadata(money.currencyCode).symbol
         return try {
-            val currency = Currency.getInstance(money.currencyCode)
-            val formatter = NumberFormat.getCurrencyInstance(locale).apply {
-                this.currency = currency
-                maximumFractionDigits = decimals
-                minimumFractionDigits = decimals
+            val formatter = NumberFormat.getCurrencyInstance(locale)
+            if (formatter is java.text.DecimalFormat) {
+                val symbols = formatter.decimalFormatSymbols
+                symbols.currencySymbol = symbol
+                formatter.decimalFormatSymbols = symbols
+                formatter.maximumFractionDigits = decimals
+                formatter.minimumFractionDigits = decimals
+                formatter.format(toMajor(money.amountMinor, money.currencyCode))
+            } else {
+                val currency = Currency.getInstance(money.currencyCode)
+                formatter.currency = currency
+                formatter.maximumFractionDigits = decimals
+                formatter.minimumFractionDigits = decimals
+                formatter.format(toMajor(money.amountMinor, money.currencyCode))
             }
-            formatter.format(toMajor(money.amountMinor, money.currencyCode))
         } catch (_: Exception) {
             val sign = if (money.isNegative) "-" else ""
             val absMajor = toMajor(kotlin.math.abs(money.amountMinor), money.currencyCode)
-            val symbol = getMetadata(money.currencyCode).symbol
             "$sign$symbol$absMajor"
         }
     }
+
+    fun getCurrency(currencyCode: String): CurrencyMetadata = getMetadata(currencyCode)
+
+    fun formatMoney(
+        amount: BigDecimal,
+        currencyCode: String,
+        locale: Locale = Locale.getDefault()
+    ): String = format(fromMajor(amount, currencyCode), locale)
+
+    fun formatMoney(
+        amount: Double,
+        currencyCode: String,
+        locale: Locale = Locale.getDefault()
+    ): String = format(fromMajor(amount, currencyCode), locale)
+
+    fun formatMoney(
+        amountMinor: Long,
+        currencyCode: String,
+        locale: Locale = Locale.getDefault()
+    ): String = format(Money(amountMinor, currencyCode), locale)
 }
+
+/**
+ * Top-level centralized money formatter per Requirement 8:
+ * formatMoney(amount, currencyCode, locale)
+ */
+fun formatMoney(
+    amount: BigDecimal,
+    currencyCode: String,
+    locale: Locale = Locale.getDefault()
+): String = CurrencyConfig.formatMoney(amount, currencyCode, locale)
+
+fun formatMoney(
+    amount: Double,
+    currencyCode: String,
+    locale: Locale = Locale.getDefault()
+): String = CurrencyConfig.formatMoney(amount, currencyCode, locale)
+
+fun formatMoney(
+    amountMinor: Long,
+    currencyCode: String,
+    locale: Locale = Locale.getDefault()
+): String = CurrencyConfig.formatMoney(amountMinor, currencyCode, locale)
+
+

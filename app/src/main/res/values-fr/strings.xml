@@ -1360,4 +1360,14 @@
     <string name="currencies_edit_rate_desc">Définissez un taux de conversion manuel entre %1$s et %2$s pour refléter les frais bancaires ou marges.</string>
     <string name="currencies_reset_default">Réinitialiser au taux de référence</string>
     <string name="currencies_more_desc">Devise de base : %1$s • Gérer les taux manuels et conversions hors ligne</string>
+    <string name="currency_label">Devise</string>
+    <string name="currency_picker_title">Sélectionner une devise</string>
+    <string name="currency_picker_search_hint">Rechercher par code, nom ou symbole…</string>
+    <string name="currency_picker_no_results">Aucune devise correspondante trouvée</string>
+    <string name="default_currency_title">Devise par défaut</string>
+    <string name="account_currency_label">Devise du compte</string>
+    <string name="budget_currency_label">Devise du budget</string>
+    <string name="account_currency_locked_desc">La devise ne peut pas être modifiée car ce compte contient des transactions enregistrées.</string>
+    <string name="different_currencies_desc">Les comptes utilisent des devises différentes. L\'addition directe sans conversion est évitée.</string>
+    <string name="currencies_change_currency">Changer de devise</string>
 </resources>

@@ -37,23 +37,30 @@ class EvaluateBudgetStatusUseCase {
             // Filter transactions:
             // 1. Exclude transfers
             // 2. Exclude transactions marked as isExcludedFromBudget
-            // 3. Multi-currency safety: only include transactions in the budget currency
-            // 4. Must fall within budget period
+            // 3. Must fall within budget period
             val eligibleTransactions = transactions.filter { tx ->
                 !tx.isExcludedFromBudget &&
                 tx.type != TransactionType.TRANSFER &&
-                tx.amount.currencyCode.equals(currency, ignoreCase = true) &&
                 tx.timestamp in budget.startDate..budget.endDate &&
                 (isOverallBudget || tx.categoryId == budget.categoryId)
             }
 
+            fun convertToBudgetCurrency(tx: Transaction): Long {
+                if (tx.amount.currencyCode.equals(currency, ignoreCase = true)) {
+                    return tx.amount.amountMinor
+                }
+                val rate = tx.exchangeRate ?: com.finpulse.app.data.repository.ExchangeRateProviderImpl.computeFallbackRate(tx.amount.currencyCode, currency)
+                val targetMajor = tx.amount.amountBigDecimal.multiply(java.math.BigDecimal.valueOf(rate))
+                return com.finpulse.app.core.model.CurrencyConfig.toMinor(targetMajor, currency)
+            }
+
             val expenseMinor = eligibleTransactions
                 .filter { it.type == TransactionType.EXPENSE }
-                .sumOf { it.amount.amountMinor }
+                .sumOf { convertToBudgetCurrency(it) }
 
             val refundMinor = eligibleTransactions
                 .filter { it.type == TransactionType.REFUND }
-                .sumOf { it.amount.amountMinor }
+                .sumOf { convertToBudgetCurrency(it) }
 
             // Refunds correctly offset expenses for the category/budget
             val netSpentMinor = maxOf(0L, expenseMinor - refundMinor)

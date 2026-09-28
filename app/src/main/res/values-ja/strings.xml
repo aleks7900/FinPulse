@@ -1352,4 +1352,14 @@
     <string name="currencies_edit_rate_desc">銀行の手数料やスプレッドに合わせて、%1$s から %2$s への手動レートを設定します。</string>
     <string name="currencies_reset_default">基準レートにリセット</string>
     <string name="currencies_more_desc">基準通貨: %1$s • 手動レートとオフライン換算の管理</string>
+    <string name="currency_label">通貨</string>
+    <string name="currency_picker_title">通貨を選択</string>
+    <string name="currency_picker_search_hint">コード、名前、または記号で検索…</string>
+    <string name="currency_picker_no_results">一致する通貨が見つかりません</string>
+    <string name="default_currency_title">デフォルト通貨</string>
+    <string name="account_currency_label">口座の通貨</string>
+    <string name="budget_currency_label">予算の通貨</string>
+    <string name="account_currency_locked_desc">この口座には取引履歴が存在するため、通貨を変更できません。</string>
+    <string name="different_currencies_desc">口座間で異なる通貨が使用されています。換算なしの単純合算は行われません。</string>
+    <string name="currencies_change_currency">通貨を変更</string>
 </resources>

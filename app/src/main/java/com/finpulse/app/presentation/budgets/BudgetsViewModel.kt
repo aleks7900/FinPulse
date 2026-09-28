@@ -133,16 +133,54 @@ class BudgetsViewModel(
             BudgetFilter.EXCEEDED -> categoryStatuses.filter { it.isExceeded }
         }
 
-        val totalBudgetedMinor = if (overallStatus != null) {
-            overallStatus.budget.effectiveLimit.amountMinor
+        val baseCode = userPrefs.baseCurrencyCode
+
+        val totalBudgeted = if (overallStatus != null) {
+            val limit = overallStatus.budget.effectiveLimit
+            if (limit.currencyCode.equals(baseCode, ignoreCase = true)) {
+                limit
+            } else {
+                val rate = com.finpulse.app.data.repository.ExchangeRateProviderImpl.computeFallbackRate(limit.currencyCode, baseCode)
+                val targetMajor = limit.amountBigDecimal.multiply(java.math.BigDecimal.valueOf(rate))
+                Money.fromMajor(targetMajor, baseCode)
+            }
         } else {
-            categoryStatuses.sumOf { it.budget.effectiveLimit.amountMinor }
+            var sumMinor = 0L
+            for (status in categoryStatuses) {
+                val limit = status.budget.effectiveLimit
+                if (limit.currencyCode.equals(baseCode, ignoreCase = true)) {
+                    sumMinor += limit.amountMinor
+                } else {
+                    val rate = com.finpulse.app.data.repository.ExchangeRateProviderImpl.computeFallbackRate(limit.currencyCode, baseCode)
+                    val targetMajor = limit.amountBigDecimal.multiply(java.math.BigDecimal.valueOf(rate))
+                    sumMinor += com.finpulse.app.core.model.CurrencyConfig.toMinor(targetMajor, baseCode)
+                }
+            }
+            Money(sumMinor, baseCode)
         }
 
-        val totalSpentMinor = if (overallStatus != null) {
-            overallStatus.spentAmount.amountMinor
+        val totalSpent = if (overallStatus != null) {
+            val spent = overallStatus.spentAmount
+            if (spent.currencyCode.equals(baseCode, ignoreCase = true)) {
+                spent
+            } else {
+                val rate = com.finpulse.app.data.repository.ExchangeRateProviderImpl.computeFallbackRate(spent.currencyCode, baseCode)
+                val targetMajor = spent.amountBigDecimal.multiply(java.math.BigDecimal.valueOf(rate))
+                Money.fromMajor(targetMajor, baseCode)
+            }
         } else {
-            categoryStatuses.sumOf { it.spentAmount.amountMinor }
+            var sumMinor = 0L
+            for (status in categoryStatuses) {
+                val spent = status.spentAmount
+                if (spent.currencyCode.equals(baseCode, ignoreCase = true)) {
+                    sumMinor += spent.amountMinor
+                } else {
+                    val rate = com.finpulse.app.data.repository.ExchangeRateProviderImpl.computeFallbackRate(spent.currencyCode, baseCode)
+                    val targetMajor = spent.amountBigDecimal.multiply(java.math.BigDecimal.valueOf(rate))
+                    sumMinor += com.finpulse.app.core.model.CurrencyConfig.toMinor(targetMajor, baseCode)
+                }
+            }
+            Money(sumMinor, baseCode)
         }
 
         BudgetsUiState(
@@ -150,8 +188,8 @@ class BudgetsViewModel(
             categoryBudgetStatuses = filteredCategoryStatuses,
             budgetStatuses = allStatuses,
             categories = categories,
-            totalBudgeted = Money(totalBudgetedMinor, userPrefs.baseCurrencyCode),
-            totalSpent = Money(totalSpentMinor, userPrefs.baseCurrencyCode),
+            totalBudgeted = totalBudgeted,
+            totalSpent = totalSpent,
             hideBalances = userPrefs.hideBalances,
             baseCurrency = userPrefs.baseCurrencyCode,
             isAddEditDialogVisible = control.isAddVisible,
@@ -184,6 +222,7 @@ class BudgetsViewModel(
         categoryId: String,
         name: String,
         limitAmountMinor: Long,
+        currencyCode: String? = null,
         period: BudgetPeriod = BudgetPeriod.MONTHLY,
         isOverall: Boolean = false,
         isRolloverEnabled: Boolean = false,
@@ -197,11 +236,15 @@ class BudgetsViewModel(
                 BudgetPeriod.CUSTOM -> TimePeriod.MONTH.toDateRange()
             }
 
+            val resolvedCurrency = currencyCode?.uppercase()
+                ?: _editingBudget.value?.limitAmount?.currencyCode
+                ?: uiState.value.baseCurrency
+
             val b = Budget(
                 id = id ?: UUID.randomUUID().toString(),
                 categoryId = if (isOverall) "overall" else categoryId,
                 name = name.ifBlank { if (isOverall) "Overall Monthly Budget" else "Budget" },
-                limitAmount = Money(limitAmountMinor, uiState.value.baseCurrency),
+                limitAmount = Money(limitAmountMinor, resolvedCurrency),
                 periodType = period,
                 startDate = startMillis,
                 endDate = endMillis,

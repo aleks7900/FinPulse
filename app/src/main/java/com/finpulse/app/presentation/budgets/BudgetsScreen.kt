@@ -73,6 +73,7 @@ import com.finpulse.app.core.model.Money
 import com.finpulse.app.core.ui.BudgetProgressBar
 import com.finpulse.app.core.ui.CategoryIconBadge
 import com.finpulse.app.core.ui.CategoryPickerDialog
+import com.finpulse.app.core.ui.CurrencyPickerField
 import com.finpulse.app.core.ui.getCategoryDisplayName
 import com.finpulse.app.core.ui.getDisplayName
 import com.finpulse.app.core.ui.getLocalizedName
@@ -95,6 +96,7 @@ fun BudgetsScreen(
         categoryId: String,
         name: String,
         limitMinor: Long,
+        currencyCode: String?,
         period: BudgetPeriod,
         isOverall: Boolean,
         isRolloverEnabled: Boolean,
@@ -842,6 +844,7 @@ fun AddEditBudgetDialog(
         categoryId: String,
         name: String,
         limitMinor: Long,
+        currencyCode: String?,
         period: BudgetPeriod,
         isOverall: Boolean,
         isRolloverEnabled: Boolean,
@@ -852,6 +855,10 @@ fun AddEditBudgetDialog(
 ) {
     val expenseCategories = remember(categories) {
         categories.filter { it.type == CategoryType.EXPENSE }
+    }
+
+    var selectedCurrency by remember(editingBudget, baseCurrency) {
+        mutableStateOf(editingBudget?.limitAmount?.currencyCode ?: baseCurrency)
     }
 
     var isOverall by remember {
@@ -995,11 +1002,19 @@ fun AddEditBudgetDialog(
                     }
                 }
 
+                // Budget Currency Picker
+                CurrencyPickerField(
+                    selectedCurrencyCode = selectedCurrency,
+                    onCurrencySelected = { selectedCurrency = it },
+                    label = stringResource(R.string.budget_currency_label),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
                 // Spending Limit
                 OutlinedTextField(
                     value = limitText,
                     onValueChange = { limitText = it; isError = false },
-                    label = { Text("${stringResource(R.string.budget_limit_hint)} ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.budget_limit_hint)} ($selectedCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     isError = isError,
                     singleLine = true,
@@ -1095,8 +1110,10 @@ fun AddEditBudgetDialog(
                         isError = true
                         return@Button
                     }
-                    val limitMinor = (limitVal * 100).toLong()
-                    val rolloverMinor = ((rolloverText.toDoubleOrNull() ?: 0.0) * 100).toLong()
+                    val limitMinor = com.finpulse.app.core.model.CurrencyConfig.fromMajor(limitVal, selectedCurrency).amountMinor
+                    val rolloverMinor = ((rolloverText.toDoubleOrNull() ?: 0.0).let {
+                        com.finpulse.app.core.model.CurrencyConfig.fromMajor(it, selectedCurrency).amountMinor
+                    })
                     val catName = if (isOverall) {
                         nameText.ifBlank { "Overall Monthly Budget" }
                     } else {
@@ -1110,6 +1127,7 @@ fun AddEditBudgetDialog(
                         if (isOverall) "overall" else categoryId,
                         catName,
                         limitMinor,
+                        selectedCurrency,
                         selectedPeriod,
                         isOverall,
                         isRolloverEnabled,

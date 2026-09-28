@@ -1360,4 +1360,14 @@
     <string name="currencies_edit_rate_desc">Imposta un tasso di cambio manuale tra %1$s e %2$s per riflettere le commissioni o gli spread della tua banca.</string>
     <string name="currencies_reset_default">Ripristina tasso di riferimento</string>
     <string name="currencies_more_desc">Valuta di base: %1$s • Gestisci tassi manuali e conversioni offline</string>
+    <string name="currency_label">Valuta</string>
+    <string name="currency_picker_title">Seleziona valuta</string>
+    <string name="currency_picker_search_hint">Cerca per codice, nome o simbolo…</string>
+    <string name="currency_picker_no_results">Nessuna valuta corrispondente trovata</string>
+    <string name="default_currency_title">Valuta predefinita</string>
+    <string name="account_currency_label">Valuta del conto</string>
+    <string name="budget_currency_label">Valuta del budget</string>
+    <string name="account_currency_locked_desc">La valuta non può essere modificata perché questo conto ha transazioni registrate.</string>
+    <string name="different_currencies_desc">I conti utilizzano valute diverse. Si evita la somma diretta senza conversione.</string>
+    <string name="currencies_change_currency">Cambia valuta</string>
 </resources>

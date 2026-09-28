@@ -1360,4 +1360,14 @@
     <string name="currencies_edit_rate_desc">Defina uma taxa manual entre %1$s e %2$s para refletir taxas ou spreads bancários específicos.</string>
     <string name="currencies_reset_default">Restaurar taxa de referência</string>
     <string name="currencies_more_desc">Moeda base: %1$s • Gerenciar taxas manuais e conversão offline</string>
+    <string name="currency_label">Moeda</string>
+    <string name="currency_picker_title">Selecionar moeda</string>
+    <string name="currency_picker_search_hint">Pesquisar por código, nome ou símbolo…</string>
+    <string name="currency_picker_no_results">Nenhuma moeda correspondente encontrada</string>
+    <string name="default_currency_title">Moeda padrão</string>
+    <string name="account_currency_label">Moeda da conta</string>
+    <string name="budget_currency_label">Moeda do orçamento</string>
+    <string name="account_currency_locked_desc">A moeda não pode ser alterada porque esta conta possui transações registradas.</string>
+    <string name="different_currencies_desc">As contas usam moedas diferentes. A soma direta sem conversão é evitada.</string>
+    <string name="currencies_change_currency">Alterar moeda</string>
 </resources>

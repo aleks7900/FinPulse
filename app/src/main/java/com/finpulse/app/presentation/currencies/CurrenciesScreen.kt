@@ -62,6 +62,7 @@ import com.finpulse.app.core.designsystem.AmberWarning
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.SapphireAccent
 import com.finpulse.app.core.model.CurrencyConfig
+import com.finpulse.app.core.ui.CurrencyPickerField
 import com.finpulse.app.domain.model.ExchangeRate
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -80,8 +81,6 @@ fun CurrenciesScreen(
     onResetRateToDefault: (from: String, to: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var baseCurrencyDropdownExpanded by remember { mutableStateOf(false) }
-
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -175,52 +174,12 @@ fun CurrenciesScreen(
 
                         Spacer(modifier = Modifier.height(14.dp))
 
-                        ExposedDropdownMenuBox(
-                            expanded = baseCurrencyDropdownExpanded,
-                            onExpandedChange = { baseCurrencyDropdownExpanded = it },
+                        CurrencyPickerField(
+                            selectedCurrencyCode = uiState.baseCurrency,
+                            onCurrencySelected = onSetBaseCurrency,
+                            label = stringResource(R.string.currencies_change_base_currency),
                             modifier = Modifier.fillMaxWidth()
-                        ) {
-                            OutlinedTextField(
-                                value = stringResource(R.string.currencies_change_base_currency),
-                                onValueChange = {},
-                                readOnly = true,
-                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = baseCurrencyDropdownExpanded) },
-                                modifier = Modifier
-                                    .menuAnchor()
-                                    .fillMaxWidth()
-                            )
-                            ExposedDropdownMenu(
-                                expanded = baseCurrencyDropdownExpanded,
-                                onDismissRequest = { baseCurrencyDropdownExpanded = false }
-                            ) {
-                                uiState.supportedCurrencies.forEach { code ->
-                                    DropdownMenuItem(
-                                        text = {
-                                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                                Text(
-                                                    text = "$code (${CurrencyConfig.getSymbol(code)}) — ${CurrencyConfig.getName(code)}",
-                                                    fontWeight = if (code == uiState.baseCurrency) FontWeight.Bold else FontWeight.Normal,
-                                                    color = if (code == uiState.baseCurrency) EmeraldPrimary else MaterialTheme.colorScheme.onSurface
-                                                )
-                                                if (code == uiState.baseCurrency) {
-                                                    Spacer(modifier = Modifier.width(8.dp))
-                                                    Icon(
-                                                        imageVector = Icons.Default.Check,
-                                                        contentDescription = null,
-                                                        tint = EmeraldPrimary,
-                                                        modifier = Modifier.size(16.dp)
-                                                    )
-                                                }
-                                            }
-                                        },
-                                        onClick = {
-                                            onSetBaseCurrency(code)
-                                            baseCurrencyDropdownExpanded = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
+                        )
                     }
                 }
             }

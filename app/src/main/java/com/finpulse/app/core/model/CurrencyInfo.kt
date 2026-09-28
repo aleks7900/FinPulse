@@ -10,28 +10,23 @@ data class CurrencyInfo(
     val flag: String = ""
 ) {
     companion object {
-        val SUPPORTED_CURRENCIES = listOf(
-            CurrencyInfo("USD", "US Dollar", "$", "🇺🇸"),
-            CurrencyInfo("EUR", "Euro", "€", "🇪🇺"),
-            CurrencyInfo("GBP", "British Pound", "£", "🇬🇧"),
-            CurrencyInfo("JPY", "Japanese Yen", "¥", "🇯🇵"),
-            CurrencyInfo("CAD", "Canadian Dollar", "CA$", "🇨🇦"),
-            CurrencyInfo("AUD", "Australian Dollar", "A$", "🇦🇺"),
-            CurrencyInfo("CHF", "Swiss Franc", "CHF", "🇨🇭"),
-            CurrencyInfo("CNY", "Chinese Yuan", "¥", "🇨🇳"),
-            CurrencyInfo("INR", "Indian Rupee", "₹", "🇮🇳"),
-            CurrencyInfo("BRL", "Brazilian Real", "R$", "🇧🇷"),
-            CurrencyInfo("SGD", "Singapore Dollar", "S$", "🇸🇬"),
-            CurrencyInfo("SEK", "Swedish Krona", "kr", "🇸🇪"),
-            CurrencyInfo("NOK", "Norwegian Krone", "kr", "🇳🇴"),
-            CurrencyInfo("MXN", "Mexican Peso", "$", "🇲🇽")
-        )
+        val SUPPORTED_CURRENCIES: List<CurrencyInfo> = CurrencyConfig.supportedCurrencies.map {
+            CurrencyInfo(
+                code = it.code,
+                name = it.displayName,
+                symbol = it.symbol,
+                flag = it.flagEmoji
+            )
+        }
 
         val DEFAULT = SUPPORTED_CURRENCIES.first()
 
         fun findByCode(code: String): CurrencyInfo {
             return SUPPORTED_CURRENCIES.find { it.code.equals(code, ignoreCase = true) }
-                ?: CurrencyInfo(code, code, code, "🌐")
+                ?: run {
+                    val meta = CurrencyConfig.getMetadata(code)
+                    CurrencyInfo(meta.code, meta.displayName, meta.symbol, meta.flagEmoji)
+                }
         }
     }
 }

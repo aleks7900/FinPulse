@@ -28,7 +28,8 @@ data class AccountsUiState(
     val baseCurrency: String = "USD",
     val isAddEditDialogVisible: Boolean = false,
     val isTransferDialogVisible: Boolean = false,
-    val editingAccount: Account? = null
+    val editingAccount: Account? = null,
+    val editingAccountTransactionCount: Int = 0
 )
 
 class AccountsViewModel(
@@ -42,6 +43,7 @@ class AccountsViewModel(
     private val _isAddEditDialogVisible = MutableStateFlow(false)
     private val _isTransferDialogVisible = MutableStateFlow(false)
     private val _editingAccount = MutableStateFlow<Account?>(null)
+    private val _editingAccountTxCount = MutableStateFlow(0)
 
     val uiState: StateFlow<AccountsUiState> = combine(
         accountRepository.getAllAccountsFlow(),
@@ -49,7 +51,8 @@ class AccountsViewModel(
         exchangeRateProvider.getAllRatesFlow(),
         _isAddEditDialogVisible,
         _isTransferDialogVisible,
-        _editingAccount
+        _editingAccount,
+        _editingAccountTxCount
     ) { params ->
         @Suppress("UNCHECKED_CAST")
         val accounts = params[0] as List<Account>
@@ -58,6 +61,7 @@ class AccountsViewModel(
         val isAddVisible = params[3] as Boolean
         val isTransferVisible = params[4] as Boolean
         val editingAcc = params[5] as Account?
+        val txCount = params[6] as Int
 
         val active = accounts.filter { !it.isArchived }
         val total = currencyConverter.sumIn(active.map { it.balance }, userPrefs.baseCurrencyCode)
@@ -69,7 +73,8 @@ class AccountsViewModel(
             baseCurrency = userPrefs.baseCurrencyCode,
             isAddEditDialogVisible = isAddVisible,
             isTransferDialogVisible = isTransferVisible,
-            editingAccount = editingAcc
+            editingAccount = editingAcc,
+            editingAccountTransactionCount = txCount
         )
     }.stateIn(
         scope = viewModelScope,
@@ -80,6 +85,14 @@ class AccountsViewModel(
     fun showAddEditDialog(show: Boolean, account: Account? = null) {
         _editingAccount.value = account
         _isAddEditDialogVisible.value = show
+        if (show && account != null) {
+            viewModelScope.launch {
+                val count = transactionRepository.getTransactionCountForAccount(account.id)
+                _editingAccountTxCount.value = count
+            }
+        } else {
+            _editingAccountTxCount.value = 0
+        }
     }
 
     fun showTransferDialog(show: Boolean) {
@@ -96,19 +109,29 @@ class AccountsViewModel(
         colorHex: Long
     ) {
         viewModelScope.launch {
-            val currency = currencyCode?.uppercase() ?: uiState.value.baseCurrency
+            val existing = if (id != null) accountRepository.getAccountById(id) else null
+            val txCount = if (id != null) transactionRepository.getTransactionCountForAccount(id) else 0
+
+            // If account contains transactions, NEVER silently reinterpret or mutate historical currency
+            val resolvedCurrency = if (existing != null && txCount > 0) {
+                existing.balance.currencyCode
+            } else {
+                currencyCode?.uppercase() ?: existing?.balance?.currencyCode ?: uiState.value.baseCurrency
+            }
+
             val acc = Account(
                 id = id ?: UUID.randomUUID().toString(),
                 name = name,
                 type = type,
-                balance = Money(balanceMinor, currency),
-                availableBalance = Money(balanceMinor, currency),
+                balance = Money(balanceMinor, resolvedCurrency),
+                availableBalance = Money(balanceMinor, resolvedCurrency),
                 institution = institution?.takeIf { it.isNotBlank() },
                 colorHex = colorHex
             )
             accountRepository.saveAccount(acc)
             _isAddEditDialogVisible.value = false
             _editingAccount.value = null
+            _editingAccountTxCount.value = 0
         }
     }
 

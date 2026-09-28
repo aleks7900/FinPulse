@@ -108,6 +108,9 @@ class TransactionRepositoryImpl(private val database: FinPulseDatabase) : Transa
     override fun getTransactionsByAccountFlow(accountId: String): Flow<List<Transaction>> =
         txDao.getTransactionsByAccountFlow(accountId).map { list -> list.map { it.toDomain() } }
 
+    override suspend fun getTransactionCountForAccount(accountId: String): Int =
+        txDao.getTransactionCountForAccount(accountId)
+
     override fun getTransactionsByCategoryFlow(categoryId: String): Flow<List<Transaction>> =
         txDao.getTransactionsByCategoryFlow(categoryId).map { list -> list.map { it.toDomain() } }
 

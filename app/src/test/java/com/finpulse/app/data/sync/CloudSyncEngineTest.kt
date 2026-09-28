@@ -519,6 +519,8 @@ private class FakeTestTransactionDao : TransactionDao {
     override fun getAllTransactionsFlow(): Flow<List<TransactionEntity>> = flowOf(storage.values.toList())
     override fun getRecentTransactionsFlow(limit: Int): Flow<List<TransactionEntity>> = flowOf(storage.values.take(limit))
     override fun getTransactionsByAccountFlow(accountId: String): Flow<List<TransactionEntity>> = flowOf(storage.values.filter { it.sourceAccountId == accountId || it.destinationAccountId == accountId })
+    override suspend fun getTransactionCountForAccount(accountId: String): Int =
+        storage.values.count { it.sourceAccountId == accountId || it.destinationAccountId == accountId }
     override fun getTransactionsByCategoryFlow(categoryId: String): Flow<List<TransactionEntity>> = flowOf(storage.values.filter { it.categoryId == categoryId })
     override fun getTransactionsByDateRangeFlow(startDate: Long, endDate: Long): Flow<List<TransactionEntity>> =
         flowOf(storage.values.filter { it.timestamp in startDate..endDate })

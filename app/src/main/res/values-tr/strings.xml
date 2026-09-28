@@ -1360,4 +1360,14 @@
     <string name="currencies_edit_rate_desc">Banka komisyonlarını veya kur marjlarını yansıtmak için %1$s ve %2$s arasında özel manuel kur belirleyin.</string>
     <string name="currencies_reset_default">Referans Kura Sıfırla</string>
     <string name="currencies_more_desc">Temel para birimi: %1$s • Manuel kurları ve çevrimdışı dönüşümü yönet</string>
+    <string name="currency_label">Para Birimi</string>
+    <string name="currency_picker_title">Para Birimi Seç</string>
+    <string name="currency_picker_search_hint">Kod, ad veya sembolle ara…</string>
+    <string name="currency_picker_no_results">Eşleşen para birimi bulunamadı</string>
+    <string name="default_currency_title">Varsayılan Para Birimi</string>
+    <string name="account_currency_label">Hesap Para Birimi</string>
+    <string name="budget_currency_label">Bütçe Para Birimi</string>
+    <string name="account_currency_locked_desc">Bu hesapta kayıtlı işlemler bulunduğundan para birimi değiştirilemez.</string>
+    <string name="different_currencies_desc">Hesaplar farklı para birimleri kullanmaktadır. Dönüştürme olmadan doğrudan toplama engellenir.</string>
+    <string name="currencies_change_currency">Para Birimini Değiştir</string>
 </resources>

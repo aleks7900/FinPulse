@@ -44,6 +44,9 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE sourceAccountId = :accountId OR destinationAccountId = :accountId ORDER BY timestamp DESC")
     fun getTransactionsByAccountFlow(accountId: String): Flow<List<TransactionEntity>>
 
+    @Query("SELECT COUNT(*) FROM transactions WHERE sourceAccountId = :accountId OR destinationAccountId = :accountId")
+    suspend fun getTransactionCountForAccount(accountId: String): Int
+
     @Query("SELECT * FROM transactions WHERE categoryId = :categoryId ORDER BY timestamp DESC")
     fun getTransactionsByCategoryFlow(categoryId: String): Flow<List<TransactionEntity>>
 

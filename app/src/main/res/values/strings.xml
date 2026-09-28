@@ -1361,4 +1361,14 @@
     <string name="currencies_edit_rate_desc">Set a custom manual conversion rate between %1$s and %2$s to match your specific bank fees or exchange spreads.</string>
     <string name="currencies_reset_default">Reset to Reference Rate</string>
     <string name="currencies_more_desc">Base currency: %1$s • Manage manual rates and offline conversion</string>
+    <string name="currency_label">Currency</string>
+    <string name="currency_picker_title">Select Currency</string>
+    <string name="currency_picker_search_hint">Search by code, name, or symbol…</string>
+    <string name="currency_picker_no_results">No matching currencies found</string>
+    <string name="default_currency_title">Default Currency</string>
+    <string name="account_currency_label">Account Currency</string>
+    <string name="budget_currency_label">Budget Currency</string>
+    <string name="account_currency_locked_desc">Currency cannot be changed because this account has recorded transactions.</string>
+    <string name="different_currencies_desc">Accounts use different currencies. Direct summation without conversion is avoided.</string>
+    <string name="currencies_change_currency">Change Currency</string>
 </resources>

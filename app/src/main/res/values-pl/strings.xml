@@ -1376,4 +1376,14 @@
     <string name="currencies_edit_rate_desc">Ustaw własny kurs wymiany między %1$s a %2$s, aby uwzględnić prowizje lub spready bankowe.</string>
     <string name="currencies_reset_default">Przywróć kurs referencyjny</string>
     <string name="currencies_more_desc">Waluta bazowa: %1$s • Zarządzanie kursami i przeliczaniem offline</string>
+    <string name="currency_label">Waluta</string>
+    <string name="currency_picker_title">Wybierz walutę</string>
+    <string name="currency_picker_search_hint">Szukaj według kodu, nazwy lub symbolu…</string>
+    <string name="currency_picker_no_results">Nie znaleziono pasujących walut</string>
+    <string name="default_currency_title">Domyślna waluta</string>
+    <string name="account_currency_label">Waluta konta</string>
+    <string name="budget_currency_label">Waluta budżetu</string>
+    <string name="account_currency_locked_desc">Nie można zmienić waluty, ponieważ to konto posiada zarejestrowane transakcje.</string>
+    <string name="different_currencies_desc">Konta używają różnych walut. Bezpośrednie sumowanie bez przeliczenia jest wykluczone.</string>
+    <string name="currencies_change_currency">Zmień walutę</string>
 </resources>

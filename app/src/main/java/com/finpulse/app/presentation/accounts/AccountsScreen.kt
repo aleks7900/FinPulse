@@ -67,6 +67,7 @@ import com.finpulse.app.R
 import com.finpulse.app.core.designsystem.CrimsonExpense
 import com.finpulse.app.core.designsystem.EmeraldPrimary
 import com.finpulse.app.core.designsystem.TransferBlue
+import com.finpulse.app.core.ui.CurrencyPickerField
 import com.finpulse.app.core.ui.getLocalizedName
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.AccountType
@@ -179,6 +180,7 @@ fun AccountsScreen(
             AddEditAccountDialog(
                 editingAccount = uiState.editingAccount,
                 baseCurrency = uiState.baseCurrency,
+                editingAccountTransactionCount = uiState.editingAccountTransactionCount,
                 onDismiss = { onShowAddEditDialog(false, null) },
                 onSave = onSaveAccount,
                 onDelete = { uiState.editingAccount?.let { onDeleteAccount(it.id) } }
@@ -286,6 +288,7 @@ fun AccountCard(
 fun AddEditAccountDialog(
     editingAccount: Account?,
     baseCurrency: String,
+    editingAccountTransactionCount: Int = 0,
     onDismiss: () -> Unit,
     onSave: (id: String?, name: String, type: AccountType, balanceMinor: Long, currencyCode: String?, institution: String?, colorHex: Long) -> Unit,
     onDelete: () -> Unit
@@ -293,10 +296,11 @@ fun AddEditAccountDialog(
     var name by remember { mutableStateOf(editingAccount?.name ?: "") }
     var selectedType by remember { mutableStateOf(editingAccount?.type ?: AccountType.BANK) }
     var selectedCurrency by remember { mutableStateOf(editingAccount?.balance?.currencyCode ?: baseCurrency) }
-    var currencyDropdownExpanded by remember { mutableStateOf(false) }
     var balanceText by remember { mutableStateOf(editingAccount?.balance?.amountBigDecimal?.toPlainString() ?: "0.00") }
     var institution by remember { mutableStateOf(editingAccount?.institution ?: "") }
     var isError by remember { mutableStateOf(false) }
+
+    val isCurrencyLocked = editingAccount != null && editingAccountTransactionCount > 0
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -317,35 +321,15 @@ fun AddEditAccountDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                // Currency selector dropdown
-                ExposedDropdownMenuBox(
-                    expanded = currencyDropdownExpanded,
-                    onExpandedChange = { currencyDropdownExpanded = it },
+                // Currency Picker with lock protection if transactions exist
+                CurrencyPickerField(
+                    selectedCurrencyCode = selectedCurrency,
+                    onCurrencySelected = { selectedCurrency = it },
+                    label = stringResource(R.string.account_currency_label),
+                    enabled = !isCurrencyLocked,
+                    lockedMessage = if (isCurrencyLocked) stringResource(R.string.account_currency_locked_desc) else null,
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    OutlinedTextField(
-                        value = "$selectedCurrency (${com.finpulse.app.core.model.CurrencyConfig.getSymbol(selectedCurrency)})",
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text("Currency") },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = currencyDropdownExpanded) },
-                        modifier = Modifier.menuAnchor().fillMaxWidth()
-                    )
-                    ExposedDropdownMenu(
-                        expanded = currencyDropdownExpanded,
-                        onDismissRequest = { currencyDropdownExpanded = false }
-                    ) {
-                        com.finpulse.app.core.model.CurrencyConfig.supportedCurrencyCodes.forEach { code ->
-                            DropdownMenuItem(
-                                text = { Text("$code — ${com.finpulse.app.core.model.CurrencyConfig.getName(code)}") },
-                                onClick = {
-                                    selectedCurrency = code
-                                    currencyDropdownExpanded = false
-                                }
-                            )
-                        }
-                    }
-                }
+                )
 
                 OutlinedTextField(
                     value = institution,

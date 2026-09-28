@@ -30,6 +30,7 @@ interface TransactionRepository {
     fun getAllTransactionsFlow(): Flow<List<Transaction>>
     fun getRecentTransactionsFlow(limit: Int = 10): Flow<List<Transaction>>
     fun getTransactionsByAccountFlow(accountId: String): Flow<List<Transaction>>
+    suspend fun getTransactionCountForAccount(accountId: String): Int = 0
     fun getTransactionsByCategoryFlow(categoryId: String): Flow<List<Transaction>>
     fun getTransactionsByDateRangeFlow(startDate: Long, endDate: Long): Flow<List<Transaction>>
     fun searchTransactionsFlow(query: String): Flow<List<Transaction>>

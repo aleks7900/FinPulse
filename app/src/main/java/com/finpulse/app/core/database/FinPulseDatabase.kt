@@ -137,7 +137,6 @@ abstract class FinPulseDatabase : RoomDatabase() {
                     FinPulseDatabase::class.java,
                     "finpulse.db"
                 ).addMigrations(MIGRATION_6_7, MIGRATION_7_8)
-                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

@@ -91,4 +91,73 @@ class CurrencyConfigTest {
             usd - eur
         }
     }
+
+    @Test
+    fun `newly added currencies have correct ISO metadata, symbols, and flags`() {
+        val mdl = CurrencyConfig.getCurrency("MDL")
+        assertEquals("MDL", mdl.code)
+        assertEquals("Moldovan Leu", mdl.name)
+        assertEquals("L", mdl.symbol)
+        assertEquals(2, mdl.decimals)
+        assertEquals("🇲🇩", mdl.flagEmoji)
+
+        val ron = CurrencyConfig.getCurrency("RON")
+        assertEquals("RON", ron.code)
+        assertEquals("Romanian Leu", ron.name)
+        assertEquals("lei", ron.symbol)
+        assertEquals(2, ron.decimals)
+        assertEquals("🇷🇴", ron.flagEmoji)
+
+        val uah = CurrencyConfig.getCurrency("UAH")
+        assertEquals("UAH", uah.code)
+        assertEquals("Ukrainian Hryvnia", uah.name)
+        assertEquals("₴", uah.symbol)
+        assertEquals(2, uah.decimals)
+        assertEquals("🇺🇦", uah.flagEmoji)
+
+        val pln = CurrencyConfig.getCurrency("PLN")
+        assertEquals("PLN", pln.code)
+        assertEquals("zł", pln.symbol)
+
+        val chf = CurrencyConfig.getCurrency("CHF")
+        assertEquals("CHF", chf.code)
+        assertEquals("CHF", chf.symbol)
+
+        // Zero decimal HUF
+        val huf = CurrencyConfig.getCurrency("HUF")
+        assertEquals(0, huf.decimals)
+        assertEquals("Ft", huf.symbol)
+        assertEquals("🇭🇺", huf.flagEmoji)
+
+        // Ensure all supported currencies have non-blank flags and symbols
+        for (currency in CurrencyConfig.supportedCurrencies) {
+            assertTrue("Currency ${currency.code} flag should not be blank", currency.flagEmoji.isNotBlank())
+            assertTrue("Currency ${currency.code} symbol should not be blank", currency.symbol.isNotBlank())
+            assertTrue("Currency ${currency.code} name should not be blank", currency.name.isNotBlank())
+        }
+    }
+
+    @Test
+    fun `formatMoney formats amounts with currency symbol according to ISO rules`() {
+        // USD with Locale.US
+        val usdFormatted = CurrencyConfig.formatMoney(BigDecimal("1234.50"), "USD", java.util.Locale.US)
+        assertTrue("USD formatted should contain $ and 1,234.50", usdFormatted.contains("1,234.50") && usdFormatted.contains("$"))
+
+        // JPY (0 decimals)
+        val jpyFormatted = CurrencyConfig.formatMoney(BigDecimal("1234.50"), "JPY", java.util.Locale.US)
+        // Banker's rounding on 1234.5 with 0 decimals -> 1234 (rounds to nearest even)
+        assertTrue("JPY formatted should contain 1,234 or 1,235 and ¥", (jpyFormatted.contains("1,234") || jpyFormatted.contains("1,235")) && jpyFormatted.contains("¥"))
+
+        // Minor unit overload
+        val usdMinorFormatted = CurrencyConfig.formatMoney(123450L, "USD", java.util.Locale.US)
+        assertEquals(usdFormatted, usdMinorFormatted)
+
+        // BHD (3 decimals)
+        val bhdFormatted = CurrencyConfig.formatMoney(1234567L, "BHD", java.util.Locale.US)
+        assertTrue("BHD should show 3 decimal places", bhdFormatted.contains("1,234.567"))
+
+        // MDL custom symbol fallback
+        val mdlFormatted = CurrencyConfig.formatMoney(10000L, "MDL", java.util.Locale.US)
+        assertTrue("MDL formatted should contain 100.00 and L", mdlFormatted.contains("100.00") && mdlFormatted.contains("L"))
+    }
 }

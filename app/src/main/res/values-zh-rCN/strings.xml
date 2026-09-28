@@ -1352,4 +1352,14 @@
     <string name="currencies_edit_rate_desc">设置 %1$s 与 %2$s 之间的自定义汇率，以精确反映银行手续费或点差。</string>
     <string name="currencies_reset_default">重置为基准汇率</string>
     <string name="currencies_more_desc">基础货币：%1$s • 管理手动汇率与离线换算</string>
+    <string name="currency_label">货币</string>
+    <string name="currency_picker_title">选择货币</string>
+    <string name="currency_picker_search_hint">按代码、名称或符号搜索…</string>
+    <string name="currency_picker_no_results">未找到匹配的货币</string>
+    <string name="default_currency_title">默认货币</string>
+    <string name="account_currency_label">账户货币</string>
+    <string name="budget_currency_label">预算货币</string>
+    <string name="account_currency_locked_desc">由于此账户已存在交易记录，无法更改其货币。</string>
+    <string name="different_currencies_desc">各账户使用不同货币，已避免未经汇率换算的直接相加。</string>
+    <string name="currencies_change_currency">更改货币</string>
 </resources>

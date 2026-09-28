@@ -1360,4 +1360,14 @@
     <string name="currencies_edit_rate_desc">Legen Sie einen manuellen Umrechnungskurs zwischen %1$s und %2$s fest, um Bankgebühren oder Spreads zu berücksichtigen.</string>
     <string name="currencies_reset_default">Auf Referenzkurs zurücksetzen</string>
     <string name="currencies_more_desc">Basiswährung: %1$s • Manuelle Kurse &amp; Offline-Umrechnung verwalten</string>
+    <string name="currency_label">Währung</string>
+    <string name="currency_picker_title">Währung auswählen</string>
+    <string name="currency_picker_search_hint">Nach Code, Name oder Symbol suchen…</string>
+    <string name="currency_picker_no_results">Keine passenden Währungen gefunden</string>
+    <string name="default_currency_title">Standardwährung</string>
+    <string name="account_currency_label">Kontowährung</string>
+    <string name="budget_currency_label">Budgetwährung</string>
+    <string name="account_currency_locked_desc">Die Währung kann nicht geändert werden, da für dieses Konto bereits Transaktionen vorliegen.</string>
+    <string name="different_currencies_desc">Konten verwenden unterschiedliche Währungen. Eine direkte Summierung ohne Umrechnung wird vermieden.</string>
+    <string name="currencies_change_currency">Währung ändern</string>
 </resources>
