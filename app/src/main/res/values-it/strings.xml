@@ -819,7 +819,7 @@
     <string name="cat_transfer_withdrawal">Prelievo contanti</string>
     <string name="cat_transfer_deposit">Versamento contanti</string>
 
-    <!-- Financial Calendar & Cash Flow -->
+    <!-- Financial Calendar &amp; Cash Flow -->
     <string name="calendar_title">Calendario Finanziario</string>
     <string name="calendar_tab_month">Mese</string>
     <string name="calendar_tab_agenda">Agenda</string>
@@ -862,7 +862,7 @@
     <string name="shortcut_review_inbox_short">Posta revisione</string>
     <string name="shortcut_review_inbox_long">Esamina movimenti in sospeso</string>
 
-    <!-- Home Screen Widgets & Privacy -->
+    <!-- Home Screen Widgets &amp; Privacy -->
     <string name="widget_name_balance">FinPulse: Saldo attuale</string>
     <string name="widget_desc_balance">Mostra il saldo liquido attuale e il riepilogo dei conti</string>
     <string name="widget_name_spending">FinPulse: Spese mensili</string>
@@ -896,7 +896,7 @@
     <string name="security_widget_mask_lock">Maschera con blocco app</string>
     <string name="security_widget_mask_lock_desc">Nascondi automaticamente i dati finanziari nei widget quando biometrico o PIN sono attivi</string>
 
-    <!-- Search, Filters & Saved Views -->
+    <!-- Search, Filters &amp; Saved Views -->
     <string name="preset_this_month">Questo mese</string>
     <string name="preset_last_month">Mese scorso</string>
     <string name="preset_uncategorized">Non categorizzato</string>
@@ -932,7 +932,7 @@
     <string name="filter_active_count">%1$d attivi</string>
     <string name="filter_results_count">%1$d transazioni</string>
 
-    <!-- TASK-10: Backup, Restore & Export Strings -->
+    <!-- TASK-10: Backup, Restore &amp; Export Strings -->
     <string name="backup_last_date">Ultimo backup: %1$s</string>
     <string name="backup_never">Nessun backup creato finora</string>
     <string name="backup_reminder_title">Promemoria periodico di backup</string>
@@ -1307,7 +1307,7 @@
     <string name="action_got_it">Ho capito</string>
     <string name="export_records_to_restore">Record da ripristinare:</string>
 
-    <!-- Financial Digest & Habit Insights -->
+    <!-- Financial Digest &amp; Habit Insights -->
     <string name="digest_screen_title">Riepilogo finanziario</string>
     <string name="digest_more_desc">Riepiloghi giornalieri e settimanali, bollette e tendenze di spesa</string>
     <string name="digest_card_summary_desc">Riepilogo giornaliero e settimanale, bollette e tendenze di spesa</string>
@@ -1347,4 +1347,17 @@
     <string name="digest_notif_detailed_top_expense">Maggiore spesa: %1$s (%2$s)</string>
     <string name="digest_notif_detailed_bills">%1$d scadenza/e imminente/i</string>
     <string name="digest_notif_action_open">Visualizza riepilogo</string>
+    <string name="currencies_screen_title">Valute e tassi di cambio</string>
+    <string name="currencies_refresh_rates">Aggiorna tassi di cambio</string>
+    <string name="currencies_base_currency_label">Valuta di base</string>
+    <string name="currencies_change_base_currency">Cambia valuta di base</string>
+    <string name="currencies_last_updated_at">Tassi aggiornati il %1$s</string>
+    <string name="currencies_offline_fallback_active">Fallback deterministico offline attivo</string>
+    <string name="currencies_offline_desc">I tassi di riferimento del mercato sono usati per la contabilità multivaluta.</string>
+    <string name="currencies_exchange_rates_title">Tassi di cambio rispetto a %1$s</string>
+    <string name="currencies_manual_badge">Personalizzato</string>
+    <string name="currencies_edit_rate_title">Modifica tasso: %1$s in %2$s</string>
+    <string name="currencies_edit_rate_desc">Imposta un tasso di cambio manuale tra %1$s e %2$s per riflettere le commissioni o gli spread della tua banca.</string>
+    <string name="currencies_reset_default">Ripristina tasso di riferimento</string>
+    <string name="currencies_more_desc">Valuta di base: %1$s • Gestisci tassi manuali e conversioni offline</string>
 </resources>

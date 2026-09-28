@@ -811,7 +811,7 @@
     <string name="cat_transfer_withdrawal">ATM現金引出し</string>
     <string name="cat_transfer_deposit">ATM現金預入れ</string>
 
-    <!-- Financial Calendar & Cash Flow -->
+    <!-- Financial Calendar &amp; Cash Flow -->
     <string name="calendar_title">財務カレンダー</string>
     <string name="calendar_tab_month">月</string>
     <string name="calendar_tab_agenda">アジェンダ</string>
@@ -854,7 +854,7 @@
     <string name="shortcut_review_inbox_short">確認トレイ</string>
     <string name="shortcut_review_inbox_long">未確認の取引を確認</string>
 
-    <!-- Home Screen Widgets & Privacy -->
+    <!-- Home Screen Widgets &amp; Privacy -->
     <string name="widget_name_balance">FinPulse: 現在の残高</string>
     <string name="widget_desc_balance">流動性残高と口座概要を表示</string>
     <string name="widget_name_spending">FinPulse: 今月の支出</string>
@@ -888,7 +888,7 @@
     <string name="security_widget_mask_lock">アプロック時に金額を隠す</string>
     <string name="security_widget_mask_lock_desc">生体認証やPIN設定時にウィジェットの金額を自動でマスク</string>
 
-    <!-- Search, Filters & Saved Views -->
+    <!-- Search, Filters &amp; Saved Views -->
     <string name="preset_this_month">今月</string>
     <string name="preset_last_month">先月</string>
     <string name="preset_uncategorized">未分類</string>
@@ -924,7 +924,7 @@
     <string name="filter_active_count">%1$d件 適用中</string>
     <string name="filter_results_count">%1$d件の取引</string>
 
-    <!-- TASK-10: Backup, Restore & Export Strings -->
+    <!-- TASK-10: Backup, Restore &amp; Export Strings -->
     <string name="backup_last_date">前回のバックアップ: %1$s</string>
     <string name="backup_never">まだバックアップはありません</string>
     <string name="backup_reminder_title">定期バックアップのリマインダー</string>
@@ -1299,7 +1299,7 @@
     <string name="action_got_it">дє†и§Ј</string>
     <string name="export_records_to_restore">еѕ©е…ѓеЇѕи±Ўгѓ¬г‚ігѓјгѓ‰ж•°:</string>
 
-    <!-- Financial Digest & Habit Insights -->
+    <!-- Financial Digest &amp; Habit Insights -->
     <string name="digest_screen_title">財務ダイジェスト</string>
     <string name="digest_more_desc">日次・週次の習慣サマリー、請求書および支出トレンド</string>
     <string name="digest_card_summary_desc">毎日の習慣サマリー、請求書と支出の推移</string>
@@ -1339,4 +1339,17 @@
     <string name="digest_notif_detailed_top_expense">最大支出: %1$s (%2$s)</string>
     <string name="digest_notif_detailed_bills">%1$d件の請求期日間近</string>
     <string name="digest_notif_action_open">ダイジェストを表示</string>
+    <string name="currencies_screen_title">通貨と為替レート</string>
+    <string name="currencies_refresh_rates">為替レートを更新</string>
+    <string name="currencies_base_currency_label">基準通貨</string>
+    <string name="currencies_change_base_currency">基準通貨を変更</string>
+    <string name="currencies_last_updated_at">為替レート更新日時: %1$s</string>
+    <string name="currencies_offline_fallback_active">オフライン参照レートが有効です</string>
+    <string name="currencies_offline_desc">複数通貨の集計には市場基準レートが適用されます。</string>
+    <string name="currencies_exchange_rates_title">%1$s に対する為替レート</string>
+    <string name="currencies_manual_badge">カスタム</string>
+    <string name="currencies_edit_rate_title">為替レート編集: %1$s → %2$s</string>
+    <string name="currencies_edit_rate_desc">銀行の手数料やスプレッドに合わせて、%1$s から %2$s への手動レートを設定します。</string>
+    <string name="currencies_reset_default">基準レートにリセット</string>
+    <string name="currencies_more_desc">基準通貨: %1$s • 手動レートとオフライン換算の管理</string>
 </resources>

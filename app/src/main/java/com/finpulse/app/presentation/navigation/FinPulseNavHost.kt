@@ -224,7 +224,8 @@ fun FinPulseApp(
                         investmentRepository = container.investmentRepository,
                         debtRepository = container.debtRepository,
                         userPreferencesDataStore = container.userPreferencesDataStore,
-                        getReviewInboxUseCase = container.getReviewInboxUseCase
+                        getReviewInboxUseCase = container.getReviewInboxUseCase,
+                        getDashboardSummaryUseCase = container.getDashboardSummaryUseCase
                     )
                 }
                 val uiState by viewModel.uiState.collectAsState()
@@ -321,7 +322,9 @@ fun FinPulseApp(
                     AnalyticsViewModel(
                         transactionRepository = container.transactionRepository,
                         categoryRepository = container.categoryRepository,
-                        userPreferencesDataStore = container.userPreferencesDataStore
+                        userPreferencesDataStore = container.userPreferencesDataStore,
+                        currencyConverter = container.currencyConverter,
+                        exchangeRateProvider = container.exchangeRateProvider
                     )
                 }
                 val uiState by viewModel.uiState.collectAsState()
@@ -355,7 +358,9 @@ fun FinPulseApp(
                     AccountsViewModel(
                         accountRepository = container.accountRepository,
                         transactionRepository = container.transactionRepository,
-                        userPreferencesDataStore = container.userPreferencesDataStore
+                        userPreferencesDataStore = container.userPreferencesDataStore,
+                        currencyConverter = container.currencyConverter,
+                        exchangeRateProvider = container.exchangeRateProvider
                     )
                 }
                 val uiState by viewModel.uiState.collectAsState()
@@ -489,7 +494,8 @@ fun FinPulseApp(
                         goalRepository = container.goalRepository,
                         investmentRepository = container.investmentRepository,
                         debtRepository = container.debtRepository,
-                        userPreferencesDataStore = container.userPreferencesDataStore
+                        userPreferencesDataStore = container.userPreferencesDataStore,
+                        getDashboardSummaryUseCase = container.getDashboardSummaryUseCase
                     )
                 }
                 val uiState by dashboardViewModel.uiState.collectAsState()
@@ -727,6 +733,28 @@ fun FinPulseApp(
                             else -> navController.navigate(route)
                         }
                     }
+                )
+            }
+
+            // Currencies & Exchange Rates Screen
+            composable(Screen.Currencies.route) {
+                val viewModel: com.finpulse.app.presentation.currencies.CurrenciesViewModel = viewModel {
+                    com.finpulse.app.presentation.currencies.CurrenciesViewModel(
+                        exchangeRateProvider = container.exchangeRateProvider,
+                        userPreferencesDataStore = container.userPreferencesDataStore
+                    )
+                }
+                val uiState by viewModel.uiState.collectAsState()
+
+                com.finpulse.app.presentation.currencies.CurrenciesScreen(
+                    uiState = uiState,
+                    onNavigateBack = { navController.popBackStack() },
+                    onSetBaseCurrency = viewModel::setBaseCurrency,
+                    onRefreshRates = viewModel::refreshRates,
+                    onOpenEditRate = viewModel::openEditRate,
+                    onDismissEditRate = viewModel::dismissEditRate,
+                    onSaveManualRate = viewModel::saveManualRate,
+                    onResetRateToDefault = viewModel::resetRateToDefault
                 )
             }
         }

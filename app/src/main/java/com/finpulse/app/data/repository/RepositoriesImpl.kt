@@ -242,22 +242,33 @@ class TransactionRepositoryImpl(private val database: FinPulseDatabase) : Transa
                 )
             }
             TransactionType.TRANSFER -> {
-                // Deduct from source
-                val delta = tx.amount.amountMinor * multiplier
+                // Deduct from source account (in source account currency)
+                val srcDelta = tx.amount.amountMinor * multiplier
                 accountDao.updateBalances(
                     accountId = tx.sourceAccountId,
-                    balanceMinor = currentBalance - delta,
-                    availableBalanceMinor = currentAvailable - delta
+                    balanceMinor = currentBalance - srcDelta,
+                    availableBalanceMinor = currentAvailable - srcDelta
                 )
 
-                // Add to destination
+                // Add to destination account (handling cross-currency and bank differences)
                 if (tx.destinationAccountId != null) {
                     val destAccount = accountDao.getAccountById(tx.destinationAccountId)
                     if (destAccount != null) {
+                        val destDelta = if (tx.destinationAmount != null) {
+                            tx.destinationAmount.amountMinor * multiplier
+                        } else if (!tx.amount.currencyCode.equals(destAccount.currencyCode, ignoreCase = true)) {
+                            // Cross-currency transfer without explicit destinationAmount: compute via rate or fallback
+                            val rate = tx.exchangeRate ?: ExchangeRateProviderImpl.computeFallbackRate(tx.amount.currencyCode, destAccount.currencyCode)
+                            val destMajor = tx.amount.amountBigDecimal.multiply(java.math.BigDecimal.valueOf(rate))
+                            com.finpulse.app.core.model.CurrencyConfig.toMinor(destMajor, destAccount.currencyCode) * multiplier
+                        } else {
+                            srcDelta
+                        }
+
                         accountDao.updateBalances(
                             accountId = tx.destinationAccountId,
-                            balanceMinor = destAccount.balanceMinor + delta,
-                            availableBalanceMinor = destAccount.availableBalanceMinor + delta
+                            balanceMinor = destAccount.balanceMinor + destDelta,
+                            availableBalanceMinor = destAccount.availableBalanceMinor + destDelta
                         )
                     }
                 }

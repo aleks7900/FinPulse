@@ -71,6 +71,9 @@ interface AppContainer {
     val cloudStorageDataSource: com.finpulse.app.data.cloud.CloudStorageDataSource
     val cloudSyncRepository: com.finpulse.app.domain.repository.CloudSyncRepository
     val getFinancialDigestUseCase: com.finpulse.app.domain.usecase.digest.GetFinancialDigestUseCase
+    val exchangeRateProvider: com.finpulse.app.domain.repository.ExchangeRateProvider
+    val currencyConverter: com.finpulse.app.domain.engine.CurrencyConverter
+    val getDashboardSummaryUseCase: com.finpulse.app.domain.usecase.GetDashboardSummaryUseCase
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -130,8 +133,20 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
         com.finpulse.app.data.repository.MerchantSignalRepositoryImpl(database)
     }
 
+    override val exchangeRateProvider: com.finpulse.app.domain.repository.ExchangeRateProvider by lazy {
+        com.finpulse.app.data.repository.ExchangeRateProviderImpl(database.exchangeRateDao())
+    }
+
+    override val currencyConverter: com.finpulse.app.domain.engine.CurrencyConverter by lazy {
+        com.finpulse.app.domain.engine.CurrencyConverter(exchangeRateProvider)
+    }
+
+    override val getDashboardSummaryUseCase: com.finpulse.app.domain.usecase.GetDashboardSummaryUseCase by lazy {
+        com.finpulse.app.domain.usecase.GetDashboardSummaryUseCase(currencyConverter)
+    }
+
     override val createTransactionUseCase: CreateTransactionUseCase by lazy {
-        CreateTransactionUseCase(transactionRepository, accountRepository)
+        CreateTransactionUseCase(transactionRepository, accountRepository, exchangeRateProvider)
     }
 
     override val getQuickAddSuggestionsUseCase: GetQuickAddSuggestionsUseCase by lazy {

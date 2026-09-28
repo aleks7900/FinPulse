@@ -221,8 +221,8 @@ class CreateTransactionUseCaseTest {
     }
 
     @Test
-    fun testRejectDifferentCurrenciesInTransfer() = runBlocking {
-        // Main is USD, acc-eur is EUR
+    fun testTransferBetweenDifferentCurrenciesSupported() = runBlocking {
+        // Main is USD ($20.00), acc-eur is EUR
         val result = useCase(
             amountMinor = 2000L,
             currencyCode = "USD",
@@ -231,8 +231,12 @@ class CreateTransactionUseCaseTest {
             destinationAccountId = "acc-eur",
             categoryId = "cat-transfer"
         )
-        assertTrue(result is CreateTransactionResult.Error)
-        assertTrue((result as CreateTransactionResult.Error).message.contains("Transfer between different currencies"))
+        assertTrue("Transfer between different currencies should succeed", result is CreateTransactionResult.Success)
+        val tx = (result as CreateTransactionResult.Success).transaction
+        assertEquals("USD", tx.amount.currencyCode)
+        assertEquals(2000L, tx.amount.amountMinor)
+        assertNotNull(tx.destinationAmount)
+        assertEquals("EUR", tx.destinationAmount!!.currencyCode)
     }
 
     @Test

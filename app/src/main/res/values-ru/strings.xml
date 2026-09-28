@@ -835,7 +835,7 @@
     <string name="cat_transfer_withdrawal">Снятие наличных</string>
     <string name="cat_transfer_deposit">Внесение наличных</string>
 
-    <!-- Financial Calendar & Cash Flow -->
+    <!-- Financial Calendar &amp; Cash Flow -->
     <string name="calendar_title">Финансовый календарь</string>
     <string name="calendar_tab_month">Месяц</string>
     <string name="calendar_tab_agenda">Повестка</string>
@@ -878,7 +878,7 @@
     <string name="shortcut_review_inbox_short">Входящие</string>
     <string name="shortcut_review_inbox_long">Проверить операции</string>
 
-    <!-- Home Screen Widgets & Privacy -->
+    <!-- Home Screen Widgets &amp; Privacy -->
     <string name="widget_name_balance">FinPulse: Текущий баланс</string>
     <string name="widget_desc_balance">Показать ликвидный баланс и обзор счетов</string>
     <string name="widget_name_spending">FinPulse: Расходы за месяц</string>
@@ -912,7 +912,7 @@
     <string name="security_widget_mask_lock">Маскировать при блокировке</string>
     <string name="security_widget_mask_lock_desc">Автоматически скрывать суммы на виджетах при включенной биометрии или PIN</string>
 
-    <!-- Search, Filters & Saved Views -->
+    <!-- Search, Filters &amp; Saved Views -->
     <string name="preset_this_month">Этот месяц</string>
     <string name="preset_last_month">Прошлый месяц</string>
     <string name="preset_uncategorized">Без категории</string>
@@ -948,7 +948,7 @@
     <string name="filter_active_count">%1$d активных</string>
     <string name="filter_results_count">%1$d операций</string>
 
-    <!-- TASK-10: Backup, Restore & Export Strings -->
+    <!-- TASK-10: Backup, Restore &amp; Export Strings -->
     <string name="backup_last_date">Последняя копия: %1$s</string>
     <string name="backup_never">Копия еще не создавалась</string>
     <string name="backup_reminder_title">Периодическое напоминание о резервной копии</string>
@@ -1324,7 +1324,7 @@
     <string name="action_got_it">Понятно</string>
     <string name="export_records_to_restore">Записи для восстановления:</string>
 
-    <!-- Financial Digest & Habit Insights -->
+    <!-- Financial Digest &amp; Habit Insights -->
     <string name="digest_screen_title">Финансовый дайджест</string>
     <string name="digest_more_desc">Ежедневные и еженедельные сводки, счета и динамика расходов</string>
     <string name="digest_card_summary_desc">Сводка за день и неделю, счета и динамика трат</string>
@@ -1364,4 +1364,17 @@
     <string name="digest_notif_detailed_top_expense">Главная трата: %1$s (%2$s)</string>
     <string name="digest_notif_detailed_bills">Счетов к оплате: %1$d</string>
     <string name="digest_notif_action_open">Открыть дайджест</string>
+    <string name="currencies_screen_title">Валюты и курсы обмена</string>
+    <string name="currencies_refresh_rates">Обновить курсы валют</string>
+    <string name="currencies_base_currency_label">Основная валюта</string>
+    <string name="currencies_change_base_currency">Изменить основную валюту</string>
+    <string name="currencies_last_updated_at">Курсы обновлены %1$s</string>
+    <string name="currencies_offline_fallback_active">Активен детерминированный оффлайн-резерв</string>
+    <string name="currencies_offline_desc">Используются эталонные рыночные курсы для мультивалютного учета.</string>
+    <string name="currencies_exchange_rates_title">Курсы обмена к %1$s</string>
+    <string name="currencies_manual_badge">Свой</string>
+    <string name="currencies_edit_rate_title">Изменить курс: %1$s к %2$s</string>
+    <string name="currencies_edit_rate_desc">Установите собственный курс между %1$s и %2$s для точного учета банковских комиссий и спредов.</string>
+    <string name="currencies_reset_default">Сбросить на эталонный курс</string>
+    <string name="currencies_more_desc">Основная валюта: %1$s • Настройка курсов и оффлайн-конвертации</string>
 </resources>

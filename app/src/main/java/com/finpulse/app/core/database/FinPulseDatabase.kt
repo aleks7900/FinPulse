@@ -31,6 +31,8 @@ import com.finpulse.app.core.database.entity.TransactionEntity
 
 import com.finpulse.app.core.database.dao.SavedFilterDao
 import com.finpulse.app.core.database.dao.SyncRecordDao
+import com.finpulse.app.core.database.dao.ExchangeRateDao
+import com.finpulse.app.core.database.entity.ExchangeRateEntity
 import com.finpulse.app.core.database.entity.SavedFilterEntity
 import com.finpulse.app.core.database.entity.SyncRecordEntity
 import androidx.room.migration.Migration
@@ -51,9 +53,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         MerchantSignalEntity::class,
         ImportProfileEntity::class,
         SavedFilterEntity::class,
-        SyncRecordEntity::class
+        SyncRecordEntity::class,
+        ExchangeRateEntity::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 abstract class FinPulseDatabase : RoomDatabase() {
@@ -71,6 +74,7 @@ abstract class FinPulseDatabase : RoomDatabase() {
     abstract fun importProfileDao(): ImportProfileDao
     abstract fun savedFilterDao(): SavedFilterDao
     abstract fun syncRecordDao(): SyncRecordDao
+    abstract fun exchangeRateDao(): ExchangeRateDao
 
     companion object {
         @Volatile
@@ -100,13 +104,39 @@ abstract class FinPulseDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `exchange_rates` (
+                        `fromCurrency` TEXT NOT NULL,
+                        `toCurrency` TEXT NOT NULL,
+                        `rate` REAL NOT NULL,
+                        `timestamp` INTEGER NOT NULL,
+                        `isManual` INTEGER NOT NULL,
+                        PRIMARY KEY(`fromCurrency`, `toCurrency`)
+                    )
+                    """.trimIndent()
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_exchange_rates_fromCurrency` ON `exchange_rates` (`fromCurrency`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_exchange_rates_toCurrency` ON `exchange_rates` (`toCurrency`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_exchange_rates_timestamp` ON `exchange_rates` (`timestamp`)")
+
+                // Add multi-currency columns to transactions
+                db.execSQL("ALTER TABLE `transactions` ADD COLUMN `exchangeRate` REAL")
+                db.execSQL("ALTER TABLE `transactions` ADD COLUMN `exchangeRateDate` INTEGER")
+                db.execSQL("ALTER TABLE `transactions` ADD COLUMN `destinationAmountMinor` INTEGER")
+                db.execSQL("ALTER TABLE `transactions` ADD COLUMN `destinationCurrencyCode` TEXT")
+            }
+        }
+
         fun getInstance(context: Context): FinPulseDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     FinPulseDatabase::class.java,
                     "finpulse.db"
-                ).addMigrations(MIGRATION_6_7)
+                ).addMigrations(MIGRATION_6_7, MIGRATION_7_8)
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance

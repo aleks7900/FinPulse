@@ -28,5 +28,8 @@ data class Transaction(
     val isCategoryConfirmed: Boolean = true,
     val categorizationConfidence: Float = 1.0f,
     val matchedRuleId: String? = null,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val exchangeRate: Double? = null,
+    val exchangeRateDate: Long? = null,
+    val destinationAmount: Money? = null
 )

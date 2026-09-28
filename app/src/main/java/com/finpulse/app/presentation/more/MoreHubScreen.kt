@@ -37,6 +37,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Savings
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Subscriptions
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -164,7 +165,9 @@ fun MoreHubScreen(
             // Profile & Currency Banner
             item {
                 Surface(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onNavigate(Screen.Currencies) },
                     shape = RoundedCornerShape(20.dp),
                     color = MaterialTheme.colorScheme.surface
                 ) {
@@ -203,6 +206,13 @@ fun MoreHubScreen(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
+
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(18.dp)
+                        )
                     }
                 }
             }
@@ -217,6 +227,13 @@ fun MoreHubScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    HubItem(
+                        title = stringResource(R.string.currencies_screen_title),
+                        subtitle = stringResource(R.string.currencies_more_desc, baseCurrency),
+                        icon = Icons.Default.SwapHoriz,
+                        tint = EmeraldPrimary,
+                        onClick = { onNavigate(Screen.Currencies) }
+                    )
                     HubItem(
                         title = stringResource(R.string.more_account_sync_title),
                         subtitle = stringResource(R.string.more_account_sync_disconnected),

@@ -2,13 +2,16 @@ package com.finpulse.app.presentation.analytics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.finpulse.app.core.datastore.UserPreferences
 import com.finpulse.app.core.datastore.UserPreferencesDataStore
 import com.finpulse.app.core.model.Money
 import com.finpulse.app.core.model.TimePeriod
+import com.finpulse.app.domain.engine.CurrencyConverter
 import com.finpulse.app.domain.model.Category
 import com.finpulse.app.domain.model.Transaction
 import com.finpulse.app.domain.model.TransactionType
 import com.finpulse.app.domain.repository.CategoryRepository
+import com.finpulse.app.domain.repository.ExchangeRateProvider
 import com.finpulse.app.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -47,7 +50,9 @@ data class AnalyticsUiState(
 class AnalyticsViewModel(
     private val transactionRepository: TransactionRepository,
     private val categoryRepository: CategoryRepository,
-    private val userPreferencesDataStore: UserPreferencesDataStore
+    private val userPreferencesDataStore: UserPreferencesDataStore,
+    private val currencyConverter: CurrencyConverter,
+    private val exchangeRateProvider: ExchangeRateProvider
 ) : ViewModel() {
 
     private val _selectedPeriod = MutableStateFlow(TimePeriod.MONTH)
@@ -56,24 +61,39 @@ class AnalyticsViewModel(
         transactionRepository.getAllTransactionsFlow(),
         categoryRepository.getAllCategoriesFlow(),
         userPreferencesDataStore.userPreferencesFlow,
+        exchangeRateProvider.getAllRatesFlow(),
         _selectedPeriod
-    ) { transactions, categories, userPrefs, period ->
+    ) { params ->
+        @Suppress("UNCHECKED_CAST")
+        val transactions = params[0] as List<Transaction>
+        @Suppress("UNCHECKED_CAST")
+        val categories = params[1] as List<Category>
+        val userPrefs = params[2] as UserPreferences
+        // params[3] is List<ExchangeRate>, triggers re-computation on rate update
+        val period = params[4] as TimePeriod
+
         val currency = userPrefs.baseCurrencyCode
         val (startMillis, endMillis) = period.toDateRange()
         val periodTx = transactions.filter { it.timestamp in startMillis..endMillis }
+
+        // Convert each transaction using historical rate to base currency
+        val convertedTxList = periodTx.map { tx ->
+            val converted = currencyConverter.convertHistorical(tx, currency)
+            tx to converted
+        }
 
         var incomeMinor = 0L
         var expenseMinor = 0L
         var maxExpenseMinor = 0L
 
-        for (tx in periodTx) {
+        for ((tx, convertedMoney) in convertedTxList) {
             when (tx.type) {
-                TransactionType.INCOME, TransactionType.REFUND -> incomeMinor += tx.amount.amountMinor
+                TransactionType.INCOME, TransactionType.REFUND -> incomeMinor += convertedMoney.amountMinor
                 TransactionType.EXPENSE -> {
                     if (!tx.isExcludedFromBudget) {
-                        expenseMinor += tx.amount.amountMinor
-                        if (tx.amount.amountMinor > maxExpenseMinor) {
-                            maxExpenseMinor = tx.amount.amountMinor
+                        expenseMinor += convertedMoney.amountMinor
+                        if (convertedMoney.amountMinor > maxExpenseMinor) {
+                            maxExpenseMinor = convertedMoney.amountMinor
                         }
                     }
                 }
@@ -98,12 +118,12 @@ class AnalyticsViewModel(
 
         // Category breakdown
         val catMap = categories.associateBy { it.id }
-        val expenseTx = periodTx.filter { it.type == TransactionType.EXPENSE && !it.isExcludedFromBudget }
-        val categoryBreakdown = expenseTx
-            .groupBy { it.categoryId }
-            .mapNotNull { (catId, txList) ->
+        val expenseConverted = convertedTxList.filter { (tx, _) -> tx.type == TransactionType.EXPENSE && !tx.isExcludedFromBudget }
+        val categoryBreakdown = expenseConverted
+            .groupBy { (tx, _) -> tx.categoryId }
+            .mapNotNull { (catId, pairList) ->
                 val cat = catMap[catId] ?: return@mapNotNull null
-                val catTotal = txList.sumOf { it.amount.amountMinor }
+                val catTotal = pairList.sumOf { (_, money) -> money.amountMinor }
                 val pct = if (expenseMinor > 0) catTotal.toDouble() / expenseMinor.toDouble() else 0.0
                 CategorySpendItem(
                     category = cat,
@@ -114,15 +134,15 @@ class AnalyticsViewModel(
             .sortedByDescending { it.totalAmount.amountMinor }
 
         // Top merchants
-        val topMerchants = expenseTx
-            .filter { !it.merchant.isNullOrBlank() }
-            .groupBy { it.merchant!! }
-            .map { (merchant, txList) ->
-                val merchantTotal = txList.sumOf { it.amount.amountMinor }
+        val topMerchants = expenseConverted
+            .filter { (tx, _) -> !tx.merchant.isNullOrBlank() }
+            .groupBy { (tx, _) -> tx.merchant!! }
+            .map { (merchant, pairList) ->
+                val merchantTotal = pairList.sumOf { (_, money) -> money.amountMinor }
                 MerchantSpendItem(
                     merchant = merchant,
                     totalAmount = Money(merchantTotal, currency),
-                    transactionCount = txList.size
+                    transactionCount = pairList.size
                 )
             }
             .sortedByDescending { it.totalAmount.amountMinor }

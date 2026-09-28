@@ -811,7 +811,7 @@
     <string name="cat_transfer_withdrawal">현금 인출</string>
     <string name="cat_transfer_deposit">현금 입금</string>
 
-    <!-- Financial Calendar & Cash Flow -->
+    <!-- Financial Calendar &amp; Cash Flow -->
     <string name="calendar_title">금융 캘린더</string>
     <string name="calendar_tab_month">월</string>
     <string name="calendar_tab_agenda">일정</string>
@@ -854,7 +854,7 @@
     <string name="shortcut_review_inbox_short">검토함</string>
     <string name="shortcut_review_inbox_long">미확인 내역 검토</string>
 
-    <!-- Home Screen Widgets & Privacy -->
+    <!-- Home Screen Widgets &amp; Privacy -->
     <string name="widget_name_balance">FinPulse: 현재 잔액</string>
     <string name="widget_desc_balance">현재 유동 잔액 및 계좌 요약 보기</string>
     <string name="widget_name_spending">FinPulse: 이번 달 지출</string>
@@ -888,7 +888,7 @@
     <string name="security_widget_mask_lock">앱 잠금 시 위젯 마스킹</string>
     <string name="security_widget_mask_lock_desc">생체 인증 또는 PIN 사용 시 위젯 금액 자동 마스킹</string>
 
-    <!-- Search, Filters & Saved Views -->
+    <!-- Search, Filters &amp; Saved Views -->
     <string name="preset_this_month">이번 달</string>
     <string name="preset_last_month">지난달</string>
     <string name="preset_uncategorized">미분류</string>
@@ -924,7 +924,7 @@
     <string name="filter_active_count">%1$d개 적용됨</string>
     <string name="filter_results_count">%1$d건의 거래</string>
 
-    <!-- TASK-10: Backup, Restore & Export Strings -->
+    <!-- TASK-10: Backup, Restore &amp; Export Strings -->
     <string name="backup_last_date">최근 백업: %1$s</string>
     <string name="backup_never">생성된 백업 없음</string>
     <string name="backup_reminder_title">정기 백업 알림</string>
@@ -1299,7 +1299,7 @@
     <string name="action_got_it">н™•мќё</string>
     <string name="export_records_to_restore">ліµм›ђн•  н•­лЄ© м€:</string>
 
-    <!-- Financial Digest & Habit Insights -->
+    <!-- Financial Digest &amp; Habit Insights -->
     <string name="digest_screen_title">금융 다이제스트</string>
     <string name="digest_more_desc">일일 및 주간 습관 형성 요약, 청구서 및 지출 추이</string>
     <string name="digest_card_summary_desc">일일 및 주간 습관 요약, 청구서 &amp; 지출 추이</string>
@@ -1339,4 +1339,17 @@
     <string name="digest_notif_detailed_top_expense">최대 지출: %1$s (%2$s)</string>
     <string name="digest_notif_detailed_bills">곧 마감되는 청구서 %1$d건</string>
     <string name="digest_notif_action_open">다이제스트 열기</string>
+    <string name="currencies_screen_title">통화 및 환율</string>
+    <string name="currencies_refresh_rates">환율 새로고침</string>
+    <string name="currencies_base_currency_label">기준 통화</string>
+    <string name="currencies_change_base_currency">기준 통화 변경</string>
+    <string name="currencies_last_updated_at">환율 업데이트됨: %1$s</string>
+    <string name="currencies_offline_fallback_active">결정론적 오프라인 대체 환율 활성화됨</string>
+    <string name="currencies_offline_desc">다중 통화 회계 처리에 시장 기준 환율이 사용됩니다.</string>
+    <string name="currencies_exchange_rates_title">%1$s 기준 환율</string>
+    <string name="currencies_manual_badge">사용자 지정</string>
+    <string name="currencies_edit_rate_title">환율 수정: %1$s → %2$s</string>
+    <string name="currencies_edit_rate_desc">은행 수수료나 환전 스프레드를 반영하도록 %1$s와 %2$s 간의 수동 환율을 설정하세요.</string>
+    <string name="currencies_reset_default">기준 환율로 재설정</string>
+    <string name="currencies_more_desc">기준 통화: %1$s • 수동 환율 및 오프라인 환산 관리</string>
 </resources>

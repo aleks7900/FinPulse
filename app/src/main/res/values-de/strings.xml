@@ -819,7 +819,7 @@
     <string name="cat_transfer_withdrawal">Bargeldabhebung</string>
     <string name="cat_transfer_deposit">Bareinzahlung</string>
 
-    <!-- Financial Calendar & Cash Flow -->
+    <!-- Financial Calendar &amp; Cash Flow -->
     <string name="calendar_title">Finanzkalender</string>
     <string name="calendar_tab_month">Monat</string>
     <string name="calendar_tab_agenda">Agenda</string>
@@ -862,7 +862,7 @@
     <string name="shortcut_review_inbox_short">Posteingang prüfen</string>
     <string name="shortcut_review_inbox_long">Ausstehende Buchungen prüfen</string>
 
-    <!-- Home Screen Widgets & Privacy -->
+    <!-- Home Screen Widgets &amp; Privacy -->
     <string name="widget_name_balance">FinPulse: Aktueller Kontostand</string>
     <string name="widget_desc_balance">Aktuelles liquides Guthaben und Kontenübersicht anzeigen</string>
     <string name="widget_name_spending">FinPulse: Monatliche Ausgaben</string>
@@ -896,7 +896,7 @@
     <string name="security_widget_mask_lock">Widgets bei App-Sperre maskieren</string>
     <string name="security_widget_mask_lock_desc">Finanzbeträge auf Widgets automatisch verbergen, wenn Biometrie oder PIN aktiv ist</string>
 
-    <!-- Search, Filters & Saved Views -->
+    <!-- Search, Filters &amp; Saved Views -->
     <string name="preset_this_month">Diesen Monat</string>
     <string name="preset_last_month">Letzten Monat</string>
     <string name="preset_uncategorized">Nicht kategorisiert</string>
@@ -932,7 +932,7 @@
     <string name="filter_active_count">%1$d aktiv</string>
     <string name="filter_results_count">%1$d Transaktionen</string>
 
-    <!-- TASK-10: Backup, Restore & Export Strings -->
+    <!-- TASK-10: Backup, Restore &amp; Export Strings -->
     <string name="backup_last_date">Letztes Backup: %1$s</string>
     <string name="backup_never">Noch kein Backup erstellt</string>
     <string name="backup_reminder_title">Regelmäßige Backup-Erinnerung</string>
@@ -1307,7 +1307,7 @@
     <string name="action_got_it">Verstanden</string>
     <string name="export_records_to_restore">Wiederherzustellende DatensГ¤tze:</string>
 
-    <!-- Financial Digest & Habit Insights -->
+    <!-- Financial Digest &amp; Habit Insights -->
     <string name="digest_screen_title">Finanz-Digest</string>
     <string name="digest_more_desc">Tägliche &amp; wöchentliche Zusammenfassungen, Rechnungen und Trends</string>
     <string name="digest_card_summary_desc">Täglicher &amp; wöchentlicher Überblick, Rechnungen &amp; Ausgabentrends</string>
@@ -1347,4 +1347,17 @@
     <string name="digest_notif_detailed_top_expense">Top: %1$s (%2$s)</string>
     <string name="digest_notif_detailed_bills">%1$d Rechnung(en) bald fällig</string>
     <string name="digest_notif_action_open">Digest öffnen</string>
+    <string name="currencies_screen_title">Währungen &amp; Wechselkurse</string>
+    <string name="currencies_refresh_rates">Wechselkurse aktualisieren</string>
+    <string name="currencies_base_currency_label">Basiswährung</string>
+    <string name="currencies_change_base_currency">Basiswährung ändern</string>
+    <string name="currencies_last_updated_at">Wechselkurse aktualisiert %1$s</string>
+    <string name="currencies_offline_fallback_active">Deterministischer Offline-Fallback aktiv</string>
+    <string name="currencies_offline_desc">Marktreferenzkurse sind aktiv und werden für Währungsumrechnungen genutzt.</string>
+    <string name="currencies_exchange_rates_title">Wechselkurse gegenüber %1$s</string>
+    <string name="currencies_manual_badge">Benutzerdefiniert</string>
+    <string name="currencies_edit_rate_title">Kurs bearbeiten: %1$s zu %2$s</string>
+    <string name="currencies_edit_rate_desc">Legen Sie einen manuellen Umrechnungskurs zwischen %1$s und %2$s fest, um Bankgebühren oder Spreads zu berücksichtigen.</string>
+    <string name="currencies_reset_default">Auf Referenzkurs zurücksetzen</string>
+    <string name="currencies_more_desc">Basiswährung: %1$s • Manuelle Kurse &amp; Offline-Umrechnung verwalten</string>
 </resources>

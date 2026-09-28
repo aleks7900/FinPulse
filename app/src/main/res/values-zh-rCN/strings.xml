@@ -811,7 +811,7 @@
     <string name="cat_transfer_withdrawal">现金取款</string>
     <string name="cat_transfer_deposit">现金存款</string>
 
-    <!-- Financial Calendar & Cash Flow -->
+    <!-- Financial Calendar &amp; Cash Flow -->
     <string name="calendar_title">财务日历</string>
     <string name="calendar_tab_month">月视图</string>
     <string name="calendar_tab_agenda">议程</string>
@@ -854,7 +854,7 @@
     <string name="shortcut_review_inbox_short">待审核收件箱</string>
     <string name="shortcut_review_inbox_long">审核待处理的交易记录</string>
 
-    <!-- Home Screen Widgets & Privacy -->
+    <!-- Home Screen Widgets &amp; Privacy -->
     <string name="widget_name_balance">FinPulse：当前结余</string>
     <string name="widget_desc_balance">查看当前流动资金及账户概览</string>
     <string name="widget_name_spending">FinPulse：本月支出</string>
@@ -888,7 +888,7 @@
     <string name="security_widget_mask_lock">应用锁定时脱敏小组件</string>
     <string name="security_widget_mask_lock_desc">启用生物识别或密码锁定时自动隐藏小组件上的金额</string>
 
-    <!-- Search, Filters & Saved Views -->
+    <!-- Search, Filters &amp; Saved Views -->
     <string name="preset_this_month">本月</string>
     <string name="preset_last_month">上月</string>
     <string name="preset_uncategorized">未分类</string>
@@ -924,7 +924,7 @@
     <string name="filter_active_count">%1$d 项生效</string>
     <string name="filter_results_count">%1$d 笔交易</string>
 
-    <!-- TASK-10: Backup, Restore & Export Strings -->
+    <!-- TASK-10: Backup, Restore &amp; Export Strings -->
     <string name="backup_last_date">上次备份：%1$s</string>
     <string name="backup_never">尚未创建任何备份</string>
     <string name="backup_reminder_title">定期备份提醒</string>
@@ -1299,7 +1299,7 @@
     <string name="action_got_it">зџҐйЃ“дє†</string>
     <string name="export_records_to_restore">еѕ…жЃўе¤Ќи®°еЅ•ж•°пјљ</string>
 
-    <!-- Financial Digest & Habit Insights -->
+    <!-- Financial Digest &amp; Habit Insights -->
     <string name="digest_screen_title">财务简报</string>
     <string name="digest_more_desc">每日与每周习惯摘要、账单提醒及支出趋势</string>
     <string name="digest_card_summary_desc">每日与每周简报、账单与支出趋势</string>
@@ -1339,4 +1339,17 @@
     <string name="digest_notif_detailed_top_expense">最大支出：%1$s (%2$s)</string>
     <string name="digest_notif_detailed_bills">%1$d 笔账单即将到期</string>
     <string name="digest_notif_action_open">查看简报</string>
+    <string name="currencies_screen_title">货币与汇率</string>
+    <string name="currencies_refresh_rates">刷新汇率</string>
+    <string name="currencies_base_currency_label">基础货币</string>
+    <string name="currencies_change_base_currency">更改基础货币</string>
+    <string name="currencies_last_updated_at">汇率更新于 %1$s</string>
+    <string name="currencies_offline_fallback_active">离线基准汇率已激活</string>
+    <string name="currencies_offline_desc">市场基准汇率已生效，用于多货币核算。</string>
+    <string name="currencies_exchange_rates_title">相对 %1$s 的汇率</string>
+    <string name="currencies_manual_badge">自定义</string>
+    <string name="currencies_edit_rate_title">修改汇率：%1$s 至 %2$s</string>
+    <string name="currencies_edit_rate_desc">设置 %1$s 与 %2$s 之间的自定义汇率，以精确反映银行手续费或点差。</string>
+    <string name="currencies_reset_default">重置为基准汇率</string>
+    <string name="currencies_more_desc">基础货币：%1$s • 管理手动汇率与离线换算</string>
 </resources>

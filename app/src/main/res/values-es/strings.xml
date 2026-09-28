@@ -819,7 +819,7 @@
     <string name="cat_transfer_withdrawal">Retiro de efectivo</string>
     <string name="cat_transfer_deposit">Depósito en efectivo</string>
 
-    <!-- Financial Calendar & Cash Flow -->
+    <!-- Financial Calendar &amp; Cash Flow -->
     <string name="calendar_title">Calendario Financiero</string>
     <string name="calendar_tab_month">Mes</string>
     <string name="calendar_tab_agenda">Agenda</string>
@@ -862,7 +862,7 @@
     <string name="shortcut_review_inbox_short">Buzón de revisión</string>
     <string name="shortcut_review_inbox_long">Revisar transacciones pendientes</string>
 
-    <!-- Home Screen Widgets & Privacy -->
+    <!-- Home Screen Widgets &amp; Privacy -->
     <string name="widget_name_balance">FinPulse: Saldo actual</string>
     <string name="widget_desc_balance">Ver saldo líquido actual y resumen de cuentas</string>
     <string name="widget_name_spending">FinPulse: Gasto mensual</string>
@@ -896,7 +896,7 @@
     <string name="security_widget_mask_lock">Enmascarar con bloqueo de app</string>
     <string name="security_widget_mask_lock_desc">Ocultar cifras financieras automáticamente cuando la biometría o el PIN estén activos</string>
 
-    <!-- Search, Filters & Saved Views -->
+    <!-- Search, Filters &amp; Saved Views -->
     <string name="preset_this_month">Este mes</string>
     <string name="preset_last_month">Mes anterior</string>
     <string name="preset_uncategorized">Sin categoría</string>
@@ -932,7 +932,7 @@
     <string name="filter_active_count">%1$d activos</string>
     <string name="filter_results_count">%1$d transacciones</string>
 
-    <!-- TASK-10: Backup, Restore & Export Strings -->
+    <!-- TASK-10: Backup, Restore &amp; Export Strings -->
     <string name="backup_last_date">Última copia de seguridad: %1$s</string>
     <string name="backup_never">Aún no hay copias de seguridad</string>
     <string name="backup_reminder_title">Recordatorio periódico de copia de seguridad</string>
@@ -1307,7 +1307,7 @@
     <string name="action_got_it">Entendido</string>
     <string name="export_records_to_restore">Registros a restaurar:</string>
 
-    <!-- Financial Digest & Habit Insights -->
+    <!-- Financial Digest &amp; Habit Insights -->
     <string name="digest_screen_title">Resumen financiero</string>
     <string name="digest_more_desc">Resúmenes diarios y semanales, facturas y tendencias de gasto</string>
     <string name="digest_card_summary_desc">Resumen diario y semanal, facturas y tendencias de gasto</string>
@@ -1347,4 +1347,17 @@
     <string name="digest_notif_detailed_top_expense">Mayor gasto: %1$s (%2$s)</string>
     <string name="digest_notif_detailed_bills">%1$d factura(s) por vencer</string>
     <string name="digest_notif_action_open">Ver resumen</string>
+    <string name="currencies_screen_title">Monedas y tipos de cambio</string>
+    <string name="currencies_refresh_rates">Actualizar tipos de cambio</string>
+    <string name="currencies_base_currency_label">Moneda base</string>
+    <string name="currencies_change_base_currency">Cambiar moneda base</string>
+    <string name="currencies_last_updated_at">Tipos de cambio actualizados %1$s</string>
+    <string name="currencies_offline_fallback_active">Respaldo determinista sin conexión activo</string>
+    <string name="currencies_offline_desc">Las tasas de referencia del mercado están activas para contabilidad multidivisa.</string>
+    <string name="currencies_exchange_rates_title">Tipos de cambio respecto a %1$s</string>
+    <string name="currencies_manual_badge">Personalizado</string>
+    <string name="currencies_edit_rate_title">Editar tipo: %1$s a %2$s</string>
+    <string name="currencies_edit_rate_desc">Establezca un tipo de conversión manual entre %1$s y %2$s para reflejar comisiones o márgenes bancarios.</string>
+    <string name="currencies_reset_default">Restablecer a tasa de referencia</string>
+    <string name="currencies_more_desc">Moneda base: %1$s • Gestionar tasas manuales y conversión offline</string>
 </resources>

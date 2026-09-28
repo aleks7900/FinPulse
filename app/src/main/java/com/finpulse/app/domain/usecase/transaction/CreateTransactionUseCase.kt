@@ -1,10 +1,14 @@
 package com.finpulse.app.domain.usecase.transaction
 
+import com.finpulse.app.core.model.CurrencyConfig
 import com.finpulse.app.core.model.Money
+import com.finpulse.app.data.repository.ExchangeRateProviderImpl
 import com.finpulse.app.domain.model.Transaction
 import com.finpulse.app.domain.model.TransactionType
 import com.finpulse.app.domain.repository.AccountRepository
+import com.finpulse.app.domain.repository.ExchangeRateProvider
 import com.finpulse.app.domain.repository.TransactionRepository
+import java.math.BigDecimal
 import java.util.UUID
 
 sealed class CreateTransactionResult {
@@ -14,7 +18,8 @@ sealed class CreateTransactionResult {
 
 class CreateTransactionUseCase(
     private val transactionRepository: TransactionRepository,
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val rateProvider: ExchangeRateProvider? = null
 ) {
     suspend operator fun invoke(
         id: String? = null,
@@ -31,7 +36,10 @@ class CreateTransactionUseCase(
         timestamp: Long = System.currentTimeMillis(),
         isCategoryConfirmed: Boolean = true,
         categorizationConfidence: Float = 1.0f,
-        matchedRuleId: String? = null
+        matchedRuleId: String? = null,
+        // Multi-currency transfer options:
+        exchangeRate: Double? = null,
+        destinationAmountMinor: Long? = null
     ): CreateTransactionResult {
         // 1. Validation: Amount must be strictly positive
         if (amountMinor <= 0L) {
@@ -59,6 +67,9 @@ class CreateTransactionUseCase(
         }
 
         // 5. Validation: Transfer specific rules
+        var finalDestAmount: Money? = null
+        var finalRate: Double? = exchangeRate
+
         if (type == TransactionType.TRANSFER) {
             if (destinationAccountId.isNullOrBlank()) {
                 return CreateTransactionResult.Error("Destination account is required for transfers")
@@ -72,10 +83,34 @@ class CreateTransactionUseCase(
             if (destinationAccount.isArchived) {
                 return CreateTransactionResult.Error("Cannot transfer to an archived account")
             }
-            if (destinationAccount.balance.currencyCode != currencyCode) {
-                return CreateTransactionResult.Error(
-                    "Transfer between different currencies (${sourceAccount.balance.currencyCode} to ${destinationAccount.balance.currencyCode}) requires currency conversion."
-                )
+
+            val destCurrency = destinationAccount.balance.currencyCode
+
+            // Cross-currency transfer calculation
+            if (destCurrency != currencyCode) {
+                if (destinationAmountMinor != null && destinationAmountMinor > 0L) {
+                    finalDestAmount = Money(destinationAmountMinor, destCurrency)
+                    // Compute effective conversion rate
+                    val srcMajor = CurrencyConfig.toMajor(amountMinor, currencyCode)
+                    val dstMajor = CurrencyConfig.toMajor(destinationAmountMinor, destCurrency)
+                    if (srcMajor.compareTo(BigDecimal.ZERO) != 0) {
+                        finalRate = dstMajor.divide(srcMajor, 6, java.math.RoundingMode.HALF_EVEN).toDouble()
+                    }
+                } else {
+                    // Compute destination amount using provided rate or provider rate
+                    val effectiveRate = finalRate
+                        ?: rateProvider?.getRate(currencyCode, destCurrency)?.rate
+                        ?: ExchangeRateProviderImpl.computeFallbackRate(currencyCode, destCurrency)
+                    finalRate = effectiveRate
+
+                    val srcMajor = CurrencyConfig.toMajor(amountMinor, currencyCode)
+                    val dstMajor = srcMajor.multiply(BigDecimal.valueOf(effectiveRate))
+                    val minor = CurrencyConfig.toMinor(dstMajor, destCurrency)
+                    finalDestAmount = Money(minor, destCurrency)
+                }
+            } else {
+                finalDestAmount = Money(amountMinor, currencyCode)
+                finalRate = 1.0
             }
         }
 
@@ -93,7 +128,10 @@ class CreateTransactionUseCase(
             timestamp = timestamp,
             isCategoryConfirmed = isCategoryConfirmed,
             categorizationConfidence = categorizationConfidence,
-            matchedRuleId = matchedRuleId
+            matchedRuleId = matchedRuleId,
+            exchangeRate = finalRate,
+            exchangeRateDate = if (finalRate != null) timestamp else null,
+            destinationAmount = finalDestAmount
         )
 
         if (id != null) {

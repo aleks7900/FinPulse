@@ -78,8 +78,8 @@ fun AccountsScreen(
     onNavigateBack: () -> Unit,
     onShowAddEditDialog: (Boolean, Account?) -> Unit,
     onShowTransferDialog: (Boolean) -> Unit,
-    onSaveAccount: (id: String?, name: String, type: AccountType, balanceMinor: Long, institution: String?, colorHex: Long) -> Unit,
-    onTransferFunds: (sourceId: String, destId: String, amountMinor: Long, note: String) -> Unit,
+    onSaveAccount: (id: String?, name: String, type: AccountType, balanceMinor: Long, currencyCode: String?, institution: String?, colorHex: Long) -> Unit,
+    onTransferFunds: (sourceId: String, destId: String, amountMinor: Long, destinationAmountMinor: Long?, exchangeRate: Double?, note: String) -> Unit,
     onArchiveAccount: (String, Boolean) -> Unit,
     onDeleteAccount: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -281,16 +281,19 @@ fun AccountCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditAccountDialog(
     editingAccount: Account?,
     baseCurrency: String,
     onDismiss: () -> Unit,
-    onSave: (id: String?, name: String, type: AccountType, balanceMinor: Long, institution: String?, colorHex: Long) -> Unit,
+    onSave: (id: String?, name: String, type: AccountType, balanceMinor: Long, currencyCode: String?, institution: String?, colorHex: Long) -> Unit,
     onDelete: () -> Unit
 ) {
     var name by remember { mutableStateOf(editingAccount?.name ?: "") }
     var selectedType by remember { mutableStateOf(editingAccount?.type ?: AccountType.BANK) }
+    var selectedCurrency by remember { mutableStateOf(editingAccount?.balance?.currencyCode ?: baseCurrency) }
+    var currencyDropdownExpanded by remember { mutableStateOf(false) }
     var balanceText by remember { mutableStateOf(editingAccount?.balance?.amountBigDecimal?.toPlainString() ?: "0.00") }
     var institution by remember { mutableStateOf(editingAccount?.institution ?: "") }
     var isError by remember { mutableStateOf(false) }
@@ -314,6 +317,36 @@ fun AddEditAccountDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                // Currency selector dropdown
+                ExposedDropdownMenuBox(
+                    expanded = currencyDropdownExpanded,
+                    onExpandedChange = { currencyDropdownExpanded = it },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = "$selectedCurrency (${com.finpulse.app.core.model.CurrencyConfig.getSymbol(selectedCurrency)})",
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Currency") },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = currencyDropdownExpanded) },
+                        modifier = Modifier.menuAnchor().fillMaxWidth()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = currencyDropdownExpanded,
+                        onDismissRequest = { currencyDropdownExpanded = false }
+                    ) {
+                        com.finpulse.app.core.model.CurrencyConfig.supportedCurrencyCodes.forEach { code ->
+                            DropdownMenuItem(
+                                text = { Text("$code — ${com.finpulse.app.core.model.CurrencyConfig.getName(code)}") },
+                                onClick = {
+                                    selectedCurrency = code
+                                    currencyDropdownExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+
                 OutlinedTextField(
                     value = institution,
                     onValueChange = { institution = it },
@@ -325,7 +358,7 @@ fun AddEditAccountDialog(
                 OutlinedTextField(
                     value = balanceText,
                     onValueChange = { balanceText = it },
-                    label = { Text("${stringResource(R.string.account_starting_balance_hint)} ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.account_starting_balance_hint)} ($selectedCurrency)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -340,14 +373,14 @@ fun AddEditAccountDialog(
                         return@Button
                     }
                     val balanceVal = balanceText.toDoubleOrNull() ?: 0.0
-                    val balanceMinor = (balanceVal * 100).toLong()
+                    val balanceMinor = com.finpulse.app.core.model.CurrencyConfig.fromMajor(balanceVal, selectedCurrency).amountMinor
                     val colorHex = when (selectedType) {
                         AccountType.SAVINGS -> 0xFF009688
                         AccountType.CREDIT_CARD -> 0xFFFF5722
                         AccountType.INVESTMENT -> 0xFF673AB7
                         else -> 0xFF2196F3
                     }
-                    onSave(editingAccount?.id, name, selectedType, balanceMinor, institution, colorHex)
+                    onSave(editingAccount?.id, name, selectedType, balanceMinor, selectedCurrency, institution, colorHex)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
@@ -367,12 +400,13 @@ fun AddEditAccountDialog(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransferFundsDialog(
     accounts: List<Account>,
     baseCurrency: String,
     onDismiss: () -> Unit,
-    onTransfer: (sourceId: String, destId: String, amountMinor: Long, note: String) -> Unit
+    onTransfer: (sourceId: String, destId: String, amountMinor: Long, destinationAmountMinor: Long?, exchangeRate: Double?, note: String) -> Unit
 ) {
     if (accounts.size < 2) {
         AlertDialog(
@@ -386,7 +420,17 @@ fun TransferFundsDialog(
 
     var sourceId by remember { mutableStateOf(accounts[0].id) }
     var destId by remember { mutableStateOf(accounts[1].id) }
+    var sourceDropdownExpanded by remember { mutableStateOf(false) }
+    var destDropdownExpanded by remember { mutableStateOf(false) }
+
+    val sourceAccount = remember(sourceId, accounts) { accounts.find { it.id == sourceId } ?: accounts[0] }
+    val destAccount = remember(destId, accounts) { accounts.find { it.id == destId } ?: accounts[1] }
+
+    val isCrossCurrency = sourceAccount.balance.currencyCode != destAccount.balance.currencyCode
+
     var amountText by remember { mutableStateOf("") }
+    var customDestAmountText by remember { mutableStateOf("") }
+    var isCustomRateEnabled by remember { mutableStateOf(false) }
     var note by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(false) }
 
@@ -395,15 +439,113 @@ fun TransferFundsDialog(
         title = { Text(stringResource(R.string.accounts_transfer_title), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                // Source Account Dropdown
+                ExposedDropdownMenuBox(
+                    expanded = sourceDropdownExpanded,
+                    onExpandedChange = { sourceDropdownExpanded = it },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = "${sourceAccount.name} (${sourceAccount.balance.formatted()})",
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("From Account") },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = sourceDropdownExpanded) },
+                        modifier = Modifier.menuAnchor().fillMaxWidth()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = sourceDropdownExpanded,
+                        onDismissRequest = { sourceDropdownExpanded = false }
+                    ) {
+                        accounts.forEach { acc ->
+                            DropdownMenuItem(
+                                text = { Text("${acc.name} — ${acc.balance.formatted()}") },
+                                onClick = {
+                                    sourceId = acc.id
+                                    if (destId == acc.id) {
+                                        val other = accounts.find { it.id != acc.id }
+                                        if (other != null) destId = other.id
+                                    }
+                                    sourceDropdownExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+
+                // Destination Account Dropdown
+                ExposedDropdownMenuBox(
+                    expanded = destDropdownExpanded,
+                    onExpandedChange = { destDropdownExpanded = it },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = "${destAccount.name} (${destAccount.balance.formatted()})",
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("To Account") },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = destDropdownExpanded) },
+                        modifier = Modifier.menuAnchor().fillMaxWidth()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = destDropdownExpanded,
+                        onDismissRequest = { destDropdownExpanded = false }
+                    ) {
+                        accounts.filter { it.id != sourceId }.forEach { acc ->
+                            DropdownMenuItem(
+                                text = { Text("${acc.name} — ${acc.balance.formatted()}") },
+                                onClick = {
+                                    destId = acc.id
+                                    destDropdownExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+
+                // Amount in Source Currency
                 OutlinedTextField(
                     value = amountText,
                     onValueChange = { amountText = it; isError = false },
-                    label = { Text("${stringResource(R.string.tx_amount)} ($baseCurrency)") },
+                    label = { Text("${stringResource(R.string.tx_amount)} (${sourceAccount.balance.currencyCode})") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     isError = isError,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
+
+                // Cross-currency transfer options: allows bank conversion differences
+                if (isCrossCurrency) {
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    ) {
+                        Column(modifier = Modifier.padding(10.dp)) {
+                            Text(
+                                text = "Cross-Currency Transfer (${sourceAccount.balance.currencyCode} → ${destAccount.balance.currencyCode})",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = EmeraldPrimary
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "Optionally specify the exact destination amount received after bank fee or conversion spread.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            OutlinedTextField(
+                                value = customDestAmountText,
+                                onValueChange = { customDestAmountText = it },
+                                label = { Text("Received Amount (${destAccount.balance.currencyCode}) [Optional]") },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
+                }
 
                 OutlinedTextField(
                     value = note,
@@ -422,8 +564,26 @@ fun TransferFundsDialog(
                         isError = true
                         return@Button
                     }
-                    val amountMinor = (amountVal * 100).toLong()
-                    onTransfer(sourceId, destId, amountMinor, note)
+                    val amountMinor = com.finpulse.app.core.model.CurrencyConfig.fromMajor(
+                        amountVal,
+                        sourceAccount.balance.currencyCode
+                    ).amountMinor
+
+                    var destAmountMinor: Long? = null
+                    var exchangeRate: Double? = null
+
+                    if (isCrossCurrency) {
+                        val customDestVal = customDestAmountText.toDoubleOrNull()
+                        if (customDestVal != null && customDestVal > 0.0) {
+                            destAmountMinor = com.finpulse.app.core.model.CurrencyConfig.fromMajor(
+                                customDestVal,
+                                destAccount.balance.currencyCode
+                            ).amountMinor
+                            exchangeRate = customDestVal / amountVal
+                        }
+                    }
+
+                    onTransfer(sourceId, destId, amountMinor, destAmountMinor, exchangeRate, note)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {

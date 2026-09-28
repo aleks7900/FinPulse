@@ -2,13 +2,16 @@ package com.finpulse.app.presentation.accounts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.finpulse.app.core.datastore.UserPreferences
 import com.finpulse.app.core.datastore.UserPreferencesDataStore
 import com.finpulse.app.core.model.Money
+import com.finpulse.app.domain.engine.CurrencyConverter
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.AccountType
 import com.finpulse.app.domain.model.Transaction
 import com.finpulse.app.domain.model.TransactionType
 import com.finpulse.app.domain.repository.AccountRepository
+import com.finpulse.app.domain.repository.ExchangeRateProvider
 import com.finpulse.app.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,7 +34,9 @@ data class AccountsUiState(
 class AccountsViewModel(
     private val accountRepository: AccountRepository,
     private val transactionRepository: TransactionRepository,
-    private val userPreferencesDataStore: UserPreferencesDataStore
+    private val userPreferencesDataStore: UserPreferencesDataStore,
+    private val currencyConverter: CurrencyConverter,
+    private val exchangeRateProvider: ExchangeRateProvider
 ) : ViewModel() {
 
     private val _isAddEditDialogVisible = MutableStateFlow(false)
@@ -41,20 +46,21 @@ class AccountsViewModel(
     val uiState: StateFlow<AccountsUiState> = combine(
         accountRepository.getAllAccountsFlow(),
         userPreferencesDataStore.userPreferencesFlow,
+        exchangeRateProvider.getAllRatesFlow(),
         _isAddEditDialogVisible,
         _isTransferDialogVisible,
         _editingAccount
     ) { params ->
         @Suppress("UNCHECKED_CAST")
         val accounts = params[0] as List<Account>
-        val userPrefs = params[1] as com.finpulse.app.core.datastore.UserPreferences
-        val isAddVisible = params[2] as Boolean
-        val isTransferVisible = params[3] as Boolean
-        val editingAcc = params[4] as Account?
+        val userPrefs = params[1] as UserPreferences
+        // params[2] is List<ExchangeRate>, triggers re-computation on rate updates
+        val isAddVisible = params[3] as Boolean
+        val isTransferVisible = params[4] as Boolean
+        val editingAcc = params[5] as Account?
 
         val active = accounts.filter { !it.isArchived }
-        val totalMinor = active.sumOf { it.balance.amountMinor }
-        val total = Money(totalMinor, userPrefs.baseCurrencyCode)
+        val total = currencyConverter.sumIn(active.map { it.balance }, userPrefs.baseCurrencyCode)
 
         AccountsUiState(
             accounts = accounts,
@@ -85,11 +91,12 @@ class AccountsViewModel(
         name: String,
         type: AccountType,
         balanceMinor: Long,
+        currencyCode: String? = null,
         institution: String?,
         colorHex: Long
     ) {
         viewModelScope.launch {
-            val currency = uiState.value.baseCurrency
+            val currency = currencyCode?.uppercase() ?: uiState.value.baseCurrency
             val acc = Account(
                 id = id ?: UUID.randomUUID().toString(),
                 name = name,
@@ -109,13 +116,39 @@ class AccountsViewModel(
         sourceAccountId: String,
         destinationAccountId: String,
         amountMinor: Long,
-        note: String
+        destinationAmountMinor: Long? = null,
+        exchangeRate: Double? = null,
+        note: String = ""
     ) {
         viewModelScope.launch {
-            val currency = uiState.value.baseCurrency
+            val accounts = uiState.value.accounts
+            val sourceAcc = accounts.find { it.id == sourceAccountId }
+                ?: accountRepository.getAccountById(sourceAccountId)
+            val destAcc = accounts.find { it.id == destinationAccountId }
+                ?: accountRepository.getAccountById(destinationAccountId)
+
+            val sourceCurrency = sourceAcc?.balance?.currencyCode ?: uiState.value.baseCurrency
+            val destCurrency = destAcc?.balance?.currencyCode ?: sourceCurrency
+
+            val sourceMoney = Money(amountMinor, sourceCurrency)
+            val destMoney: Money = if (destinationAmountMinor != null && destinationAmountMinor > 0L) {
+                Money(destinationAmountMinor, destCurrency)
+            } else if (sourceCurrency.equals(destCurrency, ignoreCase = true)) {
+                sourceMoney
+            } else {
+                currencyConverter.convert(sourceMoney, destCurrency, customRate = exchangeRate)
+            }
+
+            val effectiveRate = exchangeRate ?: if (!sourceCurrency.equals(destCurrency, ignoreCase = true)) {
+                currencyConverter.computeTransferRate(sourceMoney, destMoney)
+            } else null
+
             val tx = Transaction(
                 id = UUID.randomUUID().toString(),
-                amount = Money(amountMinor, currency),
+                amount = sourceMoney,
+                destinationAmount = destMoney,
+                exchangeRate = effectiveRate,
+                exchangeRateDate = if (effectiveRate != null) System.currentTimeMillis() else null,
                 type = TransactionType.TRANSFER,
                 sourceAccountId = sourceAccountId,
                 destinationAccountId = destinationAccountId,

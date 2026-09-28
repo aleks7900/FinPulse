@@ -72,6 +72,10 @@ fun Account.toEntity(): AccountEntity {
 fun TransactionEntity.toDomain(): Transaction {
     val currency = currencyCode
     val tagList = if (tags.isBlank()) emptyList() else tags.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+    val destAmount = if (destinationAmountMinor != null && destinationCurrencyCode != null) {
+        Money(destinationAmountMinor, destinationCurrencyCode)
+    } else null
+
     return Transaction(
         id = id,
         amount = Money(amountMinor, currency),
@@ -89,7 +93,10 @@ fun TransactionEntity.toDomain(): Transaction {
         isCategoryConfirmed = isCategoryConfirmed,
         categorizationConfidence = categorizationConfidence,
         matchedRuleId = matchedRuleId,
-        createdAt = createdAt
+        createdAt = createdAt,
+        exchangeRate = exchangeRate,
+        exchangeRateDate = exchangeRateDate,
+        destinationAmount = destAmount
     )
 }
 
@@ -112,7 +119,31 @@ fun Transaction.toEntity(): TransactionEntity {
         isCategoryConfirmed = isCategoryConfirmed,
         categorizationConfidence = categorizationConfidence,
         matchedRuleId = matchedRuleId,
-        createdAt = createdAt
+        createdAt = createdAt,
+        exchangeRate = exchangeRate,
+        exchangeRateDate = exchangeRateDate,
+        destinationAmountMinor = destinationAmount?.amountMinor,
+        destinationCurrencyCode = destinationAmount?.currencyCode
+    )
+}
+
+fun com.finpulse.app.core.database.entity.ExchangeRateEntity.toDomain(): com.finpulse.app.domain.model.ExchangeRate {
+    return com.finpulse.app.domain.model.ExchangeRate(
+        fromCurrency = fromCurrency,
+        toCurrency = toCurrency,
+        rate = rate,
+        timestamp = timestamp,
+        isManual = isManual
+    )
+}
+
+fun com.finpulse.app.domain.model.ExchangeRate.toEntity(): com.finpulse.app.core.database.entity.ExchangeRateEntity {
+    return com.finpulse.app.core.database.entity.ExchangeRateEntity(
+        fromCurrency = fromCurrency.uppercase(),
+        toCurrency = toCurrency.uppercase(),
+        rate = rate,
+        timestamp = timestamp,
+        isManual = isManual
     )
 }
 

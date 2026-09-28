@@ -19,7 +19,7 @@ data class Money(
 ) : Comparable<Money> {
 
     val amountBigDecimal: BigDecimal
-        get() = BigDecimal(amountMinor).divide(BigDecimal(100), 2, RoundingMode.HALF_EVEN)
+        get() = CurrencyConfig.toMajor(amountMinor, currencyCode)
 
     val isZero: Boolean get() = amountMinor == 0L
     val isPositive: Boolean get() = amountMinor > 0L
@@ -68,34 +68,16 @@ data class Money(
     }
 
     fun formatted(locale: Locale = Locale.getDefault()): String {
-        return try {
-            val currency = Currency.getInstance(currencyCode)
-            val formatter = NumberFormat.getCurrencyInstance(locale).apply {
-                this.currency = currency
-                maximumFractionDigits = 2
-                minimumFractionDigits = 2
-            }
-            formatter.format(amountBigDecimal)
-        } catch (_: Exception) {
-            val sign = if (isNegative) "-" else ""
-            val absVal = kotlin.math.abs(amountMinor)
-            val major = absVal / 100
-            val minor = absVal % 100
-            "$sign$currencyCode $major.${minor.toString().padStart(2, '0')}"
-        }
+        return CurrencyConfig.format(this, locale)
     }
 
     fun formattedCompact(): String {
-        val abs = kotlin.math.abs(amountMinor) / 100.0
+        val majorValue = kotlin.math.abs(amountBigDecimal.toDouble())
         val sign = if (isNegative) "-" else ""
-        val symbol = try {
-            Currency.getInstance(currencyCode).getSymbol(Locale.getDefault())
-        } catch (_: Exception) {
-            currencyCode
-        }
+        val symbol = CurrencyConfig.getMetadata(currencyCode).symbol
         return when {
-            abs >= 1_000_000 -> String.format(Locale.US, "%s%s%.1fM", sign, symbol, abs / 1_000_000.0)
-            abs >= 1_000 -> String.format(Locale.US, "%s%s%.1fK", sign, symbol, abs / 1_000.0)
+            majorValue >= 1_000_000 -> String.format(Locale.US, "%s%s%.1fM", sign, symbol, majorValue / 1_000_000.0)
+            majorValue >= 1_000 -> String.format(Locale.US, "%s%s%.1fK", sign, symbol, majorValue / 1_000.0)
             else -> formatted()
         }
     }
@@ -111,10 +93,7 @@ data class Money(
         fun zero(currencyCode: String = "USD") = Money(0L, currencyCode)
 
         fun fromMajor(majorAmount: BigDecimal, currencyCode: String = "USD"): Money {
-            val minor = majorAmount
-                .multiply(BigDecimal(100))
-                .setScale(0, RoundingMode.HALF_EVEN)
-                .toLong()
+            val minor = CurrencyConfig.toMinor(majorAmount, currencyCode)
             return Money(minor, currencyCode)
         }
 

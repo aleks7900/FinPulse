@@ -819,7 +819,7 @@
     <string name="cat_transfer_withdrawal">Retrait d\'espèces</string>
     <string name="cat_transfer_deposit">Dépôt d\'espèces</string>
 
-    <!-- Financial Calendar & Cash Flow -->
+    <!-- Financial Calendar &amp; Cash Flow -->
     <string name="calendar_title">Calendrier Financier</string>
     <string name="calendar_tab_month">Mois</string>
     <string name="calendar_tab_agenda">Agenda</string>
@@ -862,7 +862,7 @@
     <string name="shortcut_review_inbox_short">Boîte de révision</string>
     <string name="shortcut_review_inbox_long">Examiner les opérations en attente</string>
 
-    <!-- Home Screen Widgets & Privacy -->
+    <!-- Home Screen Widgets &amp; Privacy -->
     <string name="widget_name_balance">FinPulse : Solde actuel</string>
     <string name="widget_desc_balance">Afficher le solde liquide actuel et l’aperçu des comptes</string>
     <string name="widget_name_spending">FinPulse : Dépenses du mois</string>
@@ -896,7 +896,7 @@
     <string name="security_widget_mask_lock">Masquer au verrouillage de l’application</string>
     <string name="security_widget_mask_lock_desc">Masquer automatiquement les données financières quand la biométrie ou le code PIN est activé</string>
 
-    <!-- Search, Filters & Saved Views -->
+    <!-- Search, Filters &amp; Saved Views -->
     <string name="preset_this_month">Ce mois-ci</string>
     <string name="preset_last_month">Le mois dernier</string>
     <string name="preset_uncategorized">Non catégorisé</string>
@@ -932,7 +932,7 @@
     <string name="filter_active_count">%1$d actifs</string>
     <string name="filter_results_count">%1$d Opérations</string>
 
-    <!-- TASK-10: Backup, Restore & Export Strings -->
+    <!-- TASK-10: Backup, Restore &amp; Export Strings -->
     <string name="backup_last_date">Dernière sauvegarde : %1$s</string>
     <string name="backup_never">Aucune sauvegarde effectuée</string>
     <string name="backup_reminder_title">Rappel de sauvegarde périodique</string>
@@ -1307,7 +1307,7 @@
     <string name="action_got_it">Compris</string>
     <string name="export_records_to_restore">Enregistrements Г  restaurer :</string>
 
-    <!-- Financial Digest & Habit Insights -->
+    <!-- Financial Digest &amp; Habit Insights -->
     <string name="digest_screen_title">Bilan financier</string>
     <string name="digest_more_desc">Synthèses quotidiennes et hebdomadaires, factures et tendances</string>
     <string name="digest_card_summary_desc">Synthèse quotidienne et hebdomadaire, factures et tendances</string>
@@ -1347,4 +1347,17 @@
     <string name="digest_notif_detailed_top_expense">Top : %1$s (%2$s)</string>
     <string name="digest_notif_detailed_bills">%1$d facture(s) bientôt à échéance</string>
     <string name="digest_notif_action_open">Voir le bilan</string>
+    <string name="currencies_screen_title">Devises et taux de change</string>
+    <string name="currencies_refresh_rates">Actualiser les taux de change</string>
+    <string name="currencies_base_currency_label">Devise de base</string>
+    <string name="currencies_change_base_currency">Changer la devise de base</string>
+    <string name="currencies_last_updated_at">Taux de change mis à jour le %1$s</string>
+    <string name="currencies_offline_fallback_active">Secours déterministe hors ligne actif</string>
+    <string name="currencies_offline_desc">Les taux de référence du marché sont utilisés pour la comptabilité multidevise.</string>
+    <string name="currencies_exchange_rates_title">Taux de change par rapport à %1$s</string>
+    <string name="currencies_manual_badge">Personnalisé</string>
+    <string name="currencies_edit_rate_title">Modifier le taux : %1$s vers %2$s</string>
+    <string name="currencies_edit_rate_desc">Définissez un taux de conversion manuel entre %1$s et %2$s pour refléter les frais bancaires ou marges.</string>
+    <string name="currencies_reset_default">Réinitialiser au taux de référence</string>
+    <string name="currencies_more_desc">Devise de base : %1$s • Gérer les taux manuels et conversions hors ligne</string>
 </resources>

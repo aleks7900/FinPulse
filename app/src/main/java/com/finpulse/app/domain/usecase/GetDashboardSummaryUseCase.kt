@@ -1,7 +1,9 @@
 package com.finpulse.app.domain.usecase
 
+import com.finpulse.app.core.model.CurrencyConfig
 import com.finpulse.app.core.model.Money
-import com.finpulse.app.core.model.TimePeriod
+import com.finpulse.app.data.repository.ExchangeRateProviderImpl
+import com.finpulse.app.domain.engine.CurrencyConverter
 import com.finpulse.app.domain.model.Account
 import com.finpulse.app.domain.model.AccountType
 import com.finpulse.app.domain.model.Debt
@@ -9,6 +11,7 @@ import com.finpulse.app.domain.model.FinancialGoal
 import com.finpulse.app.domain.model.InvestmentAsset
 import com.finpulse.app.domain.model.Transaction
 import com.finpulse.app.domain.model.TransactionType
+import java.math.BigDecimal
 
 data class DashboardSummary(
     val totalBalance: Money,
@@ -22,9 +25,26 @@ data class DashboardSummary(
     val savingsRatePercentage: Double
 )
 
-class GetDashboardSummaryUseCase {
+class GetDashboardSummaryUseCase(
+    private val currencyConverter: CurrencyConverter? = null
+) {
 
-    operator fun invoke(
+    private fun convertFallback(money: Money, targetCurrency: String, customRate: Double? = null): Money {
+        val target = targetCurrency.uppercase()
+        if (money.currencyCode.equals(target, ignoreCase = true)) return money
+
+        val rate = customRate ?: ExchangeRateProviderImpl.computeFallbackRate(money.currencyCode, target)
+        val targetMajor = money.amountBigDecimal.multiply(BigDecimal.valueOf(rate))
+        return Money.fromMajor(targetMajor, target)
+    }
+
+    private fun convertTxFallback(tx: Transaction, targetCurrency: String): Money {
+        val target = targetCurrency.uppercase()
+        if (tx.amount.currencyCode.equals(target, ignoreCase = true)) return tx.amount
+        return convertFallback(tx.amount, target, tx.exchangeRate)
+    }
+
+    suspend operator fun invoke(
         accounts: List<Account>,
         transactions: List<Transaction>,
         investments: List<InvestmentAsset>,
@@ -33,67 +53,83 @@ class GetDashboardSummaryUseCase {
         baseCurrency: String = "USD"
     ): DashboardSummary {
         val activeAccounts = accounts.filter { !it.isArchived }
+        val target = baseCurrency.uppercase()
 
-        // Total Balance & Available
+        // 1. Total Balance & Available (converted to baseCurrency)
         var totalBalMinor = 0L
         var totalAvailMinor = 0L
         var savingsBalMinor = 0L
 
         for (acc in activeAccounts) {
-            totalBalMinor += acc.balance.amountMinor
-            totalAvailMinor += acc.availableBalance.amountMinor
+            val convertedBal = currencyConverter?.convert(acc.balance, target)
+                ?: convertFallback(acc.balance, target)
+            val convertedAvail = currencyConverter?.convert(acc.availableBalance, target)
+                ?: convertFallback(acc.availableBalance, target)
+
+            totalBalMinor += convertedBal.amountMinor
+            totalAvailMinor += convertedAvail.amountMinor
+
             if (acc.type == AccountType.SAVINGS) {
-                savingsBalMinor += acc.balance.amountMinor
+                savingsBalMinor += convertedBal.amountMinor
             }
         }
 
-        // Transactions in period
+        // 2. Transactions in period (converted to baseCurrency respecting historical rates)
         var incomeMinor = 0L
         var expenseMinor = 0L
 
         for (tx in transactions) {
+            val convertedTx = currencyConverter?.convertHistorical(tx, target)
+                ?: convertTxFallback(tx, target)
+
             when (tx.type) {
-                TransactionType.INCOME, TransactionType.REFUND -> incomeMinor += tx.amount.amountMinor
-                TransactionType.EXPENSE -> if (!tx.isExcludedFromBudget) expenseMinor += tx.amount.amountMinor
-                TransactionType.TRANSFER -> { /* Transfers don't alter net cash flow */ }
+                TransactionType.INCOME, TransactionType.REFUND -> incomeMinor += convertedTx.amountMinor
+                TransactionType.EXPENSE -> if (!tx.isExcludedFromBudget) expenseMinor += convertedTx.amountMinor
+                TransactionType.TRANSFER -> { /* Internal transfers don't alter net cash flow */ }
             }
         }
 
-        // Net Cash Flow
+        // 3. Net Cash Flow
         val netCashFlowMinor = incomeMinor - expenseMinor
 
-        // Investments total current value
+        // 4. Investments total current value (converted to baseCurrency)
         var totalInvestmentsMinor = 0L
         for (asset in investments) {
-            totalInvestmentsMinor += asset.currentValue.amountMinor
+            val convertedInv = currencyConverter?.convert(asset.currentValue, target)
+                ?: convertFallback(asset.currentValue, target)
+            totalInvestmentsMinor += convertedInv.amountMinor
         }
 
-        // Debts total remaining
+        // 5. Debts total remaining (converted to baseCurrency)
         var totalDebtMinor = 0L
         for (debt in debts) {
-            totalDebtMinor += debt.remainingBalance.amountMinor
+            val convertedDebt = currencyConverter?.convert(debt.remainingBalance, target)
+                ?: convertFallback(debt.remainingBalance, target)
+            totalDebtMinor += convertedDebt.amountMinor
         }
 
-        // Goal savings
+        // 6. Goal savings (converted to baseCurrency)
         for (goal in goals) {
-            savingsBalMinor += goal.currentAmount.amountMinor
+            val convertedGoal = currencyConverter?.convert(goal.currentAmount, target)
+                ?: convertFallback(goal.currentAmount, target)
+            savingsBalMinor += convertedGoal.amountMinor
         }
 
-        // Savings Rate = (Income - Expenses) / Income * 100%
+        // 7. Savings Rate
         val savingsRate = if (incomeMinor > 0L) {
             val saved = (incomeMinor - expenseMinor).coerceAtLeast(0L)
             (saved.toDouble() / incomeMinor.toDouble()) * 100.0
         } else 0.0
 
         return DashboardSummary(
-            totalBalance = Money(totalBalMinor, baseCurrency),
-            availableBalance = Money(totalAvailMinor, baseCurrency),
-            income = Money(incomeMinor, baseCurrency),
-            expenses = Money(expenseMinor, baseCurrency),
-            netCashFlow = Money(netCashFlowMinor, baseCurrency),
-            totalSavings = Money(savingsBalMinor, baseCurrency),
-            totalInvestments = Money(totalInvestmentsMinor, baseCurrency),
-            totalDebt = Money(totalDebtMinor, baseCurrency),
+            totalBalance = Money(totalBalMinor, target),
+            availableBalance = Money(totalAvailMinor, target),
+            income = Money(incomeMinor, target),
+            expenses = Money(expenseMinor, target),
+            netCashFlow = Money(netCashFlowMinor, target),
+            totalSavings = Money(savingsBalMinor, target),
+            totalInvestments = Money(totalInvestmentsMinor, target),
+            totalDebt = Money(totalDebtMinor, target),
             savingsRatePercentage = savingsRate
         )
     }

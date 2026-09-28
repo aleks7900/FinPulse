@@ -819,7 +819,7 @@
     <string name="cat_transfer_withdrawal">Nakit Para Çekme</string>
     <string name="cat_transfer_deposit">Nakit Para Yatırma</string>
 
-    <!-- Financial Calendar & Cash Flow -->
+    <!-- Financial Calendar &amp; Cash Flow -->
     <string name="calendar_title">Finansal Takvim</string>
     <string name="calendar_tab_month">Ay</string>
     <string name="calendar_tab_agenda">Ajanda</string>
@@ -862,7 +862,7 @@
     <string name="shortcut_review_inbox_short">İnceleme Kutusu</string>
     <string name="shortcut_review_inbox_long">Bekleyen İşlemleri İncele</string>
 
-    <!-- Home Screen Widgets & Privacy -->
+    <!-- Home Screen Widgets &amp; Privacy -->
     <string name="widget_name_balance">FinPulse: Güncel Bakiye</string>
     <string name="widget_desc_balance">Güncel likit bakiyeyi ve hesap özetini görüntüleyin</string>
     <string name="widget_name_spending">FinPulse: Aylık Harcama</string>
@@ -896,7 +896,7 @@
     <string name="security_widget_mask_lock">Uygulama Kilidinde Maskele</string>
     <string name="security_widget_mask_lock_desc">Biyometri veya PIN etkinken widget tutarlarını otomatik gizle</string>
 
-    <!-- Search, Filters & Saved Views -->
+    <!-- Search, Filters &amp; Saved Views -->
     <string name="preset_this_month">Bu Ay</string>
     <string name="preset_last_month">Geçen Ay</string>
     <string name="preset_uncategorized">Kategorisiz</string>
@@ -932,7 +932,7 @@
     <string name="filter_active_count">%1$d aktif</string>
     <string name="filter_results_count">%1$d İşlem</string>
 
-    <!-- TASK-10: Backup, Restore & Export Strings -->
+    <!-- TASK-10: Backup, Restore &amp; Export Strings -->
     <string name="backup_last_date">Son yedekleme: %1$s</string>
     <string name="backup_never">Henüz yedekleme oluşturulmadı</string>
     <string name="backup_reminder_title">Periyodik Yedekleme Hatırlatıcısı</string>
@@ -1307,7 +1307,7 @@
     <string name="action_got_it">AnladД±m</string>
     <string name="export_records_to_restore">Geri yГјklenecek kayД±tlar:</string>
 
-    <!-- Financial Digest & Habit Insights -->
+    <!-- Financial Digest &amp; Habit Insights -->
     <string name="digest_screen_title">Finansal Özet</string>
     <string name="digest_more_desc">Günlük ve haftalık alışkanlık özetleri, faturalar ve harcama trendleri</string>
     <string name="digest_card_summary_desc">Günlük ve haftalık alışkanlık özeti, faturalar ve harcama trendleri</string>
@@ -1347,4 +1347,17 @@
     <string name="digest_notif_detailed_top_expense">En büyük: %1$s (%2$s)</string>
     <string name="digest_notif_detailed_bills">%1$d fatura yaklaşıyor</string>
     <string name="digest_notif_action_open">Özeti Görüntüle</string>
+    <string name="currencies_screen_title">Para Birimleri ve Döviz Kurları</string>
+    <string name="currencies_refresh_rates">Döviz Kurlarını Yenile</string>
+    <string name="currencies_base_currency_label">Temel Para Birimi</string>
+    <string name="currencies_change_base_currency">Temel Para Birimini Değiştir</string>
+    <string name="currencies_last_updated_at">Döviz kurları güncellendi %1$s</string>
+    <string name="currencies_offline_fallback_active">Çevrimdışı Deterministik Yedek Aktif</string>
+    <string name="currencies_offline_desc">Çoklu para birimi hesaplamaları için piyasa referans kurları kullanılır.</string>
+    <string name="currencies_exchange_rates_title">%1$s Karşısındaki Döviz Kurları</string>
+    <string name="currencies_manual_badge">Özel</string>
+    <string name="currencies_edit_rate_title">Kuru Düzenle: %1$s / %2$s</string>
+    <string name="currencies_edit_rate_desc">Banka komisyonlarını veya kur marjlarını yansıtmak için %1$s ve %2$s arasında özel manuel kur belirleyin.</string>
+    <string name="currencies_reset_default">Referans Kura Sıfırla</string>
+    <string name="currencies_more_desc">Temel para birimi: %1$s • Manuel kurları ve çevrimdışı dönüşümü yönet</string>
 </resources>

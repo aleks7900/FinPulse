@@ -26,7 +26,7 @@ import java.time.LocalDate
 class EnginesTest {
 
     @Test
-    fun testDashboardSummaryCalculation() {
+    fun testDashboardSummaryCalculation() = kotlinx.coroutines.runBlocking {
         val useCase = GetDashboardSummaryUseCase()
 
         val accounts = listOf(
