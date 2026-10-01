@@ -156,7 +156,7 @@
     <string name="budget_rollover_amount_hint">Ajuste de rollover (+/-)</string>
     <string name="budget_rollover_badge">Rollover: %1$s</string>
     <string name="budget_alert_threshold">Limite de alerta: %1$d%%</string>
-    <string name="budget_threshold_heads_up">70% atingido</string>
+    <string name="budget_threshold_heads_up" formatted="false">70% atingido</string>
     <string name="budget_threshold_warning">Perto do limite (%1$d%%)</string>
     <string name="budget_pacing_ahead">Ritmo acelerado (+%1$s/dia)</string>
     <string name="budget_pacing_under">Abaixo do ritmo (-%1$s/dia)</string>
@@ -1213,7 +1213,7 @@
     <string name="rules_manual_matches">вЂў Categorizadas manualmente antes: %1$d</string>
     <string name="rules_overwrite_manual">Substituir explicitamente %1$d transaГ§Гµes categorizadas Г  mГЈo</string>
     <string name="rules_safe_only_note">Todas as %1$d transaГ§Гµes correspondentes nГЈo foram revisadas e podem ser atualizadas com seguranГ§a.</string>
-    <string name="rules_match_exact">CorrespondГЄncia 100% Exata</string>
+    <string name="rules_match_exact" formatted="false">CorrespondГЄncia 100% Exata</string>
     <string name="rules_match_confident">%1$d%% de ConfianГ§a</string>
     <string name="rules_match_keyword">CorrespondГЄncia por Palavra-chave</string>
     <string name="rules_match_low">Baixa ConfianГ§a</string>

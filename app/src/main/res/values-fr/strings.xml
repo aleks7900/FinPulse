@@ -156,7 +156,7 @@
     <string name="budget_rollover_amount_hint">Montant du report (+/-)</string>
     <string name="budget_rollover_badge">Report : %1$s</string>
     <string name="budget_alert_threshold">Seuil d\'alerte : %1$d%%</string>
-    <string name="budget_threshold_heads_up">70% atteints</string>
+    <string name="budget_threshold_heads_up" formatted="false">70% atteints</string>
     <string name="budget_threshold_warning">Proche de la limite (%1$d%%)</string>
     <string name="budget_pacing_ahead">Rythme accéléré (+%1$s/j)</string>
     <string name="budget_pacing_under">Rythme ralenti (-%1$s/j)</string>
@@ -1213,7 +1213,7 @@
     <string name="rules_manual_matches">вЂў DГ©jГ  catГ©gorisГ©es manuellement : %1$d</string>
     <string name="rules_overwrite_manual">Г‰craser explicitement %1$d transactions catГ©gorisГ©es manuellement</string>
     <string name="rules_safe_only_note">Toutes les %1$d transactions trouvГ©es ne sont pas vГ©rifiГ©es et peuvent ГЄtre mises Г  jour en toute sГ©curitГ©.</string>
-    <string name="rules_match_exact">100% Correspondance de rГЁgle</string>
+    <string name="rules_match_exact" formatted="false">100% Correspondance de rГЁgle</string>
     <string name="rules_match_confident">%1$d%% Confiance</string>
     <string name="rules_match_keyword">Correspondance mot-clГ©</string>
     <string name="rules_match_low">Faible confiance</string>
@@ -1263,7 +1263,7 @@
 
     <!-- Additional Localizations -->
     <string name="csv_intro_desc">Importez des relevГ©s bancaires ou de carte de crГ©dit au format CSV. FinPulse dГ©tectera automatiquement les formats de date, montants et colonnes.</string>
-    <string name="csv_on_device_privacy">100% sur l\'appareil &amp; privГ©. Jamais transmis au cloud.</string>
+    <string name="csv_on_device_privacy" formatted="false">100% sur l\'appareil &amp; privГ©. Jamais transmis au cloud.</string>
     <string name="csv_quick_demo">RelevГ©s de dГ©monstration rapide</string>
     <string name="csv_quick_demo_desc">Vous n\'avez pas de fichier prГЄt ? Chargez un Г©chantillon pour tester le mappage, la dГ©tection des doublons et la catГ©gorisation :</string>
     <string name="csv_import_profile">Profil d\'importation</string>

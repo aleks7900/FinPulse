@@ -26,7 +26,7 @@ object DuplicateDetectorEngine {
         merchant: String?
     ): String {
         val zone = java.time.ZoneId.systemDefault()
-        val dateStr = LocalDate.ofInstant(Instant.ofEpochMilli(timestamp), zone).toString()
+        val dateStr = Instant.ofEpochMilli(timestamp).atZone(zone).toLocalDate().toString()
         val textToNormalize = if (!merchant.isNullOrBlank()) merchant else description
         val normalizedText = normalizeForMatching(textToNormalize)
 
@@ -81,7 +81,7 @@ object DuplicateDetectorEngine {
             }
 
             // 2. Check Existing Transactions for Exact Match
-            val rowDate = LocalDate.ofInstant(Instant.ofEpochMilli(row.parsedDate), zone)
+            val rowDate = Instant.ofEpochMilli(row.parsedDate).atZone(zone).toLocalDate()
             val rowNormalizedText = normalizeForMatching(row.parsedMerchant ?: row.parsedDescription)
 
             var exactMatch: Transaction? = null
@@ -92,7 +92,7 @@ object DuplicateDetectorEngine {
                     continue
                 }
 
-                val txDate = LocalDate.ofInstant(Instant.ofEpochMilli(tx.timestamp), zone)
+                val txDate = Instant.ofEpochMilli(tx.timestamp).atZone(zone).toLocalDate()
                 val txNormalizedText = normalizeForMatching(tx.merchant ?: tx.description)
 
                 val daysDiff = abs(rowDate.toEpochDay() - txDate.toEpochDay())

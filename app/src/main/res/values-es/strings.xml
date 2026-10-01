@@ -156,7 +156,7 @@
     <string name="budget_rollover_amount_hint">Importe de remanente (+/-)</string>
     <string name="budget_rollover_badge">Remanente: %1$s</string>
     <string name="budget_alert_threshold">Umbral de alerta: %1$d%%</string>
-    <string name="budget_threshold_heads_up">70% alcanzado</string>
+    <string name="budget_threshold_heads_up" formatted="false">70% alcanzado</string>
     <string name="budget_threshold_warning">Cerca del límite (%1$d%%)</string>
     <string name="budget_pacing_ahead">Ritmo alto (+%1$s/día)</string>
     <string name="budget_pacing_under">Ritmo bajo (-%1$s/día)</string>
@@ -1213,7 +1213,7 @@
     <string name="rules_manual_matches">вЂў Categorizadas manualmente con anterioridad: %1$d</string>
     <string name="rules_overwrite_manual">Sobrescribir explГ­citamente %1$d transacciones categorizadas a mano</string>
     <string name="rules_safe_only_note">Las %1$d transacciones coincidentes no han sido revisadas y se pueden actualizar de forma segura.</string>
-    <string name="rules_match_exact">100% Coincidencia de regla</string>
+    <string name="rules_match_exact" formatted="false">100% Coincidencia de regla</string>
     <string name="rules_match_confident">%1$d%% Confianza</string>
     <string name="rules_match_keyword">Coincidencia por palabra clave</string>
     <string name="rules_match_low">Baja confianza</string>
@@ -1263,7 +1263,7 @@
 
     <!-- Additional Localizations -->
     <string name="csv_intro_desc">Carga extractos bancarios o de tarjetas de crГ©dito en formato CSV. FinPulse detectarГЎ automГЎticamente formatos de fecha, importes y estructura de columnas.</string>
-    <string name="csv_on_device_privacy">100% en el dispositivo y privado. Nunca se envГ­a a la nube.</string>
+    <string name="csv_on_device_privacy" formatted="false">100% en el dispositivo y privado. Nunca se envГ­a a la nube.</string>
     <string name="csv_quick_demo">Extractos de demostraciГіn rГЎpida</string>
     <string name="csv_quick_demo_desc">ВїNo tienes un archivo listo? Carga un extracto bancario de ejemplo para probar la asignaciГіn, detecciГіn de duplicados y categorizaciГіn:</string>
     <string name="csv_import_profile">Perfil de importaciГіn</string>

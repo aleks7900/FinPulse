@@ -1,0 +1,21 @@
+Google Play Console Categorization & Contact Metadata:
+
+Application Type: App
+Primary Category: Finance
+Tags / Keywords:
+  - Personal Finance
+  - Expense Tracker
+  - Budget Planner
+  - Money Manager
+  - Bill Reminder
+
+Contact Information:
+  - Email: support@finpulse.app
+  - Website: https://finpulse.app
+  - Privacy Policy URL: https://finpulse.app/privacy (or hosting docs/PRIVACY_POLICY.md on GitHub Pages)
+
+Content Rating:
+  - IARC Questionnaire: All Ages / Everyone (PEGI 3, ESRB Everyone)
+  - Contains Ads: No
+  - In-App Purchases: No
+  - Target Audience: 18 and over (Adults managing personal finances)

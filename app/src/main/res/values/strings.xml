@@ -156,7 +156,7 @@
     <string name="budget_rollover_amount_hint">Rollover Amount (+/-)</string>
     <string name="budget_rollover_badge">Rollover: %1$s</string>
     <string name="budget_alert_threshold">Alert Threshold: %1$d%%</string>
-    <string name="budget_threshold_heads_up">70% Reached</string>
+    <string name="budget_threshold_heads_up" formatted="false">70% Reached</string>
     <string name="budget_threshold_warning">Near Limit (%1$d%%)</string>
     <string name="budget_pacing_ahead">Ahead of pace (+%1$s/day)</string>
     <string name="budget_pacing_under">Under pace (-%1$s/day)</string>
@@ -1214,7 +1214,7 @@
     <string name="rules_manual_matches">• Previously Manual Categorized: %1$d</string>
     <string name="rules_overwrite_manual">Explicitly overwrite %1$d manually categorized transactions</string>
     <string name="rules_safe_only_note">All %1$d matching transactions are unreviewed and safe to update.</string>
-    <string name="rules_match_exact">100% Rule Match</string>
+    <string name="rules_match_exact" formatted="false">100% Rule Match</string>
     <string name="rules_match_confident">%1$d%% Confident</string>
     <string name="rules_match_keyword">Keyword Match</string>
     <string name="rules_match_low">Low Confidence</string>
@@ -1264,7 +1264,7 @@
 
     <!-- Additional Localizations -->
     <string name="csv_intro_desc">Upload bank or credit card statements exported in CSV format. FinPulse will automatically detect date formats, amounts, and column structures.</string>
-    <string name="csv_on_device_privacy">100% On-Device &amp; Private. Never sent to the cloud.</string>
+    <string name="csv_on_device_privacy" formatted="false">100% On-Device &amp; Private. Never sent to the cloud.</string>
     <string name="csv_quick_demo">Quick Demo Statements</string>
     <string name="csv_quick_demo_desc">Don\'t have a file ready? Load a sample bank statement to test mapping, duplicate detection, and categorization:</string>
     <string name="csv_import_profile">Import Profile</string>

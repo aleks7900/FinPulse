@@ -1,0 +1,1 @@
+Smart expense tracker, offline budget planner & seamless Google cloud sync.

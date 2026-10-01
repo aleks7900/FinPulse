@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Include core database for offline financial history restore -->
+    <include domain="database" path="finpulse.db" />
+    <include domain="database" path="finpulse.db-wal" />
+    <include domain="database" path="finpulse.db-shm" />
+    <!-- Include preferences -->
+    <include domain="file" path="datastore/user_preferences.preferences_pb" />
+    <!-- Exclude cache -->
+    <exclude domain="root" path="cache" />
+</full-backup-content>

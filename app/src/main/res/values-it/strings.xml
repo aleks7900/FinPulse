@@ -1213,7 +1213,7 @@
     <string name="rules_manual_matches">вЂў GiГ  categorizzate manualmente: %1$d</string>
     <string name="rules_overwrite_manual">Sovrascrivi esplicitamente %1$d transazioni categorizzate a mano</string>
     <string name="rules_safe_only_note">Tutte le %1$d transazioni individuate non sono state verificate e possono essere aggiornate in sicurezza.</string>
-    <string name="rules_match_exact">100% Corrispondenza regola</string>
+    <string name="rules_match_exact" formatted="false">100% Corrispondenza regola</string>
     <string name="rules_match_confident">%1$d%% AttendibilitГ </string>
     <string name="rules_match_keyword">Corrispondenza parola chiave</string>
     <string name="rules_match_low">Bassa attendibilitГ </string>
@@ -1263,7 +1263,7 @@
 
     <!-- Additional Localizations -->
     <string name="csv_intro_desc">Carica estratti conto bancari o di carte di credito in formato CSV. FinPulse rileverГ  automaticamente formati data, importi e colonne.</string>
-    <string name="csv_on_device_privacy">100% sul dispositivo &amp; privato. Mai inviato al cloud.</string>
+    <string name="csv_on_device_privacy" formatted="false">100% sul dispositivo &amp; privato. Mai inviato al cloud.</string>
     <string name="csv_quick_demo">Estratti conto dimostrativi</string>
     <string name="csv_quick_demo_desc">Non hai un file pronto? Carica un estratto di esempio per testare mappatura, ricerca duplicati e categorizzazione:</string>
     <string name="csv_import_profile">Profilo di importazione</string>

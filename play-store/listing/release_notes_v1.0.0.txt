@@ -1,0 +1,11 @@
+Fin Pulse v1.0.0 — Welcome to Fin Pulse!
+
+What's New:
+• Complete personal finance tracker: Log expenses, income, and transfers seamlessly.
+• Multi-Account & Wallet support: Manage checking, savings, credit cards, and cash.
+• Category budgets with visual alerts and progress bars.
+• Rich spending analytics and interactive monthly cash flow charts.
+• Offline-First architecture: Works completely offline with zero latency.
+• Optional Google Account Sync: Backup and sync all your financial records across Android devices via Google Sign-In.
+• Biometric Lock (Fingerprint/PIN), Privacy Mode (balance masking), and screenshot protection.
+• Refined modern Material Design 3 user interface with dark mode.
