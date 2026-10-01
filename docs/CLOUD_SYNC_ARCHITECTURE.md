@@ -208,7 +208,7 @@ No client can ever read, list, or tamper with another user's financial documents
 
 ## 8. Background Synchronization (WorkManager)
 
-* **Worker**: `com.finpulse.app.core.work.SyncWorker`
+* **Worker**: `md.alexlab.finpulse.core.work.SyncWorker`
 * **Trigger Conditions**:
   - `NetworkType.CONNECTED` (Requires internet connectivity)
   - `BatteryNotLow` (Preserves battery on low battery states)

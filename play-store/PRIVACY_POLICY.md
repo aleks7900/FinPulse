@@ -8,7 +8,7 @@
 ---
 
 > [!IMPORTANT]
-> **LEGAL REVIEW REQUIRED:** This Privacy Policy was drafted based strictly on the technical architecture, SDK dependencies, and data flows implemented in the FinPulse Android repository (`com.finpulse.app`). Before publishing this application on Google Play or making this policy public, it must be reviewed and customized by the publisher's legal counsel. All placeholder tags (e.g., `[INSERT ...]`) must be replaced with accurate corporate and contact information.
+> **LEGAL REVIEW REQUIRED:** This Privacy Policy was drafted based strictly on the technical architecture, SDK dependencies, and data flows implemented in the FinPulse Android repository (`md.alexlab.finpulse`). Before publishing this application on Google Play or making this policy public, it must be reviewed and customized by the publisher's legal counsel. All placeholder tags (e.g., `[INSERT ...]`) must be replaced with accurate corporate and contact information.
 
 ---
 
@@ -27,7 +27,7 @@ Our core privacy principles are:
 ## 2. Information Handled by FinPulse
 
 ### A. Information Stored Locally on Your Device (Offline)
-When using FinPulse, the following user-created information is stored exclusively within your device's private, sandboxed SQLite database (Android Room) located in `/data/data/com.finpulse.app/`:
+When using FinPulse, the following user-created information is stored exclusively within your device's private, sandboxed SQLite database (Android Room) located in `/data/data/md.alexlab.finpulse/`:
 - **Financial Transactions:** Transaction amounts, timestamps, types (Income, Expense, Transfer, Refund), descriptions, merchants, custom tags, and notes.
 - **Financial Accounts & Portfolios:** Account names, types (Cash, Checking, Savings, Credit Card, Investment, Loan, Digital Wallet), initial balances, currency codes, and credit limits.
 - **Budgeting Configuration:** Category budget targets, overall monthly budgets, rollover configurations, and pacing preferences.
@@ -101,7 +101,7 @@ All network transmissions are strictly encrypted in transit using Transport Laye
 ## 5. Data Storage, Security & Retention
 
 We implement rigorous technical safeguards to secure your financial records:
-- **Sandbox Isolation:** Local database files are stored in Android's private internal application directory (`/data/data/com.finpulse.app/`), preventing access by other installed applications on unrooted devices.
+- **Sandbox Isolation:** Local database files are stored in Android's private internal application directory (`/data/data/md.alexlab.finpulse/`), preventing access by other installed applications on unrooted devices.
 - **In-Transit Encryption:** All communications with Google Cloud services use strict TLS 1.3 / HTTPS. Cleartext HTTP is explicitly prohibited at the application manifest level.
 - **Server Security Rules:** Firestore database rules enforce that documents located at `/users/{userId}` are strictly readable and writable only by the authenticated user whose `request.auth.uid == userId`. No cross-account or public access is permitted.
 - **Screenshot Protection:** When enabled in Security Settings, FinPulse applies `WindowManager.LayoutParams.FLAG_SECURE` to prevent OS screenshots and conceal application contents in the Android recent apps task switcher.

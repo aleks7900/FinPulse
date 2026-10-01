@@ -70,7 +70,7 @@ All communications between the App and Google Cloud infrastructure are encrypted
 ## 5. Data Security & Storage
 
 We implement rigorous technical safeguards to secure your data:
-- **Local Sandbox Storage:** Your database is kept in Android's protected internal app storage (`/data/data/com.finpulse.app/`), inaccessible to other applications installed on your device without root access.
+- **Local Sandbox Storage:** Your database is kept in Android's protected internal app storage (`/data/data/md.alexlab.finpulse/`), inaccessible to other applications installed on your device without root access.
 - **Android Keystore:** Cryptographic keys and sensitive tokens are stored using the hardware-backed Android Keystore system.
 - **Cloud Security Rules:** Firestore database rules enforce that data located at `/users/{userId}/` can **only** be read or written by the authenticated user whose `request.auth.uid == userId`. No other user or unauthorized third party can read your data.
 - **Screenshot Protection:** When enabled, the App activates Android's `FLAG_SECURE` window attribute, preventing screenshots and hiding app contents in the Android recent apps task switcher.

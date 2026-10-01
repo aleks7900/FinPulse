@@ -1,0 +1,1049 @@
+package md.alexlab.finpulse.data.repository
+
+import md.alexlab.finpulse.core.database.FinPulseDatabase
+import md.alexlab.finpulse.core.database.dao.CategoryDao
+import md.alexlab.finpulse.core.database.entity.CategoryEntity
+import md.alexlab.finpulse.core.database.entity.SyncRecordEntity
+import md.alexlab.finpulse.core.model.Money
+import md.alexlab.finpulse.data.mapper.toDomain
+import md.alexlab.finpulse.data.mapper.toEntity
+import md.alexlab.finpulse.domain.model.Account
+import md.alexlab.finpulse.domain.model.Budget
+import md.alexlab.finpulse.domain.model.Category
+import md.alexlab.finpulse.domain.model.CategoryType
+import md.alexlab.finpulse.domain.model.Debt
+import md.alexlab.finpulse.domain.model.FinancialGoal
+import md.alexlab.finpulse.domain.model.InvestmentAsset
+import md.alexlab.finpulse.domain.engine.RecurringDateEngine
+import md.alexlab.finpulse.domain.model.OccurrenceStatus
+import md.alexlab.finpulse.domain.model.PaymentFrequency
+import md.alexlab.finpulse.domain.model.RecurringOccurrence
+import md.alexlab.finpulse.domain.model.RecurringTransaction
+import md.alexlab.finpulse.domain.model.Transaction
+import md.alexlab.finpulse.domain.model.TransactionType
+import md.alexlab.finpulse.domain.repository.AccountRepository
+import md.alexlab.finpulse.domain.repository.BudgetRepository
+import md.alexlab.finpulse.domain.repository.CategorizationRuleRepository
+import md.alexlab.finpulse.domain.repository.CategoryRepository
+import md.alexlab.finpulse.domain.repository.DebtRepository
+import md.alexlab.finpulse.domain.repository.GoalRepository
+import md.alexlab.finpulse.domain.repository.ImportProfileRepository
+import md.alexlab.finpulse.domain.repository.InvestmentRepository
+import md.alexlab.finpulse.domain.repository.MerchantSignalRepository
+import md.alexlab.finpulse.core.database.util.TransactionQueryBuilder
+import md.alexlab.finpulse.domain.model.SavedFilter
+import md.alexlab.finpulse.domain.model.TransactionFilterParams
+import md.alexlab.finpulse.domain.repository.RecurringRepository
+import md.alexlab.finpulse.domain.repository.SavedFilterRepository
+import md.alexlab.finpulse.domain.repository.TransactionRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import java.util.UUID
+
+class AccountRepositoryImpl(private val database: FinPulseDatabase) : AccountRepository {
+    private val dao = database.accountDao()
+
+    override fun getAllAccountsFlow(): Flow<List<Account>> =
+        dao.getAllAccountsFlow().map { list -> list.map { it.toDomain() } }
+
+    override fun getActiveAccountsFlow(): Flow<List<Account>> =
+        dao.getActiveAccountsFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getAccountById(id: String): Account? =
+        dao.getAccountById(id)?.toDomain()
+
+    override suspend fun saveAccount(account: Account) {
+        dao.insertAccount(account.toEntity())
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "ACCOUNT",
+                entityId = account.id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun deleteAccount(id: String) {
+        dao.deleteAccountById(id)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "ACCOUNT",
+                entityId = id,
+                syncStatus = "PENDING_DELETE",
+                localUpdatedAt = System.currentTimeMillis(),
+                isDeleted = true,
+                deletedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun setArchived(id: String, isArchived: Boolean) {
+        dao.setArchived(id, isArchived)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "ACCOUNT",
+                entityId = id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun updateBalances(accountId: String, balance: Money, availableBalance: Money) {
+        dao.updateBalances(accountId, balance.amountMinor, availableBalance.amountMinor)
+    }
+}
+
+class TransactionRepositoryImpl(private val database: FinPulseDatabase) : TransactionRepository {
+    private val txDao = database.transactionDao()
+    private val accountDao = database.accountDao()
+
+    override fun getAllTransactionsFlow(): Flow<List<Transaction>> =
+        txDao.getAllTransactionsFlow().map { list -> list.map { it.toDomain() } }
+
+    override fun getRecentTransactionsFlow(limit: Int): Flow<List<Transaction>> =
+        txDao.getRecentTransactionsFlow(limit).map { list -> list.map { it.toDomain() } }
+
+    override fun getTransactionsByAccountFlow(accountId: String): Flow<List<Transaction>> =
+        txDao.getTransactionsByAccountFlow(accountId).map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getTransactionCountForAccount(accountId: String): Int =
+        txDao.getTransactionCountForAccount(accountId)
+
+    override fun getTransactionsByCategoryFlow(categoryId: String): Flow<List<Transaction>> =
+        txDao.getTransactionsByCategoryFlow(categoryId).map { list -> list.map { it.toDomain() } }
+
+    override fun getTransactionsByDateRangeFlow(startDate: Long, endDate: Long): Flow<List<Transaction>> =
+        txDao.getTransactionsByDateRangeFlow(startDate, endDate).map { list -> list.map { it.toDomain() } }
+
+    override fun searchTransactionsFlow(query: String): Flow<List<Transaction>> =
+        txDao.searchTransactionsFlow(query).map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getTransactionById(id: String): Transaction? =
+        txDao.getTransactionById(id)?.toDomain()
+
+    override suspend fun createTransaction(transaction: Transaction) {
+        // Enforce balance update in accounts
+        applyTransactionBalanceChange(transaction, isReversal = false)
+        txDao.insertTransaction(transaction.toEntity())
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "TRANSACTION",
+                entityId = transaction.id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun updateTransaction(transaction: Transaction) {
+        val existing = txDao.getTransactionById(transaction.id)?.toDomain()
+        if (existing != null) {
+            // Reverse previous balance change
+            applyTransactionBalanceChange(existing, isReversal = true)
+        }
+        // Apply new balance change
+        applyTransactionBalanceChange(transaction, isReversal = false)
+        txDao.updateTransaction(transaction.toEntity())
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "TRANSACTION",
+                entityId = transaction.id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun deleteTransaction(id: String) {
+        val existing = txDao.getTransactionById(id)?.toDomain()
+        if (existing != null) {
+            applyTransactionBalanceChange(existing, isReversal = true)
+            txDao.deleteTransactionById(id)
+            database.syncRecordDao().upsertSyncRecord(
+                SyncRecordEntity(
+                    entityType = "TRANSACTION",
+                    entityId = id,
+                    syncStatus = "PENDING_DELETE",
+                    localUpdatedAt = System.currentTimeMillis(),
+                    isDeleted = true,
+                    deletedAt = System.currentTimeMillis()
+                )
+            )
+        }
+    }
+
+    override fun getFrequentCategoryIdsFlow(type: TransactionType, limit: Int): Flow<List<String>> =
+        txDao.getFrequentCategoryIdsFlow(type.name, limit)
+
+    override fun getFrequentMerchantsFlow(limit: Int): Flow<List<String>> =
+        txDao.getFrequentMerchantsFlow(limit)
+
+    override suspend fun getSuggestedCategoryForMerchant(merchant: String): String? =
+        txDao.getSuggestedCategoryForMerchant(merchant)
+
+    override fun getUnreviewedTransactionsFlow(): Flow<List<Transaction>> =
+        txDao.getUnreviewedTransactionsFlow().map { list -> list.map { it.toDomain() } }
+
+    override fun getUnreviewedCountFlow(): Flow<Int> =
+        txDao.getUnreviewedCountFlow()
+
+    override suspend fun confirmTransactionCategory(id: String, categoryId: String, matchedRuleId: String?, confidence: Float) {
+        txDao.updateTransactionCategory(
+            id = id,
+            categoryId = categoryId,
+            isConfirmed = true,
+            matchedRuleId = matchedRuleId,
+            confidence = confidence
+        )
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "TRANSACTION",
+                entityId = id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun bulkUpdateCategory(ids: List<String>, categoryId: String, isConfirmed: Boolean, matchedRuleId: String?) {
+        txDao.bulkUpdateCategory(
+            ids = ids,
+            categoryId = categoryId,
+            isConfirmed = isConfirmed,
+            matchedRuleId = matchedRuleId
+        )
+        val now = System.currentTimeMillis()
+        ids.forEach { id ->
+            database.syncRecordDao().upsertSyncRecord(
+                SyncRecordEntity(
+                    entityType = "TRANSACTION",
+                    entityId = id,
+                    syncStatus = "PENDING_UPSERT",
+                    localUpdatedAt = now
+                )
+            )
+        }
+    }
+
+    override fun filterTransactionsFlow(params: TransactionFilterParams): Flow<List<Transaction>> {
+        val query = TransactionQueryBuilder.buildQuery(params)
+        return txDao.queryTransactionsFlow(query).map { list -> list.map { it.toDomain() } }
+    }
+
+    override suspend fun filterTransactions(params: TransactionFilterParams): List<Transaction> {
+        val query = TransactionQueryBuilder.buildQuery(params)
+        return txDao.queryTransactions(query).map { it.toDomain() }
+    }
+
+    private suspend fun applyTransactionBalanceChange(tx: Transaction, isReversal: Boolean) {
+        val multiplier = if (isReversal) -1 else 1
+
+        val sourceAccount = accountDao.getAccountById(tx.sourceAccountId) ?: return
+        val currentBalance = sourceAccount.balanceMinor
+        val currentAvailable = sourceAccount.availableBalanceMinor
+
+        when (tx.type) {
+            TransactionType.EXPENSE -> {
+                // Deduction: normal is -amount, reversal is +amount
+                val delta = tx.amount.amountMinor * multiplier
+                accountDao.updateBalances(
+                    accountId = tx.sourceAccountId,
+                    balanceMinor = currentBalance - delta,
+                    availableBalanceMinor = currentAvailable - delta
+                )
+            }
+            TransactionType.INCOME, TransactionType.REFUND -> {
+                // Addition: normal is +amount, reversal is -amount
+                val delta = tx.amount.amountMinor * multiplier
+                accountDao.updateBalances(
+                    accountId = tx.sourceAccountId,
+                    balanceMinor = currentBalance + delta,
+                    availableBalanceMinor = currentAvailable + delta
+                )
+            }
+            TransactionType.TRANSFER -> {
+                // Deduct from source account (in source account currency)
+                val srcDelta = tx.amount.amountMinor * multiplier
+                accountDao.updateBalances(
+                    accountId = tx.sourceAccountId,
+                    balanceMinor = currentBalance - srcDelta,
+                    availableBalanceMinor = currentAvailable - srcDelta
+                )
+
+                // Add to destination account (handling cross-currency and bank differences)
+                if (tx.destinationAccountId != null) {
+                    val destAccount = accountDao.getAccountById(tx.destinationAccountId)
+                    if (destAccount != null) {
+                        val destDelta = if (tx.destinationAmount != null) {
+                            tx.destinationAmount.amountMinor * multiplier
+                        } else if (!tx.amount.currencyCode.equals(destAccount.currencyCode, ignoreCase = true)) {
+                            // Cross-currency transfer without explicit destinationAmount: compute via rate or fallback
+                            val rate = tx.exchangeRate ?: ExchangeRateProviderImpl.computeFallbackRate(tx.amount.currencyCode, destAccount.currencyCode)
+                            val destMajor = tx.amount.amountBigDecimal.multiply(java.math.BigDecimal.valueOf(rate))
+                            md.alexlab.finpulse.core.model.CurrencyConfig.toMinor(destMajor, destAccount.currencyCode) * multiplier
+                        } else {
+                            srcDelta
+                        }
+
+                        accountDao.updateBalances(
+                            accountId = tx.destinationAccountId,
+                            balanceMinor = destAccount.balanceMinor + destDelta,
+                            availableBalanceMinor = destAccount.availableBalanceMinor + destDelta
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+class CategoryRepositoryImpl(
+    private val dao: CategoryDao,
+    private val database: FinPulseDatabase? = null
+) : CategoryRepository {
+    constructor(database: FinPulseDatabase) : this(database.categoryDao(), database)
+
+    override fun getAllCategoriesFlow(): Flow<List<Category>> =
+        dao.getAllCategoriesFlow().map { list -> list.map { it.toDomain() } }
+
+    override fun getCategoriesByTypeFlow(type: CategoryType): Flow<List<Category>> =
+        dao.getCategoriesByTypeFlow(type.name).map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getCategoryById(id: String): Category? =
+        dao.getCategoryById(id)?.toDomain()
+
+    override suspend fun saveCategory(category: Category) {
+        dao.insertCategory(category.toEntity())
+        database?.syncRecordDao()?.upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "CATEGORY",
+                entityId = category.id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun seedDefaultCategoriesIfNeeded() {
+        val existingIds = dao.getAllCategoryIds().toSet()
+        val missingDefaults = md.alexlab.finpulse.domain.model.DefaultCategoryCatalog.ALL.filter { it.id !in existingIds }
+        if (missingDefaults.isNotEmpty()) {
+            dao.insertCategoriesIgnore(missingDefaults)
+        }
+    }
+}
+
+class BudgetRepositoryImpl(private val database: FinPulseDatabase) : BudgetRepository {
+    private val dao = database.budgetDao()
+
+    override fun getAllActiveBudgetsFlow(): Flow<List<Budget>> =
+        dao.getAllActiveBudgetsFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getBudgetById(id: String): Budget? =
+        dao.getBudgetById(id)?.toDomain()
+
+    override suspend fun saveBudget(budget: Budget) {
+        dao.insertBudget(budget.toEntity())
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "BUDGET",
+                entityId = budget.id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun deleteBudget(id: String) {
+        dao.deleteBudgetById(id)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "BUDGET",
+                entityId = id,
+                syncStatus = "PENDING_DELETE",
+                localUpdatedAt = System.currentTimeMillis(),
+                isDeleted = true,
+                deletedAt = System.currentTimeMillis()
+            )
+        )
+    }
+}
+
+class RecurringRepositoryImpl(
+    private val database: FinPulseDatabase,
+    private val transactionRepository: TransactionRepository
+) : RecurringRepository {
+    private val dao = database.recurringTransactionDao()
+
+    override fun getAllRecurringFlow(): Flow<List<RecurringTransaction>> =
+        dao.getAllRecurringFlow().map { list -> list.map { it.toDomain() } }
+
+    override fun getActiveRecurringFlow(): Flow<List<RecurringTransaction>> =
+        dao.getActiveRecurringFlow().map { list -> list.map { it.toDomain() } }
+
+    override fun getActiveSubscriptionsFlow(): Flow<List<RecurringTransaction>> =
+        dao.getActiveSubscriptionsFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getRecurringById(id: String): RecurringTransaction? =
+        dao.getRecurringById(id)?.toDomain()
+
+    override suspend fun getDueRecurring(timestamp: Long): List<RecurringTransaction> =
+        dao.getDueRecurring(timestamp).map { it.toDomain() }
+
+    override suspend fun saveRecurring(recurring: RecurringTransaction) {
+        dao.insertRecurring(recurring.toEntity())
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "RECURRING_RULE",
+                entityId = recurring.id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun deleteRecurring(id: String) {
+        // Soft delete / cancel or hard delete rule
+        // Note: Historical transactions with recurringRuleId are preserved in ledger
+        dao.deleteRecurringById(id)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "RECURRING_RULE",
+                entityId = id,
+                syncStatus = "PENDING_DELETE",
+                localUpdatedAt = System.currentTimeMillis(),
+                isDeleted = true,
+                deletedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun setRuleActive(id: String, isActive: Boolean) {
+        dao.setRuleActive(id, isActive)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "RECURRING_RULE",
+                entityId = id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun cancelRule(id: String) {
+        dao.cancelRule(id)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "RECURRING_RULE",
+                entityId = id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun getOccurrenceById(id: String): RecurringOccurrence? {
+        val entity = dao.getOccurrenceById(id) ?: return null
+        val rule = dao.getRecurringById(entity.ruleId)?.toDomain() ?: return null
+        return entity.toDomain(rule)
+    }
+
+    override fun getOccurrencesInRangeFlow(startDate: Long, endDate: Long): Flow<List<RecurringOccurrence>> =
+        dao.getOccurrencesInRangeFlow(startDate, endDate).map { list ->
+            list.mapNotNull { entity ->
+                val rule = dao.getRecurringById(entity.ruleId)?.toDomain()
+                rule?.let { entity.toDomain(it) }
+            }
+        }
+
+    override suspend fun getOccurrencesInRange(startDate: Long, endDate: Long): List<RecurringOccurrence> =
+        dao.getOccurrencesInRange(startDate, endDate).mapNotNull { entity ->
+            val rule = dao.getRecurringById(entity.ruleId)?.toDomain()
+            rule?.let { entity.toDomain(it) }
+        }
+
+    override suspend fun saveOccurrence(occurrence: RecurringOccurrence) {
+        dao.insertOccurrence(occurrence.toEntity())
+    }
+
+    override suspend fun markOccurrencePaid(occurrenceId: String, paidDate: Long, transactionId: String) {
+        dao.markOccurrenceStatus(occurrenceId, OccurrenceStatus.PAID.name, paidDate, transactionId)
+    }
+
+    override suspend fun markOccurrenceSkipped(occurrenceId: String) {
+        dao.markOccurrenceStatus(occurrenceId, OccurrenceStatus.SKIPPED.name, null, null)
+    }
+
+    override suspend fun advanceRuleDueDate(ruleId: String, newDueDate: Long, processedDate: Long) {
+        dao.updateProcessedDate(ruleId, newDueDate, processedDate)
+    }
+
+    override suspend fun processDueRecurringTransactions(nowMillis: Long) {
+        val dueList = dao.getDueRecurring(nowMillis)
+        for (item in dueList) {
+            val rule = item.toDomain()
+            val occurrenceId = "${rule.id}_${rule.nextDueDate}"
+
+            // Idempotency: Avoid duplicate generation after restart or WorkManager retry
+            val existingOcc = dao.getOccurrenceById(occurrenceId)
+            if (existingOcc != null && (existingOcc.status == OccurrenceStatus.PAID.name || existingOcc.status == OccurrenceStatus.SKIPPED.name || existingOcc.status == OccurrenceStatus.GENERATED.name)) {
+                // Already processed, calculate next due date if rule is still stuck on this date
+                val nextDue = RecurringDateEngine.calculateNextDueDate(
+                    currentDueDateMillis = rule.nextDueDate,
+                    frequency = rule.frequency,
+                    anchorDayOfMonth = rule.anchorDayOfMonth,
+                    customIntervalValue = rule.customIntervalValue,
+                    customIntervalUnit = rule.customIntervalUnit
+                )
+                dao.updateProcessedDate(rule.id, nextDue, nowMillis)
+                continue
+            }
+
+            // Create ledger transaction
+            val tx = Transaction(
+                id = UUID.randomUUID().toString(),
+                amount = rule.amount,
+                type = rule.type,
+                sourceAccountId = rule.accountId,
+                destinationAccountId = rule.destinationAccountId,
+                categoryId = rule.categoryId,
+                merchant = rule.title,
+                timestamp = rule.nextDueDate,
+                description = "Recurring: ${rule.title}",
+                recurringRuleId = rule.id
+            )
+            transactionRepository.createTransaction(tx)
+
+            // Record occurrence as GENERATED (distinguishing expected, generated, paid, skipped, overdue)
+            val occEntity = md.alexlab.finpulse.core.database.entity.RecurringOccurrenceEntity(
+                id = occurrenceId,
+                ruleId = rule.id,
+                dueDate = rule.nextDueDate,
+                status = OccurrenceStatus.GENERATED.name,
+                amountMinor = rule.amount.amountMinor,
+                currencyCode = rule.amount.currencyCode,
+                paidDate = nowMillis,
+                transactionId = tx.id
+            )
+            dao.insertOccurrence(occEntity)
+
+            // Advance rule to next due date with exact calendar calculation
+            val nextDue = RecurringDateEngine.calculateNextDueDate(
+                currentDueDateMillis = rule.nextDueDate,
+                frequency = rule.frequency,
+                anchorDayOfMonth = rule.anchorDayOfMonth,
+                customIntervalValue = rule.customIntervalValue,
+                customIntervalUnit = rule.customIntervalUnit
+            )
+            dao.updateProcessedDate(rule.id, nextDue, nowMillis)
+        }
+    }
+}
+
+class GoalRepositoryImpl(private val database: FinPulseDatabase) : GoalRepository {
+    private val dao = database.financialGoalDao()
+
+    override fun getAllGoalsFlow(): Flow<List<FinancialGoal>> =
+        dao.getAllGoalsFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getGoalById(id: String): FinancialGoal? =
+        dao.getGoalById(id)?.toDomain()
+
+    override suspend fun saveGoal(goal: FinancialGoal) {
+        dao.insertGoal(goal.toEntity())
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "GOAL",
+                entityId = goal.id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun deleteGoal(id: String) {
+        dao.deleteGoalById(id)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "GOAL",
+                entityId = id,
+                syncStatus = "PENDING_DELETE",
+                localUpdatedAt = System.currentTimeMillis(),
+                isDeleted = true,
+                deletedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun contributeToGoal(goalId: String, amount: Money) {
+        val goal = dao.getGoalById(goalId) ?: return
+        val newAmount = goal.currentAmountMinor + amount.amountMinor
+        val isCompleted = newAmount >= goal.targetAmountMinor
+        dao.updateProgress(goalId, newAmount, isCompleted)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "GOAL",
+                entityId = goalId,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+}
+
+class InvestmentRepositoryImpl(private val database: FinPulseDatabase) : InvestmentRepository {
+    private val dao = database.assetDao()
+
+    override fun getAllAssetsFlow(): Flow<List<InvestmentAsset>> =
+        dao.getAllAssetsFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getAssetById(id: String): InvestmentAsset? =
+        dao.getAssetById(id)?.toDomain()
+
+    override suspend fun saveAsset(asset: InvestmentAsset) {
+        dao.insertAsset(asset.toEntity())
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "ASSET",
+                entityId = asset.id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun deleteAsset(id: String) {
+        dao.deleteAssetById(id)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "ASSET",
+                entityId = id,
+                syncStatus = "PENDING_DELETE",
+                localUpdatedAt = System.currentTimeMillis(),
+                isDeleted = true,
+                deletedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun updateAssetPrice(id: String, currentPrice: Money) {
+        dao.updatePrice(id, currentPrice.amountMinor)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "ASSET",
+                entityId = id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+}
+
+class DebtRepositoryImpl(private val database: FinPulseDatabase) : DebtRepository {
+    private val dao = database.debtDao()
+
+    override fun getAllDebtsFlow(): Flow<List<Debt>> =
+        dao.getAllDebtsFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getDebtById(id: String): Debt? =
+        dao.getDebtById(id)?.toDomain()
+
+    override suspend fun saveDebt(debt: Debt) {
+        dao.insertDebt(debt.toEntity())
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "DEBT",
+                entityId = debt.id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun deleteDebt(id: String) {
+        dao.deleteDebtById(id)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "DEBT",
+                entityId = id,
+                syncStatus = "PENDING_DELETE",
+                localUpdatedAt = System.currentTimeMillis(),
+                isDeleted = true,
+                deletedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun makePayment(debtId: String, paymentAmount: Money) {
+        val debt = dao.getDebtById(debtId) ?: return
+        val newBalance = (debt.remainingBalanceMinor - paymentAmount.amountMinor).coerceAtLeast(0L)
+        dao.updateBalance(debtId, newBalance)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "DEBT",
+                entityId = debtId,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+}
+
+class CategorizationRuleRepositoryImpl(private val database: FinPulseDatabase) : CategorizationRuleRepository {
+    private val dao = database.categorizationRuleDao()
+
+    override fun getAllRulesFlow(): Flow<List<md.alexlab.finpulse.domain.model.CategorizationRule>> =
+        dao.getAllRulesFlow().map { list -> list.map { it.toDomain() } }
+
+    override fun getActiveRulesFlow(): Flow<List<md.alexlab.finpulse.domain.model.CategorizationRule>> =
+        dao.getActiveRulesFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getActiveRules(): List<md.alexlab.finpulse.domain.model.CategorizationRule> =
+        dao.getActiveRules().map { it.toDomain() }
+
+    override suspend fun getRuleById(id: String): md.alexlab.finpulse.domain.model.CategorizationRule? =
+        dao.getRuleById(id)?.toDomain()
+
+    override suspend fun saveRule(rule: md.alexlab.finpulse.domain.model.CategorizationRule) {
+        dao.insertRule(rule.toEntity())
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "CATEGORIZATION_RULE",
+                entityId = rule.id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun deleteRule(id: String) {
+        dao.deleteRuleById(id)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "CATEGORIZATION_RULE",
+                entityId = id,
+                syncStatus = "PENDING_DELETE",
+                localUpdatedAt = System.currentTimeMillis(),
+                isDeleted = true,
+                deletedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun setRuleActive(id: String, isActive: Boolean) {
+        dao.setRuleActive(id, isActive)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "CATEGORIZATION_RULE",
+                entityId = id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun updateRulePriority(id: String, priority: Int) {
+        dao.updateRulePriority(id, priority)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "CATEGORIZATION_RULE",
+                entityId = id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun seedDefaultRulesIfNeeded() {
+        if (dao.getRuleCount() > 0) return
+
+        val defaults = listOf(
+            md.alexlab.finpulse.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_amazon",
+                name = "Amazon Purchases",
+                targetCategoryId = "cat_shopping",
+                priority = 10,
+                merchantPattern = "amazon",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            md.alexlab.finpulse.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_starbucks",
+                name = "Starbucks & Coffee",
+                targetCategoryId = "cat_food",
+                priority = 10,
+                merchantPattern = "starbucks",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            md.alexlab.finpulse.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_uber",
+                name = "Uber Rides & Transit",
+                targetCategoryId = "cat_transport",
+                priority = 10,
+                merchantPattern = "uber",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            md.alexlab.finpulse.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_lyft",
+                name = "Lyft Rides",
+                targetCategoryId = "cat_transport",
+                priority = 10,
+                merchantPattern = "lyft",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            md.alexlab.finpulse.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_netflix",
+                name = "Netflix Streaming",
+                targetCategoryId = "cat_subscriptions",
+                priority = 10,
+                merchantPattern = "netflix",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            md.alexlab.finpulse.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_spotify",
+                name = "Spotify Music",
+                targetCategoryId = "cat_subscriptions",
+                priority = 10,
+                merchantPattern = "spotify",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            md.alexlab.finpulse.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_walmart",
+                name = "Walmart Groceries & Store",
+                targetCategoryId = "cat_groceries",
+                priority = 10,
+                merchantPattern = "walmart",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            md.alexlab.finpulse.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_target",
+                name = "Target Store",
+                targetCategoryId = "cat_shopping",
+                priority = 10,
+                merchantPattern = "target",
+                merchantMatchType = "CONTAINS",
+                isActive = true
+            ),
+            md.alexlab.finpulse.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_payroll",
+                name = "Payroll & Salary",
+                targetCategoryId = "cat_salary",
+                priority = 15,
+                descriptionPattern = "payroll",
+                descriptionMatchType = "CONTAINS",
+                transactionType = "INCOME",
+                isActive = true
+            ),
+            md.alexlab.finpulse.core.database.entity.CategorizationRuleEntity(
+                id = "rule_default_grocery",
+                name = "Supermarket & Groceries",
+                targetCategoryId = "cat_groceries",
+                priority = 8,
+                descriptionPattern = "grocery",
+                descriptionMatchType = "CONTAINS",
+                isActive = true
+            )
+        )
+        dao.insertRules(defaults)
+    }
+}
+
+class MerchantSignalRepositoryImpl(private val database: FinPulseDatabase) : MerchantSignalRepository {
+    private val dao = database.merchantSignalDao()
+
+    override fun getAllSignalsFlow(): Flow<List<md.alexlab.finpulse.domain.model.MerchantSignal>> =
+        dao.getAllSignalsFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getAllSignals(): List<md.alexlab.finpulse.domain.model.MerchantSignal> =
+        dao.getAllSignals().map { it.toDomain() }
+
+    override suspend fun getSignal(normalizedMerchant: String): md.alexlab.finpulse.domain.model.MerchantSignal? =
+        dao.getSignal(normalizedMerchant)?.toDomain()
+
+    override suspend fun recordSignal(merchant: String, categoryId: String) {
+        val key = md.alexlab.finpulse.domain.engine.MerchantNormalizer.toLookupKey(merchant)
+        if (key.isBlank()) return
+        val existing = dao.getSignal(key)
+        val count = (existing?.useCount ?: 0) + 1
+        val signal = md.alexlab.finpulse.core.database.entity.MerchantSignalEntity(
+            normalizedMerchant = key,
+            categoryId = categoryId,
+            useCount = count,
+            lastUsedAt = System.currentTimeMillis()
+        )
+        dao.insertOrUpdateSignal(signal)
+    }
+
+    override suspend fun clearAllSignals() {
+        dao.clearAllSignals()
+    }
+}
+
+class ImportProfileRepositoryImpl(private val database: FinPulseDatabase) : ImportProfileRepository {
+    private val dao = database.importProfileDao()
+
+    override fun getAllProfilesFlow(): Flow<List<md.alexlab.finpulse.domain.model.ImportProfile>> =
+        dao.getAllProfilesFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getAllProfiles(): List<md.alexlab.finpulse.domain.model.ImportProfile> =
+        dao.getAllProfiles().map { it.toDomain() }
+
+    override suspend fun getProfileById(id: String): md.alexlab.finpulse.domain.model.ImportProfile? =
+        dao.getProfileById(id)?.toDomain()
+
+    override suspend fun saveProfile(profile: md.alexlab.finpulse.domain.model.ImportProfile) {
+        dao.insertProfile(md.alexlab.finpulse.core.database.entity.ImportProfileEntity.fromDomain(profile))
+    }
+
+    override suspend fun deleteProfile(id: String) {
+        dao.deleteProfileById(id)
+    }
+
+    override suspend fun seedDefaultProfilesIfNeeded() {
+        if (dao.getProfileCount() > 0) return
+
+        val defaults = listOf(
+            md.alexlab.finpulse.domain.model.ImportProfile(
+                id = "profile_generic_csv",
+                name = "Standard CSV (Date, Amount, Description)",
+                institution = "Generic",
+                formatConfig = md.alexlab.finpulse.domain.model.CsvFormatConfig(
+                    delimiter = ',',
+                    dateFormat = "yyyy-MM-dd",
+                    decimalSeparator = '.',
+                    hasHeader = true,
+                    amountMode = md.alexlab.finpulse.domain.model.AmountMode.SINGLE_AMOUNT
+                ),
+                columnMapping = md.alexlab.finpulse.domain.model.CsvColumnMapping(
+                    dateColumnIndex = 0,
+                    amountColumnIndex = 1,
+                    descriptionColumnIndex = 2
+                ),
+                isSystemPreset = true
+            ),
+            md.alexlab.finpulse.domain.model.ImportProfile(
+                id = "profile_chase",
+                name = "Chase Bank Export",
+                institution = "Chase",
+                formatConfig = md.alexlab.finpulse.domain.model.CsvFormatConfig(
+                    delimiter = ',',
+                    dateFormat = "MM/dd/yyyy",
+                    decimalSeparator = '.',
+                    hasHeader = true,
+                    amountMode = md.alexlab.finpulse.domain.model.AmountMode.SINGLE_AMOUNT
+                ),
+                columnMapping = md.alexlab.finpulse.domain.model.CsvColumnMapping(
+                    dateColumnIndex = 0,
+                    descriptionColumnIndex = 1,
+                    amountColumnIndex = 3,
+                    categoryColumnIndex = 4,
+                    balanceColumnIndex = 5
+                ),
+                isSystemPreset = true
+            ),
+            md.alexlab.finpulse.domain.model.ImportProfile(
+                id = "profile_boa",
+                name = "Bank of America Export",
+                institution = "Bank of America",
+                formatConfig = md.alexlab.finpulse.domain.model.CsvFormatConfig(
+                    delimiter = ',',
+                    dateFormat = "MM/dd/yyyy",
+                    decimalSeparator = '.',
+                    hasHeader = true,
+                    amountMode = md.alexlab.finpulse.domain.model.AmountMode.SINGLE_AMOUNT
+                ),
+                columnMapping = md.alexlab.finpulse.domain.model.CsvColumnMapping(
+                    dateColumnIndex = 0,
+                    descriptionColumnIndex = 1,
+                    amountColumnIndex = 2,
+                    balanceColumnIndex = 3
+                ),
+                isSystemPreset = true
+            ),
+            md.alexlab.finpulse.domain.model.ImportProfile(
+                id = "profile_european_csv",
+                name = "European Semicolon (dd.MM.yyyy, comma decimal)",
+                institution = "European Banking",
+                formatConfig = md.alexlab.finpulse.domain.model.CsvFormatConfig(
+                    delimiter = ';',
+                    dateFormat = "dd.MM.yyyy",
+                    decimalSeparator = ',',
+                    hasHeader = true,
+                    amountMode = md.alexlab.finpulse.domain.model.AmountMode.SINGLE_AMOUNT
+                ),
+                columnMapping = md.alexlab.finpulse.domain.model.CsvColumnMapping(
+                    dateColumnIndex = 0,
+                    descriptionColumnIndex = 1,
+                    amountColumnIndex = 2
+                ),
+                isSystemPreset = true
+            ),
+            md.alexlab.finpulse.domain.model.ImportProfile(
+                id = "profile_split_debit_credit",
+                name = "Separate Debit / Credit Columns",
+                institution = "Generic Split",
+                formatConfig = md.alexlab.finpulse.domain.model.CsvFormatConfig(
+                    delimiter = ',',
+                    dateFormat = "yyyy-MM-dd",
+                    decimalSeparator = '.',
+                    hasHeader = true,
+                    amountMode = md.alexlab.finpulse.domain.model.AmountMode.SEPARATE_DEBIT_CREDIT
+                ),
+                columnMapping = md.alexlab.finpulse.domain.model.CsvColumnMapping(
+                    dateColumnIndex = 0,
+                    descriptionColumnIndex = 1,
+                    debitColumnIndex = 2,
+                    creditColumnIndex = 3
+                ),
+                isSystemPreset = true
+            )
+        )
+
+        dao.insertProfiles(defaults.map { md.alexlab.finpulse.core.database.entity.ImportProfileEntity.fromDomain(it) })
+    }
+}
+
+class SavedFilterRepositoryImpl(private val database: FinPulseDatabase) : SavedFilterRepository {
+    private val dao = database.savedFilterDao()
+
+    override fun getAllSavedFiltersFlow(): Flow<List<SavedFilter>> =
+        dao.getAllSavedFiltersFlow().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getSavedFilterById(id: String): SavedFilter? =
+        dao.getSavedFilterById(id)?.toDomain()
+
+    override suspend fun saveFilter(savedFilter: SavedFilter) {
+        dao.insertSavedFilter(savedFilter.toEntity())
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "SAVED_FILTER",
+                entityId = savedFilter.id,
+                syncStatus = "PENDING_UPSERT",
+                localUpdatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    override suspend fun deleteFilter(id: String) {
+        dao.deleteSavedFilterById(id)
+        database.syncRecordDao().upsertSyncRecord(
+            SyncRecordEntity(
+                entityType = "SAVED_FILTER",
+                entityId = id,
+                syncStatus = "PENDING_DELETE",
+                localUpdatedAt = System.currentTimeMillis(),
+                isDeleted = true,
+                deletedAt = System.currentTimeMillis()
+            )
+        )
+    }
+}
+

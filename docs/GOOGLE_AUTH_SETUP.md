@@ -17,7 +17,7 @@ This guide covers the manual configuration steps in the **Firebase Console** and
 
 1. In project overview, click the **Android** icon (or go to **Project settings** > **General** > **Your apps** > **Add app**).
 2. Enter the Package Name:
-   - **Android package name**: `com.finpulse.app`
+   - **Android package name**: `md.alexlab.finpulse`
    - **App nickname**: `Fin Pulse`
 3. Retrieve your Android debug signing certificate fingerprints (SHA-1 and SHA-256):
    - Run the Gradle signing report in the terminal:

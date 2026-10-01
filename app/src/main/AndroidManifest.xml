@@ -62,8 +62,8 @@
             android:label="@string/widget_name_balance">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.finpulse.app.action.TOGGLE_WIDGET_PRIVACY" />
-                <action android:name="com.finpulse.app.action.REFRESH_WIDGETS" />
+                <action android:name="md.alexlab.finpulse.action.TOGGLE_WIDGET_PRIVACY" />
+                <action android:name="md.alexlab.finpulse.action.REFRESH_WIDGETS" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
@@ -77,8 +77,8 @@
             android:label="@string/widget_name_spending">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.finpulse.app.action.TOGGLE_WIDGET_PRIVACY" />
-                <action android:name="com.finpulse.app.action.REFRESH_WIDGETS" />
+                <action android:name="md.alexlab.finpulse.action.TOGGLE_WIDGET_PRIVACY" />
+                <action android:name="md.alexlab.finpulse.action.REFRESH_WIDGETS" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
@@ -92,8 +92,8 @@
             android:label="@string/widget_name_budget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.finpulse.app.action.TOGGLE_WIDGET_PRIVACY" />
-                <action android:name="com.finpulse.app.action.REFRESH_WIDGETS" />
+                <action android:name="md.alexlab.finpulse.action.TOGGLE_WIDGET_PRIVACY" />
+                <action android:name="md.alexlab.finpulse.action.REFRESH_WIDGETS" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
@@ -107,8 +107,8 @@
             android:label="@string/widget_name_bills">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.finpulse.app.action.TOGGLE_WIDGET_PRIVACY" />
-                <action android:name="com.finpulse.app.action.REFRESH_WIDGETS" />
+                <action android:name="md.alexlab.finpulse.action.TOGGLE_WIDGET_PRIVACY" />
+                <action android:name="md.alexlab.finpulse.action.REFRESH_WIDGETS" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
@@ -135,8 +135,8 @@
             android:label="@string/widget_name_dashboard">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.finpulse.app.action.TOGGLE_WIDGET_PRIVACY" />
-                <action android:name="com.finpulse.app.action.REFRESH_WIDGETS" />
+                <action android:name="md.alexlab.finpulse.action.TOGGLE_WIDGET_PRIVACY" />
+                <action android:name="md.alexlab.finpulse.action.REFRESH_WIDGETS" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"

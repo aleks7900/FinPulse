@@ -1,6 +1,6 @@
 # Google Play Publication Guide for Fin Pulse
 
-This guide provides a complete, step-by-step walkthrough for preparing, signing, building, and publishing **Fin Pulse** (`com.finpulse.app`) to the **Google Play Store**.
+This guide provides a complete, step-by-step walkthrough for preparing, signing, building, and publishing **Fin Pulse** (`md.alexlab.finpulse`) to the **Google Play Store**.
 
 ---
 
@@ -87,7 +87,7 @@ For Google Sign-In and Cloud Sync to function in your production release build, 
    keytool -list -v -keystore "keystore/finpulse-release.keystore" -alias finpulse
    ```
 2. Open the [Firebase Console](https://console.firebase.google.com/) -> Select your FinPulse project.
-3. Navigate to **Project Settings > General > Your Apps > com.finpulse.app**.
+3. Navigate to **Project Settings > General > Your Apps > md.alexlab.finpulse**.
 4. Click **Add fingerprint**:
    - Paste your **SHA-1** fingerprint.
    - Paste your **SHA-256** fingerprint.

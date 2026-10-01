@@ -1,6 +1,6 @@
 # Google Play Data Safety Specification for FinPulse
 
-**Application ID:** `com.finpulse.app`  
+**Application ID:** `md.alexlab.finpulse`  
 **Target SDK:** 36 (Android 16) | **Min SDK:** 26 (Android 8.0)  
 **Document Purpose:** Exact data safety questionnaire declaration answers for Google Play Console submission.
 

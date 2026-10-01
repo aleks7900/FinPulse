@@ -8,7 +8,7 @@
 ---
 
 > [!IMPORTANT]
-> **LEGAL REVIEW REQUIRED:** This document is a technical and operational draft prepared based on the FinPulse application codebase (`com.finpulse.app`). It must be reviewed, adapted, and approved by qualified legal counsel prior to commercial distribution or formal publication on the Google Play Store.
+> **LEGAL REVIEW REQUIRED:** This document is a technical and operational draft prepared based on the FinPulse application codebase (`md.alexlab.finpulse`). It must be reviewed, adapted, and approved by qualified legal counsel prior to commercial distribution or formal publication on the Google Play Store.
 
 ---
 

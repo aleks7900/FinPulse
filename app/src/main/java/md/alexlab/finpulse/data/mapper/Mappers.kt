@@ -1,0 +1,506 @@
+package md.alexlab.finpulse.data.mapper
+
+import md.alexlab.finpulse.core.database.entity.AccountEntity
+import md.alexlab.finpulse.core.database.entity.AssetEntity
+import md.alexlab.finpulse.core.database.entity.BudgetEntity
+import md.alexlab.finpulse.core.database.entity.CategoryEntity
+import md.alexlab.finpulse.core.database.entity.DebtEntity
+import md.alexlab.finpulse.core.database.entity.FinancialGoalEntity
+import md.alexlab.finpulse.core.database.entity.RecurringTransactionEntity
+import md.alexlab.finpulse.core.database.entity.TransactionEntity
+import md.alexlab.finpulse.core.model.Money
+import md.alexlab.finpulse.domain.model.Account
+import md.alexlab.finpulse.domain.model.AccountType
+import md.alexlab.finpulse.domain.model.AssetClass
+import md.alexlab.finpulse.domain.model.Budget
+import md.alexlab.finpulse.domain.model.BudgetPeriod
+import md.alexlab.finpulse.domain.model.Category
+import md.alexlab.finpulse.domain.model.CategoryType
+import md.alexlab.finpulse.domain.model.Debt
+import md.alexlab.finpulse.core.database.entity.RecurringOccurrenceEntity
+import md.alexlab.finpulse.domain.model.CustomIntervalUnit
+import md.alexlab.finpulse.domain.model.DebtType
+import md.alexlab.finpulse.domain.model.FinancialGoal
+import md.alexlab.finpulse.domain.model.InvestmentAsset
+import md.alexlab.finpulse.domain.model.OccurrenceStatus
+import md.alexlab.finpulse.domain.model.PaymentFrequency
+import md.alexlab.finpulse.domain.model.RecurringOccurrence
+import md.alexlab.finpulse.domain.model.RecurringTransaction
+import md.alexlab.finpulse.domain.model.Transaction
+import md.alexlab.finpulse.domain.model.TransactionType
+
+// Account Mappers
+fun AccountEntity.toDomain(): Account {
+    val currency = currencyCode
+    return Account(
+        id = id,
+        name = name,
+        type = try { AccountType.valueOf(type) } catch (_: Exception) { AccountType.OTHER },
+        balance = Money(balanceMinor, currency),
+        availableBalance = Money(availableBalanceMinor, currency),
+        creditLimit = creditLimitMinor?.let { Money(it, currency) },
+        institution = institution,
+        icon = icon,
+        colorHex = colorHex,
+        notes = notes,
+        isArchived = isArchived,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
+}
+
+fun Account.toEntity(): AccountEntity {
+    return AccountEntity(
+        id = id,
+        name = name,
+        type = type.name,
+        balanceMinor = balance.amountMinor,
+        availableBalanceMinor = availableBalance.amountMinor,
+        creditLimitMinor = creditLimit?.amountMinor,
+        currencyCode = balance.currencyCode,
+        institution = institution,
+        icon = icon,
+        colorHex = colorHex,
+        notes = notes,
+        isArchived = isArchived,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
+}
+
+// Transaction Mappers
+fun TransactionEntity.toDomain(): Transaction {
+    val currency = currencyCode
+    val tagList = if (tags.isBlank()) emptyList() else tags.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+    val destAmount = if (destinationAmountMinor != null && destinationCurrencyCode != null) {
+        Money(destinationAmountMinor, destinationCurrencyCode)
+    } else null
+
+    return Transaction(
+        id = id,
+        amount = Money(amountMinor, currency),
+        type = try { TransactionType.valueOf(type) } catch (_: Exception) { TransactionType.EXPENSE },
+        sourceAccountId = sourceAccountId,
+        destinationAccountId = destinationAccountId,
+        categoryId = categoryId,
+        merchant = merchant,
+        timestamp = timestamp,
+        description = description,
+        tags = tagList,
+        notes = notes,
+        recurringRuleId = recurringRuleId,
+        isExcludedFromBudget = isExcludedFromBudget,
+        isCategoryConfirmed = isCategoryConfirmed,
+        categorizationConfidence = categorizationConfidence,
+        matchedRuleId = matchedRuleId,
+        createdAt = createdAt,
+        exchangeRate = exchangeRate,
+        exchangeRateDate = exchangeRateDate,
+        destinationAmount = destAmount
+    )
+}
+
+fun Transaction.toEntity(): TransactionEntity {
+    return TransactionEntity(
+        id = id,
+        amountMinor = amount.amountMinor,
+        currencyCode = amount.currencyCode,
+        type = type.name,
+        sourceAccountId = sourceAccountId,
+        destinationAccountId = destinationAccountId,
+        categoryId = categoryId,
+        merchant = merchant,
+        timestamp = timestamp,
+        description = description,
+        tags = tags.joinToString(","),
+        notes = notes,
+        recurringRuleId = recurringRuleId,
+        isExcludedFromBudget = isExcludedFromBudget,
+        isCategoryConfirmed = isCategoryConfirmed,
+        categorizationConfidence = categorizationConfidence,
+        matchedRuleId = matchedRuleId,
+        createdAt = createdAt,
+        exchangeRate = exchangeRate,
+        exchangeRateDate = exchangeRateDate,
+        destinationAmountMinor = destinationAmount?.amountMinor,
+        destinationCurrencyCode = destinationAmount?.currencyCode
+    )
+}
+
+fun md.alexlab.finpulse.core.database.entity.ExchangeRateEntity.toDomain(): md.alexlab.finpulse.domain.model.ExchangeRate {
+    return md.alexlab.finpulse.domain.model.ExchangeRate(
+        fromCurrency = fromCurrency,
+        toCurrency = toCurrency,
+        rate = rate,
+        timestamp = timestamp,
+        isManual = isManual
+    )
+}
+
+fun md.alexlab.finpulse.domain.model.ExchangeRate.toEntity(): md.alexlab.finpulse.core.database.entity.ExchangeRateEntity {
+    return md.alexlab.finpulse.core.database.entity.ExchangeRateEntity(
+        fromCurrency = fromCurrency.uppercase(),
+        toCurrency = toCurrency.uppercase(),
+        rate = rate,
+        timestamp = timestamp,
+        isManual = isManual
+    )
+}
+
+// Category Mappers
+fun CategoryEntity.toDomain(): Category {
+    return Category(
+        id = id,
+        name = name,
+        type = try { CategoryType.valueOf(type) } catch (_: Exception) { CategoryType.EXPENSE },
+        parentCategoryId = parentCategoryId,
+        icon = icon,
+        colorHex = colorHex,
+        isDefault = isDefault,
+        sortOrder = sortOrder
+    )
+}
+
+fun Category.toEntity(): CategoryEntity {
+    return CategoryEntity(
+        id = id,
+        name = name,
+        type = type.name,
+        parentCategoryId = parentCategoryId,
+        icon = icon,
+        colorHex = colorHex,
+        isDefault = isDefault,
+        sortOrder = sortOrder
+    )
+}
+
+// Budget Mappers
+fun BudgetEntity.toDomain(): Budget {
+    return Budget(
+        id = id,
+        categoryId = categoryId,
+        name = name,
+        limitAmount = Money(limitAmountMinor, currencyCode),
+        periodType = try { BudgetPeriod.valueOf(periodType) } catch (_: Exception) { BudgetPeriod.MONTHLY },
+        startDate = startDate,
+        endDate = endDate,
+        notifyAt70 = notifyAt70,
+        notifyAt90 = notifyAt90,
+        notifyAt100 = notifyAt100,
+        isArchived = isArchived,
+        isOverall = isOverall,
+        isRolloverEnabled = isRolloverEnabled,
+        rolloverAmountMinor = rolloverAmountMinor,
+        alertThresholdPercent = alertThresholdPercent
+    )
+}
+
+fun Budget.toEntity(): BudgetEntity {
+    return BudgetEntity(
+        id = id,
+        categoryId = categoryId,
+        name = name,
+        limitAmountMinor = limitAmount.amountMinor,
+        currencyCode = limitAmount.currencyCode,
+        periodType = periodType.name,
+        startDate = startDate,
+        endDate = endDate,
+        notifyAt70 = notifyAt70,
+        notifyAt90 = notifyAt90,
+        notifyAt100 = notifyAt100,
+        isArchived = isArchived,
+        isOverall = isOverall,
+        isRolloverEnabled = isRolloverEnabled,
+        rolloverAmountMinor = rolloverAmountMinor,
+        alertThresholdPercent = alertThresholdPercent
+    )
+}
+
+// Recurring Mappers
+fun RecurringTransactionEntity.toDomain(): RecurringTransaction {
+    return RecurringTransaction(
+        id = id,
+        title = title,
+        amount = Money(amountMinor, currencyCode),
+        type = try { TransactionType.valueOf(type) } catch (_: Exception) { TransactionType.EXPENSE },
+        accountId = accountId,
+        destinationAccountId = destinationAccountId,
+        categoryId = categoryId,
+        frequency = try { PaymentFrequency.valueOf(frequency) } catch (_: Exception) { PaymentFrequency.MONTHLY },
+        customIntervalValue = customIntervalValue,
+        customIntervalUnit = try { CustomIntervalUnit.valueOf(customIntervalUnit) } catch (_: Exception) { CustomIntervalUnit.MONTHS },
+        anchorDayOfMonth = anchorDayOfMonth,
+        nextDueDate = nextDueDate,
+        lastProcessedDate = lastProcessedDate,
+        isActive = isActive,
+        isCancelled = isCancelled,
+        isSubscription = isSubscription,
+        isVariableAmount = isVariableAmount,
+        reminderDaysBefore = reminderDaysBefore,
+        notes = notes
+    )
+}
+
+fun RecurringTransaction.toEntity(): RecurringTransactionEntity {
+    return RecurringTransactionEntity(
+        id = id,
+        title = title,
+        amountMinor = amount.amountMinor,
+        currencyCode = amount.currencyCode,
+        type = type.name,
+        accountId = accountId,
+        destinationAccountId = destinationAccountId,
+        categoryId = categoryId,
+        frequency = frequency.name,
+        customIntervalValue = customIntervalValue,
+        customIntervalUnit = customIntervalUnit.name,
+        anchorDayOfMonth = anchorDayOfMonth,
+        nextDueDate = nextDueDate,
+        lastProcessedDate = lastProcessedDate,
+        isActive = isActive,
+        isCancelled = isCancelled,
+        isSubscription = isSubscription,
+        isVariableAmount = isVariableAmount,
+        reminderDaysBefore = reminderDaysBefore,
+        notes = notes
+    )
+}
+
+fun RecurringOccurrenceEntity.toDomain(rule: RecurringTransaction): RecurringOccurrence {
+    val occAmount = if (amountMinor != null && currencyCode != null) {
+        Money(amountMinor, currencyCode)
+    } else {
+        rule.amount
+    }
+    return RecurringOccurrence(
+        id = id,
+        ruleId = ruleId,
+        ruleTitle = rule.title,
+        amount = occAmount,
+        type = rule.type,
+        accountId = rule.accountId,
+        destinationAccountId = rule.destinationAccountId,
+        categoryId = rule.categoryId,
+        dueDate = dueDate,
+        status = try { OccurrenceStatus.valueOf(status) } catch (_: Exception) { OccurrenceStatus.EXPECTED },
+        paidDate = paidDate,
+        transactionId = transactionId,
+        isVariableAmount = rule.isVariableAmount,
+        isSubscription = rule.isSubscription,
+        notes = notes ?: rule.notes
+    )
+}
+
+fun RecurringOccurrence.toEntity(): RecurringOccurrenceEntity {
+    return RecurringOccurrenceEntity(
+        id = id,
+        ruleId = ruleId,
+        dueDate = dueDate,
+        status = status.name,
+        amountMinor = amount.amountMinor,
+        currencyCode = amount.currencyCode,
+        paidDate = paidDate,
+        transactionId = transactionId,
+        notes = notes
+    )
+}
+
+// Goal Mappers
+fun FinancialGoalEntity.toDomain(): FinancialGoal {
+    return FinancialGoal(
+        id = id,
+        title = title,
+        targetAmount = Money(targetAmountMinor, currencyCode),
+        currentAmount = Money(currentAmountMinor, currencyCode),
+        targetDate = targetDate,
+        linkedAccountId = linkedAccountId,
+        icon = icon,
+        colorHex = colorHex,
+        isCompleted = isCompleted,
+        createdAt = createdAt
+    )
+}
+
+fun FinancialGoal.toEntity(): FinancialGoalEntity {
+    return FinancialGoalEntity(
+        id = id,
+        title = title,
+        targetAmountMinor = targetAmount.amountMinor,
+        currentAmountMinor = currentAmount.amountMinor,
+        currencyCode = targetAmount.currencyCode,
+        targetDate = targetDate,
+        linkedAccountId = linkedAccountId,
+        icon = icon,
+        colorHex = colorHex,
+        isCompleted = isCompleted,
+        createdAt = createdAt
+    )
+}
+
+// Asset Mappers
+fun AssetEntity.toDomain(): InvestmentAsset {
+    return InvestmentAsset(
+        id = id,
+        name = name,
+        symbol = symbol,
+        assetClass = try { AssetClass.valueOf(assetClass) } catch (_: Exception) { AssetClass.OTHER },
+        quantity = quantity,
+        purchasePrice = Money(purchasePriceMinor, currencyCode),
+        currentPrice = Money(currentPriceMinor, currencyCode),
+        lastUpdated = lastUpdated,
+        notes = notes
+    )
+}
+
+fun InvestmentAsset.toEntity(): AssetEntity {
+    return AssetEntity(
+        id = id,
+        name = name,
+        symbol = symbol,
+        assetClass = assetClass.name,
+        quantity = quantity,
+        purchasePriceMinor = purchasePrice.amountMinor,
+        currentPriceMinor = currentPrice.amountMinor,
+        currencyCode = purchasePrice.currencyCode,
+        lastUpdated = lastUpdated,
+        notes = notes
+    )
+}
+
+// Debt Mappers
+fun DebtEntity.toDomain(): Debt {
+    return Debt(
+        id = id,
+        name = name,
+        type = try { DebtType.valueOf(type) } catch (_: Exception) { DebtType.OTHER },
+        totalPrincipal = Money(totalPrincipalMinor, currencyCode),
+        remainingBalance = Money(remainingBalanceMinor, currencyCode),
+        interestRatePercent = interestRatePercent,
+        minimumPayment = Money(minimumPaymentMinor, currencyCode),
+        nextPaymentDate = nextPaymentDate,
+        linkedAccountId = linkedAccountId,
+        notes = notes
+    )
+}
+
+fun Debt.toEntity(): DebtEntity {
+    return DebtEntity(
+        id = id,
+        name = name,
+        type = type.name,
+        totalPrincipalMinor = totalPrincipal.amountMinor,
+        remainingBalanceMinor = remainingBalance.amountMinor,
+        currencyCode = remainingBalance.currencyCode,
+        interestRatePercent = interestRatePercent,
+        minimumPaymentMinor = minimumPayment.amountMinor,
+        nextPaymentDate = nextPaymentDate,
+        linkedAccountId = linkedAccountId,
+        notes = notes
+    )
+}
+
+// Categorization Rule Mappers
+fun md.alexlab.finpulse.core.database.entity.CategorizationRuleEntity.toDomain(): md.alexlab.finpulse.domain.model.CategorizationRule {
+    return md.alexlab.finpulse.domain.model.CategorizationRule(
+        id = id,
+        name = name,
+        targetCategoryId = targetCategoryId,
+        priority = priority,
+        merchantPattern = merchantPattern,
+        merchantMatchType = try { md.alexlab.finpulse.domain.model.MatchType.valueOf(merchantMatchType) } catch (_: Exception) { md.alexlab.finpulse.domain.model.MatchType.CONTAINS },
+        descriptionPattern = descriptionPattern,
+        descriptionMatchType = try { md.alexlab.finpulse.domain.model.MatchType.valueOf(descriptionMatchType) } catch (_: Exception) { md.alexlab.finpulse.domain.model.MatchType.CONTAINS },
+        accountId = accountId,
+        minAmountMinor = minAmountMinor,
+        maxAmountMinor = maxAmountMinor,
+        transactionType = transactionType?.let { try { TransactionType.valueOf(it) } catch (_: Exception) { null } },
+        isActive = isActive,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
+}
+
+fun md.alexlab.finpulse.domain.model.CategorizationRule.toEntity(): md.alexlab.finpulse.core.database.entity.CategorizationRuleEntity {
+    return md.alexlab.finpulse.core.database.entity.CategorizationRuleEntity(
+        id = id,
+        name = name,
+        targetCategoryId = targetCategoryId,
+        priority = priority,
+        merchantPattern = merchantPattern,
+        merchantMatchType = merchantMatchType.name,
+        descriptionPattern = descriptionPattern,
+        descriptionMatchType = descriptionMatchType.name,
+        accountId = accountId,
+        minAmountMinor = minAmountMinor,
+        maxAmountMinor = maxAmountMinor,
+        transactionType = transactionType?.name,
+        isActive = isActive,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
+}
+
+// Merchant Signal Mappers
+fun md.alexlab.finpulse.core.database.entity.MerchantSignalEntity.toDomain(): md.alexlab.finpulse.domain.model.MerchantSignal {
+    return md.alexlab.finpulse.domain.model.MerchantSignal(
+        normalizedMerchant = normalizedMerchant,
+        categoryId = categoryId,
+        useCount = useCount,
+        lastUsedAt = lastUsedAt
+    )
+}
+
+fun md.alexlab.finpulse.domain.model.MerchantSignal.toEntity(): md.alexlab.finpulse.core.database.entity.MerchantSignalEntity {
+    return md.alexlab.finpulse.core.database.entity.MerchantSignalEntity(
+        normalizedMerchant = normalizedMerchant,
+        categoryId = categoryId,
+        useCount = useCount,
+        lastUsedAt = lastUsedAt
+    )
+}
+
+// Saved Filter Mappers
+fun md.alexlab.finpulse.core.database.entity.SavedFilterEntity.toDomain(): md.alexlab.finpulse.domain.model.SavedFilter {
+    return md.alexlab.finpulse.domain.model.SavedFilter(
+        id = id,
+        name = name,
+        params = md.alexlab.finpulse.domain.model.TransactionFilterParams(
+            query = searchQuery,
+            accountId = accountId,
+            categoryId = categoryId,
+            type = transactionType?.let { runCatching { md.alexlab.finpulse.domain.model.TransactionType.valueOf(it) }.getOrNull() },
+            dateRangePreset = runCatching { md.alexlab.finpulse.domain.model.DateRangePreset.valueOf(dateRangePreset) }.getOrDefault(md.alexlab.finpulse.domain.model.DateRangePreset.ALL),
+            customStartDate = startDate,
+            customEndDate = endDate,
+            minAmountMinor = minAmountMinor,
+            maxAmountMinor = maxAmountMinor,
+            currencyCode = currencyCode,
+            status = runCatching { md.alexlab.finpulse.domain.model.TransactionStatusFilter.valueOf(status) }.getOrDefault(md.alexlab.finpulse.domain.model.TransactionStatusFilter.ALL),
+            sortOrder = runCatching { md.alexlab.finpulse.domain.model.TransactionSort.valueOf(sortOrder) }.getOrDefault(md.alexlab.finpulse.domain.model.TransactionSort.DATE_DESC)
+        ),
+        isPreset = isPreset,
+        createdAt = createdAt
+    )
+}
+
+fun md.alexlab.finpulse.domain.model.SavedFilter.toEntity(): md.alexlab.finpulse.core.database.entity.SavedFilterEntity {
+    return md.alexlab.finpulse.core.database.entity.SavedFilterEntity(
+        id = id,
+        name = name,
+        searchQuery = params.query,
+        accountId = params.accountId,
+        categoryId = params.categoryId,
+        transactionType = params.type?.name,
+        dateRangePreset = params.dateRangePreset.name,
+        startDate = params.customStartDate,
+        endDate = params.customEndDate,
+        minAmountMinor = params.minAmountMinor,
+        maxAmountMinor = params.maxAmountMinor,
+        currencyCode = params.currencyCode,
+        status = params.status.name,
+        sortOrder = params.sortOrder.name,
+        isPreset = isPreset,
+        createdAt = createdAt
+    )
+}
+

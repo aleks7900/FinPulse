@@ -1,6 +1,6 @@
 # Google Play Data Safety Specification for Fin Pulse
 
-This document provides exact, verified answers for completing the **Data safety** questionnaire in the **Google Play Console** for **Fin Pulse** (`com.finpulse.app`).
+This document provides exact, verified answers for completing the **Data safety** questionnaire in the **Google Play Console** for **Fin Pulse** (`md.alexlab.finpulse`).
 
 ---
 

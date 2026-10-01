@@ -10,11 +10,11 @@ plugins {
 }
 
 android {
-    namespace = "com.finpulse.app"
+    namespace = "md.alexlab.finpulse"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.finpulse.app"
+        applicationId = "md.alexlab.finpulse"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

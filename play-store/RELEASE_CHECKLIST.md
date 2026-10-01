@@ -1,6 +1,6 @@
 # Google Play Production Release Checklist for FinPulse
 
-**Application ID:** `com.finpulse.app` | **Target SDK:** 36 | **Min SDK:** 26  
+**Application ID:** `md.alexlab.finpulse` | **Target SDK:** 36 | **Min SDK:** 26  
 **Release Version:** `1.0.0` (`versionCode = 1`)  
 
 ---

@@ -1,0 +1,697 @@
+package md.alexlab.finpulse.presentation.quickadd
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBalance
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Backspace
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Notes
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import md.alexlab.finpulse.R
+import md.alexlab.finpulse.core.designsystem.CrimsonExpense
+import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.TransferBlue
+import md.alexlab.finpulse.core.model.CurrencyInfo
+import md.alexlab.finpulse.core.ui.CategoryIconBadge
+import md.alexlab.finpulse.core.ui.CategoryPickerDialog
+import md.alexlab.finpulse.core.ui.getDisplayName
+import md.alexlab.finpulse.core.ui.getLocalizedName
+import md.alexlab.finpulse.domain.model.Account
+import md.alexlab.finpulse.domain.model.Category
+import md.alexlab.finpulse.domain.model.CategoryType
+import md.alexlab.finpulse.domain.model.Transaction
+import md.alexlab.finpulse.domain.model.TransactionType
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun QuickAddBottomSheet(
+    uiState: QuickAddUiState,
+    onDigitClick: (Char) -> Unit,
+    onQuickAmountAdd: (Int) -> Unit,
+    onTypeSelected: (TransactionType) -> Unit,
+    onAccountSelected: (String) -> Unit,
+    onDestinationAccountSelected: (String) -> Unit,
+    onCategorySelected: (String) -> Unit,
+    onMerchantSelected: (String) -> Unit,
+    onMerchantTextChange: (String) -> Unit,
+    onDescriptionTextChange: (String) -> Unit,
+    onDateChoiceSelected: (QuickAddDateChoice) -> Unit,
+    onSave: (andAddAnother: Boolean, onSaved: (Transaction) -> Unit) -> Unit,
+    onDismiss: () -> Unit,
+    onTransactionSaved: (Transaction, Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showDetails by remember { mutableStateOf(false) }
+    var showCategoryPickerDialog by remember { mutableStateOf(false) }
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = MaterialTheme.colorScheme.surface,
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 24.dp)
+        ) {
+            // 1. Header: Type Selector & Account Picker
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Type Switcher
+                TypeSegmentedControl(
+                    selectedType = uiState.selectedType,
+                    onTypeSelected = onTypeSelected
+                )
+
+                // Account Dropdown Pill
+                AccountPickerPill(
+                    accounts = uiState.accounts,
+                    selectedAccountId = uiState.selectedAccountId,
+                    onAccountSelected = onAccountSelected
+                )
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // 2. Transfer Destination Account (if Transfer selected)
+            if (uiState.selectedType == TransactionType.TRANSFER) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.quick_add_transfer_to),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    AccountPickerPill(
+                        accounts = uiState.accounts.filter { it.id != uiState.selectedAccountId },
+                        selectedAccountId = uiState.selectedDestinationAccountId,
+                        onAccountSelected = onDestinationAccountSelected
+                    )
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            // 3. Amount Display
+            val symbol = CurrencyInfo.findByCode(uiState.currencyCode).symbol
+            val typeAccentColor by animateColorAsState(
+                targetValue = when (uiState.selectedType) {
+                    TransactionType.EXPENSE -> CrimsonExpense
+                    TransactionType.INCOME -> EmeraldPrimary
+                    TransactionType.TRANSFER -> TransferBlue
+                    else -> EmeraldPrimary
+                },
+                animationSpec = tween(300),
+                label = "TypeColor"
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = symbol,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = uiState.amountInput,
+                        fontSize = 44.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (uiState.amountInput == "0") MaterialTheme.colorScheme.onSurfaceVariant else typeAccentColor
+                    )
+                }
+            }
+
+            // Quick increment chips: +5, +10, +20, +50
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                listOf(5, 10, 20, 50, 100).forEach { inc ->
+                    Surface(
+                        modifier = Modifier
+                            .padding(horizontal = 4.dp)
+                            .clickable { onQuickAmountAdd(inc) },
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    ) {
+                        Text(
+                            text = "+$inc",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // 3.5. Smart Categorization Suggestion Banner
+            if (uiState.suggestedCategory != null && uiState.selectedType != TransactionType.TRANSFER) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onCategorySelected(uiState.suggestedCategory.id) },
+                    shape = RoundedCornerShape(12.dp),
+                    color = EmeraldPrimary.copy(alpha = 0.12f),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, EmeraldPrimary.copy(alpha = 0.35f))
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CategoryIconBadge(
+                            iconName = uiState.suggestedCategory.icon,
+                            colorHex = uiState.suggestedCategory.colorHex,
+                            size = 24.dp,
+                            iconSize = 14.dp
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = stringResource(R.string.quick_add_smart_suggestion),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = EmeraldPrimary,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = uiState.suggestedCategory.getDisplayName(),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                            uiState.suggestionExplanation?.let { exp ->
+                                Text(
+                                    text = exp,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                        if (uiState.selectedCategoryId == uiState.suggestedCategory.id) {
+                            Text(
+                                text = stringResource(R.string.quick_add_applied),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = EmeraldPrimary
+                            )
+                        } else {
+                            Text(
+                                text = stringResource(R.string.quick_add_tap_apply),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = EmeraldPrimary
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            // 4. Category Selector (Frequent + Browse All)
+            if (uiState.selectedType != TransactionType.TRANSFER) {
+                val scrollState = rememberScrollState()
+                val displayCategories = remember(uiState.frequentCategories, uiState.selectedCategoryId, uiState.categories) {
+                    val selected = uiState.categories.find { it.id == uiState.selectedCategoryId }
+                    if (selected != null && uiState.frequentCategories.none { it.id == selected.id }) {
+                        listOf(selected) + uiState.frequentCategories
+                    } else {
+                        uiState.frequentCategories
+                    }
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(scrollState),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Browse all categories trigger
+                    Surface(
+                        modifier = Modifier.clickable { showCategoryPickerDialog = true },
+                        shape = RoundedCornerShape(16.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = stringResource(R.string.category_browse_all),
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = stringResource(R.string.category_browse_all),
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+
+                    displayCategories.forEach { category ->
+                        val isSelected = category.id == uiState.selectedCategoryId
+                        Surface(
+                            modifier = Modifier.clickable { onCategorySelected(category.id) },
+                            shape = RoundedCornerShape(16.dp),
+                            color = if (isSelected) Color(category.colorHex).copy(alpha = 0.25f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                            border = if (isSelected) androidx.compose.foundation.BorderStroke(1.5.dp, Color(category.colorHex)) else null
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                CategoryIconBadge(
+                                    iconName = category.icon,
+                                    colorHex = category.colorHex,
+                                    size = 24.dp,
+                                    iconSize = 14.dp
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = category.getDisplayName(),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            // 5. Frequent Merchants (1-tap prediction)
+            if (uiState.frequentMerchants.isNotEmpty() && uiState.selectedType == TransactionType.EXPENSE) {
+                val merchantScroll = rememberScrollState()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(merchantScroll),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    uiState.frequentMerchants.forEach { m ->
+                        val isSelected = uiState.merchant.equals(m, ignoreCase = true)
+                        Surface(
+                            modifier = Modifier.clickable { onMerchantSelected(m) },
+                            shape = RoundedCornerShape(12.dp),
+                            color = if (isSelected) EmeraldPrimary.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                            border = if (isSelected) androidx.compose.foundation.BorderStroke(1.dp, EmeraldPrimary) else null
+                        ) {
+                            Text(
+                                text = m,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            // 6. Date Selector Chips: [Today] [Yesterday] [Pick Date]
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                QuickAddDateChoice.values().forEach { choice ->
+                    val isSelected = uiState.dateChoice == choice
+                    val dateLabel = when (choice) {
+                        QuickAddDateChoice.TODAY -> stringResource(R.string.quick_add_date_today)
+                        QuickAddDateChoice.YESTERDAY -> stringResource(R.string.quick_add_date_yesterday)
+                        QuickAddDateChoice.CUSTOM -> stringResource(R.string.quick_add_date_custom)
+                    }
+                    Surface(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { onDateChoiceSelected(choice) },
+                        shape = RoundedCornerShape(10.dp),
+                        color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+                    ) {
+                        Text(
+                            text = dateLabel,
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(vertical = 6.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            // Expandable optional notes
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showDetails = !showDetails }
+                    .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = if (showDetails) stringResource(R.string.quick_add_hide_details) else stringResource(R.string.quick_add_show_details),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = EmeraldPrimary
+                )
+                Icon(
+                    imageVector = Icons.Default.ExpandMore,
+                    contentDescription = null,
+                    tint = EmeraldPrimary,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+
+            AnimatedVisibility(visible = showDetails) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(vertical = 6.dp)) {
+                    OutlinedTextField(
+                        value = uiState.merchant,
+                        onValueChange = onMerchantTextChange,
+                        label = { Text(stringResource(R.string.tx_merchant)) },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = uiState.description,
+                        onValueChange = onDescriptionTextChange,
+                        label = { Text(stringResource(R.string.tx_notes)) },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+
+            // Error display
+            uiState.errorMessage?.let { err ->
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = err, color = CrimsonExpense, style = MaterialTheme.typography.labelSmall)
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // 7. Ultra-Responsive Numeric Keypad
+            NumericKeypad(onDigitClick = onDigitClick)
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // 8. Dual Action Buttons: [Save & Add Another] and [Save]
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                if (!uiState.isEditing) {
+                    OutlinedButton(
+                        onClick = {
+                            onSave(true) { tx ->
+                                onTransactionSaved(tx, true)
+                            }
+                        },
+                        shape = RoundedCornerShape(14.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(50.dp)
+                    ) {
+                        Icon(imageVector = Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp), tint = EmeraldPrimary)
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(stringResource(R.string.quick_add_add_another), color = EmeraldPrimary, fontWeight = FontWeight.SemiBold)
+                    }
+                }
+
+                Button(
+                    onClick = {
+                        onSave(false) { tx ->
+                            onTransactionSaved(tx, false)
+                            onDismiss()
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = typeAccentColor),
+                    shape = RoundedCornerShape(14.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(50.dp)
+                ) {
+                    Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = Color.Black, modifier = Modifier.size(18.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = if (uiState.isEditing) stringResource(R.string.quick_add_update) else stringResource(R.string.action_save),
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+    }
+
+    if (showCategoryPickerDialog) {
+        CategoryPickerDialog(
+            categories = uiState.categories,
+            selectedCategoryId = uiState.selectedCategoryId,
+            initialType = when (uiState.selectedType) {
+                TransactionType.INCOME, TransactionType.REFUND -> CategoryType.INCOME
+                else -> CategoryType.EXPENSE
+            },
+            frequentCategories = uiState.frequentCategories,
+            onCategorySelected = { category ->
+                onCategorySelected(category.id)
+                showCategoryPickerDialog = false
+            },
+            onDismissRequest = { showCategoryPickerDialog = false }
+        )
+    }
+}
+
+@Composable
+fun TypeSegmentedControl(
+    selectedType: TransactionType,
+    onTypeSelected: (TransactionType) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+    ) {
+        Row(modifier = Modifier.padding(3.dp)) {
+            listOf(TransactionType.EXPENSE, TransactionType.INCOME, TransactionType.TRANSFER).forEach { type ->
+                val isSelected = selectedType == type
+                val selColor = when (type) {
+                    TransactionType.EXPENSE -> CrimsonExpense
+                    TransactionType.INCOME -> EmeraldPrimary
+                    TransactionType.TRANSFER -> TransferBlue
+                    else -> EmeraldPrimary
+                }
+                Surface(
+                    modifier = Modifier.clickable { onTypeSelected(type) },
+                    shape = RoundedCornerShape(10.dp),
+                    color = if (isSelected) selColor else Color.Transparent,
+                    contentColor = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+                ) {
+                    Text(
+                        text = type.getLocalizedName(),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun AccountPickerPill(
+    accounts: List<Account>,
+    selectedAccountId: String?,
+    onAccountSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val currentAccount = accounts.find { it.id == selectedAccountId } ?: accounts.firstOrNull()
+
+    Box(modifier = modifier) {
+        Surface(
+            modifier = Modifier.clickable { expanded = true },
+            shape = RoundedCornerShape(12.dp),
+            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AccountBalance,
+                    contentDescription = null,
+                    tint = EmeraldPrimary,
+                    modifier = Modifier.size(14.dp)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = currentAccount?.name ?: stringResource(R.string.tx_account),
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Icon(
+                    imageVector = Icons.Default.ExpandMore,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            accounts.forEach { acc ->
+                DropdownMenuItem(
+                    text = { Text("${acc.name} (${acc.balance.formatted()})") },
+                    onClick = {
+                        onAccountSelected(acc.id)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun NumericKeypad(
+    onDigitClick: (Char) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val keys = listOf(
+        listOf('1', '2', '3'),
+        listOf('4', '5', '6'),
+        listOf('7', '8', '9'),
+        listOf('.', '0', '⌫')
+    )
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        keys.forEach { row ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                row.forEach { key ->
+                    Surface(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp)
+                            .clickable { onDigitClick(key) },
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        tonalElevation = 2.dp
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            if (key == '⌫') {
+                                Icon(
+                                    imageVector = Icons.Default.Backspace,
+                                    contentDescription = "Backspace",
+                                    tint = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            } else {
+                                Text(
+                                    text = key.toString(),
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

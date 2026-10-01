@@ -50,10 +50,10 @@
 -keep @androidx.room.Dao interface * { *; }
 
 # --- FinPulse Domain Models & Database Entities ---
--keep class com.finpulse.app.domain.model.** { *; }
--keep class com.finpulse.app.core.database.entity.** { *; }
--keep class com.finpulse.app.domain.model.sync.** { *; }
--keep class com.finpulse.app.domain.model.backup.** { *; }
+-keep class md.alexlab.finpulse.domain.model.** { *; }
+-keep class md.alexlab.finpulse.core.database.entity.** { *; }
+-keep class md.alexlab.finpulse.domain.model.sync.** { *; }
+-keep class md.alexlab.finpulse.domain.model.backup.** { *; }
 
 # --- Firebase Auth & Cloud Firestore ---
 -keepattributes *Annotation*

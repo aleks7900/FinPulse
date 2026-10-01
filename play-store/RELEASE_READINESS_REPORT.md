@@ -1,6 +1,6 @@
 # Google Play Production Release Readiness Report for FinPulse
 
-**Application ID:** `com.finpulse.app`  
+**Application ID:** `md.alexlab.finpulse`  
 **Version:** `1.0.0` (`versionCode = 1`)  
 **Target SDK:** `36` (Android 16) | **Min SDK:** `26` (Android 8.0) | **Compile SDK:** `36`  
 **Audit Date:** October 1, 2026  
@@ -29,7 +29,7 @@ However, the application is **NOT YET PUBLISHABLE** to the Google Play Store unt
 | **Root Gradle Configuration** | **PASS** | `build.gradle.kts` uses modern Gradle plugin declarations via version catalog. Build cache and Kotlin 2.0 compiler enabled. |
 | **App Module Gradle** | **PASS** | `app/build.gradle.kts` properly configures AGP 8.7.2, Java 17 compatibility, JVM target 17, and Jetpack Compose. |
 | **Version Catalog** | **PASS** | `gradle/libs.versions.toml` defines all dependencies cleanly; no ad-hoc string coordinates in module build file. |
-| **Application ID / Namespace** | **PASS** | `namespace = "com.finpulse.app"`, `applicationId = "com.finpulse.app"`. Debug builds append `.debug` suffix to allow side-by-side device installation. |
+| **Application ID / Namespace** | **PASS** | `namespace = "md.alexlab.finpulse"`, `applicationId = "md.alexlab.finpulse"`. Debug builds append `.debug` suffix to allow side-by-side device installation. |
 | **Compile / Target / Min SDK** | **PASS** | `compileSdk = 36`, `targetSdk = 36`, `minSdk = 26`. Fully complies with Google Play's requirement for targetSdk >= 34/35. |
 | **Version Code & Name** | **PASS** | `versionCode = 1`, `versionName = "1.0.0"`. Clean initial release semantic versioning. |
 | **Build Types** | **PASS** | `release` has `isDebuggable = false` (default), `isMinifyEnabled = true`, `isShrinkResources = true`. `debug` has `isDebuggable = true`. |
@@ -70,7 +70,7 @@ The following items **must** be resolved before uploading the `.aab` to Google P
    - **Resolution:** Generate a production upload key using `keytool` (or supply the organization's existing upload keystore), copy `key.properties.example` to `key.properties`, and fill in the keystore path, alias, and passwords.
 2. **Production Firebase `google-services.json`:**
    - `app/google-services.json` contains dummy project IDs and API keys (`AIzaSyFinPulseDevelopmentTemplateKeyPlaceholder`).
-   - **Resolution:** If Google Sign-In and Cloud Synchronization are to be launched in production, download the production `google-services.json` from the Firebase Console (matching package `com.finpulse.app`) and place it in the `app/` directory. Deploy `firestore.rules` to the production Firebase project.
+   - **Resolution:** If Google Sign-In and Cloud Synchronization are to be launched in production, download the production `google-services.json` from the Firebase Console (matching package `md.alexlab.finpulse`) and place it in the `app/` directory. Deploy `firestore.rules` to the production Firebase project.
 3. **Public Privacy Policy URL:**
    - Google Play rejects apps without an active, publicly crawlable Privacy Policy URL.
    - **Resolution:** Publish `play-store/PRIVACY_POLICY.md` to a public HTTPS domain (e.g. `https://finpulse.app/privacy` or GitHub Pages).
