@@ -6,6 +6,5 @@
     <include domain="database" path="finpulse.db-shm" />
     <!-- Include preferences -->
     <include domain="file" path="datastore/user_preferences.preferences_pb" />
-    <!-- Exclude cache -->
-    <exclude domain="root" path="cache" />
+    <!-- Preferences are included; all unmentioned directories (cache, temp) are excluded by default -->
 </full-backup-content>
