@@ -29,9 +29,28 @@ if ($storePass.Length -lt 6) {
 $keyAlias = "finpulse_release_key"
 $dname = "CN=Fin Pulse, OU=Finance, O=FinPulse, L=San Francisco, ST=California, C=US"
 
-Write-Host "`nGenerating RSA 2048-bit release keystore valid for 10,000 days..." -ForegroundColor Cyan
+# Resolve keytool.exe path
+$keytoolCmd = "keytool"
+$cmd = Get-Command "keytool" -ErrorAction SilentlyContinue
+if ($cmd) {
+    $keytoolCmd = $cmd.Source
+} elseif ($env:JAVA_HOME -and (Test-Path "$env:JAVA_HOME\bin\keytool.exe")) {
+    $keytoolCmd = "$env:JAVA_HOME\bin\keytool.exe"
+} else {
+    $candidates = @(
+        Get-ChildItem -Path "$env:USERPROFILE\.jdks" -Filter "keytool.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
+        Get-ChildItem -Path "C:\Program Files\Java", "C:\Program Files\Android" -Filter "keytool.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
+    )
+    if ($candidates.Count -gt 0) {
+        $keytoolCmd = $candidates[0]
+    } else {
+        Write-Error "Could not locate keytool.exe. Please ensure a JDK is installed."
+        exit 1
+    }
+}
+Write-Host "Using keytool from: $keytoolCmd" -ForegroundColor DarkGray
 
-& keytool -genkeypair `
+& $keytoolCmd -genkeypair `
     -v `
     -keystore $keystorePath `
     -alias $keyAlias `

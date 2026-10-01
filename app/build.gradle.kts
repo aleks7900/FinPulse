@@ -32,10 +32,17 @@ android {
             if (keystorePropertiesFile.exists()) {
                 val properties = Properties()
                 keystorePropertiesFile.inputStream().use { properties.load(it) }
-                storeFile = file(properties.getProperty("storeFile") ?: "release.keystore")
+                val storeFilePath = properties.getProperty("storeFile") ?: "release.keystore"
+                val rawFile = File(storeFilePath)
+                storeFile = if (rawFile.isAbsolute && rawFile.exists()) rawFile else rootProject.file(storeFilePath)
                 storePassword = properties.getProperty("storePassword") ?: ""
                 keyAlias = properties.getProperty("keyAlias") ?: ""
                 keyPassword = properties.getProperty("keyPassword") ?: ""
+            } else if (rootProject.file("release.keystore").exists()) {
+                storeFile = rootProject.file("release.keystore")
+                storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "changeit"
+                keyAlias = System.getenv("KEY_ALIAS") ?: "finpulse_release_key"
+                keyPassword = System.getenv("KEY_PASSWORD") ?: "changeit"
             } else if (System.getenv("KEYSTORE_PATH") != null) {
                 storeFile = file(System.getenv("KEYSTORE_PATH"))
                 storePassword = System.getenv("KEYSTORE_PASSWORD")
@@ -64,7 +71,6 @@ android {
             )
         }
         debug {
-            applicationIdSuffix = ".debug"
             isDebuggable = true
         }
     }

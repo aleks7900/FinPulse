@@ -11,13 +11,13 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
-    // Match all user subcollections: settings, transactions, accounts, categories, budgets, etc.
+    // Match all user subcollections at any depth: settings, transactions, accounts, categories, budgets, etc.
     match /users/{userId} {
       // User root document
       allow read, write: if isOwner(userId);
 
-      // User subcollections (including /users/{userId}/settings/app)
-      match /{collectionName}/{docId} {
+      // User subcollections at any depth
+      match /{allPaths=**} {
         allow read, write: if isOwner(userId);
       }
     }
