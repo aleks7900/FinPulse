@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">快速记账</string>
     <string name="shortcut_quick_add_long">快速记录一笔交易</string>
@@ -1362,4 +1362,13 @@
     <string name="account_currency_locked_desc">由于此账户已存在交易记录，无法更改其货币。</string>
     <string name="different_currencies_desc">各账户使用不同货币，已避免未经汇率换算的直接相加。</string>
     <string name="currencies_change_currency">更改货币</string>
+
+<string name="account_delete_cloud_data_title">е€ й™¤дє‘з«Їж•°жЌ®</string>
+    <string name="account_delete_cloud_data_desc">иї™е°†д»Ћдє‘з«Їж°ёд№…е€ й™¤ж‰Ђжњ‰еђЊж­Ґзљ„и®ѕзЅ®е’Њж•°жЌ®гЂ‚ж­¤и®ѕе¤‡дёЉзљ„жњ¬ењ°ж•°жЌ®дёЌдјљиў«е€ й™¤гЂ‚жЇеђ¦з»§з»­пјџ</string>
+    <string name="account_delete_cloud_data_confirm">д»Ћдє‘з«Їе€ й™¤</string>
+    <string name="account_delete_cloud_data_success">дє‘з«Їж•°жЌ®е€ й™¤ж€ђеЉџ</string>
+    <string name="account_delete_cloud_data_failed">е€ й™¤дє‘з«Їж•°жЌ®е¤±иґҐ</string>
+    <string name="account_cloud_sync_on">дє‘еђЊж­ҐпјљејЂеђЇ</string>
+    <string name="account_not_signed_in">жњЄз™»еЅ•</string>
+    <string name="account_google_account_title">Google иґ¦еЏ·</string>
 </resources>

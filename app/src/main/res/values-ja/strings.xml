@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">クイック入力</string>
     <string name="shortcut_quick_add_long">取引をすばやく記録</string>
@@ -1362,4 +1362,13 @@
     <string name="account_currency_locked_desc">この口座には取引履歴が存在するため、通貨を変更できません。</string>
     <string name="different_currencies_desc">口座間で異なる通貨が使用されています。換算なしの単純合算は行われません。</string>
     <string name="currencies_change_currency">通貨を変更</string>
+
+<string name="account_delete_cloud_data_title">г‚Їгѓ©г‚¦гѓ‰гѓ‡гѓјг‚їг‚’е‰Љй™¤</string>
+    <string name="account_delete_cloud_data_desc">гЃ“г‚ЊгЃ«г‚€г‚ЉгЂЃеђЊжњџгЃ•г‚ЊгЃџгЃ™гЃ№гЃ¦гЃ®иЁ­е®љгЃЁгѓ‡гѓјг‚їгЃЊг‚Їгѓ©г‚¦гѓ‰гЃ‹г‚‰е®Ње…ЁгЃ«е‰Љй™¤гЃ•г‚ЊгЃѕгЃ™гЂ‚гЃ“гЃ®гѓ‡гѓђг‚¤г‚№дёЉгЃ®гѓ­гѓјг‚«гѓ«гѓ‡гѓјг‚їгЃЇе‰Љй™¤гЃ•г‚ЊгЃѕгЃ›г‚“гЂ‚з¶љиЎЊгЃ—гЃѕгЃ™гЃ‹пјџ</string>
+    <string name="account_delete_cloud_data_confirm">г‚Їгѓ©г‚¦гѓ‰гЃ‹г‚‰е‰Љй™¤</string>
+    <string name="account_delete_cloud_data_success">г‚Їгѓ©г‚¦гѓ‰гѓ‡гѓјг‚їгЃЊж­ЈеёёгЃ«е‰Љй™¤гЃ•г‚ЊгЃѕгЃ—гЃџ</string>
+    <string name="account_delete_cloud_data_failed">г‚Їгѓ©г‚¦гѓ‰гѓ‡гѓјг‚їгЃ®е‰Љй™¤гЃ«е¤±ж•—гЃ—гЃѕгЃ—гЃџ</string>
+    <string name="account_cloud_sync_on">г‚Їгѓ©г‚¦гѓ‰еђЊжњџ: ON</string>
+    <string name="account_not_signed_in">гѓ­г‚°г‚¤гѓігЃ—гЃ¦гЃ„гЃѕгЃ›г‚“</string>
+    <string name="account_google_account_title">Google г‚ўг‚«г‚¦гѓігѓ€</string>
 </resources>

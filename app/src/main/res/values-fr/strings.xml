@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Ajout rapide</string>
     <string name="shortcut_quick_add_long">Ajouter une opération rapide</string>
@@ -1370,4 +1370,13 @@
     <string name="account_currency_locked_desc">La devise ne peut pas être modifiée car ce compte contient des transactions enregistrées.</string>
     <string name="different_currencies_desc">Les comptes utilisent des devises différentes. L\'addition directe sans conversion est évitée.</string>
     <string name="currencies_change_currency">Changer de devise</string>
+
+<string name="account_delete_cloud_data_title">Supprimer les donnГ©es cloud</string>
+    <string name="account_delete_cloud_data_desc">Cela supprimera dГ©finitivement tous vos paramГЁtres et donnГ©es synchronisГ©s du cloud. Vos donnГ©es locales sur cet appareil ne seront PAS supprimГ©es. Voulez-vous continuer ?</string>
+    <string name="account_delete_cloud_data_confirm">Supprimer du cloud</string>
+    <string name="account_delete_cloud_data_success">DonnГ©es cloud supprimГ©es avec succГЁs</string>
+    <string name="account_delete_cloud_data_failed">Г‰chec de la suppression des donnГ©es cloud</string>
+    <string name="account_cloud_sync_on">Synchronisation cloud : ACTIVГ‰E</string>
+    <string name="account_not_signed_in">Non connectГ©</string>
+    <string name="account_google_account_title">Compte Google</string>
 </resources>

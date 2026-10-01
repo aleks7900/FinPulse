@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">빠른 입력</string>
     <string name="shortcut_quick_add_long">빠른 내역 추가</string>
@@ -1362,4 +1362,13 @@
     <string name="account_currency_locked_desc">이 계좌에는 거래 내역이 있으므로 통화를 변경할 수 없습니다.</string>
     <string name="different_currencies_desc">계좌 간에 서로 다른 통화를 사용합니다. 환율 변환 없는 단순 합산은 방지됩니다.</string>
     <string name="currencies_change_currency">통화 변경</string>
+
+<string name="account_delete_cloud_data_title">нЃґлќјмљ°л“њ лЌ°мќґн„° м‚­м њ</string>
+    <string name="account_delete_cloud_data_desc">нЃґлќјмљ°л“њм—ђм„њ лЏ™кё°н™”лђњ лЄЁл“  м„¤м •кіј лЌ°мќґн„°к°Ђ мЃкµ¬м ЃмњјлЎњ м‚­м њлђ©л‹€л‹¤. мќґ кё°кё°мќ лЎњм»¬ лЌ°мќґн„°лЉ” м‚­м њлђм§Ђ м•ЉмЉµл‹€л‹¤. кі„м†Ќн•м‹њкІ мЉµл‹€к№Њ?</string>
+    <string name="account_delete_cloud_data_confirm">нЃґлќјмљ°л“њм—ђм„њ м‚­м њ</string>
+    <string name="account_delete_cloud_data_success">нЃґлќјмљ°л“њ лЌ°мќґн„°к°Ђ м„±кіµм ЃмњјлЎњ м‚­м њлђм—€мЉµл‹€л‹¤</string>
+    <string name="account_delete_cloud_data_failed">нЃґлќјмљ°л“њ лЌ°мќґн„° м‚­м њ м‹¤нЊЁ</string>
+    <string name="account_cloud_sync_on">нЃґлќјмљ°л“њ лЏ™кё°н™”: мјњм§ђ</string>
+    <string name="account_not_signed_in">лЎњк·ёмќёлђм§Ђ м•ЉмќЊ</string>
+    <string name="account_google_account_title">Google кі„м •</string>
 </resources>

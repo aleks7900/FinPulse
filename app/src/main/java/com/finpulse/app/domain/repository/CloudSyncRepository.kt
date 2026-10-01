@@ -17,4 +17,7 @@ interface CloudSyncRepository {
     suspend fun restoreCloudDataToLocal(uid: String): Result<SyncResult>
     suspend fun handleAccountSwitch(previousUid: String?, newUid: String): Result<Unit>
     suspend fun clearLocalData()
+    suspend fun deleteCloudData(): Result<Unit>
+    suspend fun syncSettings(): Result<Unit>
 }
+

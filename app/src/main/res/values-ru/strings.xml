@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Быстрое добавление</string>
     <string name="shortcut_quick_add_long">Добавить операцию</string>
@@ -1387,4 +1387,13 @@
     <string name="account_currency_locked_desc">Нельзя изменить валюту счета с существующими транзакциями.</string>
     <string name="different_currencies_desc">Счета используют разные валюты. Прямое сложение без конвертации исключено.</string>
     <string name="currencies_change_currency">Сменить валюту</string>
+
+<string name="account_delete_cloud_data_title">РЈРґР°Р»РёС‚СЊ РґР°РЅРЅС‹Рµ РёР· РѕР±Р»Р°РєР°</string>
+    <string name="account_delete_cloud_data_desc">Р­С‚Рѕ РґРµР№СЃС‚РІРёРµ Р±РµР·РІРѕР·РІСЂР°С‚РЅРѕ СѓРґР°Р»РёС‚ РІСЃРµ СЃРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°РЅРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё Рё РґР°РЅРЅС‹Рµ РёР· РѕР±Р»Р°РєР°. Р›РѕРєР°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ РЅР° СЌС‚РѕРј СѓСЃС‚СЂРѕР№СЃС‚РІРµ РќР• Р±СѓРґСѓС‚ СѓРґР°Р»РµРЅС‹. РџСЂРѕРґРѕР»Р¶РёС‚СЊ?</string>
+    <string name="account_delete_cloud_data_confirm">РЈРґР°Р»РёС‚СЊ РёР· РѕР±Р»Р°РєР°</string>
+    <string name="account_delete_cloud_data_success">РћР±Р»Р°С‡РЅС‹Рµ РґР°РЅРЅС‹Рµ СѓСЃРїРµС€РЅРѕ СѓРґР°Р»РµРЅС‹</string>
+    <string name="account_delete_cloud_data_failed">РќРµ СѓРґР°Р»РѕСЃСЊ СѓРґР°Р»РёС‚СЊ РґР°РЅРЅС‹Рµ РёР· РѕР±Р»Р°РєР°</string>
+    <string name="account_cloud_sync_on">РЎРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ СЃ РѕР±Р»Р°РєРѕРј: Р’РљР›</string>
+    <string name="account_not_signed_in">Р’С…РѕРґ РЅРµ РІС‹РїРѕР»РЅРµРЅ</string>
+    <string name="account_google_account_title">РђРєРєР°СѓРЅС‚ Google</string>
 </resources>

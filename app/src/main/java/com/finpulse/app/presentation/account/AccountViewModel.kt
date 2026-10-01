@@ -29,8 +29,10 @@ data class AccountUiState(
     val errorMessageRes: Int? = null,
     val successMessageRes: Int? = null,
     val successMessageArgs: List<String> = emptyList(),
-    val showSignOutConfirmDialog: Boolean = false
+    val showSignOutConfirmDialog: Boolean = false,
+    val showDeleteCloudDataDialog: Boolean = false
 )
+
 
 class AccountViewModel(
     private val authRepository: AuthRepository,
@@ -172,6 +174,30 @@ class AccountViewModel(
             }
         }
     }
+
+    fun requestDeleteCloudData() {
+        _uiState.update { it.copy(showDeleteCloudDataDialog = true) }
+    }
+
+    fun dismissDeleteCloudDataDialog() {
+        _uiState.update { it.copy(showDeleteCloudDataDialog = false) }
+    }
+
+    fun confirmDeleteCloudData() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, showDeleteCloudDataDialog = false) }
+            val result = cloudSyncRepository.deleteCloudData()
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    successMessageRes = if (result.isSuccess) R.string.account_delete_cloud_data_success else null,
+                    errorMessageRes = if (result.isFailure) R.string.account_delete_cloud_data_failed else null,
+                    errorMessage = if (result.isFailure) result.exceptionOrNull()?.localizedMessage else null
+                )
+            }
+        }
+    }
+
 
     fun dismissMessages() {
         _uiState.update {

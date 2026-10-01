@@ -1371,4 +1371,14 @@
     <string name="account_currency_locked_desc">Currency cannot be changed because this account has recorded transactions.</string>
     <string name="different_currencies_desc">Accounts use different currencies. Direct summation without conversion is avoided.</string>
     <string name="currencies_change_currency">Change Currency</string>
+
+    <string name="account_delete_cloud_data_title">Delete Cloud Data</string>
+    <string name="account_delete_cloud_data_desc">This will permanently delete all your synchronized settings and data from the cloud. Your local data on this device will NOT be deleted. Do you want to continue?</string>
+    <string name="account_delete_cloud_data_confirm">Delete from Cloud</string>
+    <string name="account_delete_cloud_data_success">Cloud data deleted successfully</string>
+    <string name="account_delete_cloud_data_failed">Failed to delete cloud data</string>
+    <string name="account_cloud_sync_on">Cloud Sync: ON</string>
+    <string name="account_not_signed_in">Not signed in</string>
+    <string name="account_google_account_title">Google Account</string>
 </resources>
+

@@ -17,13 +17,18 @@ import com.finpulse.app.domain.model.FinancialGoal
 import com.finpulse.app.domain.model.InvestmentAsset
 import com.finpulse.app.domain.model.RecurringTransaction
 import com.finpulse.app.domain.model.SavedFilter
+import com.finpulse.app.data.cloud.DataStoreLocalSettingsDataSource
+import com.finpulse.app.data.cloud.FirestoreCloudSettingsDataSource
+import com.finpulse.app.data.repository.SettingsRepositoryImpl
 import com.finpulse.app.domain.model.Transaction
 import com.finpulse.app.domain.model.sync.CloudAccountSettings
+import com.finpulse.app.domain.model.sync.CloudSettings
 import com.finpulse.app.domain.model.sync.SyncEntityType
 import com.finpulse.app.domain.model.sync.SyncResult
 import com.finpulse.app.domain.model.sync.SyncStatus
 import com.finpulse.app.domain.repository.AuthRepository
 import com.finpulse.app.domain.repository.CloudSyncRepository
+import com.finpulse.app.domain.repository.SettingsRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -40,6 +45,7 @@ class CloudSyncEngine(
     private val cloudStorage: CloudStorageDataSource,
     private val userPreferencesDataStore: UserPreferencesDataStore,
     private val authRepository: AuthRepository,
+    private val settingsRepository: SettingsRepository? = null,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : CloudSyncRepository {
 
@@ -261,46 +267,14 @@ class CloudSyncEngine(
     }
 
     private suspend fun syncSettingsInternal(uid: String) {
-        val colName = "settings"
-        val docId = "preferences"
-
-        val localPrefs = userPreferencesDataStore.userPreferencesFlow.first()
-        val localSettings = CloudAccountSettings(
-            baseCurrencyCode = localPrefs.baseCurrencyCode,
-            selectedLanguage = localPrefs.selectedLanguage,
-            hideBalances = localPrefs.hideBalances,
-            darkMode = if (localPrefs.isDarkMode == true) "DARK" else if (localPrefs.isDarkMode == false) "LIGHT" else "SYSTEM",
-            widgetPrivacyEnabled = localPrefs.widgetPrivacyEnabled,
-            updatedAt = System.currentTimeMillis()
+        val actualSettingsRepo = settingsRepository ?: SettingsRepositoryImpl(
+            localDataSource = DataStoreLocalSettingsDataSource(userPreferencesDataStore),
+            cloudDataSource = FirestoreCloudSettingsDataSource(cloudStorage),
+            dispatcher = dispatcher
         )
-
-        val remoteRecords = cloudStorage.downloadRecords(uid, colName, 0L).getOrDefault(emptyList())
-        val remoteSettingsRecord = remoteRecords.firstOrNull { it.id == docId }
-
-        if (remoteSettingsRecord != null && remoteSettingsRecord.jsonPayload.isNotBlank()) {
-            val remoteSettings = runCatching { json.decodeFromString<CloudAccountSettings>(remoteSettingsRecord.jsonPayload) }.getOrNull()
-            if (remoteSettings != null && remoteSettings.updatedAt > localSettings.updatedAt) {
-                // Apply remote settings to local
-                userPreferencesDataStore.setBaseCurrency(remoteSettings.baseCurrencyCode)
-                userPreferencesDataStore.setSelectedLanguage(remoteSettings.selectedLanguage)
-                userPreferencesDataStore.setHideBalances(remoteSettings.hideBalances)
-                if (remoteSettings.darkMode != null) {
-                    userPreferencesDataStore.setDarkMode(remoteSettings.darkMode)
-                }
-                userPreferencesDataStore.setWidgetPrivacyEnabled(remoteSettings.widgetPrivacyEnabled)
-                return
-            }
-        }
-
-        // Otherwise push local settings to cloud
-        val record = CloudEntityRecord(
-            id = docId,
-            collection = colName,
-            jsonPayload = json.encodeToString(localSettings),
-            updatedAt = localSettings.updatedAt
-        )
-        cloudStorage.uploadRecords(uid, colName, listOf(record))
+        actualSettingsRepo.synchronize(uid)
     }
+
 
     override suspend fun migrateLocalDataToCloud(uid: String): Result<SyncResult> = withContext(dispatcher) {
         _syncStatus.value = SyncStatus.SYNCING
@@ -551,6 +525,9 @@ class CloudSyncEngine(
             } else if (hasRemoteData && localTxCount > 0) {
                 // Normal sync or merge
                 performFullSync()
+            } else {
+                // Synchronize settings for initial setup
+                syncSettingsInternal(newUid)
             }
             Result.success(Unit)
         } catch (t: Throwable) {
@@ -565,6 +542,34 @@ class CloudSyncEngine(
         }
         _lastSyncTimestamp.value = 0L
         userPreferencesDataStore.setSyncState("IDLE", 0L, null)
+        userPreferencesDataStore.resetSettingsUpdatedAt()
+    }
+
+    override suspend fun deleteCloudData(): Result<Unit> = withContext(dispatcher) {
+        val user = authRepository.currentUser.value
+            ?: return@withContext Result.failure(IllegalStateException("No authenticated user for cloud data deletion"))
+        try {
+            _syncStatus.value = SyncStatus.SYNCING
+            cloudStorage.clearUserStorage(user.uid).getOrThrow()
+            _lastSyncTimestamp.value = 0L
+            userPreferencesDataStore.setSyncState("IDLE", 0L, null)
+            _syncStatus.value = SyncStatus.IDLE
+            Result.success(Unit)
+        } catch (t: Throwable) {
+            _syncStatus.value = SyncStatus.ERROR
+            Result.failure(t)
+        }
+    }
+
+    override suspend fun syncSettings(): Result<Unit> = withContext(dispatcher) {
+        val user = authRepository.currentUser.value
+            ?: return@withContext Result.failure(IllegalStateException("No authenticated user for cloud sync"))
+        try {
+            syncSettingsInternal(user.uid)
+            Result.success(Unit)
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
     }
 
     private suspend fun clearLocalDatabaseTables() {

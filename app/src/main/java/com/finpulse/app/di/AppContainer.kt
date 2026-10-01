@@ -69,6 +69,9 @@ interface AppContainer {
     val googleAuthManager: com.finpulse.app.core.auth.GoogleAuthManager
     val authRepository: com.finpulse.app.domain.repository.AuthRepository
     val cloudStorageDataSource: com.finpulse.app.data.cloud.CloudStorageDataSource
+    val localSettingsDataSource: com.finpulse.app.data.cloud.LocalSettingsDataSource
+    val cloudSettingsDataSource: com.finpulse.app.data.cloud.CloudSettingsDataSource
+    val settingsRepository: com.finpulse.app.domain.repository.SettingsRepository
     val cloudSyncRepository: com.finpulse.app.domain.repository.CloudSyncRepository
     val getFinancialDigestUseCase: com.finpulse.app.domain.usecase.digest.GetFinancialDigestUseCase
     val exchangeRateProvider: com.finpulse.app.domain.repository.ExchangeRateProvider
@@ -297,12 +300,28 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
         com.finpulse.app.data.cloud.FirestoreCloudStorageDataSource()
     }
 
+    override val localSettingsDataSource: com.finpulse.app.data.cloud.LocalSettingsDataSource by lazy {
+        com.finpulse.app.data.cloud.DataStoreLocalSettingsDataSource(userPreferencesDataStore)
+    }
+
+    override val cloudSettingsDataSource: com.finpulse.app.data.cloud.CloudSettingsDataSource by lazy {
+        com.finpulse.app.data.cloud.FirestoreCloudSettingsDataSource(cloudStorageDataSource)
+    }
+
+    override val settingsRepository: com.finpulse.app.domain.repository.SettingsRepository by lazy {
+        com.finpulse.app.data.repository.SettingsRepositoryImpl(
+            localDataSource = localSettingsDataSource,
+            cloudDataSource = cloudSettingsDataSource
+        )
+    }
+
     override val cloudSyncRepository: com.finpulse.app.domain.repository.CloudSyncRepository by lazy {
         com.finpulse.app.data.sync.CloudSyncEngine(
             database = database,
             cloudStorage = cloudStorageDataSource,
             userPreferencesDataStore = userPreferencesDataStore,
-            authRepository = authRepository
+            authRepository = authRepository,
+            settingsRepository = settingsRepository
         )
     }
 

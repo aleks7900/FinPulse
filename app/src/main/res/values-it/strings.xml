@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Aggiunta rapida</string>
     <string name="shortcut_quick_add_long">Registra transazione rapida</string>
@@ -1370,4 +1370,13 @@
     <string name="account_currency_locked_desc">La valuta non può essere modificata perché questo conto ha transazioni registrate.</string>
     <string name="different_currencies_desc">I conti utilizzano valute diverse. Si evita la somma diretta senza conversione.</string>
     <string name="currencies_change_currency">Cambia valuta</string>
+
+<string name="account_delete_cloud_data_title">Elimina dati cloud</string>
+    <string name="account_delete_cloud_data_desc">Questo eliminerГ  definitivamente tutte le impostazioni e i dati sincronizzati dal cloud. I tuoi dati locali su questo dispositivo NON verranno eliminati. Vuoi continuare?</string>
+    <string name="account_delete_cloud_data_confirm">Elimina dal cloud</string>
+    <string name="account_delete_cloud_data_success">Dati cloud eliminati con successo</string>
+    <string name="account_delete_cloud_data_failed">Impossibile eliminare i dati cloud</string>
+    <string name="account_cloud_sync_on">Sincronizzazione cloud: ATTIVA</string>
+    <string name="account_not_signed_in">Non connesso</string>
+    <string name="account_google_account_title">Account Google</string>
 </resources>

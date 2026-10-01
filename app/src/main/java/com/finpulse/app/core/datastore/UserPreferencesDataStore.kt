@@ -47,7 +47,8 @@ data class UserPreferences(
     val digestFrequency: String = "DAILY", // "DAILY", "WEEKLY", "OFF"
     val digestPrivacyEnabled: Boolean = false,
     val digestDeliveryHour: Int = 20, // 8 PM default
-    val lastDigestSentMillis: Long = 0L
+    val lastDigestSentMillis: Long = 0L,
+    val settingsUpdatedAt: Long = 0L
 )
 
 class UserPreferencesDataStore(private val context: Context) {
@@ -86,6 +87,7 @@ class UserPreferencesDataStore(private val context: Context) {
         val DIGEST_PRIVACY_ENABLED = booleanPreferencesKey("digest_privacy_enabled")
         val DIGEST_DELIVERY_HOUR = androidx.datastore.preferences.core.intPreferencesKey("digest_delivery_hour")
         val LAST_DIGEST_SENT_MILLIS = longPreferencesKey("last_digest_sent_millis")
+        val SETTINGS_UPDATED_AT = longPreferencesKey("settings_updated_at")
     }
 
     val userPreferencesFlow: Flow<UserPreferences> = context.dataStore.data.map { preferences ->
@@ -128,25 +130,29 @@ class UserPreferencesDataStore(private val context: Context) {
             digestFrequency = preferences[PreferencesKeys.DIGEST_FREQUENCY] ?: "DAILY",
             digestPrivacyEnabled = preferences[PreferencesKeys.DIGEST_PRIVACY_ENABLED] ?: false,
             digestDeliveryHour = preferences[PreferencesKeys.DIGEST_DELIVERY_HOUR] ?: 20,
-            lastDigestSentMillis = preferences[PreferencesKeys.LAST_DIGEST_SENT_MILLIS] ?: 0L
+            lastDigestSentMillis = preferences[PreferencesKeys.LAST_DIGEST_SENT_MILLIS] ?: 0L,
+            settingsUpdatedAt = preferences[PreferencesKeys.SETTINGS_UPDATED_AT] ?: 0L
         )
     }
 
     suspend fun setDigestFrequency(frequency: String) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.DIGEST_FREQUENCY] = frequency
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
     suspend fun setDigestPrivacyEnabled(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.DIGEST_PRIVACY_ENABLED] = enabled
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
     suspend fun setDigestDeliveryHour(hour: Int) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.DIGEST_DELIVERY_HOUR] = hour
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
@@ -159,12 +165,14 @@ class UserPreferencesDataStore(private val context: Context) {
     suspend fun setSelectedLanguage(code: String) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.SELECTED_LANGUAGE] = code
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
     suspend fun setBaseCurrency(currencyCode: String) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.BASE_CURRENCY] = currencyCode
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
@@ -196,6 +204,7 @@ class UserPreferencesDataStore(private val context: Context) {
     suspend fun setLockTimeout(timeout: String) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.LOCK_TIMEOUT] = timeout
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
@@ -208,12 +217,14 @@ class UserPreferencesDataStore(private val context: Context) {
     suspend fun setHideBalances(hide: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.HIDE_BALANCES] = hide
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
     suspend fun setDarkMode(mode: String) { // "SYSTEM", "LIGHT", "DARK"
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.DARK_MODE] = mode
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
@@ -241,6 +252,7 @@ class UserPreferencesDataStore(private val context: Context) {
         context.dataStore.edit { preferences ->
             val current = preferences[PreferencesKeys.DISMISSED_INBOX_ITEMS] ?: emptySet()
             preferences[PreferencesKeys.DISMISSED_INBOX_ITEMS] = current + id
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
@@ -248,24 +260,28 @@ class UserPreferencesDataStore(private val context: Context) {
         context.dataStore.edit { preferences ->
             val current = preferences[PreferencesKeys.DISMISSED_INBOX_ITEMS] ?: emptySet()
             preferences[PreferencesKeys.DISMISSED_INBOX_ITEMS] = current + ids
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
     suspend fun clearDismissedInboxItems() {
         context.dataStore.edit { preferences ->
             preferences.remove(PreferencesKeys.DISMISSED_INBOX_ITEMS)
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
     suspend fun setWidgetPrivacyEnabled(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.WIDGET_PRIVACY_ENABLED] = enabled
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
     suspend fun setWidgetMaskOnAppLock(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.WIDGET_MASK_ON_APP_LOCK] = enabled
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
@@ -278,12 +294,41 @@ class UserPreferencesDataStore(private val context: Context) {
     suspend fun setBackupReminderInterval(interval: String) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.BACKUP_REMINDER_INTERVAL] = interval
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 
     suspend fun setLastBackupReminderDismissedMillis(timestamp: Long) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.LAST_BACKUP_REMINDER_DISMISSED] = timestamp
+        }
+    }
+
+    suspend fun restoreCloudSettings(settings: com.finpulse.app.domain.model.sync.CloudSettings) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.BASE_CURRENCY] = settings.baseCurrencyCode
+            preferences[PreferencesKeys.SELECTED_LANGUAGE] = settings.selectedLanguage
+            if (settings.darkMode != null) {
+                preferences[PreferencesKeys.DARK_MODE] = settings.darkMode
+            }
+            preferences[PreferencesKeys.HIDE_BALANCES] = settings.hideBalances
+            preferences[PreferencesKeys.WIDGET_PRIVACY_ENABLED] = settings.widgetPrivacyEnabled
+            preferences[PreferencesKeys.WIDGET_MASK_ON_APP_LOCK] = settings.widgetMaskOnAppLock
+            preferences[PreferencesKeys.LOCK_TIMEOUT] = settings.lockTimeout
+            preferences[PreferencesKeys.BACKUP_REMINDER_INTERVAL] = settings.backupReminderInterval
+            preferences[PreferencesKeys.DIGEST_FREQUENCY] = settings.digestFrequency
+            preferences[PreferencesKeys.DIGEST_PRIVACY_ENABLED] = settings.digestPrivacyEnabled
+            preferences[PreferencesKeys.DIGEST_DELIVERY_HOUR] = settings.digestDeliveryHour
+            if (settings.dismissedInboxItemIds.isNotEmpty()) {
+                preferences[PreferencesKeys.DISMISSED_INBOX_ITEMS] = settings.dismissedInboxItemIds.toSet()
+            }
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = settings.updatedAt
+        }
+    }
+
+    suspend fun resetSettingsUpdatedAt() {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = 0L
         }
     }
 

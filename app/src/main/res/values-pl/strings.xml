@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Szybkie dodawanie</string>
     <string name="shortcut_quick_add_long">Dodaj nową transakcję</string>
@@ -1386,4 +1386,13 @@
     <string name="account_currency_locked_desc">Nie można zmienić waluty, ponieważ to konto posiada zarejestrowane transakcje.</string>
     <string name="different_currencies_desc">Konta używają różnych walut. Bezpośrednie sumowanie bez przeliczenia jest wykluczone.</string>
     <string name="currencies_change_currency">Zmień walutę</string>
+
+<string name="account_delete_cloud_data_title">UsuЕ„ dane z chmury</string>
+    <string name="account_delete_cloud_data_desc">Spowoduje to trwaЕ‚e usuniД™cie wszystkich zsynchronizowanych ustawieЕ„ i danych z chmury. Twoje lokalne dane na tym urzД…dzeniu NIE zostanД… usuniД™te. Czy chcesz kontynuowaД‡?</string>
+    <string name="account_delete_cloud_data_confirm">UsuЕ„ z chmury</string>
+    <string name="account_delete_cloud_data_success">PomyЕ›lnie usuniД™to dane z chmury</string>
+    <string name="account_delete_cloud_data_failed">Nie udaЕ‚o siД™ usunД…Д‡ danych z chmury</string>
+    <string name="account_cloud_sync_on">Synchronizacja z chmurД…: WЕЃД„CZONA</string>
+    <string name="account_not_signed_in">Nie zalogowano</string>
+    <string name="account_google_account_title">Konto Google</string>
 </resources>

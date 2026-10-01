@@ -1,81 +1,30 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper functions for security validation
+    // Helper functions
     function isAuthenticated() {
-      return request.auth != null && request.auth.uid != null;
+      return request.auth != null;
     }
 
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
-    // Explicitly deny access to all collections at the root by default
-    match /{document=**} {
-      allow read, write: if false;
-    }
-
-    // Scoped User Root & Subcollections:
-    // Only the authenticated user whose UID matches the document path can read or write.
+    // Match all user subcollections: settings, transactions, accounts, categories, budgets, etc.
     match /users/{userId} {
+      // User root document
       allow read, write: if isOwner(userId);
 
-      // Financial Transactions
-      match /transactions/{transactionId} {
+      // User subcollections (including /users/{userId}/settings/app)
+      match /{collectionName}/{docId} {
         allow read, write: if isOwner(userId);
       }
+    }
 
-      // Accounts / Wallets
-      match /accounts/{accountId} {
-        allow read, write: if isOwner(userId);
-      }
-
-      // Categories (system & custom)
-      match /categories/{categoryId} {
-        allow read, write: if isOwner(userId);
-      }
-
-      // Budgets
-      match /budgets/{budgetId} {
-        allow read, write: if isOwner(userId);
-      }
-
-      // Recurring Rules & Subscriptions
-      match /recurring/{recurringId} {
-        allow read, write: if isOwner(userId);
-      }
-
-      // Savings Goals
-      match /goals/{goalId} {
-        allow read, write: if isOwner(userId);
-      }
-
-      // Investment Assets
-      match /assets/{assetId} {
-        allow read, write: if isOwner(userId);
-      }
-
-      // Liabilities & Debts
-      match /debts/{debtId} {
-        allow read, write: if isOwner(userId);
-      }
-
-      // Categorization Rules
-      match /categorization_rules/{ruleId} {
-        allow read, write: if isOwner(userId);
-      }
-
-      // Saved Transaction Filters
-      match /saved_filters/{filterId} {
-        allow read, write: if isOwner(userId);
-      }
-
-      // Portable Account Settings
-      match /settings/{settingDoc} {
-        allow read, write: if isOwner(userId);
-      }
+    // Deny all other access by default
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

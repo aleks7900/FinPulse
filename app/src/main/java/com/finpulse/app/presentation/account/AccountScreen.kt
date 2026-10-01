@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.CloudSync
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Lock
@@ -107,6 +108,9 @@ fun AccountScreen(
         onSignOut = viewModel::signOut,
         onConfirmSignOutWithSync = viewModel::confirmSignOutWithSync,
         onDismissSignOutDialog = viewModel::dismissSignOutDialog,
+        onDeleteCloudData = viewModel::requestDeleteCloudData,
+        onConfirmDeleteCloudData = viewModel::confirmDeleteCloudData,
+        onDismissDeleteCloudDataDialog = viewModel::dismissDeleteCloudDataDialog,
         onDismissMessages = viewModel::clearMessages,
         onNavigateBack = onNavigateBack,
         modifier = modifier
@@ -122,6 +126,9 @@ fun AccountScreen(
     onSignOut: () -> Unit,
     onConfirmSignOutWithSync: () -> Unit,
     onDismissSignOutDialog: () -> Unit,
+    onDeleteCloudData: () -> Unit,
+    onConfirmDeleteCloudData: () -> Unit,
+    onDismissDeleteCloudDataDialog: () -> Unit,
     onDismissMessages: () -> Unit,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier
@@ -186,6 +193,30 @@ fun AccountScreen(
         )
     }
 
+    if (uiState.showDeleteCloudDataDialog) {
+        AlertDialog(
+            onDismissRequest = onDismissDeleteCloudDataDialog,
+            icon = { Icon(Icons.Default.DeleteForever, contentDescription = null, tint = CrimsonExpense) },
+            title = { Text(stringResource(R.string.account_delete_cloud_data_title)) },
+            text = {
+                Text(stringResource(R.string.account_delete_cloud_data_desc))
+            },
+            confirmButton = {
+                Button(
+                    onClick = onConfirmDeleteCloudData,
+                    colors = ButtonDefaults.buttonColors(containerColor = CrimsonExpense)
+                ) {
+                    Text(stringResource(R.string.account_delete_cloud_data_confirm), color = Color.White)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismissDeleteCloudDataDialog) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            }
+        )
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -223,12 +254,14 @@ fun AccountScreen(
                 LoggedInContent(
                     uiState = uiState,
                     onSyncClick = { onSyncNow(context) },
-                    onSignOutClick = onSignOut
+                    onSignOutClick = onSignOut,
+                    onDeleteCloudDataClick = onDeleteCloudData
                 )
             }
         }
     }
 }
+
 
 @Composable
 private fun LoggedOutContent(
@@ -259,14 +292,29 @@ private fun LoggedOutContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = stringResource(R.string.account_sync_hero_title),
+                text = stringResource(R.string.account_google_account_title),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant
+            ) {
+                Text(
+                    text = stringResource(R.string.account_not_signed_in),
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             Text(
                 text = stringResource(R.string.account_sync_hero_subtitle),
@@ -274,6 +322,7 @@ private fun LoggedOutContent(
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -367,7 +416,8 @@ private fun LoggedOutContent(
 private fun LoggedInContent(
     uiState: AccountUiState,
     onSyncClick: () -> Unit,
-    onSignOutClick: () -> Unit
+    onSignOutClick: () -> Unit,
+    onDeleteCloudDataClick: () -> Unit
 ) {
     val user = uiState.currentUser
 
@@ -413,6 +463,13 @@ private fun LoggedInContent(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
+                    text = stringResource(R.string.account_google_account_title),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
                     text = user?.displayName ?: stringResource(R.string.account_default_username),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
@@ -436,15 +493,16 @@ private fun LoggedInContent(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = stringResource(R.string.account_google_connected_badge),
+                        text = stringResource(R.string.account_cloud_sync_on),
                         style = MaterialTheme.typography.labelSmall,
                         color = EmeraldPrimary,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
         }
     }
+
 
     // 2. Sync Status Card
     Card(
@@ -620,7 +678,25 @@ private fun LoggedInContent(
             Text(stringResource(R.string.account_sign_out), fontWeight = FontWeight.SemiBold)
         }
     }
+
+    // 5. Delete Cloud Data Button
+    TextButton(
+        onClick = onDeleteCloudDataClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(44.dp),
+        colors = ButtonDefaults.textButtonColors(
+            contentColor = CrimsonExpense.copy(alpha = 0.8f)
+        )
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(Icons.Default.DeleteForever, contentDescription = null, modifier = Modifier.size(18.dp))
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(stringResource(R.string.account_delete_cloud_data_title), fontWeight = FontWeight.Medium)
+        }
+    }
 }
+
 
 @Composable
 private fun SyncStatusBadge(status: SyncStatus) {

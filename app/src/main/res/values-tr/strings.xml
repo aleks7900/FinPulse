@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Hızlı Ekle</string>
     <string name="shortcut_quick_add_long">Hızlı İşlem Ekle</string>
@@ -1370,4 +1370,13 @@
     <string name="account_currency_locked_desc">Bu hesapta kayıtlı işlemler bulunduğundan para birimi değiştirilemez.</string>
     <string name="different_currencies_desc">Hesaplar farklı para birimleri kullanmaktadır. Dönüştürme olmadan doğrudan toplama engellenir.</string>
     <string name="currencies_change_currency">Para Birimini Değiştir</string>
+
+<string name="account_delete_cloud_data_title">Bulut Verilerini Sil</string>
+    <string name="account_delete_cloud_data_desc">Bu iЕџlem, senkronize edilmiЕџ tГјm ayarlarД±nД±zД± ve verilerinizi buluttan kalД±cД± olarak silecektir. Bu cihazdaki yerel verileriniz SД°LД°NMEYECEKTД°R. Devam etmek istiyor musunuz?</string>
+    <string name="account_delete_cloud_data_confirm">Buluttan Sil</string>
+    <string name="account_delete_cloud_data_success">Bulut verileri baЕџarД±yla silindi</string>
+    <string name="account_delete_cloud_data_failed">Bulut verileri silinemedi</string>
+    <string name="account_cloud_sync_on">Bulut Senkronizasyonu: AГ‡IK</string>
+    <string name="account_not_signed_in">Oturum aГ§Д±lmadД±</string>
+    <string name="account_google_account_title">Google HesabД±</string>
 </resources>
