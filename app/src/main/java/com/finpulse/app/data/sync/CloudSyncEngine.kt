@@ -1,5 +1,6 @@
 package com.finpulse.app.data.sync
 
+import android.util.Log
 import androidx.room.withTransaction
 import com.finpulse.app.core.database.FinPulseDatabase
 import com.finpulse.app.core.database.entity.SyncRecordEntity
@@ -49,6 +50,10 @@ class CloudSyncEngine(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : CloudSyncRepository {
 
+    companion object {
+        private const val TAG = "FinPulseSyncEngine"
+    }
+
     private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
     private val syncDao = database.syncRecordDao()
 
@@ -69,9 +74,11 @@ class CloudSyncEngine(
         val user = authRepository.currentUser.value
         if (user == null) {
             _syncStatus.value = SyncStatus.IDLE
+            Log.w(TAG, "performFullSync aborted: No authenticated user in authRepository")
             return@withContext Result.failure(IllegalStateException("No authenticated user for cloud sync"))
         }
 
+        Log.i(TAG, "Starting performFullSync for user ${user.uid}")
         _syncStatus.value = SyncStatus.SYNCING
         try {
             val prefs = userPreferencesDataStore.userPreferencesFlow.first()
@@ -99,8 +106,10 @@ class CloudSyncEngine(
                 conflictsResolvedCount = downloadResult.conflictsResolvedCount,
                 syncedAt = now
             )
+            Log.i(TAG, "performFullSync finished successfully: uploaded=${totalResult.uploadedCount}, downloaded=${totalResult.downloadedCount}, deleted=${totalResult.deletedCount}")
             Result.success(totalResult)
         } catch (t: Throwable) {
+            Log.e(TAG, "performFullSync failed for ${user.uid}: ${t.message}", t)
             _syncStatus.value = SyncStatus.ERROR
             userPreferencesDataStore.setSyncState("ERROR", _lastSyncTimestamp.value, t.message)
             Result.failure(t)

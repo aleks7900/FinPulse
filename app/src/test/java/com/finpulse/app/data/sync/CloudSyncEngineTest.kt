@@ -68,6 +68,12 @@ class CloudSyncEngineTest {
     @Before
     fun setup() {
         mockkStatic("androidx.room.RoomDatabaseKt")
+        mockkStatic(android.util.Log::class)
+        every { android.util.Log.d(any(), any()) } returns 0
+        every { android.util.Log.i(any(), any()) } returns 0
+        every { android.util.Log.w(any(), any<String>()) } returns 0
+        every { android.util.Log.e(any(), any()) } returns 0
+        every { android.util.Log.e(any(), any(), any()) } returns 0
         coEvery { any<RoomDatabase>().withTransaction<Any?>(any()) } coAnswers {
             val block = secondArg<suspend () -> Any?>()
             block()

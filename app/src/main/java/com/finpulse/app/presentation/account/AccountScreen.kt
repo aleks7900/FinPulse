@@ -139,7 +139,7 @@ fun AccountScreen(
     // Read web client ID from strings or fallback
     val webClientId = remember(context) {
         val resId = context.resources.getIdentifier("default_web_client_id", "string", context.packageName)
-        if (resId != 0) context.getString(resId) else "100000000001-abcdefghijklmnopqrstuvwxyz012345.apps.googleusercontent.com"
+        if (resId != 0) context.getString(resId) else "500924060314-rfem2fmrnai3c9r3svjk4j86t8e34cpq.apps.googleusercontent.com"
     }
 
     LaunchedEffect(uiState.errorMessage, uiState.successMessage, uiState.errorMessageRes, uiState.successMessageRes) {
