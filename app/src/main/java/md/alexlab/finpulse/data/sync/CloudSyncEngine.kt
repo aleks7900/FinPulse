@@ -47,7 +47,8 @@ class CloudSyncEngine(
     private val userPreferencesDataStore: UserPreferencesDataStore,
     private val authRepository: AuthRepository,
     private val settingsRepository: SettingsRepository? = null,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val errorReporter: md.alexlab.finpulse.core.reporting.ErrorReporter = md.alexlab.finpulse.core.reporting.NoOpErrorReporter()
 ) : CloudSyncRepository {
 
     companion object {
@@ -79,6 +80,7 @@ class CloudSyncEngine(
         }
 
         Log.i(TAG, "Starting performFullSync for user ${user.uid}")
+        errorReporter.log("Starting full cloud sync")
         _syncStatus.value = SyncStatus.SYNCING
         try {
             val prefs = userPreferencesDataStore.userPreferencesFlow.first()
@@ -107,9 +109,20 @@ class CloudSyncEngine(
                 syncedAt = now
             )
             Log.i(TAG, "performFullSync finished successfully: uploaded=${totalResult.uploadedCount}, downloaded=${totalResult.downloadedCount}, deleted=${totalResult.deletedCount}")
+            errorReporter.log("Full cloud sync completed successfully")
             Result.success(totalResult)
         } catch (t: Throwable) {
             Log.e(TAG, "performFullSync failed for ${user.uid}: ${t.message}", t)
+            errorReporter.recordException(
+                throwable = t,
+                context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                    feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_CLOUD_SYNC,
+                    operation = md.alexlab.finpulse.core.reporting.DiagnosticContext.OP_FULL_SYNC,
+                    extra = mapOf(
+                        md.alexlab.finpulse.core.reporting.DiagnosticContext.KEY_SYNC_MODE to "cloud"
+                    )
+                )
+            )
             _syncStatus.value = SyncStatus.ERROR
             userPreferencesDataStore.setSyncState("ERROR", _lastSyncTimestamp.value, t.message)
             Result.failure(t)
@@ -124,6 +137,13 @@ class CloudSyncEngine(
             _syncStatus.value = SyncStatus.SUCCESS
             Result.success(res)
         } catch (t: Throwable) {
+            errorReporter.recordException(
+                throwable = t,
+                context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                    feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_CLOUD_SYNC,
+                    operation = md.alexlab.finpulse.core.reporting.DiagnosticContext.OP_UPLOAD_CHANGES
+                )
+            )
             _syncStatus.value = SyncStatus.ERROR
             Result.failure(t)
         }
@@ -138,6 +158,13 @@ class CloudSyncEngine(
             _syncStatus.value = SyncStatus.SUCCESS
             Result.success(res)
         } catch (t: Throwable) {
+            errorReporter.recordException(
+                throwable = t,
+                context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                    feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_CLOUD_SYNC,
+                    operation = md.alexlab.finpulse.core.reporting.DiagnosticContext.OP_DOWNLOAD_CHANGES
+                )
+            )
             _syncStatus.value = SyncStatus.ERROR
             Result.failure(t)
         }

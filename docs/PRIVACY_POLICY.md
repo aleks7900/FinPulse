@@ -61,6 +61,7 @@ We **do not**:
 Fin Pulse uses trusted industry-standard infrastructure provided by Google LLC:
 - **Firebase Authentication & Android Credential Manager:** Securely authenticates your Google Account without exposing your Google account password to Fin Pulse.
 - **Cloud Firestore (Google Cloud Platform):** Secure, encrypted cloud NoSQL database used to host your optional synchronized financial records.
+- **Firebase Crashlytics (Google LLC):** Collects diagnostic crash and non-fatal error reports to diagnose and resolve software bugs. Diagnostic data excludes all financial details, transaction contents, balances, passwords, and tokens. Pseudonymous user IDs are cleared upon sign-out. Data is retained for up to 90 days.
 - **Google Play Services:** Used for app updates, in-app reviews, and system library integration.
 
 All communications between the App and Google Cloud infrastructure are encrypted in transit using industry-standard Transport Layer Security (TLS 1.3 / HTTPS).

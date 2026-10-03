@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 class FirebaseAuthRepositoryImpl(
     private val userPreferencesDataStore: UserPreferencesDataStore,
     private val firebaseAuthProvider: () -> FirebaseAuth = { FirebaseAuth.getInstance() },
+    private val errorReporter: md.alexlab.finpulse.core.reporting.ErrorReporter = md.alexlab.finpulse.core.reporting.NoOpErrorReporter(),
     scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) : AuthRepository {
 
@@ -37,6 +38,7 @@ class FirebaseAuthRepositoryImpl(
                         isAnonymous = firebaseUser.isAnonymous
                     )
                     _currentUser.value = user
+                    errorReporter.setUserContext(user.uid)
                     userPreferencesDataStore.setUserSession(
                         uid = user.uid,
                         email = user.email,
@@ -61,40 +63,69 @@ class FirebaseAuthRepositoryImpl(
     }
 
     override suspend fun signInWithGoogleIdToken(idToken: String): Result<CloudUser> = runCatching {
-        val auth = firebaseAuthProvider()
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        val authResult = auth.signInWithCredential(credential).awaitTask()
-        val firebaseUser = authResult.user ?: throw IllegalStateException("Firebase user was null after sign in")
+        try {
+            val auth = firebaseAuthProvider()
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            val authResult = auth.signInWithCredential(credential).awaitTask()
+            val firebaseUser = authResult.user ?: throw IllegalStateException("Firebase user was null after sign in")
 
-        val cloudUser = CloudUser(
-            uid = firebaseUser.uid,
-            email = firebaseUser.email,
-            displayName = firebaseUser.displayName,
-            photoUrl = firebaseUser.photoUrl?.toString(),
-            isAnonymous = firebaseUser.isAnonymous
-        )
+            val cloudUser = CloudUser(
+                uid = firebaseUser.uid,
+                email = firebaseUser.email,
+                displayName = firebaseUser.displayName,
+                photoUrl = firebaseUser.photoUrl?.toString(),
+                isAnonymous = firebaseUser.isAnonymous
+            )
 
-        userPreferencesDataStore.setUserSession(
-            uid = cloudUser.uid,
-            email = cloudUser.email,
-            displayName = cloudUser.displayName,
-            photoUrl = cloudUser.photoUrl
-        )
+            userPreferencesDataStore.setUserSession(
+                uid = cloudUser.uid,
+                email = cloudUser.email,
+                displayName = cloudUser.displayName,
+                photoUrl = cloudUser.photoUrl
+            )
 
-        _currentUser.value = cloudUser
-        cloudUser
+            errorReporter.setUserContext(cloudUser.uid)
+            errorReporter.log("User successfully signed in with Google")
+
+            _currentUser.value = cloudUser
+            cloudUser
+        } catch (t: Throwable) {
+            errorReporter.recordException(
+                throwable = t,
+                context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                    feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_AUTH,
+                    operation = md.alexlab.finpulse.core.reporting.DiagnosticContext.OP_SIGN_IN_GOOGLE
+                )
+            )
+            throw t
+        }
     }
 
     override suspend fun signOut(): Result<Unit> = runCatching {
         runCatching { firebaseAuthProvider().signOut() }
         userPreferencesDataStore.clearUserSession()
+        errorReporter.clearUserContext()
+        errorReporter.log("User signed out")
         _currentUser.value = null
     }
 
     override suspend fun deleteAccount(): Result<Unit> = runCatching {
-        val auth = firebaseAuthProvider()
-        auth.currentUser?.delete()?.awaitTask()
-        userPreferencesDataStore.clearUserSession()
-        _currentUser.value = null
+        try {
+            val auth = firebaseAuthProvider()
+            auth.currentUser?.delete()?.awaitTask()
+            userPreferencesDataStore.clearUserSession()
+            errorReporter.clearUserContext()
+            errorReporter.log("User deleted account")
+            _currentUser.value = null
+        } catch (t: Throwable) {
+            errorReporter.recordException(
+                throwable = t,
+                context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                    feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_AUTH,
+                    operation = "delete_account"
+                )
+            )
+            throw t
+        }
     }
 }

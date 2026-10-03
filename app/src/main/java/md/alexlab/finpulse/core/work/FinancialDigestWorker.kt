@@ -82,7 +82,17 @@ class FinancialDigestWorker(
             }
 
             Result.success()
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            val app = appContext.applicationContext as? FinPulseApplication
+            if (runAttemptCount >= 2) {
+                app?.container?.errorReporter?.recordException(
+                    throwable = e,
+                    context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                        feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_DIGEST,
+                        operation = "worker_digest"
+                    )
+                )
+            }
             Result.retry()
         }
     }

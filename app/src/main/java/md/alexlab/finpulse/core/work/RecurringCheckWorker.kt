@@ -64,7 +64,16 @@ class RecurringCheckWorker(
 
             Result.success()
         } catch (e: Exception) {
-            // Worker retry
+            val app = appContext.applicationContext as? FinPulseApplication
+            if (runAttemptCount >= 2) {
+                app?.container?.errorReporter?.recordException(
+                    throwable = e,
+                    context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                        feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_RECURRING,
+                        operation = md.alexlab.finpulse.core.reporting.DiagnosticContext.OP_RECURRING_CHECK
+                    )
+                )
+            }
             Result.retry()
         }
     }

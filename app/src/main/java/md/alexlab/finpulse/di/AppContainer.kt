@@ -77,9 +77,14 @@ interface AppContainer {
     val exchangeRateProvider: md.alexlab.finpulse.domain.repository.ExchangeRateProvider
     val currencyConverter: md.alexlab.finpulse.domain.engine.CurrencyConverter
     val getDashboardSummaryUseCase: md.alexlab.finpulse.domain.usecase.GetDashboardSummaryUseCase
+    val errorReporter: md.alexlab.finpulse.core.reporting.ErrorReporter
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
+    override val errorReporter: md.alexlab.finpulse.core.reporting.ErrorReporter by lazy {
+        md.alexlab.finpulse.core.reporting.FirebaseCrashlyticsErrorReporter()
+    }
+
     override val database: FinPulseDatabase by lazy {
         FinPulseDatabase.getInstance(context)
     }
@@ -293,11 +298,14 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
     }
 
     override val authRepository: md.alexlab.finpulse.domain.repository.AuthRepository by lazy {
-        md.alexlab.finpulse.data.repository.FirebaseAuthRepositoryImpl(userPreferencesDataStore)
+        md.alexlab.finpulse.data.repository.FirebaseAuthRepositoryImpl(
+            userPreferencesDataStore = userPreferencesDataStore,
+            errorReporter = errorReporter
+        )
     }
 
     override val cloudStorageDataSource: md.alexlab.finpulse.data.cloud.CloudStorageDataSource by lazy {
-        md.alexlab.finpulse.data.cloud.FirestoreCloudStorageDataSource()
+        md.alexlab.finpulse.data.cloud.FirestoreCloudStorageDataSource(errorReporter = errorReporter)
     }
 
     override val localSettingsDataSource: md.alexlab.finpulse.data.cloud.LocalSettingsDataSource by lazy {
@@ -321,7 +329,8 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
             cloudStorage = cloudStorageDataSource,
             userPreferencesDataStore = userPreferencesDataStore,
             authRepository = authRepository,
-            settingsRepository = settingsRepository
+            settingsRepository = settingsRepository,
+            errorReporter = errorReporter
         )
     }
 

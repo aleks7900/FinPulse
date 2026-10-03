@@ -19,6 +19,20 @@ class FinPulseApplication : Application() {
         super.onCreate()
         container = DefaultAppContainer(this)
 
+        // Log initial application startup breadcrumb
+        container.errorReporter.log("FinPulse application created")
+
+        // Bind / unbind anonymous user context for crash reporting
+        applicationScope.launch {
+            container.authRepository.currentUser.collect { user ->
+                if (user != null) {
+                    container.errorReporter.setUserContext(user.uid)
+                } else {
+                    container.errorReporter.clearUserContext()
+                }
+            }
+        }
+
         // Seed default categories, rules & import profiles in background
         applicationScope.launch {
             container.categoryRepository.seedDefaultCategoriesIfNeeded()

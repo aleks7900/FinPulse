@@ -31,6 +31,16 @@ class SyncWorker(
         return if (result.isSuccess) {
             Result.success()
         } else {
+            val ex = result.exceptionOrNull()
+            if (ex != null && runAttemptCount >= 2) {
+                app.container.errorReporter.recordException(
+                    throwable = ex,
+                    context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                        feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_CLOUD_SYNC,
+                        operation = "sync_worker"
+                    )
+                )
+            }
             // Retry if it was a temporary network or cloud failure
             if (runAttemptCount < 3) {
                 Result.retry()

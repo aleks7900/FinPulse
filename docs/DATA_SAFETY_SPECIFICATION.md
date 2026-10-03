@@ -61,9 +61,33 @@ This document provides exact, verified answers for completing the **Data safety*
 
 ---
 
-### Category: Device or Other IDs
-- **Collected?** No (Fin Pulse does not collect advertising IDs, IMEI, or hardware serials)
+### Category: App info and performance
+
+#### 1. Crash logs
+- **Collected?** Yes (Via Firebase Crashlytics)
+- **Shared?** No (Transmitted solely to developer's private Firebase Crashlytics project)
+- **Processed ephemerally?** No (Stored in Firebase Crashlytics for 90 days per retention policy)
+- **Is collection optional?** No (Automatically enabled for release builds to diagnose critical app failures)
+- **Data purposes:**
+  - Analytics (Crash rate metrics)
+  - App functionality (Diagnosing and resolving unexpected crashes and ANRs)
+
+#### 2. Diagnostics
+- **Collected?** Yes (Non-fatal technical errors and diagnostic breadcrumbs)
 - **Shared?** No
+- **Processed ephemerally?** No
+- **Is collection optional?** No
+- **Data purposes:**
+  - Analytics
+  - App functionality (Diagnosing cloud synchronization and storage errors)
+
+---
+
+### Category: Device or Other IDs
+- **Collected?** Yes (Firebase Installation ID / App Instance ID generated automatically by Firebase SDK for diagnostic routing; no hardware IMEI or Advertising ID is collected)
+- **Shared?** No
+- **Processed ephemerally?** No
+- **Purposes:** Analytics, App functionality
 
 ---
 
@@ -81,6 +105,9 @@ This document provides exact, verified answers for completing the **Data safety*
 | **Personal Info > Email Address** | Yes | No | Yes | No | Optional | App functionality, Account management |
 | **Personal Info > User IDs** | Yes | No | Yes | No | Optional | Account management |
 | **Financial Info > Other Financial Info** | Yes | No | Yes | No | Optional (Sync) / Required (Local) | App functionality, Account management |
+| **App info and performance > Crash logs** | Yes | No | Yes | No | Required | Analytics, App functionality |
+| **App info and performance > Diagnostics** | Yes | No | Yes | No | Required | Analytics, App functionality |
+| **Device or other IDs > Device or other IDs** | Yes | No | Yes | No | Required | Analytics, App functionality |
 
 ---
 

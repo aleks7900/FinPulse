@@ -348,7 +348,8 @@ fun FinPulseApp(
                             container.userPreferencesDataStore.setSelectedLanguage(lang.code)
                         }
                     },
-                    onNavigate = { screen -> navController.navigate(screen.route) }
+                    onNavigate = { screen -> navController.navigate(screen.route) },
+                    errorReporter = container.errorReporter
                 )
             }
 
@@ -552,7 +553,8 @@ fun FinPulseApp(
                         exportTransactionsUseCase = container.exportTransactionsUseCase,
                         accountRepository = container.accountRepository,
                         categoryRepository = container.categoryRepository,
-                        userPreferencesDataStore = container.userPreferencesDataStore
+                        userPreferencesDataStore = container.userPreferencesDataStore,
+                        errorReporter = container.errorReporter
                     )
                 }
                 ExportScreen(
@@ -605,7 +607,8 @@ fun FinPulseApp(
                         autoDetectCsvConfigUseCase = container.autoDetectCsvConfigUseCase,
                         parseCsvStatementUseCase = container.parseCsvStatementUseCase,
                         executeCsvImportUseCase = container.executeCsvImportUseCase,
-                        manageImportProfilesUseCase = container.manageImportProfilesUseCase
+                        manageImportProfilesUseCase = container.manageImportProfilesUseCase,
+                        errorReporter = container.errorReporter
                     )
                 }
                 md.alexlab.finpulse.presentation.csvimport.CsvImportScreen(

@@ -55,12 +55,14 @@
 -keep class md.alexlab.finpulse.domain.model.sync.** { *; }
 -keep class md.alexlab.finpulse.domain.model.backup.** { *; }
 
-# --- Firebase Auth & Cloud Firestore ---
+# --- Firebase Auth, Cloud Firestore & Crashlytics ---
 -keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable,InnerClasses,EnclosingMethod
 -dontwarn com.google.firebase.**
 -dontwarn com.google.android.gms.**
 -keep class com.google.firebase.** { *; }
 -keep class com.google.android.gms.** { *; }
+-keep class com.google.firebase.crashlytics.** { *; }
 
 # --- AndroidX Credential Manager & Google ID ---
 -keep class androidx.credentials.** { *; }

@@ -18,7 +18,8 @@ suspend fun <T> Task<T>.awaitTask(): T =
 
 class FirestoreCloudStorageDataSource(
     private val firestoreProvider: () -> FirebaseFirestore = { FirebaseFirestore.getInstance() },
-    private val authProvider: () -> FirebaseAuth = { FirebaseAuth.getInstance() }
+    private val authProvider: () -> FirebaseAuth = { FirebaseAuth.getInstance() },
+    private val errorReporter: md.alexlab.finpulse.core.reporting.ErrorReporter = md.alexlab.finpulse.core.reporting.NoOpErrorReporter()
 ) : CloudStorageDataSource {
 
     companion object {
@@ -90,6 +91,14 @@ class FirestoreCloudStorageDataSource(
         totalUploaded
     }.onFailure { error ->
         Log.e(TAG, "Failed to upload records to /users/$uid/$collection: ${error.message}", error)
+        errorReporter.recordException(
+            throwable = error,
+            context = mapOf(
+                "feature" to "cloud_storage",
+                "operation" to "upload_records",
+                "collection" to collection
+            )
+        )
     }
 
     override suspend fun downloadRecords(
@@ -131,6 +140,14 @@ class FirestoreCloudStorageDataSource(
         records
     }.onFailure { error ->
         Log.e(TAG, "Failed to download records from /users/$uid/$collection: ${error.message}", error)
+        errorReporter.recordException(
+            throwable = error,
+            context = mapOf(
+                "feature" to "cloud_storage",
+                "operation" to "download_records",
+                "collection" to collection
+            )
+        )
     }
 
     override suspend fun recordTombstone(
@@ -159,6 +176,14 @@ class FirestoreCloudStorageDataSource(
         Unit
     }.onFailure { error ->
         Log.e(TAG, "Failed to record tombstone /users/$uid/$collection/$id: ${error.message}", error)
+        errorReporter.recordException(
+            throwable = error,
+            context = mapOf(
+                "feature" to "cloud_storage",
+                "operation" to "record_tombstone",
+                "collection" to collection
+            )
+        )
     }
 
     override suspend fun getUserSummary(uid: String): Result<CloudUserSummary> = runCatching {
@@ -189,6 +214,13 @@ class FirestoreCloudStorageDataSource(
         )
     }.onFailure { error ->
         Log.e(TAG, "Failed to get user summary for $uid: ${error.message}", error)
+        errorReporter.recordException(
+            throwable = error,
+            context = mapOf(
+                "feature" to "cloud_storage",
+                "operation" to "get_user_summary"
+            )
+        )
     }
 
     override suspend fun clearUserStorage(uid: String): Result<Unit> = runCatching {
@@ -220,5 +252,12 @@ class FirestoreCloudStorageDataSource(
         Unit
     }.onFailure { error ->
         Log.e(TAG, "Failed to clear user storage for $uid: ${error.message}", error)
+        errorReporter.recordException(
+            throwable = error,
+            context = mapOf(
+                "feature" to "cloud_storage",
+                "operation" to "clear_user_storage"
+            )
+        )
     }
 }

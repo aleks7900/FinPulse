@@ -80,6 +80,7 @@ fun MoreHubScreen(
     selectedLanguageCode: String,
     onLanguageSelected: (AppLanguage) -> Unit,
     onNavigate: (Screen) -> Unit,
+    errorReporter: md.alexlab.finpulse.core.reporting.ErrorReporter = md.alexlab.finpulse.core.reporting.NoOpErrorReporter(),
     modifier: Modifier = Modifier
 ) {
     var showLanguageDialog by remember { mutableStateOf(false) }
@@ -375,6 +376,13 @@ fun MoreHubScreen(
                 }
             }
 
+            if (md.alexlab.finpulse.BuildConfig.DEBUG) {
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    DebugDiagnosticsSection(errorReporter = errorReporter)
+                }
+            }
+
             item {
                 Spacer(modifier = Modifier.height(80.dp))
             }
@@ -450,6 +458,159 @@ fun LanguageSelectionDialog(
             }
         }
     )
+}
+
+@Composable
+fun DebugDiagnosticsSection(
+    errorReporter: md.alexlab.finpulse.core.reporting.ErrorReporter,
+    modifier: Modifier = Modifier
+) {
+    var showCrashConfirmDialog by remember { mutableStateOf(false) }
+    var statusMessage by remember { mutableStateOf<String?>(null) }
+    var isCollectionActive by remember { mutableStateOf(errorReporter.isCollectionEnabled) }
+
+    if (showCrashConfirmDialog) {
+        AlertDialog(
+            onDismissRequest = { showCrashConfirmDialog = false },
+            title = {
+                Text(
+                    text = "Trigger Fatal Test Crash?",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.error
+                )
+            },
+            text = {
+                Text(
+                    text = "This will intentionally throw an uncaught RuntimeException to verify Firebase Crashlytics fatal crash capture. The app will immediately crash. This feature is compiled into DEBUG builds only.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showCrashConfirmDialog = false
+                        errorReporter.log("Developer deliberately triggered fatal test crash")
+                        throw RuntimeException("FinPulse Test Fatal Crash [Crashlytics Verification]")
+                    }
+                ) {
+                    Text("CRASH NOW", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showCrashConfirmDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
+    Surface(
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.25f),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.5f)),
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Crash & Error Diagnostics (Debug Only)",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.error
+                )
+                Surface(
+                    shape = RoundedCornerShape(6.dp),
+                    color = if (isCollectionActive) EmeraldPrimary else MaterialTheme.colorScheme.error
+                ) {
+                    Text(
+                        text = if (isCollectionActive) "COLLECTION ON" else "COLLECTION OFF",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.White,
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                    )
+                }
+            }
+
+            Text(
+                text = "Use these debug tools to verify Firebase Crashlytics reporting, non-fatal logging, and symbolicated stack traces without affecting production.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            if (statusMessage != null) {
+                Text(
+                    text = statusMessage ?: "",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = EmeraldPrimary,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                androidx.compose.material3.OutlinedButton(
+                    onClick = {
+                        val newState = !isCollectionActive
+                        errorReporter.setCollectionEnabled(newState)
+                        isCollectionActive = newState
+                        statusMessage = "Reporting collection set to: $newState"
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = if (isCollectionActive) "Disable Reporting" else "Enable Reporting",
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+
+                androidx.compose.material3.Button(
+                    onClick = {
+                        errorReporter.log("Developer clicked test non-fatal button in DebugDiagnosticsSection")
+                        errorReporter.recordException(
+                            throwable = IllegalStateException("FinPulse Test Non-Fatal Exception [Verification]"),
+                            context = mapOf(
+                                "feature" to "debug_menu",
+                                "operation" to "test_non_fatal",
+                                "triggered_by" to "developer"
+                            )
+                        )
+                        statusMessage = "Test non-fatal exception recorded to Crashlytics!"
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Test Non-Fatal",
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            }
+
+            androidx.compose.material3.Button(
+                onClick = { showCrashConfirmDialog = true },
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Trigger Test Fatal Crash",
+                    color = MaterialTheme.colorScheme.onError,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
+        }
+    }
 }
 
 @Composable

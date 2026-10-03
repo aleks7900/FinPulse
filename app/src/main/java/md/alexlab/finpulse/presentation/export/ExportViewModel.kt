@@ -47,7 +47,8 @@ class ExportViewModel(
     private val exportTransactionsUseCase: ExportTransactionsUseCase,
     private val accountRepository: AccountRepository,
     private val categoryRepository: CategoryRepository,
-    private val userPreferencesDataStore: UserPreferencesDataStore
+    private val userPreferencesDataStore: UserPreferencesDataStore,
+    private val errorReporter: md.alexlab.finpulse.core.reporting.ErrorReporter = md.alexlab.finpulse.core.reporting.NoOpErrorReporter()
 ) : ViewModel() {
 
     private val _filterParams = MutableStateFlow(ExportFilterParams())
@@ -139,8 +140,16 @@ class ExportViewModel(
             try {
                 val payload = createBackupUseCase(password)
                 _successMessage.value = "Backup created successfully"
+                errorReporter.log("Backup archive created successfully")
                 onReady(payload)
             } catch (e: Exception) {
+                errorReporter.recordException(
+                    throwable = e,
+                    context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                        feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_BACKUP_EXPORT,
+                        operation = md.alexlab.finpulse.core.reporting.DiagnosticContext.OP_CREATE_BACKUP
+                    )
+                )
                 _errorMessage.value = "Failed to create backup: ${e.message}"
             } finally {
                 _isLoading.value = false
@@ -155,8 +164,16 @@ class ExportViewModel(
             try {
                 val csv = exportTransactionsUseCase.exportCsv(_filterParams.value)
                 _successMessage.value = "CSV exported successfully"
+                errorReporter.log("CSV transactions exported successfully")
                 onReady(csv)
             } catch (e: Exception) {
+                errorReporter.recordException(
+                    throwable = e,
+                    context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                        feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_BACKUP_EXPORT,
+                        operation = md.alexlab.finpulse.core.reporting.DiagnosticContext.OP_EXPORT_CSV
+                    )
+                )
                 _errorMessage.value = "Failed to export CSV: ${e.message}"
             } finally {
                 _isLoading.value = false
@@ -171,8 +188,16 @@ class ExportViewModel(
             try {
                 val jsonStr = exportTransactionsUseCase.exportJson(_filterParams.value)
                 _successMessage.value = "JSON exported successfully"
+                errorReporter.log("JSON transactions exported successfully")
                 onReady(jsonStr)
             } catch (e: Exception) {
+                errorReporter.recordException(
+                    throwable = e,
+                    context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                        feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_BACKUP_EXPORT,
+                        operation = md.alexlab.finpulse.core.reporting.DiagnosticContext.OP_EXPORT_JSON
+                    )
+                )
                 _errorMessage.value = "Failed to export JSON: ${e.message}"
             } finally {
                 _isLoading.value = false
@@ -208,10 +233,18 @@ class ExportViewModel(
                 val summary = restoreBackupUseCase(backupData)
                 _restoreSummary.value = summary
                 _successMessage.value = "Restore completed successfully (${summary.totalRestoredRecords} records restored)"
+                errorReporter.log("Backup restored successfully (${summary.totalRestoredRecords} records)")
                 _isRestoreConfirmDialogVisible.value = false
                 _validationResult.value = null
                 _pendingContentForRestore.value = null
             } catch (e: Exception) {
+                errorReporter.recordException(
+                    throwable = e,
+                    context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                        feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_BACKUP_EXPORT,
+                        operation = md.alexlab.finpulse.core.reporting.DiagnosticContext.OP_RESTORE_BACKUP
+                    )
+                )
                 _errorMessage.value = "Restore failed: ${e.message}. Database was not modified."
             } finally {
                 _isLoading.value = false

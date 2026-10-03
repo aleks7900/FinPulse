@@ -65,6 +65,13 @@ If you grant the `POST_NOTIFICATIONS` runtime permission, FinPulse issues local 
 
 All notification evaluation and dispatch occurs **locally on your device** via Android WorkManager background tasks. No remote push notification services (such as Firebase Cloud Messaging / FCM) or external notification dispatch servers are utilized.
 
+### E. Crash and Diagnostic Data (Firebase Crashlytics)
+To maintain stability, diagnose crashes, and resolve unexpected software bugs in production, FinPulse utilizes **Firebase Crashlytics** (provided by Google LLC):
+- **Information Collected:** When an unexpected error or application crash occurs, Crashlytics records device state metadata (device manufacturer, model, Android OS version, orientation, battery level, free RAM and storage space), application version, stack traces, and operational breadcrumbs.
+- **Strict Data Sanitization & Exclusion:** FinPulse utilizes automated, centralized sanitization (`DataSanitizer`) that removes sensitive information before any diagnostic report leaves your device. Crashlytics **NEVER** receives transaction amounts, account balances, account names, transaction descriptions, user notes, bank details, passwords, PINs, auth tokens, API keys, or cleartext email addresses.
+- **User Identification:** If you are signed in, a pseudonymous one-way cryptographic hash of your user ID (`anon_<hash>`) is utilized to correlate crash reports without revealing your identity or email. This user context is cleared immediately upon sign-out.
+- **Data Retention:** Diagnostic crash reports are retained on Google Firebase secure servers for up to 90 days, after which they are automatically permanently deleted.
+
 ---
 
 ## 3. How We Use Information

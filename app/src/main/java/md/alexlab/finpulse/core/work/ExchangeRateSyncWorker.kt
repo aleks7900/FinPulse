@@ -30,13 +30,27 @@ class ExchangeRateSyncWorker(
                 if (runAttemptCount < 3) {
                     Result.retry()
                 } else {
+                    app.container.errorReporter.recordException(
+                        throwable = result.exceptionOrNull() ?: RuntimeException("Exchange rate sync failed"),
+                        context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                            feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_EXCHANGE_RATES,
+                            operation = "worker_sync"
+                        )
+                    )
                     Result.failure()
                 }
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             if (runAttemptCount < 3) {
                 Result.retry()
             } else {
+                app.container.errorReporter.recordException(
+                    throwable = e,
+                    context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                        feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_EXCHANGE_RATES,
+                        operation = "worker_sync_exception"
+                    )
+                )
                 Result.failure()
             }
         }

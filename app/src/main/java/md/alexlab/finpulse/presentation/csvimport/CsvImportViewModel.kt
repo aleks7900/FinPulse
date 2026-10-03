@@ -72,7 +72,8 @@ class CsvImportViewModel(
     private val autoDetectCsvConfigUseCase: AutoDetectCsvConfigUseCase,
     private val parseCsvStatementUseCase: ParseCsvStatementUseCase,
     private val executeCsvImportUseCase: ExecuteCsvImportUseCase,
-    private val manageImportProfilesUseCase: ManageImportProfilesUseCase
+    private val manageImportProfilesUseCase: ManageImportProfilesUseCase,
+    private val errorReporter: md.alexlab.finpulse.core.reporting.ErrorReporter = md.alexlab.finpulse.core.reporting.NoOpErrorReporter()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CsvImportUiState())
@@ -148,6 +149,13 @@ class CsvImportViewModel(
                     )
                 }
             } catch (e: Exception) {
+                errorReporter.recordException(
+                    throwable = e,
+                    context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                        feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_CSV_IMPORT,
+                        operation = md.alexlab.finpulse.core.reporting.DiagnosticContext.OP_PARSE_CSV
+                    )
+                )
                 _uiState.update {
                     it.copy(
                         isLoading = false,
@@ -364,6 +372,13 @@ class CsvImportViewModel(
                     )
                 }
             } catch (e: Exception) {
+                errorReporter.recordException(
+                    throwable = e,
+                    context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                        feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_CSV_IMPORT,
+                        operation = md.alexlab.finpulse.core.reporting.DiagnosticContext.OP_EXECUTE_IMPORT
+                    )
+                )
                 _uiState.update {
                     it.copy(
                         isLoading = false,
