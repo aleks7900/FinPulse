@@ -97,9 +97,11 @@ class UserPreferencesDataStore(private val context: Context) {
             "LIGHT" -> false
             else -> null
         }
+        val savedLangCode = md.alexlab.finpulse.core.locale.AppLocaleManager.getSavedLanguageCode(context)
+        val selectedLanguage = preferences[PreferencesKeys.SELECTED_LANGUAGE] ?: savedLangCode
         UserPreferences(
             baseCurrencyCode = preferences[PreferencesKeys.BASE_CURRENCY] ?: "USD",
-            selectedLanguage = preferences[PreferencesKeys.SELECTED_LANGUAGE] ?: "SYSTEM",
+            selectedLanguage = selectedLanguage,
             isBiometricEnabled = preferences[PreferencesKeys.BIOMETRIC_ENABLED] ?: false,
             isPinEnabled = preferences[PreferencesKeys.PIN_ENABLED] ?: false,
             pinHash = preferences[PreferencesKeys.PIN_HASH] ?: "",
@@ -163,11 +165,11 @@ class UserPreferencesDataStore(private val context: Context) {
     }
 
     suspend fun setSelectedLanguage(code: String) {
+        md.alexlab.finpulse.core.locale.AppLocaleManager.saveLanguageCode(context, code)
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.SELECTED_LANGUAGE] = code
             preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
-        md.alexlab.finpulse.core.locale.AppLocaleManager.saveLanguageCode(context, code)
     }
 
     suspend fun setBaseCurrency(currencyCode: String) {

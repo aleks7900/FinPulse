@@ -49,17 +49,27 @@ class MainActivity : FragmentActivity() {
         handleIntent(intent)
 
         lifecycleScope.launch {
+            val savedLangCode = AppLocaleManager.getSavedLanguageCode(this@MainActivity)
             val prefs = container.userPreferencesDataStore.userPreferencesFlow.first()
-            val lang = AppLanguage.fromCode(prefs.selectedLanguage)
-            AppLocaleManager.setLocale(this@MainActivity, lang)
 
-            // On cold start, lock app if authentication is configured
-            val isLockEnabled = container.appLockManager.isLockConfigured(
-                isBiometricEnabled = prefs.isBiometricEnabled,
-                isPinEnabled = prefs.isPinEnabled
-            )
-            if (isLockEnabled) {
-                container.appLockManager.lockNow()
+            // Keep SharedPreferences and DataStore in sync without reverting user's selected language
+            if (savedLangCode != "SYSTEM" && prefs.selectedLanguage != savedLangCode) {
+                container.userPreferencesDataStore.setSelectedLanguage(savedLangCode)
+            } else if (savedLangCode == "SYSTEM" && prefs.selectedLanguage != "SYSTEM") {
+                AppLocaleManager.saveLanguageCode(this@MainActivity, prefs.selectedLanguage)
+                val lang = AppLanguage.fromCode(prefs.selectedLanguage)
+                AppLocaleManager.setLocale(this@MainActivity, lang)
+            }
+
+            // On cold start ONLY (savedInstanceState == null), lock app if authentication is configured
+            if (savedInstanceState == null) {
+                val isLockEnabled = container.appLockManager.isLockConfigured(
+                    isBiometricEnabled = prefs.isBiometricEnabled,
+                    isPinEnabled = prefs.isPinEnabled
+                )
+                if (isLockEnabled) {
+                    container.appLockManager.lockNow()
+                }
             }
         }
 

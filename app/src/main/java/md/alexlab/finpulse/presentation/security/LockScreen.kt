@@ -73,9 +73,11 @@ fun LockScreen(
     userPrefs: UserPreferences,
     appLockManager: AppLockManager,
     onUnlockSuccess: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    activity: androidx.fragment.app.FragmentActivity? = null
 ) {
     val context = LocalContext.current
+    val hostActivity = activity ?: context.findFragmentActivity()
     val haptic = LocalHapticFeedback.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -91,9 +93,13 @@ fun LockScreen(
             (biometricAvailability == BiometricAvailability.AVAILABLE)
 
     fun launchBiometricPrompt(allowDeviceCredential: Boolean = userPrefs.deviceCredentialFallbackEnabled) {
-        val activity = context.findFragmentActivity() ?: return
+        val targetActivity = hostActivity ?: context.findFragmentActivity()
+        if (targetActivity == null) {
+            android.util.Log.e("LockScreen", "Biometric prompt aborted: host FragmentActivity is null")
+            return
+        }
         BiometricAuthManager.authenticate(
-            activity = activity,
+            activity = targetActivity,
             title = context.getString(R.string.security_biometric_title),
             subtitle = context.getString(R.string.security_biometric_subtitle),
             negativeButtonText = context.getString(R.string.action_cancel),
@@ -115,9 +121,14 @@ fun LockScreen(
         )
     }
 
-    // Trigger biometric prompt on first display if enabled
-    LaunchedEffect(Unit) {
-        if (canUseBiometrics) {
+    var hasAutoPromptedBiometrics by remember { mutableStateOf(false) }
+
+    // Trigger biometric prompt on display if enabled
+    LaunchedEffect(canUseBiometrics) {
+        if (canUseBiometrics && !hasAutoPromptedBiometrics) {
+            hasAutoPromptedBiometrics = true
+            // Allow activity window to attach, gain focus, and enter RESUMED state
+            kotlinx.coroutines.delay(200)
             launchBiometricPrompt()
         }
     }

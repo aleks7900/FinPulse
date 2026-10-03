@@ -172,4 +172,19 @@ class LocalizationTest {
             )
         }
     }
+
+    @Test
+    fun testLocalizedContextActivityResolution() {
+        val mockActivity = io.mockk.mockk<androidx.fragment.app.FragmentActivity>(relaxed = true)
+        val mockContext = io.mockk.mockk<android.content.Context>(relaxed = true)
+
+        val localizedContext = LocalizedContext(mockContext, mockActivity)
+
+        assertEquals(mockActivity, localizedContext.findActivity())
+        assertEquals(mockActivity, localizedContext.findFragmentActivity())
+
+        val plainContext = io.mockk.mockk<android.content.Context>(relaxed = true)
+        org.junit.Assert.assertNull(plainContext.findActivity())
+        org.junit.Assert.assertNull(plainContext.findFragmentActivity())
+    }
 }

@@ -22,7 +22,7 @@ object BiometricAuthManager {
         val authenticators = if (allowDeviceCredential && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
         } else {
-            BiometricManager.Authenticators.BIOMETRIC_STRONG
+            BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.BIOMETRIC_WEAK
         }
 
         val biometricManager = BiometricManager.from(context)
@@ -46,6 +46,10 @@ object BiometricAuthManager {
         onError: (errorCode: Int, errString: CharSequence) -> Unit,
         onFailed: () -> Unit
     ) {
+        if (activity.isFinishing || activity.isDestroyed) {
+            return
+        }
+
         val executor = ContextCompat.getMainExecutor(activity)
 
         val callback = object : BiometricPrompt.AuthenticationCallback() {
@@ -78,11 +82,20 @@ object BiometricAuthManager {
             promptInfoBuilder.setAllowedAuthenticators(
                 BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
             )
+        } else if (allowDeviceCredential && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            @Suppress("DEPRECATION")
+            promptInfoBuilder.setDeviceCredentialAllowed(true)
         } else {
-            promptInfoBuilder.setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+            promptInfoBuilder.setAllowedAuthenticators(
+                BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.BIOMETRIC_WEAK
+            )
             promptInfoBuilder.setNegativeButtonText(negativeButtonText)
         }
 
-        biometricPrompt.authenticate(promptInfoBuilder.build())
+        try {
+            biometricPrompt.authenticate(promptInfoBuilder.build())
+        } catch (e: Exception) {
+            onError(-1, e.message ?: "Authentication error")
+        }
     }
 }

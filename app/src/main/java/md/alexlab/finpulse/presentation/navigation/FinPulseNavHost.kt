@@ -62,6 +62,9 @@ import md.alexlab.finpulse.presentation.transactions.TransactionsScreen
 import md.alexlab.finpulse.presentation.transactions.TransactionsViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import md.alexlab.finpulse.FinPulseApplication
+import md.alexlab.finpulse.core.locale.findActivity
+import md.alexlab.finpulse.core.locale.findFragmentActivity
 
 @Composable
 fun FinPulseApp(
@@ -338,15 +341,18 @@ fun FinPulseApp(
             // 5. More (Hub)
             composable(Screen.More.route) {
                 val context = androidx.compose.ui.platform.LocalContext.current
-                val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
+                val app = context.applicationContext as? FinPulseApplication
                 MoreHubScreen(
                     baseCurrency = userPrefs.baseCurrencyCode,
                     selectedLanguageCode = userPrefs.selectedLanguage,
                     onLanguageSelected = { lang ->
-                        md.alexlab.finpulse.core.locale.AppLocaleManager.setLocale(context, lang)
-                        coroutineScope.launch {
+                        md.alexlab.finpulse.core.locale.AppLocaleManager.saveLanguageCode(context, lang.code)
+                        app?.applicationScope?.launch {
                             container.userPreferencesDataStore.setSelectedLanguage(lang.code)
                         }
+                        md.alexlab.finpulse.core.locale.AppLocaleManager.setLocale(context, lang)
+                        val hostActivity = context.findActivity()
+                        hostActivity?.recreate()
                     },
                     onNavigate = { screen -> navController.navigate(screen.route) },
                     errorReporter = container.errorReporter
@@ -804,9 +810,11 @@ fun FinPulseApp(
 
     // Lock Screen Full-Screen Blocking Overlay
     if (isAppLocked) {
+        val hostActivity = androidx.compose.ui.platform.LocalContext.current.findFragmentActivity()
         md.alexlab.finpulse.presentation.security.LockScreen(
             userPrefs = userPrefs,
             appLockManager = container.appLockManager,
+            activity = hostActivity,
             onUnlockSuccess = {
                 container.appLockManager.unlock()
             }

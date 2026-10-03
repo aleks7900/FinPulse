@@ -56,7 +56,7 @@ object AppLocaleManager {
 
     fun saveLanguageCode(context: Context, code: String) {
         val prefs = context.getSharedPreferences(PREFS_LOCALE, Context.MODE_PRIVATE)
-        prefs.edit().putString(KEY_SELECTED_LANGUAGE, code).apply()
+        prefs.edit().putString(KEY_SELECTED_LANGUAGE, code).commit()
     }
 
     fun getTargetLocale(language: AppLanguage): Locale {
@@ -77,7 +77,9 @@ object AppLocaleManager {
         LocaleList.setDefault(localeList)
         config.setLocales(localeList)
         config.setLayoutDirection(targetLocale)
-        return baseContext.createConfigurationContext(config)
+        val configContext = baseContext.createConfigurationContext(config)
+        val activity = (baseContext as? Activity) ?: baseContext.findActivity()
+        return LocalizedContext(configContext, activity)
     }
 
     fun setLocale(context: Context, language: AppLanguage) {
@@ -150,8 +152,25 @@ object AppLocaleManager {
     }
 }
 
+class LocalizedContext(
+    base: Context,
+    val activity: Activity? = null
+) : ContextWrapper(base) {
+    override fun getSystemService(name: String): Any? {
+        return activity?.getSystemService(name) ?: super.getSystemService(name)
+    }
+
+    override fun getSystemServiceName(serviceClass: Class<*>): String? {
+        return activity?.getSystemServiceName(serviceClass) ?: super.getSystemServiceName(serviceClass)
+    }
+}
+
 tailrec fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this
+    is LocalizedContext -> {
+        val act = this.activity
+        if (act != null) act else baseContext.findActivity()
+    }
     is ContextWrapper -> baseContext.findActivity()
     else -> null
 }
