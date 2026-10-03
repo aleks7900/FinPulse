@@ -153,6 +153,16 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <!-- Service for backward-compatible per-app language storage on Android 12 and below -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataTypeService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
     </application>
 
 </manifest>

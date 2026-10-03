@@ -45,7 +45,25 @@ class LocalizationTest {
 
         // Case insensitivity & fallback
         assertEquals(AppLanguage.SIMPLIFIED_CHINESE, AppLanguage.fromCode("ZH-cn"))
+        assertEquals(AppLanguage.SIMPLIFIED_CHINESE, AppLanguage.fromCode("zh-Hans"))
+        assertEquals(AppLanguage.PORTUGUESE_BRAZIL, AppLanguage.fromCode("pt"))
         assertEquals(AppLanguage.SYSTEM, AppLanguage.fromCode("non_existent_code"))
+    }
+
+    @Test
+    fun testTargetLocaleResolution() {
+        assertEquals("en", AppLocaleManager.getTargetLocale(AppLanguage.ENGLISH).language)
+        assertEquals("ru", AppLocaleManager.getTargetLocale(AppLanguage.RUSSIAN).language)
+        assertEquals("es", AppLocaleManager.getTargetLocale(AppLanguage.SPANISH).language)
+        assertEquals("de", AppLocaleManager.getTargetLocale(AppLanguage.GERMAN).language)
+        assertEquals("fr", AppLocaleManager.getTargetLocale(AppLanguage.FRENCH).language)
+        assertEquals("it", AppLocaleManager.getTargetLocale(AppLanguage.ITALIAN).language)
+        assertEquals("pl", AppLocaleManager.getTargetLocale(AppLanguage.POLISH).language)
+        assertEquals("tr", AppLocaleManager.getTargetLocale(AppLanguage.TURKISH).language)
+        assertEquals("ja", AppLocaleManager.getTargetLocale(AppLanguage.JAPANESE).language)
+        assertEquals("ko", AppLocaleManager.getTargetLocale(AppLanguage.KOREAN).language)
+        assertEquals("zh", AppLocaleManager.getTargetLocale(AppLanguage.SIMPLIFIED_CHINESE).language)
+        assertEquals("pt", AppLocaleManager.getTargetLocale(AppLanguage.PORTUGUESE_BRAZIL).language)
     }
 
     @Test

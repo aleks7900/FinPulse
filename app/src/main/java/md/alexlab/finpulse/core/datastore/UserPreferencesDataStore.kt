@@ -167,6 +167,7 @@ class UserPreferencesDataStore(private val context: Context) {
             preferences[PreferencesKeys.SELECTED_LANGUAGE] = code
             preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
+        md.alexlab.finpulse.core.locale.AppLocaleManager.saveLanguageCode(context, code)
     }
 
     suspend fun setBaseCurrency(currencyCode: String) {
@@ -324,6 +325,7 @@ class UserPreferencesDataStore(private val context: Context) {
             }
             preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = settings.updatedAt
         }
+        md.alexlab.finpulse.core.locale.AppLocaleManager.saveLanguageCode(context, settings.selectedLanguage)
     }
 
     suspend fun resetSettingsUpdatedAt() {

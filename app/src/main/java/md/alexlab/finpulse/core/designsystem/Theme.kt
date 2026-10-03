@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import md.alexlab.finpulse.core.locale.findActivity
 
 private val DarkColorScheme = darkColorScheme(
     primary = EmeraldPrimary,
@@ -71,7 +72,7 @@ fun FinPulseTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            val window = (view.context as? Activity)?.window ?: return@SideEffect
+            val window = view.context.findActivity()?.window ?: return@SideEffect
             window.statusBarColor = colorScheme.background.toArgb()
             window.navigationBarColor = colorScheme.surface.toArgb()
             val controller = WindowCompat.getInsetsController(window, view)

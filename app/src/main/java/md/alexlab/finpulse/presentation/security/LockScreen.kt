@@ -61,6 +61,7 @@ import md.alexlab.finpulse.core.datastore.UserPreferences
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.ExpenseRed
 import md.alexlab.finpulse.core.designsystem.SapphireAccent
+import md.alexlab.finpulse.core.locale.findFragmentActivity
 import md.alexlab.finpulse.core.security.AppLockManager
 import md.alexlab.finpulse.core.security.BiometricAuthManager
 import md.alexlab.finpulse.core.security.BiometricAvailability
@@ -90,7 +91,7 @@ fun LockScreen(
             (biometricAvailability == BiometricAvailability.AVAILABLE)
 
     fun launchBiometricPrompt(allowDeviceCredential: Boolean = userPrefs.deviceCredentialFallbackEnabled) {
-        val activity = context as? FragmentActivity ?: return
+        val activity = context.findFragmentActivity() ?: return
         BiometricAuthManager.authenticate(
             activity = activity,
             title = context.getString(R.string.security_biometric_title),

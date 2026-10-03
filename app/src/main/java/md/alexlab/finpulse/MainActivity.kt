@@ -1,5 +1,6 @@
 package md.alexlab.finpulse
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
@@ -7,8 +8,12 @@ import androidx.fragment.app.FragmentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import md.alexlab.finpulse.core.designsystem.FinPulseTheme
 import md.alexlab.finpulse.core.locale.AppLanguage
@@ -27,6 +32,13 @@ class MainActivity : FragmentActivity() {
     private val openQuickAddTypeFlow = MutableStateFlow<String?>(null)
     private val navigationFlow = MutableStateFlow<String?>(null)
 
+    override fun attachBaseContext(newBase: Context) {
+        val savedLangCode = AppLocaleManager.getSavedLanguageCode(newBase)
+        val lang = AppLanguage.fromCode(savedLangCode)
+        val localizedContext = AppLocaleManager.getLocalizedContext(newBase, lang)
+        super.attachBaseContext(localizedContext)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -38,10 +50,8 @@ class MainActivity : FragmentActivity() {
 
         lifecycleScope.launch {
             val prefs = container.userPreferencesDataStore.userPreferencesFlow.first()
-            if (prefs.selectedLanguage != "SYSTEM") {
-                val lang = AppLanguage.fromCode(prefs.selectedLanguage)
-                AppLocaleManager.setLocale(this@MainActivity, lang)
-            }
+            val lang = AppLanguage.fromCode(prefs.selectedLanguage)
+            AppLocaleManager.setLocale(this@MainActivity, lang)
 
             // On cold start, lock app if authentication is configured
             val isLockEnabled = container.appLockManager.isLockConfigured(
@@ -54,8 +64,9 @@ class MainActivity : FragmentActivity() {
         }
 
         setContent {
+            val initialLanguage = remember { AppLocaleManager.getSavedLanguageCode(this@MainActivity) }
             val userPrefs by container.userPreferencesDataStore.userPreferencesFlow.collectAsState(
-                initial = md.alexlab.finpulse.core.datastore.UserPreferences()
+                initial = md.alexlab.finpulse.core.datastore.UserPreferences(selectedLanguage = initialLanguage)
             )
             val isAppLocked by container.appLockManager.isAppLocked.collectAsState()
 
@@ -72,14 +83,26 @@ class MainActivity : FragmentActivity() {
 
             val darkTheme = userPrefs.isDarkMode ?: isSystemInDarkTheme()
 
-            FinPulseTheme(darkTheme = darkTheme) {
-                FinPulseApp(
-                    container = container,
-                    openQuickAddTypeTrigger = openQuickAddTypeFlow,
-                    onQuickAddTypeHandled = { openQuickAddTypeFlow.value = null },
-                    navigationTrigger = navigationFlow,
-                    onNavigationHandled = { navigationFlow.value = null }
-                )
+            val currentLanguage = remember(userPrefs.selectedLanguage) {
+                AppLanguage.fromCode(userPrefs.selectedLanguage)
+            }
+            val localizedContext = remember(currentLanguage) {
+                AppLocaleManager.getLocalizedContext(this@MainActivity, currentLanguage)
+            }
+
+            CompositionLocalProvider(
+                LocalContext provides localizedContext,
+                LocalConfiguration provides localizedContext.resources.configuration
+            ) {
+                FinPulseTheme(darkTheme = darkTheme) {
+                    FinPulseApp(
+                        container = container,
+                        openQuickAddTypeTrigger = openQuickAddTypeFlow,
+                        onQuickAddTypeHandled = { openQuickAddTypeFlow.value = null },
+                        navigationTrigger = navigationFlow,
+                        onNavigationHandled = { navigationFlow.value = null }
+                    )
+                }
             }
         }
     }
