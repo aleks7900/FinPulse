@@ -1066,6 +1066,27 @@
     <string name="more_account_sync_title">Konto Google i Synchronizacja</string>
     <string name="more_account_sync_connected">Połączono i zsynchronizowano z Google</string>
     <string name="more_account_sync_disconnected">Zaloguj się, aby synchronizować między urządzeniami</string>
+    <string name="sync_feedback_success">Zsynchronizowano pomyślnie</string>
+    <string name="sync_feedback_failed">Błąd synchronizacji</string>
+    <string name="sync_feedback_auth_required">Zaloguj się, aby zsynchronizować</string>
+    <string name="sync_feedback_offline">Brak połączenia z internetem</string>
+    <string name="sync_feedback_in_progress">Synchronizacja w toku</string>
+    <string name="settings_cloud_sync_controls_title">Sterowanie synchronizacją</string>
+    <string name="settings_auto_sync_title">Automatyczna synchronizacja</string>
+    <string name="settings_auto_sync_desc">Uzgadnianie danych w tle z chmurą Google</string>
+    <string name="settings_sync_on_startup_title">Synchronizuj przy starcie</string>
+    <string name="settings_sync_on_startup_desc">Automatyczna synchronizacja przy otwarciu FinPulse</string>
+    <string name="settings_sync_interval_title">Interwał synchronizacji</string>
+    <string name="settings_sync_interval_desc">Częstotliwość synchronizacji w tle</string>
+    <string name="settings_sync_interval_select_title">Wybierz interwał</string>
+    <string name="sync_interval_15m">15 minut</string>
+    <string name="sync_interval_30m">30 minut</string>
+    <string name="sync_interval_1h">1 godzina</string>
+    <string name="sync_interval_3h">3 godziny</string>
+    <string name="sync_interval_6h">6 godzin</string>
+    <string name="sync_interval_12h">12 godzin</string>
+    <string name="sync_interval_24h">24 godziny</string>
+    <string name="action_cloud_sync">Synchronizacja w chmurze</string>
     <!-- More Tools -->
     <string name="more_calendar_title">Kalendarz finansowy &amp; PrzepЕ‚yw Е›rodkГіw</string>
     <string name="more_calendar_desc">Prognoza przyszЕ‚ych rachunkГіw, dochodГіw, poЕјyczek i osi salda</string>

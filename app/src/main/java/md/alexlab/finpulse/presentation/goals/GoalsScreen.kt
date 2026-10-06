@@ -68,6 +68,7 @@ fun GoalsScreen(
     onSaveGoal: (id: String?, title: String, targetMinor: Long, currentMinor: Long, targetDate: Long) -> Unit,
     onContribute: (goalId: String, amountMinor: Long) -> Unit,
     onDeleteGoal: (String) -> Unit,
+    syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -85,6 +86,9 @@ fun GoalsScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
+                },
+                actions = {
+                    syncAction()
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background

@@ -135,6 +135,7 @@ fun TransactionsScreen(
     onDeleteSavedView: (String) -> Unit = {},
     onNavigateToReviewQueue: () -> Unit = {},
     onNavigateToCsvImport: () -> Unit = {},
+    syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val categoryMap = uiState.categories.associateBy { it.id }
@@ -186,6 +187,7 @@ fun TransactionsScreen(
                             )
                         }
                     }
+                    syncAction()
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background

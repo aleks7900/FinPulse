@@ -1042,6 +1042,27 @@
     <string name="more_account_sync_title">Google 계정 및 클라우드 동기화</string>
     <string name="more_account_sync_connected">Google 계정과 연결 및 동기화됨</string>
     <string name="more_account_sync_disconnected">기기 간 동기화를 위해 로그인하세요</string>
+    <string name="sync_feedback_success">동기화 완료</string>
+    <string name="sync_feedback_failed">동기화 실패</string>
+    <string name="sync_feedback_auth_required">동기화하려면 로그인하세요</string>
+    <string name="sync_feedback_offline">인터넷 연결 없음</string>
+    <string name="sync_feedback_in_progress">동기화가 이미 진행 중입니다</string>
+    <string name="settings_cloud_sync_controls_title">클라우드 동기화 설정</string>
+    <string name="settings_auto_sync_title">자동 클라우드 동기화</string>
+    <string name="settings_auto_sync_desc">백그라운드에서 Google 클라우드와 데이터 동기화</string>
+    <string name="settings_sync_on_startup_title">앱 실행 시 동기화</string>
+    <string name="settings_sync_on_startup_desc">FinPulse를 열 때 변경사항 자동 동기화</string>
+    <string name="settings_sync_interval_title">동기화 주기</string>
+    <string name="settings_sync_interval_desc">백그라운드 동기화 실행 주기</string>
+    <string name="settings_sync_interval_select_title">동기화 주기 선택</string>
+    <string name="sync_interval_15m">15분</string>
+    <string name="sync_interval_30m">30분</string>
+    <string name="sync_interval_1h">1시간</string>
+    <string name="sync_interval_3h">3시간</string>
+    <string name="sync_interval_6h">6시간</string>
+    <string name="sync_interval_12h">12시간</string>
+    <string name="sync_interval_24h">24시간</string>
+    <string name="action_cloud_sync">클라우드 동기화</string>
     <!-- More Tools -->
     <string name="more_calendar_title">кё€мњµ мєл¦°лЌ” &amp; н„кё€ нќђл¦„</string>
     <string name="more_calendar_desc">м€м •лђњ мІ­кµ¬м„њ, м€мћ…, лЊЂм¶њ л°Џ мћ”м•Ў нѓЂмћ„лќјмќё м€мёЎ</string>

@@ -1050,6 +1050,27 @@
     <string name="more_account_sync_title">Google Hesabı ve Senkronizasyon</string>
     <string name="more_account_sync_connected">Bağlandı ve Google ile senkronize edildi</string>
     <string name="more_account_sync_disconnected">Cihazlar arasında senkronize etmek için giriş yapın</string>
+    <string name="sync_feedback_success">Başarıyla senkronize edildi</string>
+    <string name="sync_feedback_failed">Senkronizasyon başarısız</string>
+    <string name="sync_feedback_auth_required">Senkronizasyon için giriş yapın</string>
+    <string name="sync_feedback_offline">İnternet bağlantısı yok</string>
+    <string name="sync_feedback_in_progress">Senkronizasyon devam ediyor</string>
+    <string name="settings_cloud_sync_controls_title">Bulut Senkronizasyon Kontrolleri</string>
+    <string name="settings_auto_sync_title">Otomatik bulut senkronizasyonu</string>
+    <string name="settings_auto_sync_desc">Arka planda Google bulut ile verileri güncel tutun</string>
+    <string name="settings_sync_on_startup_title">Uygulama açılışında senkronize et</string>
+    <string name="settings_sync_on_startup_desc">FinPulse açıldığında verileri otomatik güncelleyin</string>
+    <string name="settings_sync_interval_title">Senkronizasyon aralığı</string>
+    <string name="settings_sync_interval_desc">Arka plan senkronizasyonunun çalışma sıklığı</string>
+    <string name="settings_sync_interval_select_title">Aralık Seçin</string>
+    <string name="sync_interval_15m">15 dakika</string>
+    <string name="sync_interval_30m">30 dakika</string>
+    <string name="sync_interval_1h">1 saat</string>
+    <string name="sync_interval_3h">3 saat</string>
+    <string name="sync_interval_6h">6 saat</string>
+    <string name="sync_interval_12h">12 saat</string>
+    <string name="sync_interval_24h">24 saat</string>
+    <string name="action_cloud_sync">Bulut Senkronizasyonu</string>
     <!-- More Tools -->
     <string name="more_calendar_title">Finansal Takvim &amp; Nakit AkД±ЕџД±</string>
     <string name="more_calendar_desc">Gelecek faturalar, gelirler, krediler ve bakiye zaman Г§izelgesi tahmini</string>

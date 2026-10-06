@@ -92,12 +92,17 @@ import md.alexlab.finpulse.core.designsystem.SapphireAccent
 import md.alexlab.finpulse.domain.model.sync.SyncStatus
 import java.time.Instant
 import java.time.ZoneId
+import androidx.compose.foundation.clickable
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Switch
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun AccountScreen(
     viewModel: AccountViewModel,
     onNavigateBack: () -> Unit,
+    syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -106,6 +111,10 @@ fun AccountScreen(
         uiState = uiState,
         onSignInWithGoogle = { ctx, webClientId -> viewModel.signInWithGoogle(ctx, webClientId) },
         onSyncNow = { ctx -> viewModel.syncNow(ctx) },
+        onToggleAutoSync = viewModel::setAutoSyncEnabled,
+        onToggleSyncOnStartup = viewModel::setSyncOnStartupEnabled,
+        onSelectSyncInterval = viewModel::setSyncIntervalMinutes,
+        onShowIntervalDialog = viewModel::showIntervalDialog,
         onSignOut = viewModel::signOut,
         onConfirmSignOutWithSync = viewModel::confirmSignOutWithSync,
         onDismissSignOutDialog = viewModel::dismissSignOutDialog,
@@ -114,6 +123,7 @@ fun AccountScreen(
         onDismissDeleteCloudDataDialog = viewModel::dismissDeleteCloudDataDialog,
         onDismissMessages = viewModel::clearMessages,
         onNavigateBack = onNavigateBack,
+        syncAction = syncAction,
         modifier = modifier
     )
 }
@@ -124,6 +134,10 @@ fun AccountScreen(
     uiState: AccountUiState,
     onSignInWithGoogle: (Context, String) -> Unit,
     onSyncNow: (Context) -> Unit,
+    onToggleAutoSync: (Boolean) -> Unit = {},
+    onToggleSyncOnStartup: (Boolean) -> Unit = {},
+    onSelectSyncInterval: (Long) -> Unit = {},
+    onShowIntervalDialog: (Boolean) -> Unit = {},
     onSignOut: () -> Unit,
     onConfirmSignOutWithSync: () -> Unit,
     onDismissSignOutDialog: () -> Unit,
@@ -132,6 +146,7 @@ fun AccountScreen(
     onDismissDeleteCloudDataDialog: () -> Unit,
     onDismissMessages: () -> Unit,
     onNavigateBack: () -> Unit,
+    syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -218,6 +233,51 @@ fun AccountScreen(
         )
     }
 
+    if (uiState.showIntervalDialog) {
+        val intervalOptions = listOf(
+            15L to stringResource(R.string.sync_interval_15m),
+            30L to stringResource(R.string.sync_interval_30m),
+            60L to stringResource(R.string.sync_interval_1h),
+            180L to stringResource(R.string.sync_interval_3h),
+            360L to stringResource(R.string.sync_interval_6h),
+            720L to stringResource(R.string.sync_interval_12h),
+            1440L to stringResource(R.string.sync_interval_24h)
+        )
+        AlertDialog(
+            onDismissRequest = { onShowIntervalDialog(false) },
+            title = { Text(stringResource(R.string.settings_sync_interval_select_title)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    intervalOptions.forEach { (minutes, label) ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onSelectSyncInterval(minutes) }
+                                .padding(vertical = 10.dp, horizontal = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = uiState.syncIntervalMinutes == minutes,
+                                onClick = { onSelectSyncInterval(minutes) }
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = label,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = if (uiState.syncIntervalMinutes == minutes) FontWeight.Bold else FontWeight.Normal
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { onShowIntervalDialog(false) }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            }
+        )
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -227,6 +287,9 @@ fun AccountScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
+                },
+                actions = {
+                    syncAction()
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
@@ -255,6 +318,9 @@ fun AccountScreen(
                 LoggedInContent(
                     uiState = uiState,
                     onSyncClick = { onSyncNow(context) },
+                    onToggleAutoSync = onToggleAutoSync,
+                    onToggleSyncOnStartup = onToggleSyncOnStartup,
+                    onShowIntervalDialog = onShowIntervalDialog,
                     onSignOutClick = onSignOut,
                     onDeleteCloudDataClick = onDeleteCloudData
                 )
@@ -417,6 +483,9 @@ private fun LoggedOutContent(
 private fun LoggedInContent(
     uiState: AccountUiState,
     onSyncClick: () -> Unit,
+    onToggleAutoSync: (Boolean) -> Unit,
+    onToggleSyncOnStartup: (Boolean) -> Unit,
+    onShowIntervalDialog: (Boolean) -> Unit,
     onSignOutClick: () -> Unit,
     onDeleteCloudDataClick: () -> Unit
 ) {
@@ -624,7 +693,131 @@ private fun LoggedInContent(
         }
     }
 
-    // 3. Cloud Security Note
+    // 3. Cloud Sync Controls Card
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.settings_cloud_sync_controls_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            // Toggle: Automatic cloud sync
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
+                    Text(
+                        text = stringResource(R.string.settings_auto_sync_title),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = stringResource(R.string.settings_auto_sync_desc),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Switch(
+                    checked = uiState.isAutoSyncEnabled,
+                    onCheckedChange = onToggleAutoSync
+                )
+            }
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+
+            // Toggle: Sync after app launch
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
+                    Text(
+                        text = stringResource(R.string.settings_sync_on_startup_title),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = stringResource(R.string.settings_sync_on_startup_desc),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Switch(
+                    checked = uiState.isSyncOnStartupEnabled,
+                    onCheckedChange = onToggleSyncOnStartup
+                )
+            }
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+
+            // Interval Selector Row
+            val intervalText = when (uiState.syncIntervalMinutes) {
+                15L -> stringResource(R.string.sync_interval_15m)
+                30L -> stringResource(R.string.sync_interval_30m)
+                60L -> stringResource(R.string.sync_interval_1h)
+                180L -> stringResource(R.string.sync_interval_3h)
+                360L -> stringResource(R.string.sync_interval_6h)
+                720L -> stringResource(R.string.sync_interval_12h)
+                1440L -> stringResource(R.string.sync_interval_24h)
+                else -> "${uiState.syncIntervalMinutes} min"
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable(enabled = uiState.isAutoSyncEnabled) { onShowIntervalDialog(true) }
+                    .padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
+                    Text(
+                        text = stringResource(R.string.settings_sync_interval_title),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (uiState.isAutoSyncEnabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                    )
+                    Text(
+                        text = stringResource(R.string.settings_sync_interval_desc),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (uiState.isAutoSyncEnabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    )
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = if (uiState.isAutoSyncEnabled) EmeraldPrimary.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceVariant
+                ) {
+                    Text(
+                        text = intervalText,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = if (uiState.isAutoSyncEnabled) EmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+    }
+
+    // 4. Cloud Security Note
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),

@@ -129,6 +129,7 @@ fun RecurringScreen(
     onToggleActive: (RecurringTransaction) -> Unit,
     onCancelRule: (String) -> Unit,
     onDeleteRecurring: (String) -> Unit,
+    syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val categoryMap = uiState.categories.associateBy { it.id }
@@ -149,6 +150,9 @@ fun RecurringScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
+                },
+                actions = {
+                    syncAction()
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background

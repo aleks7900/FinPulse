@@ -84,6 +84,7 @@ fun DashboardScreen(
     onNavigateToReviewQueue: () -> Unit = {},
     onNavigateToCalendar: () -> Unit = {},
     onNavigateToDigest: () -> Unit = {},
+    syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val categoryMap = uiState.categories.associateBy { it.id }
@@ -127,6 +128,7 @@ fun DashboardScreen(
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
+                syncAction()
             },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.background

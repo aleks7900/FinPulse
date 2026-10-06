@@ -60,6 +60,7 @@ import java.util.UUID
 fun CategoriesScreen(
     categoryRepository: CategoryRepository,
     onNavigateBack: () -> Unit,
+    syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val categories by categoryRepository.getAllCategoriesFlow().collectAsState(initial = emptyList())
@@ -81,6 +82,9 @@ fun CategoriesScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
+                },
+                actions = {
+                    syncAction()
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background

@@ -81,6 +81,7 @@ fun MoreHubScreen(
     onLanguageSelected: (AppLanguage) -> Unit,
     onNavigate: (Screen) -> Unit,
     errorReporter: md.alexlab.finpulse.core.reporting.ErrorReporter = md.alexlab.finpulse.core.reporting.NoOpErrorReporter(),
+    syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var showLanguageDialog by remember { mutableStateOf(false) }
@@ -109,6 +110,9 @@ fun MoreHubScreen(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
+                },
+                actions = {
+                    syncAction()
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background

@@ -44,6 +44,9 @@ data class UserPreferences(
     val lastSyncTimestamp: Long = 0L,
     val syncStatus: String = "IDLE",
     val syncErrorMessage: String? = null,
+    val isAutoSyncEnabled: Boolean = true,
+    val isSyncOnStartupEnabled: Boolean = true,
+    val syncIntervalMinutes: Long = 60L,
     val digestFrequency: String = "DAILY", // "DAILY", "WEEKLY", "OFF"
     val digestPrivacyEnabled: Boolean = false,
     val digestDeliveryHour: Int = 20, // 8 PM default
@@ -83,6 +86,9 @@ class UserPreferencesDataStore(private val context: Context) {
         val LAST_SYNC_TIMESTAMP = longPreferencesKey("last_sync_timestamp")
         val SYNC_STATUS = stringPreferencesKey("sync_status")
         val SYNC_ERROR_MESSAGE = stringPreferencesKey("sync_error_message")
+        val IS_AUTO_SYNC_ENABLED = booleanPreferencesKey("is_auto_sync_enabled")
+        val IS_SYNC_ON_STARTUP_ENABLED = booleanPreferencesKey("is_sync_on_startup_enabled")
+        val SYNC_INTERVAL_MINUTES = longPreferencesKey("sync_interval_minutes")
         val DIGEST_FREQUENCY = stringPreferencesKey("digest_frequency")
         val DIGEST_PRIVACY_ENABLED = booleanPreferencesKey("digest_privacy_enabled")
         val DIGEST_DELIVERY_HOUR = androidx.datastore.preferences.core.intPreferencesKey("digest_delivery_hour")
@@ -129,6 +135,9 @@ class UserPreferencesDataStore(private val context: Context) {
             lastSyncTimestamp = preferences[PreferencesKeys.LAST_SYNC_TIMESTAMP] ?: 0L,
             syncStatus = preferences[PreferencesKeys.SYNC_STATUS] ?: "IDLE",
             syncErrorMessage = preferences[PreferencesKeys.SYNC_ERROR_MESSAGE],
+            isAutoSyncEnabled = preferences[PreferencesKeys.IS_AUTO_SYNC_ENABLED] ?: true,
+            isSyncOnStartupEnabled = preferences[PreferencesKeys.IS_SYNC_ON_STARTUP_ENABLED] ?: true,
+            syncIntervalMinutes = preferences[PreferencesKeys.SYNC_INTERVAL_MINUTES] ?: 60L,
             digestFrequency = preferences[PreferencesKeys.DIGEST_FREQUENCY] ?: "DAILY",
             digestPrivacyEnabled = preferences[PreferencesKeys.DIGEST_PRIVACY_ENABLED] ?: false,
             digestDeliveryHour = preferences[PreferencesKeys.DIGEST_DELIVERY_HOUR] ?: 20,
@@ -367,6 +376,27 @@ class UserPreferencesDataStore(private val context: Context) {
             } else {
                 preferences.remove(PreferencesKeys.SYNC_ERROR_MESSAGE)
             }
+        }
+    }
+
+    suspend fun setAutoSyncEnabled(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.IS_AUTO_SYNC_ENABLED] = enabled
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
+        }
+    }
+
+    suspend fun setSyncOnStartupEnabled(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.IS_SYNC_ON_STARTUP_ENABLED] = enabled
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
+        }
+    }
+
+    suspend fun setSyncIntervalMinutes(minutes: Long) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.SYNC_INTERVAL_MINUTES] = minutes
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }
 

@@ -1050,6 +1050,27 @@
     <string name="more_account_sync_title">Account Google e Sincronizzazione</string>
     <string name="more_account_sync_connected">Connesso e sincronizzato con Google</string>
     <string name="more_account_sync_disconnected">Accedi per sincronizzare tra i dispositivi</string>
+    <string name="sync_feedback_success">Sincronizzato con successo</string>
+    <string name="sync_feedback_failed">Sincronizzazione fallita</string>
+    <string name="sync_feedback_auth_required">Accedi per sincronizzare</string>
+    <string name="sync_feedback_offline">Nessuna connessione internet</string>
+    <string name="sync_feedback_in_progress">Sincronizzazione già in corso</string>
+    <string name="settings_cloud_sync_controls_title">Controlli sincronizzazione</string>
+    <string name="settings_auto_sync_title">Sincronizzazione automatica</string>
+    <string name="settings_auto_sync_desc">Riconcilia i dati in background con Google Cloud</string>
+    <string name="settings_sync_on_startup_title">Sincronizza all\'avvio</string>
+    <string name="settings_sync_on_startup_desc">Aggiorna le modifiche all\'apertura di FinPulse</string>
+    <string name="settings_sync_interval_title">Intervallo di sincronizzazione</string>
+    <string name="settings_sync_interval_desc">Frequenza della sincronizzazione in background</string>
+    <string name="settings_sync_interval_select_title">Seleziona intervallo</string>
+    <string name="sync_interval_15m">15 minuti</string>
+    <string name="sync_interval_30m">30 minuti</string>
+    <string name="sync_interval_1h">1 ora</string>
+    <string name="sync_interval_3h">3 ore</string>
+    <string name="sync_interval_6h">6 ore</string>
+    <string name="sync_interval_12h">12 ore</string>
+    <string name="sync_interval_24h">24 ore</string>
+    <string name="action_cloud_sync">Sincronizzazione cloud</string>
     <!-- More Tools -->
     <string name="more_calendar_title">Calendario finanziario &amp; flusso di cassa</string>
     <string name="more_calendar_desc">Previsione di bollette, entrate, prestiti &amp; cronologia del saldo</string>

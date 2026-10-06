@@ -1066,6 +1066,27 @@
     <string name="more_account_sync_title">Google Аккаунт и Синхронизация</string>
     <string name="more_account_sync_connected">Подключено и синхронизировано с Google</string>
     <string name="more_account_sync_disconnected">Войдите для синхронизации между устройствами</string>
+    <string name="sync_feedback_success">Синхронизировано успешно</string>
+    <string name="sync_feedback_failed">Синхронизация не удалась</string>
+    <string name="sync_feedback_auth_required">Войдите для синхронизации</string>
+    <string name="sync_feedback_offline">Нет подключения к интернету</string>
+    <string name="sync_feedback_in_progress">Синхронизация уже выполняется</string>
+    <string name="settings_cloud_sync_controls_title">Управление облачной синхронизацией</string>
+    <string name="settings_auto_sync_title">Автоматическая синхронизация</string>
+    <string name="settings_auto_sync_desc">Фоновая синхронизация с облаком Google</string>
+    <string name="settings_sync_on_startup_title">Синхронизация при запуске</string>
+    <string name="settings_sync_on_startup_desc">Автоматическое обновление данных при открытии FinPulse</string>
+    <string name="settings_sync_interval_title">Интервал синхронизации</string>
+    <string name="settings_sync_interval_desc">Периодичность фоновой синхронизации</string>
+    <string name="settings_sync_interval_select_title">Выберите интервал</string>
+    <string name="sync_interval_15m">15 минут</string>
+    <string name="sync_interval_30m">30 минут</string>
+    <string name="sync_interval_1h">1 час</string>
+    <string name="sync_interval_3h">3 часа</string>
+    <string name="sync_interval_6h">6 часов</string>
+    <string name="sync_interval_12h">12 часов</string>
+    <string name="sync_interval_24h">24 часа</string>
+    <string name="action_cloud_sync">Облачная синхронизация</string>
 
     <!-- More Tools -->
     <string name="more_calendar_title">Финансовый календарь и поток</string>

@@ -106,6 +106,7 @@ fun BudgetsScreen(
     onDeleteBudget: (String) -> Unit,
     onToggleAssumptionsDialog: (Boolean) -> Unit,
     onSelectFilter: (BudgetFilter) -> Unit,
+    syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -118,6 +119,9 @@ fun BudgetsScreen(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
+                },
+                actions = {
+                    syncAction()
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background

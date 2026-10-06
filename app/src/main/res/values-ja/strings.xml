@@ -1042,6 +1042,27 @@
     <string name="more_account_sync_title">Google アカウントとクラウド同期</string>
     <string name="more_account_sync_connected">Google アカウントと接続・同期済み</string>
     <string name="more_account_sync_disconnected">端末間で同期するにはサインインしてください</string>
+    <string name="sync_feedback_success">同期が完了しました</string>
+    <string name="sync_feedback_failed">同期に失敗しました</string>
+    <string name="sync_feedback_auth_required">同期するにはサインインしてください</string>
+    <string name="sync_feedback_offline">インターネット接続がありません</string>
+    <string name="sync_feedback_in_progress">同期は既に実行中です</string>
+    <string name="settings_cloud_sync_controls_title">クラウド同期設定</string>
+    <string name="settings_auto_sync_title">自動クラウド同期</string>
+    <string name="settings_auto_sync_desc">バックグラウンドでGoogleクラウドとデータを同期</string>
+    <string name="settings_sync_on_startup_title">アプリ起動時に同期</string>
+    <string name="settings_sync_on_startup_desc">FinPulse起動時に自動的にデータを同期</string>
+    <string name="settings_sync_interval_title">同期の間隔</string>
+    <string name="settings_sync_interval_desc">バックグラウンド同期の実行頻度</string>
+    <string name="settings_sync_interval_select_title">同期間隔の選択</string>
+    <string name="sync_interval_15m">15分</string>
+    <string name="sync_interval_30m">30分</string>
+    <string name="sync_interval_1h">1時間</string>
+    <string name="sync_interval_3h">3時間</string>
+    <string name="sync_interval_6h">6時間</string>
+    <string name="sync_interval_12h">12時間</string>
+    <string name="sync_interval_24h">24時間</string>
+    <string name="action_cloud_sync">クラウド同期</string>
     <!-- More Tools -->
     <string name="more_calendar_title">иІЎе‹™г‚«гѓ¬гѓігѓЂгѓјпј†г‚­гѓЈгѓѓг‚·гѓҐгѓ•гѓ­гѓј</string>
     <string name="more_calendar_desc">д»ЉеѕЊгЃ®и«‹ж±‚ж›ёгЂЃеЏЋе…ҐгЂЃгѓ­гѓјгѓігЃЉг‚€гЃіж®‹й«жЋЁз§»г‚’дє€жё¬</string>

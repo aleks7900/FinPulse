@@ -83,6 +83,7 @@ fun AccountsScreen(
     onTransferFunds: (sourceId: String, destId: String, amountMinor: Long, destinationAmountMinor: Long?, exchangeRate: Double?, note: String) -> Unit,
     onArchiveAccount: (String, Boolean) -> Unit,
     onDeleteAccount: (String) -> Unit,
+    syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -105,6 +106,7 @@ fun AccountsScreen(
                     IconButton(onClick = { onShowTransferDialog(true) }) {
                         Icon(imageVector = Icons.Default.SwapHoriz, contentDescription = stringResource(R.string.accounts_transfer_title), tint = EmeraldPrimary)
                     }
+                    syncAction()
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background

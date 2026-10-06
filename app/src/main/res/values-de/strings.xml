@@ -1050,6 +1050,27 @@
     <string name="more_account_sync_title">Google-Konto &amp; Cloud-Sync</string>
     <string name="more_account_sync_connected">Verbunden und mit Google synchronisiert</string>
     <string name="more_account_sync_disconnected">Anmelden zur geräteübergreifenden Synchronisierung</string>
+    <string name="sync_feedback_success">Erfolgreich synchronisiert</string>
+    <string name="sync_feedback_failed">Synchronisierung fehlgeschlagen</string>
+    <string name="sync_feedback_auth_required">Anmelden zur Cloud-Synchronisierung</string>
+    <string name="sync_feedback_offline">Keine Internetverbindung</string>
+    <string name="sync_feedback_in_progress">Synchronisierung läuft bereits</string>
+    <string name="settings_cloud_sync_controls_title">Cloud-Sync Steuerung</string>
+    <string name="settings_auto_sync_title">Automatische Synchronisierung</string>
+    <string name="settings_auto_sync_desc">Daten im Hintergrund mit Google synchronisieren</string>
+    <string name="settings_sync_on_startup_title">Beim Start synchronisieren</string>
+    <string name="settings_sync_on_startup_desc">Änderungen beim Öffnen von FinPulse automatisch abgleichen</string>
+    <string name="settings_sync_interval_title">Sync-Intervall</string>
+    <string name="settings_sync_interval_desc">Häufigkeit der Hintergrundsynchronisierung</string>
+    <string name="settings_sync_interval_select_title">Intervall auswählen</string>
+    <string name="sync_interval_15m">15 Minuten</string>
+    <string name="sync_interval_30m">30 Minuten</string>
+    <string name="sync_interval_1h">1 Stunde</string>
+    <string name="sync_interval_3h">3 Stunden</string>
+    <string name="sync_interval_6h">6 Stunden</string>
+    <string name="sync_interval_12h">12 Stunden</string>
+    <string name="sync_interval_24h">24 Stunden</string>
+    <string name="action_cloud_sync">Cloud-Synchronisierung</string>
     <!-- More Tools -->
     <string name="more_calendar_title">Finanzkalender &amp; Cashflow</string>
     <string name="more_calendar_desc">Prognose kГјnftiger Rechnungen, Einnahmen, Kredite &amp; Kontostand-Zeitachse</string>

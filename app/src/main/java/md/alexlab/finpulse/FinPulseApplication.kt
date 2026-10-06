@@ -9,6 +9,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class FinPulseApplication : Application() {
@@ -46,36 +47,35 @@ class FinPulseApplication : Application() {
         // Schedule periodic WorkManager recurring check & reminders
         md.alexlab.finpulse.core.work.RecurringCheckWorker.schedulePeriodicCheck(this)
 
-        // Schedule periodic background cloud synchronization
-        md.alexlab.finpulse.core.work.SyncWorker.schedulePeriodicSync(this)
-
-        // Initialize cloud sync engine & startup sync trigger
+        // Initialize cloud sync engine & trigger automatic startup sync via coordinator
         applicationScope.launch {
             (container.cloudSyncRepository as? md.alexlab.finpulse.data.sync.CloudSyncEngine)?.initialize()
-            if (container.authRepository.isAuthenticated && container.networkMonitor.isCurrentlyOnline()) {
-                container.cloudSyncRepository.performFullSync()
-            }
+            container.cloudSyncCoordinator.triggerStartupSync()
         }
 
-        // Connectivity restoration trigger
+        // Connectivity restoration trigger via CloudSyncCoordinator
         applicationScope.launch {
             container.networkMonitor.isOnline.collect { online ->
                 if (online && container.authRepository.isAuthenticated) {
-                    container.cloudSyncRepository.performFullSync()
+                    val prefs = container.userPreferencesDataStore.userPreferencesFlow.first()
+                    if (prefs.isAutoSyncEnabled) {
+                        container.cloudSyncCoordinator.sync(md.alexlab.finpulse.data.sync.SyncTrigger.CONNECTIVITY_RESTORED)
+                    }
                 }
             }
         }
 
-        // Auto-push trigger after local modifications when online (debounced)
+        // Auto-push trigger after local modifications when online (debounced) via coordinator
         applicationScope.launch {
             @OptIn(kotlinx.coroutines.FlowPreview::class)
-            container.cloudSyncRepository.pendingChangesCount
+            container.cloudSyncCoordinator.pendingChangesCount
                 .drop(1)
                 .filter { it > 0 }
                 .debounce(1000L)
                 .collect {
-                    if (container.authRepository.isAuthenticated && container.networkMonitor.isCurrentlyOnline()) {
-                        container.cloudSyncRepository.performFullSync()
+                    val prefs = container.userPreferencesDataStore.userPreferencesFlow.first()
+                    if (prefs.isAutoSyncEnabled && container.authRepository.isAuthenticated && container.networkMonitor.isCurrentlyOnline()) {
+                        container.cloudSyncCoordinator.sync(md.alexlab.finpulse.data.sync.SyncTrigger.LOCAL_CHANGE)
                     }
                 }
         }

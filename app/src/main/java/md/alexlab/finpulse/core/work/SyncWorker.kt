@@ -11,6 +11,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import md.alexlab.finpulse.FinPulseApplication
+import kotlinx.coroutines.flow.first
 import java.util.concurrent.TimeUnit
 
 class SyncWorker(
@@ -20,14 +21,18 @@ class SyncWorker(
 
     override suspend fun doWork(): Result {
         val app = appContext.applicationContext as? FinPulseApplication ?: return Result.success()
-        val authRepository = app.container.authRepository
-        val syncRepository = app.container.cloudSyncRepository
+        val prefs = app.container.userPreferencesDataStore.userPreferencesFlow.first()
 
-        if (!authRepository.isAuthenticated) {
+        if (!prefs.isAutoSyncEnabled) {
+            cancelPeriodicSync(appContext)
             return Result.success()
         }
 
-        val result = syncRepository.performFullSync()
+        if (!app.container.authRepository.isAuthenticated) {
+            return Result.success()
+        }
+
+        val result = app.container.cloudSyncCoordinator.sync(md.alexlab.finpulse.data.sync.SyncTrigger.SCHEDULED)
         return if (result.isSuccess) {
             Result.success()
         } else {
@@ -70,20 +75,25 @@ class SyncWorker(
             )
         }
 
-        fun schedulePeriodicSync(context: Context) {
+        fun schedulePeriodicSync(context: Context, intervalMinutes: Long = 60L) {
+            val safeInterval = maxOf(intervalMinutes, 15L) // WorkManager enforces minimum 15 minutes
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
-            val request = PeriodicWorkRequestBuilder<SyncWorker>(6, TimeUnit.HOURS)
+            val request = PeriodicWorkRequestBuilder<SyncWorker>(safeInterval, TimeUnit.MINUTES)
                 .setConstraints(constraints)
                 .build()
 
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
                 UNIQUE_PERIODIC_WORK_NAME,
-                ExistingPeriodicWorkPolicy.KEEP,
+                ExistingPeriodicWorkPolicy.UPDATE,
                 request
             )
+        }
+
+        fun cancelPeriodicSync(context: Context) {
+            WorkManager.getInstance(context).cancelUniqueWork(UNIQUE_PERIODIC_WORK_NAME)
         }
     }
 }

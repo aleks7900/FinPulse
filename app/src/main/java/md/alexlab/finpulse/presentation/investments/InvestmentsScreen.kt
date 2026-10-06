@@ -61,6 +61,7 @@ fun InvestmentsScreen(
     onShowAddEditDialog: (Boolean, InvestmentAsset?) -> Unit,
     onSaveAsset: (id: String?, name: String, symbol: String, assetClass: AssetClass, quantity: Double, purchaseMinor: Long, currentMinor: Long) -> Unit,
     onDeleteAsset: (String) -> Unit,
+    syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -78,6 +79,9 @@ fun InvestmentsScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
+                },
+                actions = {
+                    syncAction()
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background

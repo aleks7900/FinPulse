@@ -1050,6 +1050,27 @@
     <string name="more_account_sync_title">Google Account &amp; Cloud Sync</string>
     <string name="more_account_sync_connected">Connected and synchronized with Google</string>
     <string name="more_account_sync_disconnected">Sign in to synchronize across devices</string>
+    <string name="sync_feedback_success">Synced successfully</string>
+    <string name="sync_feedback_failed">Sync failed</string>
+    <string name="sync_feedback_auth_required">Sign in to enable cloud sync</string>
+    <string name="sync_feedback_offline">No internet connection</string>
+    <string name="sync_feedback_in_progress">Sync already in progress</string>
+    <string name="settings_cloud_sync_controls_title">Cloud Sync Controls</string>
+    <string name="settings_auto_sync_title">Automatic cloud sync</string>
+    <string name="settings_auto_sync_desc">Keep local data reconciled with Google cloud in background</string>
+    <string name="settings_sync_on_startup_title">Sync after app launch</string>
+    <string name="settings_sync_on_startup_desc">Reconcile changes automatically upon opening FinPulse</string>
+    <string name="settings_sync_interval_title">Sync interval</string>
+    <string name="settings_sync_interval_desc">How often background synchronization runs</string>
+    <string name="settings_sync_interval_select_title">Select Sync Interval</string>
+    <string name="sync_interval_15m">15 minutes</string>
+    <string name="sync_interval_30m">30 minutes</string>
+    <string name="sync_interval_1h">1 hour</string>
+    <string name="sync_interval_3h">3 hours</string>
+    <string name="sync_interval_6h">6 hours</string>
+    <string name="sync_interval_12h">12 hours</string>
+    <string name="sync_interval_24h">24 hours</string>
+    <string name="action_cloud_sync">Cloud Sync</string>
 
     <!-- More Tools -->
     <string name="more_calendar_title">Financial Calendar &amp; Cash Flow</string>

@@ -1050,6 +1050,27 @@
     <string name="more_account_sync_title">Conta do Google e Sincronização</string>
     <string name="more_account_sync_connected">Conectado e sincronizado com o Google</string>
     <string name="more_account_sync_disconnected">Faça login para sincronizar entre dispositivos</string>
+    <string name="sync_feedback_success">Sincronizado com sucesso</string>
+    <string name="sync_feedback_failed">Falha na sincronização</string>
+    <string name="sync_feedback_auth_required">Faça login para sincronizar</string>
+    <string name="sync_feedback_offline">Sem conexão com a internet</string>
+    <string name="sync_feedback_in_progress">Sincronização em andamento</string>
+    <string name="settings_cloud_sync_controls_title">Controles de sincronização</string>
+    <string name="settings_auto_sync_title">Sincronização automática</string>
+    <string name="settings_auto_sync_desc">Reconciliar dados em segundo plano com o Google</string>
+    <string name="settings_sync_on_startup_title">Sincronizar ao abrir app</string>
+    <string name="settings_sync_on_startup_desc">Atualizar alterações automaticamente ao iniciar o FinPulse</string>
+    <string name="settings_sync_interval_title">Intervalo de sincronização</string>
+    <string name="settings_sync_interval_desc">Frequência da sincronização em segundo plano</string>
+    <string name="settings_sync_interval_select_title">Selecionar intervalo</string>
+    <string name="sync_interval_15m">15 minutos</string>
+    <string name="sync_interval_30m">30 minutos</string>
+    <string name="sync_interval_1h">1 hora</string>
+    <string name="sync_interval_3h">3 horas</string>
+    <string name="sync_interval_6h">6 horas</string>
+    <string name="sync_interval_12h">12 horas</string>
+    <string name="sync_interval_24h">24 horas</string>
+    <string name="action_cloud_sync">Sincronização em nuvem</string>
     <!-- More Tools -->
     <string name="more_calendar_title">CalendГЎrio Financeiro &amp; Fluxo de Caixa</string>
     <string name="more_calendar_desc">PrevisГЈo de contas futuras, receitas, emprГ©stimos e linha do tempo do saldo</string>

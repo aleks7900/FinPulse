@@ -1050,6 +1050,27 @@
     <string name="more_account_sync_title">Compte Google et Synchronisation</string>
     <string name="more_account_sync_connected">Connecté et synchronisé avec Google</string>
     <string name="more_account_sync_disconnected">Connectez-vous pour synchroniser entre vos appareils</string>
+    <string name="sync_feedback_success">Synchronisé avec succès</string>
+    <string name="sync_feedback_failed">Échec de la synchronisation</string>
+    <string name="sync_feedback_auth_required">Connectez-vous pour synchroniser</string>
+    <string name="sync_feedback_offline">Pas de connexion internet</string>
+    <string name="sync_feedback_in_progress">Synchronisation déjà en cours</string>
+    <string name="settings_cloud_sync_controls_title">Contrôles de synchronisation</string>
+    <string name="settings_auto_sync_title">Synchronisation automatique</string>
+    <string name="settings_auto_sync_desc">Rapprocher les données en arrière-plan avec Google</string>
+    <string name="settings_sync_on_startup_title">Synchroniser au démarrage</string>
+    <string name="settings_sync_on_startup_desc">Rapprocher automatiquement à l\'ouverture de FinPulse</string>
+    <string name="settings_sync_interval_title">Intervalle de synchronisation</string>
+    <string name="settings_sync_interval_desc">Fréquence de la synchronisation en arrière-plan</string>
+    <string name="settings_sync_interval_select_title">Sélectionner l\'intervalle</string>
+    <string name="sync_interval_15m">15 minutes</string>
+    <string name="sync_interval_30m">30 minutes</string>
+    <string name="sync_interval_1h">1 heure</string>
+    <string name="sync_interval_3h">3 heures</string>
+    <string name="sync_interval_6h">6 heures</string>
+    <string name="sync_interval_12h">12 heures</string>
+    <string name="sync_interval_24h">24 heures</string>
+    <string name="action_cloud_sync">Synchronisation cloud</string>
     <!-- More Tools -->
     <string name="more_calendar_title">Calendrier financier &amp; trГ©sorerie</string>
     <string name="more_calendar_desc">PrГ©vision des factures, revenus, prГЄts &amp; chronologie du solde</string>

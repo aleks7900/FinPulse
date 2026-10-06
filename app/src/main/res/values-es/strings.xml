@@ -1050,6 +1050,27 @@
     <string name="more_account_sync_title">Cuenta de Google y sincronización</string>
     <string name="more_account_sync_connected">Conectado y sincronizado con Google</string>
     <string name="more_account_sync_disconnected">Inicia sesión para sincronizar entre dispositivos</string>
+    <string name="sync_feedback_success">Sincronizado con éxito</string>
+    <string name="sync_feedback_failed">Error de sincronización</string>
+    <string name="sync_feedback_auth_required">Inicia sesión para sincronizar</string>
+    <string name="sync_feedback_offline">Sin conexión a internet</string>
+    <string name="sync_feedback_in_progress">Sincronización en curso</string>
+    <string name="settings_cloud_sync_controls_title">Control de sincronización</string>
+    <string name="settings_auto_sync_title">Sincronización automática</string>
+    <string name="settings_auto_sync_desc">Mantener datos conciliados con Google en segundo plano</string>
+    <string name="settings_sync_on_startup_title">Sincronizar al iniciar</string>
+    <string name="settings_sync_on_startup_desc">Conciliar cambios automáticamente al abrir FinPulse</string>
+    <string name="settings_sync_interval_title">Intervalo de sincronización</string>
+    <string name="settings_sync_interval_desc">Frecuencia de sincronización en segundo plano</string>
+    <string name="settings_sync_interval_select_title">Seleccionar intervalo</string>
+    <string name="sync_interval_15m">15 minutos</string>
+    <string name="sync_interval_30m">30 minutos</string>
+    <string name="sync_interval_1h">1 hora</string>
+    <string name="sync_interval_3h">3 horas</string>
+    <string name="sync_interval_6h">6 horas</string>
+    <string name="sync_interval_12h">12 horas</string>
+    <string name="sync_interval_24h">24 horas</string>
+    <string name="action_cloud_sync">Sincronización en la nube</string>
     <!-- More Tools -->
     <string name="more_calendar_title">Calendario financiero y flujo de caja</string>
     <string name="more_calendar_desc">PrevisiГіn de facturas, ingresos, prГ©stamos y saldo futuro</string>

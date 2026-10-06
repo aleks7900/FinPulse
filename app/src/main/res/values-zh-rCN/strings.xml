@@ -1042,6 +1042,27 @@
     <string name="more_account_sync_title">Google 账号与云同步</string>
     <string name="more_account_sync_connected">已连接并与 Google 同步</string>
     <string name="more_account_sync_disconnected">登录以在设备间同步</string>
+    <string name="sync_feedback_success">同步成功</string>
+    <string name="sync_feedback_failed">同步失败</string>
+    <string name="sync_feedback_auth_required">请登录以启用云同步</string>
+    <string name="sync_feedback_offline">无网络连接</string>
+    <string name="sync_feedback_in_progress">同步已在进行中</string>
+    <string name="settings_cloud_sync_controls_title">云同步设置</string>
+    <string name="settings_auto_sync_title">自动云同步</string>
+    <string name="settings_auto_sync_desc">在后台与Google云端保持数据对齐</string>
+    <string name="settings_sync_on_startup_title">应用启动时同步</string>
+    <string name="settings_sync_on_startup_desc">打开FinPulse时自动对齐数据</string>
+    <string name="settings_sync_interval_title">同步间隔</string>
+    <string name="settings_sync_interval_desc">后台同步运行频率</string>
+    <string name="settings_sync_interval_select_title">选择同步间隔</string>
+    <string name="sync_interval_15m">15分钟</string>
+    <string name="sync_interval_30m">30分钟</string>
+    <string name="sync_interval_1h">1小时</string>
+    <string name="sync_interval_3h">3小时</string>
+    <string name="sync_interval_6h">6小时</string>
+    <string name="sync_interval_12h">12小时</string>
+    <string name="sync_interval_24h">24小时</string>
+    <string name="action_cloud_sync">云同步</string>
     <!-- More Tools -->
     <string name="more_calendar_title">иґўеЉЎж—ҐеЋ†дёЋзЋ°й‡‘жµЃ</string>
     <string name="more_calendar_desc">йў„жµ‹жњЄжќҐиґ¦еЌ•гЂЃж”¶е…ҐгЂЃиґ·ж¬ѕеЏЉдЅ™йўќж—¶й—ґзєї</string>

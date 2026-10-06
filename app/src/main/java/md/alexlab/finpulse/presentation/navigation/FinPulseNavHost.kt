@@ -112,6 +112,22 @@ fun FinPulseApp(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
+    val globalSyncAction: @Composable () -> Unit = {
+        md.alexlab.finpulse.presentation.sync.GlobalCloudSyncButton(
+            coordinator = container.cloudSyncCoordinator,
+            onNavigateToAccount = {
+                navController.navigate(Screen.Account.route) {
+                    launchSingleTop = true
+                }
+            },
+            onShowFeedback = { message ->
+                scope.launch {
+                    snackbarHostState.showSnackbar(message)
+                }
+            }
+        )
+    }
+
     val isAppLocked by container.appLockManager.isAppLocked.collectAsState()
 
     openQuickAddTrigger?.let { triggerFlow ->
@@ -248,7 +264,8 @@ fun FinPulseApp(
                     onNavigateToInsights = { navController.navigate(Screen.Insights.route) },
                     onNavigateToReviewQueue = { navController.navigate(Screen.ReviewInbox.route) },
                     onNavigateToCalendar = { navController.navigate(Screen.Calendar.route) },
-                    onNavigateToDigest = { navController.navigate(Screen.Digest.route) }
+                    onNavigateToDigest = { navController.navigate(Screen.Digest.route) },
+                    syncAction = globalSyncAction
                 )
             }
 
@@ -289,7 +306,8 @@ fun FinPulseApp(
                     onSaveCurrentView = viewModel::saveCurrentFilterAsView,
                     onDeleteSavedView = viewModel::deleteSavedFilter,
                     onNavigateToReviewQueue = { navController.navigate(Screen.ReviewInbox.route) },
-                    onNavigateToCsvImport = { navController.navigate(Screen.CsvImport.route) }
+                    onNavigateToCsvImport = { navController.navigate(Screen.CsvImport.route) },
+                    syncAction = globalSyncAction
                 )
             }
 
@@ -315,7 +333,8 @@ fun FinPulseApp(
                     onSaveBudget = viewModel::saveBudget,
                     onDeleteBudget = viewModel::deleteBudget,
                     onToggleAssumptionsDialog = viewModel::toggleAssumptionsDialog,
-                    onSelectFilter = viewModel::setFilter
+                    onSelectFilter = viewModel::setFilter,
+                    syncAction = globalSyncAction
                 )
             }
 
@@ -334,7 +353,8 @@ fun FinPulseApp(
 
                 AnalyticsScreen(
                     uiState = uiState,
-                    onPeriodSelected = viewModel::onPeriodSelected
+                    onPeriodSelected = viewModel::onPeriodSelected,
+                    syncAction = globalSyncAction
                 )
             }
 
@@ -355,7 +375,8 @@ fun FinPulseApp(
                         hostActivity?.recreate()
                     },
                     onNavigate = { screen -> navController.navigate(screen.route) },
-                    errorReporter = container.errorReporter
+                    errorReporter = container.errorReporter,
+                    syncAction = globalSyncAction
                 )
             }
 
@@ -380,7 +401,8 @@ fun FinPulseApp(
                     onSaveAccount = viewModel::saveAccount,
                     onTransferFunds = viewModel::transferFunds,
                     onArchiveAccount = viewModel::archiveAccount,
-                    onDeleteAccount = viewModel::deleteAccount
+                    onDeleteAccount = viewModel::deleteAccount,
+                    syncAction = globalSyncAction
                 )
             }
 
@@ -415,7 +437,8 @@ fun FinPulseApp(
                     onEditOccurrence = viewModel::editOccurrence,
                     onToggleActive = viewModel::toggleActive,
                     onCancelRule = viewModel::cancelRule,
-                    onDeleteRecurring = viewModel::deleteRecurring
+                    onDeleteRecurring = viewModel::deleteRecurring,
+                    syncAction = globalSyncAction
                 )
             }
 
@@ -436,7 +459,8 @@ fun FinPulseApp(
                     onShowContributeDialog = viewModel::showContributeDialog,
                     onSaveGoal = viewModel::saveGoal,
                     onContribute = viewModel::contributeToGoal,
-                    onDeleteGoal = viewModel::deleteGoal
+                    onDeleteGoal = viewModel::deleteGoal,
+                    syncAction = globalSyncAction
                 )
             }
 
@@ -455,7 +479,8 @@ fun FinPulseApp(
                     onNavigateBack = { navController.popBackStack() },
                     onShowAddEditDialog = viewModel::showAddEditDialog,
                     onSaveAsset = viewModel::saveAsset,
-                    onDeleteAsset = viewModel::deleteAsset
+                    onDeleteAsset = viewModel::deleteAsset,
+                    syncAction = globalSyncAction
                 )
             }
 
@@ -477,7 +502,8 @@ fun FinPulseApp(
                     onShowPaymentDialog = viewModel::showPaymentDialog,
                     onSaveDebt = viewModel::saveDebt,
                     onMakePayment = viewModel::makePayment,
-                    onDeleteDebt = viewModel::deleteDebt
+                    onDeleteDebt = viewModel::deleteDebt,
+                    syncAction = globalSyncAction
                 )
             }
 
@@ -485,7 +511,8 @@ fun FinPulseApp(
             composable(Screen.Categories.route) {
                 CategoriesScreen(
                     categoryRepository = container.categoryRepository,
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = { navController.popBackStack() },
+                    syncAction = globalSyncAction
                 )
             }
 
@@ -540,12 +567,14 @@ fun FinPulseApp(
                         authRepository = container.authRepository,
                         cloudSyncRepository = container.cloudSyncRepository,
                         googleAuthManager = container.googleAuthManager,
-                        userPreferencesDataStore = container.userPreferencesDataStore
+                        userPreferencesDataStore = container.userPreferencesDataStore,
+                        cloudSyncCoordinator = container.cloudSyncCoordinator
                     )
                 }
                 md.alexlab.finpulse.presentation.account.AccountScreen(
                     viewModel = accountViewModel,
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = { navController.popBackStack() },
+                    syncAction = globalSyncAction
                 )
             }
 

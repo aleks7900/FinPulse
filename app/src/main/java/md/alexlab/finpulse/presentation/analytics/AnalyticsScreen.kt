@@ -47,6 +47,7 @@ import md.alexlab.finpulse.presentation.dashboard.TimeRangeSelector
 fun AnalyticsScreen(
     uiState: AnalyticsUiState,
     onPeriodSelected: (TimePeriod) -> Unit,
+    syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -59,6 +60,9 @@ fun AnalyticsScreen(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
+                },
+                actions = {
+                    syncAction()
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background

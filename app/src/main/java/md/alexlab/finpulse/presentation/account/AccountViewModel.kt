@@ -14,6 +14,7 @@ import md.alexlab.finpulse.domain.repository.CloudSyncRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -23,6 +24,10 @@ data class AccountUiState(
     val syncStatus: SyncStatus = SyncStatus.IDLE,
     val lastSyncTimestamp: Long = 0L,
     val pendingChangesCount: Int = 0,
+    val isAutoSyncEnabled: Boolean = true,
+    val isSyncOnStartupEnabled: Boolean = true,
+    val syncIntervalMinutes: Long = 60L,
+    val showIntervalDialog: Boolean = false,
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val successMessage: String? = null,
@@ -38,7 +43,8 @@ class AccountViewModel(
     private val authRepository: AuthRepository,
     private val cloudSyncRepository: CloudSyncRepository,
     private val googleAuthManager: GoogleAuthManager,
-    private val userPreferencesDataStore: UserPreferencesDataStore
+    private val userPreferencesDataStore: UserPreferencesDataStore,
+    private val cloudSyncCoordinator: md.alexlab.finpulse.data.sync.CloudSyncCoordinator? = null
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AccountUiState())
@@ -77,6 +83,54 @@ class AccountViewModel(
                 _uiState.update { it.copy(pendingChangesCount = count) }
             }
         }
+
+        // Collect user sync preferences
+        viewModelScope.launch {
+            userPreferencesDataStore.userPreferencesFlow.collect { prefs ->
+                _uiState.update {
+                    it.copy(
+                        isAutoSyncEnabled = prefs.isAutoSyncEnabled,
+                        isSyncOnStartupEnabled = prefs.isSyncOnStartupEnabled,
+                        syncIntervalMinutes = prefs.syncIntervalMinutes
+                    )
+                }
+            }
+        }
+    }
+
+    fun setAutoSyncEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            if (cloudSyncCoordinator != null) {
+                cloudSyncCoordinator.setAutoSyncEnabled(enabled)
+            } else {
+                userPreferencesDataStore.setAutoSyncEnabled(enabled)
+            }
+        }
+    }
+
+    fun setSyncOnStartupEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            if (cloudSyncCoordinator != null) {
+                cloudSyncCoordinator.setSyncOnStartupEnabled(enabled)
+            } else {
+                userPreferencesDataStore.setSyncOnStartupEnabled(enabled)
+            }
+        }
+    }
+
+    fun setSyncIntervalMinutes(minutes: Long) {
+        viewModelScope.launch {
+            if (cloudSyncCoordinator != null) {
+                cloudSyncCoordinator.setSyncIntervalMinutes(minutes)
+            } else {
+                userPreferencesDataStore.setSyncIntervalMinutes(minutes)
+            }
+            _uiState.update { it.copy(showIntervalDialog = false) }
+        }
+    }
+
+    fun showIntervalDialog(show: Boolean) {
+        _uiState.update { it.copy(showIntervalDialog = show) }
     }
 
     fun signInWithGoogle(activityContext: Context, webClientId: String) {
@@ -89,7 +143,8 @@ class AccountViewModel(
                 // Trigger initial migration / sync for newly signed-in user
                 cloudSyncRepository.handleAccountSwitch(previousUid = null, newUid = user.uid)
 
-                SyncWorker.schedulePeriodicSync(activityContext)
+                val prefs = userPreferencesDataStore.userPreferencesFlow.first()
+                SyncWorker.schedulePeriodicSync(activityContext, prefs.syncIntervalMinutes)
 
                 _uiState.update {
                     it.copy(
@@ -113,7 +168,11 @@ class AccountViewModel(
     fun performSync(context: Context? = null) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null, errorMessageRes = null) }
-            val result = cloudSyncRepository.performFullSync()
+            val result = if (cloudSyncCoordinator != null) {
+                cloudSyncCoordinator.sync(md.alexlab.finpulse.data.sync.SyncTrigger.MANUAL)
+            } else {
+                cloudSyncRepository.performFullSync()
+            }
             _uiState.update {
                 it.copy(
                     isLoading = false,

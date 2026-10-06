@@ -74,6 +74,7 @@ fun DebtScreen(
     onSaveDebt: (id: String?, name: String, type: DebtType, totalMinor: Long, remainingMinor: Long, rate: Double, minPaymentMinor: Long) -> Unit,
     onMakePayment: (debtId: String, amountMinor: Long) -> Unit,
     onDeleteDebt: (String) -> Unit,
+    syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -91,6 +92,9 @@ fun DebtScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
+                },
+                actions = {
+                    syncAction()
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
