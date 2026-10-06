@@ -7,7 +7,9 @@ enum class SyncStatus {
     SYNCING,
     SUCCESS,
     ERROR,
-    WAITING_FOR_NETWORK
+    WAITING_FOR_NETWORK,
+    OFFLINE,
+    PENDING_CHANGES
 }
 
 @Serializable

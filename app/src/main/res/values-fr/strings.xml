@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Ajout rapide</string>
     <string name="shortcut_quick_add_long">Ajouter une opération rapide</string>
@@ -1041,6 +1041,8 @@
     <string name="account_status_waiting_network">En attente de connexion internet</string>
     <string name="account_status_error">Erreur de synchronisation</string>
     <string name="account_status_idle">Inactif</string>
+    <string name="account_status_offline">Hors ligne</string>
+    <string name="account_status_pending_changes">Modifications en attente</string>
     <string name="account_unsynced_dialog_title">Modifications non synchronisées</string>
     <string name="account_unsynced_dialog_desc">Vous avez %1$d modifications qui n\'ont pas encore été synchronisées dans le cloud. Voulez-vous les synchroniser avant de vous déconnecter?</string>
     <string name="account_sync_and_sign_out">Synchroniser et se déconnecter</string>

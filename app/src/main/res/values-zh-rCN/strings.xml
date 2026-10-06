@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">快速记账</string>
     <string name="shortcut_quick_add_long">快速记录一笔交易</string>
@@ -1033,6 +1033,8 @@
     <string name="account_status_waiting_network">等待网络连接</string>
     <string name="account_status_error">同步错误</string>
     <string name="account_status_idle">空闲</string>
+    <string name="account_status_offline">离线</string>
+    <string name="account_status_pending_changes">待同步更改</string>
     <string name="account_unsynced_dialog_title">未同步的更改</string>
     <string name="account_unsynced_dialog_desc">您有 %1$d 项更改尚未上传到云端。退出登录前要立即同步吗？</string>
     <string name="account_sync_and_sign_out">同步并退出</string>

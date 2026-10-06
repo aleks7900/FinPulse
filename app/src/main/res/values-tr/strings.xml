@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Hızlı Ekle</string>
     <string name="shortcut_quick_add_long">Hızlı İşlem Ekle</string>
@@ -1041,6 +1041,8 @@
     <string name="account_status_waiting_network">İnternet bağlantısı bekleniyor</string>
     <string name="account_status_error">Senkronizasyon Hatası</string>
     <string name="account_status_idle">Boşta</string>
+    <string name="account_status_offline">Çevrimdışı</string>
+    <string name="account_status_pending_changes">Bekleyen değişiklikler</string>
     <string name="account_unsynced_dialog_title">Senkronize Edilmemiş Değişiklikler</string>
     <string name="account_unsynced_dialog_desc">Henüz buluta yüklenmemiş %1$d değişikliğiniz var. Çıkış yapmadan önce şimdi senkronize etmek ister misiniz?</string>
     <string name="account_sync_and_sign_out">Senkronize Et ve Çık</string>

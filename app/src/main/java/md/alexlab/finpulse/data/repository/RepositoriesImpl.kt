@@ -4,6 +4,8 @@ import md.alexlab.finpulse.core.database.FinPulseDatabase
 import md.alexlab.finpulse.core.database.dao.CategoryDao
 import md.alexlab.finpulse.core.database.entity.CategoryEntity
 import md.alexlab.finpulse.core.database.entity.SyncRecordEntity
+import md.alexlab.finpulse.core.database.dao.recordPendingUpsert
+import md.alexlab.finpulse.core.database.dao.recordPendingDelete
 import md.alexlab.finpulse.core.model.Money
 import md.alexlab.finpulse.data.mapper.toDomain
 import md.alexlab.finpulse.data.mapper.toEntity
@@ -54,40 +56,17 @@ class AccountRepositoryImpl(private val database: FinPulseDatabase) : AccountRep
 
     override suspend fun saveAccount(account: Account) {
         dao.insertAccount(account.toEntity())
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "ACCOUNT",
-                entityId = account.id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("ACCOUNT", account.id)
     }
 
     override suspend fun deleteAccount(id: String) {
         dao.deleteAccountById(id)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "ACCOUNT",
-                entityId = id,
-                syncStatus = "PENDING_DELETE",
-                localUpdatedAt = System.currentTimeMillis(),
-                isDeleted = true,
-                deletedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingDelete("ACCOUNT", id)
     }
 
     override suspend fun setArchived(id: String, isArchived: Boolean) {
         dao.setArchived(id, isArchived)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "ACCOUNT",
-                entityId = id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("ACCOUNT", id)
     }
 
     override suspend fun updateBalances(accountId: String, balance: Money, availableBalance: Money) {
@@ -127,14 +106,7 @@ class TransactionRepositoryImpl(private val database: FinPulseDatabase) : Transa
         // Enforce balance update in accounts
         applyTransactionBalanceChange(transaction, isReversal = false)
         txDao.insertTransaction(transaction.toEntity())
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "TRANSACTION",
-                entityId = transaction.id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("TRANSACTION", transaction.id, transaction.createdAt)
     }
 
     override suspend fun updateTransaction(transaction: Transaction) {
@@ -146,14 +118,7 @@ class TransactionRepositoryImpl(private val database: FinPulseDatabase) : Transa
         // Apply new balance change
         applyTransactionBalanceChange(transaction, isReversal = false)
         txDao.updateTransaction(transaction.toEntity())
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "TRANSACTION",
-                entityId = transaction.id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("TRANSACTION", transaction.id)
     }
 
     override suspend fun deleteTransaction(id: String) {
@@ -161,16 +126,7 @@ class TransactionRepositoryImpl(private val database: FinPulseDatabase) : Transa
         if (existing != null) {
             applyTransactionBalanceChange(existing, isReversal = true)
             txDao.deleteTransactionById(id)
-            database.syncRecordDao().upsertSyncRecord(
-                SyncRecordEntity(
-                    entityType = "TRANSACTION",
-                    entityId = id,
-                    syncStatus = "PENDING_DELETE",
-                    localUpdatedAt = System.currentTimeMillis(),
-                    isDeleted = true,
-                    deletedAt = System.currentTimeMillis()
-                )
-            )
+            database.syncRecordDao().recordPendingDelete("TRANSACTION", id)
         }
     }
 
@@ -197,14 +153,7 @@ class TransactionRepositoryImpl(private val database: FinPulseDatabase) : Transa
             matchedRuleId = matchedRuleId,
             confidence = confidence
         )
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "TRANSACTION",
-                entityId = id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("TRANSACTION", id)
     }
 
     override suspend fun bulkUpdateCategory(ids: List<String>, categoryId: String, isConfirmed: Boolean, matchedRuleId: String?) {
@@ -214,16 +163,8 @@ class TransactionRepositoryImpl(private val database: FinPulseDatabase) : Transa
             isConfirmed = isConfirmed,
             matchedRuleId = matchedRuleId
         )
-        val now = System.currentTimeMillis()
         ids.forEach { id ->
-            database.syncRecordDao().upsertSyncRecord(
-                SyncRecordEntity(
-                    entityType = "TRANSACTION",
-                    entityId = id,
-                    syncStatus = "PENDING_UPSERT",
-                    localUpdatedAt = now
-                )
-            )
+            database.syncRecordDao().recordPendingUpsert("TRANSACTION", id)
         }
     }
 
@@ -316,14 +257,12 @@ class CategoryRepositoryImpl(
 
     override suspend fun saveCategory(category: Category) {
         dao.insertCategory(category.toEntity())
-        database?.syncRecordDao()?.upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "CATEGORY",
-                entityId = category.id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database?.syncRecordDao()?.recordPendingUpsert("CATEGORY", category.id)
+    }
+
+    override suspend fun deleteCategory(id: String) {
+        dao.deleteCategoryById(id)
+        database?.syncRecordDao()?.recordPendingDelete("CATEGORY", id)
     }
 
     override suspend fun seedDefaultCategoriesIfNeeded() {
@@ -346,28 +285,12 @@ class BudgetRepositoryImpl(private val database: FinPulseDatabase) : BudgetRepos
 
     override suspend fun saveBudget(budget: Budget) {
         dao.insertBudget(budget.toEntity())
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "BUDGET",
-                entityId = budget.id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("BUDGET", budget.id)
     }
 
     override suspend fun deleteBudget(id: String) {
         dao.deleteBudgetById(id)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "BUDGET",
-                entityId = id,
-                syncStatus = "PENDING_DELETE",
-                localUpdatedAt = System.currentTimeMillis(),
-                isDeleted = true,
-                deletedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingDelete("BUDGET", id)
     }
 }
 
@@ -394,54 +317,24 @@ class RecurringRepositoryImpl(
 
     override suspend fun saveRecurring(recurring: RecurringTransaction) {
         dao.insertRecurring(recurring.toEntity())
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "RECURRING_RULE",
-                entityId = recurring.id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("RECURRING_RULE", recurring.id)
     }
 
     override suspend fun deleteRecurring(id: String) {
         // Soft delete / cancel or hard delete rule
         // Note: Historical transactions with recurringRuleId are preserved in ledger
         dao.deleteRecurringById(id)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "RECURRING_RULE",
-                entityId = id,
-                syncStatus = "PENDING_DELETE",
-                localUpdatedAt = System.currentTimeMillis(),
-                isDeleted = true,
-                deletedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingDelete("RECURRING_RULE", id)
     }
 
     override suspend fun setRuleActive(id: String, isActive: Boolean) {
         dao.setRuleActive(id, isActive)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "RECURRING_RULE",
-                entityId = id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("RECURRING_RULE", id)
     }
 
     override suspend fun cancelRule(id: String) {
         dao.cancelRule(id)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "RECURRING_RULE",
-                entityId = id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("RECURRING_RULE", id)
     }
 
     override suspend fun getOccurrenceById(id: String): RecurringOccurrence? {
@@ -553,28 +446,12 @@ class GoalRepositoryImpl(private val database: FinPulseDatabase) : GoalRepositor
 
     override suspend fun saveGoal(goal: FinancialGoal) {
         dao.insertGoal(goal.toEntity())
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "GOAL",
-                entityId = goal.id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("GOAL", goal.id)
     }
 
     override suspend fun deleteGoal(id: String) {
         dao.deleteGoalById(id)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "GOAL",
-                entityId = id,
-                syncStatus = "PENDING_DELETE",
-                localUpdatedAt = System.currentTimeMillis(),
-                isDeleted = true,
-                deletedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingDelete("GOAL", id)
     }
 
     override suspend fun contributeToGoal(goalId: String, amount: Money) {
@@ -582,14 +459,7 @@ class GoalRepositoryImpl(private val database: FinPulseDatabase) : GoalRepositor
         val newAmount = goal.currentAmountMinor + amount.amountMinor
         val isCompleted = newAmount >= goal.targetAmountMinor
         dao.updateProgress(goalId, newAmount, isCompleted)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "GOAL",
-                entityId = goalId,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("GOAL", goalId)
     }
 }
 
@@ -604,40 +474,17 @@ class InvestmentRepositoryImpl(private val database: FinPulseDatabase) : Investm
 
     override suspend fun saveAsset(asset: InvestmentAsset) {
         dao.insertAsset(asset.toEntity())
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "ASSET",
-                entityId = asset.id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("ASSET", asset.id)
     }
 
     override suspend fun deleteAsset(id: String) {
         dao.deleteAssetById(id)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "ASSET",
-                entityId = id,
-                syncStatus = "PENDING_DELETE",
-                localUpdatedAt = System.currentTimeMillis(),
-                isDeleted = true,
-                deletedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingDelete("ASSET", id)
     }
 
     override suspend fun updateAssetPrice(id: String, currentPrice: Money) {
         dao.updatePrice(id, currentPrice.amountMinor)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "ASSET",
-                entityId = id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("ASSET", id)
     }
 }
 
@@ -652,42 +499,19 @@ class DebtRepositoryImpl(private val database: FinPulseDatabase) : DebtRepositor
 
     override suspend fun saveDebt(debt: Debt) {
         dao.insertDebt(debt.toEntity())
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "DEBT",
-                entityId = debt.id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("DEBT", debt.id)
     }
 
     override suspend fun deleteDebt(id: String) {
         dao.deleteDebtById(id)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "DEBT",
-                entityId = id,
-                syncStatus = "PENDING_DELETE",
-                localUpdatedAt = System.currentTimeMillis(),
-                isDeleted = true,
-                deletedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingDelete("DEBT", id)
     }
 
     override suspend fun makePayment(debtId: String, paymentAmount: Money) {
         val debt = dao.getDebtById(debtId) ?: return
         val newBalance = (debt.remainingBalanceMinor - paymentAmount.amountMinor).coerceAtLeast(0L)
         dao.updateBalance(debtId, newBalance)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "DEBT",
-                entityId = debtId,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("DEBT", debtId)
     }
 }
 
@@ -708,52 +532,22 @@ class CategorizationRuleRepositoryImpl(private val database: FinPulseDatabase) :
 
     override suspend fun saveRule(rule: md.alexlab.finpulse.domain.model.CategorizationRule) {
         dao.insertRule(rule.toEntity())
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "CATEGORIZATION_RULE",
-                entityId = rule.id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("CATEGORIZATION_RULE", rule.id)
     }
 
     override suspend fun deleteRule(id: String) {
         dao.deleteRuleById(id)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "CATEGORIZATION_RULE",
-                entityId = id,
-                syncStatus = "PENDING_DELETE",
-                localUpdatedAt = System.currentTimeMillis(),
-                isDeleted = true,
-                deletedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingDelete("CATEGORIZATION_RULE", id)
     }
 
     override suspend fun setRuleActive(id: String, isActive: Boolean) {
         dao.setRuleActive(id, isActive)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "CATEGORIZATION_RULE",
-                entityId = id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("CATEGORIZATION_RULE", id)
     }
 
     override suspend fun updateRulePriority(id: String, priority: Int) {
         dao.updateRulePriority(id, priority)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "CATEGORIZATION_RULE",
-                entityId = id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("CATEGORIZATION_RULE", id)
     }
 
     override suspend fun seedDefaultRulesIfNeeded() {
@@ -1022,28 +816,12 @@ class SavedFilterRepositoryImpl(private val database: FinPulseDatabase) : SavedF
 
     override suspend fun saveFilter(savedFilter: SavedFilter) {
         dao.insertSavedFilter(savedFilter.toEntity())
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "SAVED_FILTER",
-                entityId = savedFilter.id,
-                syncStatus = "PENDING_UPSERT",
-                localUpdatedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingUpsert("SAVED_FILTER", savedFilter.id)
     }
 
     override suspend fun deleteFilter(id: String) {
         dao.deleteSavedFilterById(id)
-        database.syncRecordDao().upsertSyncRecord(
-            SyncRecordEntity(
-                entityType = "SAVED_FILTER",
-                entityId = id,
-                syncStatus = "PENDING_DELETE",
-                localUpdatedAt = System.currentTimeMillis(),
-                isDeleted = true,
-                deletedAt = System.currentTimeMillis()
-            )
-        )
+        database.syncRecordDao().recordPendingDelete("SAVED_FILTER", id)
     }
 }
 

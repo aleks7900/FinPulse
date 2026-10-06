@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="app_name">FinPulse</string>
     <string name="shortcut_quick_add_short">Adicionar Rápido</string>
     <string name="shortcut_quick_add_long">Adicionar Transação Rápida</string>
@@ -1041,6 +1041,8 @@
     <string name="account_status_waiting_network">Aguardando conexão</string>
     <string name="account_status_error">Erro de sincronização</string>
     <string name="account_status_idle">Inativo</string>
+    <string name="account_status_offline">Offline</string>
+    <string name="account_status_pending_changes">Alterações pendentes</string>
     <string name="account_unsynced_dialog_title">Alterações Não Sincronizadas</string>
     <string name="account_unsynced_dialog_desc">Você tem %1$d alterações que ainda não foram enviadas para a nuvem. Deseja sincronizá-las antes de sair?</string>
     <string name="account_sync_and_sign_out">Sincronizar e Sair</string>

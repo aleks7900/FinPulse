@@ -73,6 +73,7 @@ interface AppContainer {
     val cloudSettingsDataSource: md.alexlab.finpulse.data.cloud.CloudSettingsDataSource
     val settingsRepository: md.alexlab.finpulse.domain.repository.SettingsRepository
     val cloudSyncRepository: md.alexlab.finpulse.domain.repository.CloudSyncRepository
+    val networkMonitor: md.alexlab.finpulse.core.network.NetworkConnectivityMonitor
     val getFinancialDigestUseCase: md.alexlab.finpulse.domain.usecase.digest.GetFinancialDigestUseCase
     val exchangeRateProvider: md.alexlab.finpulse.domain.repository.ExchangeRateProvider
     val currencyConverter: md.alexlab.finpulse.domain.engine.CurrencyConverter
@@ -323,6 +324,10 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
         )
     }
 
+    override val networkMonitor: md.alexlab.finpulse.core.network.NetworkConnectivityMonitor by lazy {
+        md.alexlab.finpulse.core.network.AndroidNetworkConnectivityMonitor(context)
+    }
+
     override val cloudSyncRepository: md.alexlab.finpulse.domain.repository.CloudSyncRepository by lazy {
         md.alexlab.finpulse.data.sync.CloudSyncEngine(
             database = database,
@@ -330,6 +335,7 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
             userPreferencesDataStore = userPreferencesDataStore,
             authRepository = authRepository,
             settingsRepository = settingsRepository,
+            networkMonitor = networkMonitor,
             errorReporter = errorReporter
         )
     }

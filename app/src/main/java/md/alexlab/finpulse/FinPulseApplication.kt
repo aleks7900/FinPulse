@@ -6,6 +6,9 @@ import md.alexlab.finpulse.di.DefaultAppContainer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 class FinPulseApplication : Application() {
@@ -46,6 +49,37 @@ class FinPulseApplication : Application() {
         // Schedule periodic background cloud synchronization
         md.alexlab.finpulse.core.work.SyncWorker.schedulePeriodicSync(this)
 
+        // Initialize cloud sync engine & startup sync trigger
+        applicationScope.launch {
+            (container.cloudSyncRepository as? md.alexlab.finpulse.data.sync.CloudSyncEngine)?.initialize()
+            if (container.authRepository.isAuthenticated && container.networkMonitor.isCurrentlyOnline()) {
+                container.cloudSyncRepository.performFullSync()
+            }
+        }
+
+        // Connectivity restoration trigger
+        applicationScope.launch {
+            container.networkMonitor.isOnline.collect { online ->
+                if (online && container.authRepository.isAuthenticated) {
+                    container.cloudSyncRepository.performFullSync()
+                }
+            }
+        }
+
+        // Auto-push trigger after local modifications when online (debounced)
+        applicationScope.launch {
+            @OptIn(kotlinx.coroutines.FlowPreview::class)
+            container.cloudSyncRepository.pendingChangesCount
+                .drop(1)
+                .filter { it > 0 }
+                .debounce(1000L)
+                .collect {
+                    if (container.authRepository.isAuthenticated && container.networkMonitor.isCurrentlyOnline()) {
+                        container.cloudSyncRepository.performFullSync()
+                    }
+                }
+        }
+
         // Schedule periodic financial digest checks
         md.alexlab.finpulse.core.work.FinancialDigestWorker.schedulePeriodicDigest(this)
 
@@ -53,3 +87,4 @@ class FinPulseApplication : Application() {
         md.alexlab.finpulse.core.work.ExchangeRateSyncWorker.schedulePeriodicSync(this)
     }
 }
+

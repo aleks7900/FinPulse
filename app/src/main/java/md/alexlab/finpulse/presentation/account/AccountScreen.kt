@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.CloudSync
+import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material.icons.filled.ErrorOutline
@@ -703,7 +704,8 @@ private fun SyncStatusBadge(status: SyncStatus) {
     val (label, icon, color) = when (status) {
         SyncStatus.SUCCESS -> Triple(stringResource(R.string.account_status_synced), Icons.Default.CheckCircle, EmeraldPrimary)
         SyncStatus.SYNCING -> Triple(stringResource(R.string.account_status_syncing), Icons.Default.Sync, SapphireAccent)
-        SyncStatus.WAITING_FOR_NETWORK -> Triple(stringResource(R.string.account_status_waiting_network), Icons.Default.CloudOff, AmberWarning)
+        SyncStatus.WAITING_FOR_NETWORK, SyncStatus.OFFLINE -> Triple(stringResource(R.string.account_status_waiting_network), Icons.Default.CloudOff, AmberWarning)
+        SyncStatus.PENDING_CHANGES -> Triple(stringResource(R.string.account_status_pending_changes), Icons.Default.CloudUpload, AmberWarning)
         SyncStatus.ERROR -> Triple(stringResource(R.string.account_status_error), Icons.Default.ErrorOutline, CrimsonExpense)
         SyncStatus.IDLE -> Triple(stringResource(R.string.account_status_idle), Icons.Default.Cloud, MaterialTheme.colorScheme.onSurfaceVariant)
     }

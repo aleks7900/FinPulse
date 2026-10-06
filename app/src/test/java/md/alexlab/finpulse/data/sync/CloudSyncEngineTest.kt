@@ -7,6 +7,8 @@ import md.alexlab.finpulse.core.database.dao.AccountDao
 import md.alexlab.finpulse.core.database.dao.CategoryDao
 import md.alexlab.finpulse.core.database.dao.SyncRecordDao
 import md.alexlab.finpulse.core.database.dao.TransactionDao
+import md.alexlab.finpulse.core.database.dao.recordPendingDelete
+import md.alexlab.finpulse.core.database.dao.recordPendingUpsert
 import md.alexlab.finpulse.core.database.entity.AccountEntity
 import md.alexlab.finpulse.core.database.entity.CategoryEntity
 import md.alexlab.finpulse.core.database.entity.SyncRecordEntity
@@ -384,6 +386,197 @@ class CloudSyncEngineTest {
         val finalCloudDocs = inMemoryCloud.downloadRecords(userA.uid, "transactions", 0L).getOrNull()
         assertEquals(1, finalCloudDocs?.size) // Still exactly 1 record, zero duplicates
         assertEquals(1, fakeTransactionDao.getAllTransactions().size)
+    }
+
+    @Test
+    fun `equal timestamps - no-op neither side overwrites`() = testScope.runTest {
+        val tx = createSampleTransactionEntity(id = "tx-eq", amount = 4000L, createdAt = 5000L)
+        fakeTransactionDao.insertTransaction(tx)
+        fakeSyncDao.upsertSyncRecord(
+            SyncRecordEntity("TRANSACTION", "tx-eq", "SYNCED", 5000L, 5000L)
+        )
+
+        val cloudRecord = CloudEntityRecord(
+            id = "tx-eq",
+            collection = "transactions",
+            jsonPayload = json.encodeToString(tx.toDomain()),
+            updatedAt = 5000L,
+            isDeleted = false
+        )
+        inMemoryCloud.uploadRecords(userA.uid, "transactions", listOf(cloudRecord))
+
+        val result = syncEngine.performFullSync()
+        assertTrue(result.isSuccess)
+        val syncResult = result.getOrNull()
+        assertNotNull(syncResult)
+        assertEquals(0, syncResult?.uploadedCount)
+        assertEquals(0, syncResult?.downloadedCount)
+        assertEquals(0, syncResult?.deletedCount)
+        assertEquals(0, syncResult?.conflictsResolvedCount)
+    }
+
+    @Test
+    fun `dependency ordering - accounts and categories synced before dependent transactions`() = testScope.runTest {
+        val newAccount = AccountEntity(
+            id = "acc-parent",
+            name = "Savings",
+            type = "SAVINGS",
+            balanceMinor = 500000L,
+            availableBalanceMinor = 500000L,
+            currencyCode = "USD",
+            isArchived = false,
+            createdAt = 1000L,
+            updatedAt = 1000L
+        )
+        val newCategory = CategoryEntity(
+            id = "cat-parent",
+            name = "Investments",
+            type = "EXPENSE",
+            parentCategoryId = null,
+            icon = "trending_up",
+            colorHex = 0x00FF00L,
+            isDefault = false,
+            sortOrder = 2
+        )
+        val dependentTx = TransactionEntity(
+            id = "tx-child",
+            amountMinor = 15000L,
+            currencyCode = "USD",
+            type = "EXPENSE",
+            sourceAccountId = "acc-parent",
+            destinationAccountId = null,
+            categoryId = "cat-parent",
+            merchant = "Brokerage",
+            timestamp = 1718000000000L,
+            description = "Index Fund",
+            tags = "",
+            notes = null,
+            recurringRuleId = null,
+            isExcludedFromBudget = false,
+            isCategoryConfirmed = true,
+            categorizationConfidence = 1.0f,
+            matchedRuleId = null,
+            createdAt = 1000L
+        )
+
+        inMemoryCloud.uploadRecords(
+            userA.uid,
+            "accounts",
+            listOf(CloudEntityRecord("acc-parent", "accounts", json.encodeToString(newAccount.toDomain()), 1000L))
+        )
+        inMemoryCloud.uploadRecords(
+            userA.uid,
+            "categories",
+            listOf(CloudEntityRecord("cat-parent", "categories", json.encodeToString(newCategory.toDomain()), 1000L))
+        )
+        inMemoryCloud.uploadRecords(
+            userA.uid,
+            "transactions",
+            listOf(CloudEntityRecord("tx-child", "transactions", json.encodeToString(dependentTx.toDomain()), 1000L))
+        )
+
+        val result = syncEngine.performFullSync()
+        assertTrue(result.isSuccess)
+
+        // Verify all entities exist locally and foreign key references are intact
+        assertNotNull(fakeAccountDao.getAccountById("acc-parent"))
+        assertNotNull(fakeCategoryDao.getCategoryById("cat-parent"))
+        val localTx = fakeTransactionDao.getTransactionById("tx-child")
+        assertNotNull(localTx)
+        assertEquals("acc-parent", localTx?.sourceAccountId)
+        assertEquals("cat-parent", localTx?.categoryId)
+    }
+
+    @Test
+    fun `app restart with pending changes - state preserved in room and synced on next start`() = testScope.runTest {
+        // App saves transaction offline before termination
+        val tx = createSampleTransactionEntity(id = "tx-saved-before-close", amount = 8500L, createdAt = 1000L)
+        fakeTransactionDao.insertTransaction(tx)
+        fakeSyncDao.upsertSyncRecord(
+            SyncRecordEntity("TRANSACTION", tx.id, "PENDING_UPSERT", 1000L, 0L)
+        )
+
+        assertEquals(1, fakeSyncDao.getPendingCount())
+
+        // App restarts: new CloudSyncEngine instance created with existing database
+        val restartedSyncEngine = CloudSyncEngine(
+            database = mockDatabase,
+            cloudStorage = inMemoryCloud,
+            userPreferencesDataStore = mockDataStore,
+            authRepository = fakeAuthRepo,
+            dispatcher = testDispatcher
+        )
+        restartedSyncEngine.initialize()
+
+        // Sync triggers on app start
+        val result = restartedSyncEngine.performFullSync()
+        assertTrue(result.isSuccess)
+        assertEquals(1, result.getOrNull()?.uploadedCount)
+        assertEquals(0, fakeSyncDao.getPendingCount())
+
+        val cloudDocs = inMemoryCloud.downloadRecords(userA.uid, "transactions", 0L).getOrNull()
+        assertEquals(1, cloudDocs?.size)
+        assertEquals("tx-saved-before-close", cloudDocs?.first()?.id)
+    }
+
+    @Test
+    fun `two device synchronization scenario - phone A changes, syncs, phone B updates, phone A receives`() = testScope.runTest {
+        // Step 1: Phone A creates Account at 10:00 (t=1000)
+        val initialAcc = AccountEntity(
+            id = "acc-shared",
+            name = "Checking",
+            type = "CHECKING",
+            balanceMinor = 10000L,
+            availableBalanceMinor = 10000L,
+            currencyCode = "USD",
+            isArchived = false,
+            createdAt = 1000L,
+            updatedAt = 1000L
+        )
+        fakeAccountDao.insertAccount(initialAcc)
+        fakeSyncDao.upsertSyncRecord(
+            SyncRecordEntity("ACCOUNT", "acc-shared", "PENDING_UPSERT", 1000L, 0L)
+        )
+
+        val sync1 = syncEngine.performFullSync()
+        assertTrue(sync1.isSuccess)
+
+        // Step 2: Phone B modifies Account at 10:10 (t=2000) and syncs to cloud
+        val phoneBUpdatedAcc = initialAcc.copy(balanceMinor = 25000L, availableBalanceMinor = 25000L, updatedAt = 2000L)
+        inMemoryCloud.uploadRecords(
+            userA.uid,
+            "accounts",
+            listOf(CloudEntityRecord("acc-shared", "accounts", json.encodeToString(phoneBUpdatedAcc.toDomain()), 2000L))
+        )
+
+        // Step 3: Phone A synchronizes at 10:11 (t=2100)
+        val sync2 = syncEngine.performFullSync()
+        assertTrue(sync2.isSuccess)
+
+        // Phone A receives Phone B's newer version
+        val phoneAResult = fakeAccountDao.getAccountById("acc-shared")
+        assertNotNull(phoneAResult)
+        assertEquals(25000L, phoneAResult?.balanceMinor)
+        val localSync = fakeSyncDao.getSyncRecord("ACCOUNT", "acc-shared")
+        assertEquals(2000L, localSync?.cloudUpdatedAt)
+    }
+
+    @Test
+    fun `timestamp monotonicity - backward client clock never regresses below remote timestamp`() = testScope.runTest {
+        // Cloud has entity with remote updatedAt = 10000L
+        fakeSyncDao.upsertSyncRecord(
+            SyncRecordEntity("TRANSACTION", "tx-skew", "SYNCED", 10000L, 10000L)
+        )
+
+        // Client clock is backward / drifted to 5000L
+        val recordedSafeTimestamp = fakeSyncDao.recordPendingUpsert("TRANSACTION", "tx-skew", timestamp = 5000L)
+
+        // Must be strictly greater than 10000L
+        assertTrue(
+            "Expected safe timestamp > 10000L but got $recordedSafeTimestamp",
+            recordedSafeTimestamp > 10000L
+        )
+        assertEquals(10001L, recordedSafeTimestamp)
     }
 
     // Helper builders

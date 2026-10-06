@@ -5,6 +5,7 @@ import androidx.room.withTransaction
 import md.alexlab.finpulse.core.database.FinPulseDatabase
 import md.alexlab.finpulse.core.database.entity.SyncRecordEntity
 import md.alexlab.finpulse.core.datastore.UserPreferencesDataStore
+import md.alexlab.finpulse.core.network.NetworkConnectivityMonitor
 import md.alexlab.finpulse.data.cloud.CloudEntityRecord
 import md.alexlab.finpulse.data.cloud.CloudStorageDataSource
 import md.alexlab.finpulse.data.mapper.toDomain
@@ -22,8 +23,6 @@ import md.alexlab.finpulse.data.cloud.DataStoreLocalSettingsDataSource
 import md.alexlab.finpulse.data.cloud.FirestoreCloudSettingsDataSource
 import md.alexlab.finpulse.data.repository.SettingsRepositoryImpl
 import md.alexlab.finpulse.domain.model.Transaction
-import md.alexlab.finpulse.domain.model.sync.CloudAccountSettings
-import md.alexlab.finpulse.domain.model.sync.CloudSettings
 import md.alexlab.finpulse.domain.model.sync.SyncEntityType
 import md.alexlab.finpulse.domain.model.sync.SyncResult
 import md.alexlab.finpulse.domain.model.sync.SyncStatus
@@ -47,6 +46,7 @@ class CloudSyncEngine(
     private val userPreferencesDataStore: UserPreferencesDataStore,
     private val authRepository: AuthRepository,
     private val settingsRepository: SettingsRepository? = null,
+    private val networkMonitor: NetworkConnectivityMonitor? = null,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val errorReporter: md.alexlab.finpulse.core.reporting.ErrorReporter = md.alexlab.finpulse.core.reporting.NoOpErrorReporter()
 ) : CloudSyncRepository {
@@ -69,6 +69,9 @@ class CloudSyncEngine(
     suspend fun initialize() {
         val prefs = userPreferencesDataStore.userPreferencesFlow.first()
         _lastSyncTimestamp.value = prefs.lastSyncTimestamp
+        if (networkMonitor != null && !networkMonitor.isCurrentlyOnline()) {
+            _syncStatus.value = SyncStatus.WAITING_FOR_NETWORK
+        }
     }
 
     override suspend fun performFullSync(): Result<SyncResult> = withContext(dispatcher) {
@@ -79,38 +82,29 @@ class CloudSyncEngine(
             return@withContext Result.failure(IllegalStateException("No authenticated user for cloud sync"))
         }
 
+        if (networkMonitor != null && !networkMonitor.isCurrentlyOnline()) {
+            Log.w(TAG, "performFullSync aborted: Network is offline")
+            _syncStatus.value = SyncStatus.WAITING_FOR_NETWORK
+            return@withContext Result.failure(IllegalStateException("Device is offline / waiting for network connection"))
+        }
+
         Log.i(TAG, "Starting performFullSync for user ${user.uid}")
         errorReporter.log("Starting full cloud sync")
         _syncStatus.value = SyncStatus.SYNCING
         try {
-            val prefs = userPreferencesDataStore.userPreferencesFlow.first()
-            val sinceTimestamp = prefs.lastSyncTimestamp
-
-            // 1. Upload pending local changes
-            val uploadResult = uploadPendingChangesInternal(user.uid)
-
-            // 2. Download remote changes since last sync
-            val downloadResult = downloadRemoteChangesInternal(user.uid, sinceTimestamp)
-
-            // 3. Sync portable account settings
-            syncSettingsInternal(user.uid)
+            val syncResult = reconcileEntities(user.uid)
 
             val now = System.currentTimeMillis()
             _lastSyncTimestamp.value = now
             _syncStatus.value = SyncStatus.SUCCESS
             userPreferencesDataStore.setSyncState("SUCCESS", now, null)
 
-            val totalResult = SyncResult(
-                isSuccess = true,
-                uploadedCount = uploadResult.uploadedCount,
-                downloadedCount = downloadResult.downloadedCount,
-                deletedCount = uploadResult.deletedCount + downloadResult.deletedCount,
-                conflictsResolvedCount = downloadResult.conflictsResolvedCount,
-                syncedAt = now
+            Log.i(
+                TAG,
+                "performFullSync completed: uploaded=${syncResult.uploadedCount}, downloaded=${syncResult.downloadedCount}, deleted=${syncResult.deletedCount}, conflicts=${syncResult.conflictsResolvedCount}"
             )
-            Log.i(TAG, "performFullSync finished successfully: uploaded=${totalResult.uploadedCount}, downloaded=${totalResult.downloadedCount}, deleted=${totalResult.deletedCount}")
             errorReporter.log("Full cloud sync completed successfully")
-            Result.success(totalResult)
+            Result.success(syncResult)
         } catch (t: Throwable) {
             Log.e(TAG, "performFullSync failed for ${user.uid}: ${t.message}", t)
             errorReporter.recordException(
@@ -123,19 +117,23 @@ class CloudSyncEngine(
                     )
                 )
             )
-            _syncStatus.value = SyncStatus.ERROR
+            val isOffline = networkMonitor?.isCurrentlyOnline() == false ||
+                t.message?.contains("network", ignoreCase = true) == true ||
+                t.message?.contains("unable to resolve", ignoreCase = true) == true
+            _syncStatus.value = if (isOffline) SyncStatus.WAITING_FOR_NETWORK else SyncStatus.ERROR
             userPreferencesDataStore.setSyncState("ERROR", _lastSyncTimestamp.value, t.message)
             Result.failure(t)
         }
     }
 
     override suspend fun uploadPendingChanges(): Result<SyncResult> = withContext(dispatcher) {
-        val user = authRepository.currentUser.value ?: return@withContext Result.failure(IllegalStateException("User not logged in"))
+        val user = authRepository.currentUser.value
+            ?: return@withContext Result.failure(IllegalStateException("User not logged in"))
         _syncStatus.value = SyncStatus.SYNCING
         try {
-            val res = uploadPendingChangesInternal(user.uid)
+            val result = reconcileEntities(user.uid)
             _syncStatus.value = SyncStatus.SUCCESS
-            Result.success(res)
+            Result.success(result)
         } catch (t: Throwable) {
             errorReporter.recordException(
                 throwable = t,
@@ -150,13 +148,13 @@ class CloudSyncEngine(
     }
 
     override suspend fun downloadRemoteChanges(): Result<SyncResult> = withContext(dispatcher) {
-        val user = authRepository.currentUser.value ?: return@withContext Result.failure(IllegalStateException("User not logged in"))
+        val user = authRepository.currentUser.value
+            ?: return@withContext Result.failure(IllegalStateException("User not logged in"))
         _syncStatus.value = SyncStatus.SYNCING
         try {
-            val since = _lastSyncTimestamp.value
-            val res = downloadRemoteChangesInternal(user.uid, since)
+            val result = reconcileEntities(user.uid)
             _syncStatus.value = SyncStatus.SUCCESS
-            Result.success(res)
+            Result.success(result)
         } catch (t: Throwable) {
             errorReporter.recordException(
                 throwable = t,
@@ -170,90 +168,254 @@ class CloudSyncEngine(
         }
     }
 
-    private suspend fun uploadPendingChangesInternal(uid: String): SyncResult {
-        val pendingUpserts = syncDao.getPendingUpserts()
-        val pendingDeletes = syncDao.getPendingDeletes()
+    /**
+     * Executes bidirectional Latest-Change-Wins reconciliation across all entity collections.
+     * Guarantees that:
+     * - remote.updatedAt > local.updatedAt -> Remote wins, updates local
+     * - local.updatedAt > remote.updatedAt -> Local wins, uploads to cloud
+     * - local.updatedAt == remote.updatedAt -> No-op
+     * - Local-only -> Uploads if pending or unsynced
+     * - Remote-only -> Downloads locally unless tombstone
+     * - Deletions propagate reliably via tombstones without resurrection
+     * - Dependencies are preserved: Accounts & Categories applied before Transactions & Budgets
+     */
+    private suspend fun reconcileEntities(uid: String): SyncResult {
+        var totalUploaded = 0
+        var totalDownloaded = 0
+        var totalDeleted = 0
+        var totalConflicts = 0
 
-        var uploaded = 0
-        var deleted = 0
-
-        // Handle tombstones (pending deletes)
-        for (deleteRecord in pendingDeletes) {
-            val collection = getCollectionName(deleteRecord.entityType)
-            cloudStorage.recordTombstone(
-                uid = uid,
-                collection = collection,
-                id = deleteRecord.entityId,
-                deletedAt = deleteRecord.deletedAt ?: System.currentTimeMillis()
-            )
-            syncDao.markAsSynced(deleteRecord.entityType, deleteRecord.entityId, System.currentTimeMillis())
-            deleted++
-        }
-
-        // Group upserts by entity type and upload in batches
-        val byType = pendingUpserts.groupBy { it.entityType }
-        for ((type, records) in byType) {
-            val cloudRecords = mutableListOf<CloudEntityRecord>()
-            for (rec in records) {
-                val jsonPayload = serializeEntity(type, rec.entityId)
-                if (jsonPayload != null) {
-                    cloudRecords.add(
-                        CloudEntityRecord(
-                            id = rec.entityId,
-                            collection = getCollectionName(type),
-                            jsonPayload = jsonPayload,
-                            updatedAt = rec.localUpdatedAt,
-                            isDeleted = false
-                        )
-                    )
-                }
-            }
-
-            if (cloudRecords.isNotEmpty()) {
-                val count = cloudStorage.uploadRecords(uid, getCollectionName(type), cloudRecords).getOrThrow()
-                uploaded += count
-                val now = System.currentTimeMillis()
-                for (rec in records) {
-                    syncDao.markAsSynced(type, rec.entityId, now)
-                }
-            }
-        }
-
-        return SyncResult(isSuccess = true, uploadedCount = uploaded, deletedCount = deleted)
-    }
-
-    private suspend fun downloadRemoteChangesInternal(uid: String, sinceTimestamp: Long): SyncResult {
-        var downloaded = 0
-        var deleted = 0
-        var conflictsResolved = 0
-
-        val collections = listOf(
+        // Strict dependency order for entities (parents before children)
+        val entityTypesInOrder = listOf(
             SyncEntityType.ACCOUNT.name,
             SyncEntityType.CATEGORY.name,
-            SyncEntityType.TRANSACTION.name,
-            SyncEntityType.BUDGET.name,
-            SyncEntityType.RECURRING_RULE.name,
+            SyncEntityType.CATEGORIZATION_RULE.name,
+            SyncEntityType.SAVED_FILTER.name,
             SyncEntityType.GOAL.name,
             SyncEntityType.ASSET.name,
             SyncEntityType.DEBT.name,
-            SyncEntityType.CATEGORIZATION_RULE.name,
-            SyncEntityType.SAVED_FILTER.name
+            SyncEntityType.BUDGET.name,
+            SyncEntityType.RECURRING_RULE.name,
+            SyncEntityType.TRANSACTION.name
         )
 
-        for (type in collections) {
+        // Ensure all local entities in SQLite tables have corresponding sync_records
+        for (type in entityTypesInOrder) {
+            ensureLocalSyncRecordsForType(type)
+        }
+
+        data class ReconcileAction(
+            val type: String,
+            val id: String,
+            val applyRemoteUpsert: CloudEntityRecord? = null,
+            val applyRemoteDelete: CloudEntityRecord? = null,
+            val pushLocalUpsert: Boolean = false,
+            val pushLocalTombstone: Long? = null,
+            val isConflict: Boolean = false
+        )
+
+        val actions = mutableListOf<ReconcileAction>()
+
+        for (type in entityTypesInOrder) {
             val colName = getCollectionName(type)
-            val remoteRecords = cloudStorage.downloadRecords(uid, colName, sinceTimestamp).getOrThrow()
+            val remoteRecords = cloudStorage.downloadRecords(uid, colName, 0L).getOrThrow()
+            val remoteMap = remoteRecords.associateBy { it.id }
+            val localSyncMap = syncDao.getSyncRecordsForType(type).associateBy { it.entityId }
 
-            for (remote in remoteRecords) {
-                val localSync = syncDao.getSyncRecord(type, remote.id)
+            val allIds = (remoteMap.keys + localSyncMap.keys).toSet()
 
-                if (remote.isDeleted) {
-                    // Tombstone received from remote: delete locally
-                    deleteEntityLocally(type, remote.id)
+            for (id in allIds) {
+                val remote = remoteMap[id]
+                val local = localSyncMap[id]
+
+                if (remote != null && local != null) {
+                    val isLocalPending = local.syncStatus == "PENDING_UPSERT" ||
+                        local.syncStatus == "PENDING_DELETE" ||
+                        local.syncStatus == "FAILED"
+
+                    when {
+                        // Both sides deleted
+                        remote.isDeleted && local.isDeleted -> {
+                            if (local.localUpdatedAt > remote.updatedAt) {
+                                actions.add(
+                                    ReconcileAction(
+                                        type = type,
+                                        id = id,
+                                        pushLocalTombstone = local.deletedAt ?: local.localUpdatedAt,
+                                        isConflict = isLocalPending
+                                    )
+                                )
+                            } else {
+                                syncDao.markAsSynced(type, id, remote.updatedAt)
+                            }
+                        }
+
+                        // Remote is deleted, Local is active
+                        remote.isDeleted && !local.isDeleted -> {
+                            if (remote.updatedAt > local.localUpdatedAt) {
+                                Log.d(
+                                    TAG,
+                                    "Conflict [$type $id]: Remote deletion (${remote.updatedAt}) > Local active (${local.localUpdatedAt}) -> Remote deletion wins"
+                                )
+                                actions.add(ReconcileAction(type, id, applyRemoteDelete = remote, isConflict = true))
+                            } else if (local.localUpdatedAt > remote.updatedAt) {
+                                Log.d(
+                                    TAG,
+                                    "Conflict [$type $id]: Local active (${local.localUpdatedAt}) > Remote deletion (${remote.updatedAt}) -> Local active wins"
+                                )
+                                actions.add(ReconcileAction(type, id, pushLocalUpsert = true, isConflict = true))
+                            } else {
+                                // Equal timestamps: if local was actively modified pending, local wins; else remote delete wins
+                                if (isLocalPending) {
+                                    actions.add(ReconcileAction(type, id, pushLocalUpsert = true, isConflict = true))
+                                } else {
+                                    actions.add(ReconcileAction(type, id, applyRemoteDelete = remote, isConflict = true))
+                                }
+                            }
+                        }
+
+                        // Remote is active, Local is deleted
+                        !remote.isDeleted && local.isDeleted -> {
+                            if (local.localUpdatedAt > remote.updatedAt) {
+                                Log.d(
+                                    TAG,
+                                    "Conflict [$type $id]: Local deletion (${local.localUpdatedAt}) > Remote active (${remote.updatedAt}) -> Local deletion wins"
+                                )
+                                actions.add(
+                                    ReconcileAction(
+                                        type = type,
+                                        id = id,
+                                        pushLocalTombstone = local.deletedAt ?: local.localUpdatedAt,
+                                        isConflict = true
+                                    )
+                                )
+                            } else if (remote.updatedAt > local.localUpdatedAt) {
+                                Log.d(
+                                    TAG,
+                                    "Conflict [$type $id]: Remote active (${remote.updatedAt}) > Local deletion (${local.localUpdatedAt}) -> Remote active wins"
+                                )
+                                actions.add(ReconcileAction(type, id, applyRemoteUpsert = remote, isConflict = true))
+                            } else {
+                                // Equal timestamps: if local was actively pending delete, local wins; else remote wins
+                                if (isLocalPending) {
+                                    actions.add(
+                                        ReconcileAction(
+                                            type = type,
+                                            id = id,
+                                            pushLocalTombstone = local.deletedAt ?: local.localUpdatedAt,
+                                            isConflict = true
+                                        )
+                                    )
+                                } else {
+                                    actions.add(ReconcileAction(type, id, applyRemoteUpsert = remote, isConflict = true))
+                                }
+                            }
+                        }
+
+                        // Both sides active
+                        !remote.isDeleted && !local.isDeleted -> {
+                            when {
+                                remote.updatedAt > local.localUpdatedAt -> {
+                                    Log.d(
+                                        TAG,
+                                        "Reconcile [$type $id]: Remote (${remote.updatedAt}) > Local (${local.localUpdatedAt}) -> Remote wins"
+                                    )
+                                    actions.add(ReconcileAction(type, id, applyRemoteUpsert = remote, isConflict = isLocalPending))
+                                }
+                                local.localUpdatedAt > remote.updatedAt -> {
+                                    Log.d(
+                                        TAG,
+                                        "Reconcile [$type $id]: Local (${local.localUpdatedAt}) > Remote (${remote.updatedAt}) -> Local wins"
+                                    )
+                                    if (isLocalPending || local.cloudUpdatedAt != local.localUpdatedAt) {
+                                        actions.add(ReconcileAction(type, id, pushLocalUpsert = true, isConflict = isLocalPending))
+                                    }
+                                }
+                                else -> {
+                                    // Equal timestamps: no-op, ensure marked as SYNCED
+                                    if (local.syncStatus != "SYNCED" || local.cloudUpdatedAt != remote.updatedAt) {
+                                        syncDao.markAsSynced(type, id, remote.updatedAt)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (remote != null && local == null) {
+                    // Remote-only entity
+                    if (remote.isDeleted) {
+                        // Remote tombstone: record locally in sync_records to prevent resurrection
+                        syncDao.upsertSyncRecord(
+                            SyncRecordEntity(
+                                entityType = type,
+                                entityId = id,
+                                syncStatus = "SYNCED",
+                                localUpdatedAt = remote.updatedAt,
+                                cloudUpdatedAt = remote.updatedAt,
+                                isDeleted = true,
+                                deletedAt = remote.deletedAt ?: remote.updatedAt
+                            )
+                        )
+                    } else {
+                        Log.d(TAG, "Reconcile [$type $id]: Remote-only -> Download locally")
+                        actions.add(ReconcileAction(type = type, id = id, applyRemoteUpsert = remote))
+                    }
+                } else if (remote == null && local != null) {
+                    // Local-only entity
+                    if (local.isDeleted) {
+                        if (local.syncStatus == "PENDING_DELETE" || local.syncStatus == "FAILED" || local.localUpdatedAt > local.cloudUpdatedAt) {
+                            Log.d(TAG, "Reconcile [$type $id]: Local-only tombstone -> Push to cloud")
+                            actions.add(
+                                ReconcileAction(
+                                    type = type,
+                                    id = id,
+                                    pushLocalTombstone = local.deletedAt ?: local.localUpdatedAt
+                                )
+                            )
+                        } else {
+                            syncDao.markAsSynced(type, id, local.localUpdatedAt)
+                        }
+                    } else {
+                        Log.d(TAG, "Reconcile [$type $id]: Local-only -> Push to cloud")
+                        actions.add(ReconcileAction(type = type, id = id, pushLocalUpsert = true))
+                    }
+                }
+            }
+        }
+
+        // Apply Remote changes to Local Room Database in a single atomic transaction
+        database.withTransaction {
+            // Apply Remote Upserts in parent-to-child order
+            for (type in entityTypesInOrder) {
+                val upsertsForType = actions.filter { it.type == type && it.applyRemoteUpsert != null }
+                for (action in upsertsForType) {
+                    val remote = action.applyRemoteUpsert!!
+                    deserializeAndUpsertLocally(type, remote.jsonPayload)
                     syncDao.upsertSyncRecord(
                         SyncRecordEntity(
                             entityType = type,
-                            entityId = remote.id,
+                            entityId = action.id,
+                            syncStatus = "SYNCED",
+                            localUpdatedAt = remote.updatedAt,
+                            cloudUpdatedAt = remote.updatedAt,
+                            isDeleted = false,
+                            deletedAt = null
+                        )
+                    )
+                    totalDownloaded++
+                    if (action.isConflict) totalConflicts++
+                }
+            }
+
+            // Apply Remote Deletions in child-to-parent order (reverse)
+            for (type in entityTypesInOrder.reversed()) {
+                val deletesForType = actions.filter { it.type == type && it.applyRemoteDelete != null }
+                for (action in deletesForType) {
+                    val remote = action.applyRemoteDelete!!
+                    deleteEntityLocally(type, action.id)
+                    syncDao.upsertSyncRecord(
+                        SyncRecordEntity(
+                            entityType = type,
+                            entityId = action.id,
                             syncStatus = "SYNCED",
                             localUpdatedAt = remote.updatedAt,
                             cloudUpdatedAt = remote.updatedAt,
@@ -261,45 +423,107 @@ class CloudSyncEngine(
                             deletedAt = remote.deletedAt ?: remote.updatedAt
                         )
                     )
-                    deleted++
-                } else {
-                    // Remote upsert: Check Conflict Resolution (Last-Write-Wins)
-                    val shouldApplyRemote = if (localSync != null) {
-                        if (localSync.syncStatus == "PENDING_UPSERT" || localSync.syncStatus == "PENDING_DELETE") {
-                            conflictsResolved++
-                            // LWW: remote is applied only if remote timestamp >= local timestamp
-                            remote.updatedAt >= localSync.localUpdatedAt
-                        } else {
-                            true
-                        }
-                    } else {
-                        true
-                    }
+                    totalDeleted++
+                    if (action.isConflict) totalConflicts++
+                }
+            }
+        }
 
-                    if (shouldApplyRemote) {
-                        deserializeAndUpsertLocally(type, remote.jsonPayload)
-                        syncDao.upsertSyncRecord(
-                            SyncRecordEntity(
-                                entityType = type,
-                                entityId = remote.id,
-                                syncStatus = "SYNCED",
-                                localUpdatedAt = remote.updatedAt,
-                                cloudUpdatedAt = remote.updatedAt,
+        // Push Local Tombstones to Cloud
+        val tombstones = actions.filter { it.pushLocalTombstone != null }
+        for (t in tombstones) {
+            val colName = getCollectionName(t.type)
+            val deletedAt = t.pushLocalTombstone!!
+            cloudStorage.recordTombstone(uid, colName, t.id, deletedAt).getOrThrow()
+            syncDao.markAsSynced(t.type, t.id, deletedAt)
+            totalDeleted++
+            if (t.isConflict) totalConflicts++
+        }
+
+        // Push Local Upserts to Cloud in batches per collection
+        for (type in entityTypesInOrder) {
+            val upserts = actions.filter { it.type == type && it.pushLocalUpsert }
+            if (upserts.isNotEmpty()) {
+                val cloudRecords = mutableListOf<CloudEntityRecord>()
+                val validActions = mutableListOf<ReconcileAction>()
+                for (act in upserts) {
+                    val payload = serializeEntity(type, act.id)
+                    val localSync = syncDao.getSyncRecord(type, act.id)
+                    val updatedAt = localSync?.localUpdatedAt ?: System.currentTimeMillis()
+                    if (payload != null) {
+                        cloudRecords.add(
+                            CloudEntityRecord(
+                                id = act.id,
+                                collection = getCollectionName(type),
+                                jsonPayload = payload,
+                                updatedAt = updatedAt,
                                 isDeleted = false
                             )
                         )
-                        downloaded++
+                        validActions.add(act)
+                    }
+                }
+
+                if (cloudRecords.isNotEmpty()) {
+                    val uploaded = cloudStorage.uploadRecords(uid, getCollectionName(type), cloudRecords).getOrThrow()
+                    totalUploaded += uploaded
+                    for ((idx, act) in validActions.withIndex()) {
+                        val rec = cloudRecords[idx]
+                        syncDao.markAsSynced(type, act.id, rec.updatedAt)
+                        if (act.isConflict) totalConflicts++
                     }
                 }
             }
         }
 
+        // Synchronize portable account settings
+        syncSettingsInternal(uid)
+
         return SyncResult(
             isSuccess = true,
-            downloadedCount = downloaded,
-            deletedCount = deleted,
-            conflictsResolvedCount = conflictsResolved
+            uploadedCount = totalUploaded,
+            downloadedCount = totalDownloaded,
+            deletedCount = totalDeleted,
+            conflictsResolvedCount = totalConflicts,
+            syncedAt = System.currentTimeMillis()
         )
+    }
+
+    private suspend fun ensureLocalSyncRecordsForType(type: String) {
+        val existingSync = runCatching { syncDao.getSyncRecordsForType(type) }
+            .getOrDefault(emptyList())
+            .associateBy { it.entityId }
+
+        val localEntities: List<Pair<String, Long>> = runCatching {
+            when (type) {
+                "ACCOUNT" -> database.accountDao().getAllAccounts().map { it.id to it.updatedAt }
+                "CATEGORY" -> database.categoryDao().getAllCategories().map { it.id to System.currentTimeMillis() }
+                "TRANSACTION" -> database.transactionDao().getAllTransactions().map { it.id to it.createdAt }
+                "BUDGET" -> database.budgetDao().getAllBudgets().map { it.id to System.currentTimeMillis() }
+                "RECURRING_RULE" -> database.recurringTransactionDao().getAllRecurring().map { it.id to System.currentTimeMillis() }
+                "GOAL" -> database.financialGoalDao().getAllGoals().map { it.id to System.currentTimeMillis() }
+                "ASSET" -> database.assetDao().getAllAssets().map { it.id to it.lastUpdated }
+                "DEBT" -> database.debtDao().getAllDebts().map { it.id to System.currentTimeMillis() }
+                "CATEGORIZATION_RULE" -> database.categorizationRuleDao().getAllRules().map { it.id to System.currentTimeMillis() }
+                "SAVED_FILTER" -> database.savedFilterDao().getAllSavedFilters().map { it.id to System.currentTimeMillis() }
+                else -> emptyList()
+            }
+        }.getOrDefault(emptyList())
+
+        val missing = localEntities.filter { it.first !in existingSync }
+        if (missing.isNotEmpty()) {
+            val records = missing.map { (id, time) ->
+                SyncRecordEntity(
+                    entityType = type,
+                    entityId = id,
+                    syncStatus = "PENDING_UPSERT",
+                    localUpdatedAt = time,
+                    cloudUpdatedAt = 0L,
+                    isDeleted = false
+                )
+            }
+            syncDao.upsertSyncRecords(records)
+        }
     }
 
     private suspend fun syncSettingsInternal(uid: String) {
@@ -310,7 +534,6 @@ class CloudSyncEngine(
         )
         actualSettingsRepo.synchronize(uid)
     }
-
 
     override suspend fun migrateLocalDataToCloud(uid: String): Result<SyncResult> = withContext(dispatcher) {
         _syncStatus.value = SyncStatus.SYNCING
@@ -437,7 +660,7 @@ class CloudSyncEngine(
                 // Clear local data for clean restoration
                 clearLocalDatabaseTables()
 
-                // Download all collections
+                // Download all collections in hierarchical order
                 // 1. Categories
                 val categories = cloudStorage.downloadRecords(uid, "categories", 0L).getOrDefault(emptyList())
                 categories.filter { !it.isDeleted }.forEach { rec ->
@@ -543,26 +766,20 @@ class CloudSyncEngine(
     override suspend fun handleAccountSwitch(previousUid: String?, newUid: String): Result<Unit> = withContext(dispatcher) {
         try {
             if (previousUid != null && previousUid != newUid) {
-                // Clear local data completely before loading new user data to guarantee account isolation
                 clearLocalData()
             }
 
-            // Inspect cloud data for newUid
             val summary = cloudStorage.getUserSummary(newUid).getOrDefault(null)
             val hasRemoteData = summary != null && summary.totalRecords > 0
             val localTxCount = database.transactionDao().getAllTransactions().size
 
             if (hasRemoteData && localTxCount == 0) {
-                // New device/clean local state -> restore from cloud
                 restoreCloudDataToLocal(newUid)
             } else if (!hasRemoteData && localTxCount > 0) {
-                // Initial migration of existing local user
                 migrateLocalDataToCloud(newUid)
             } else if (hasRemoteData && localTxCount > 0) {
-                // Normal sync or merge
                 performFullSync()
             } else {
-                // Synchronize settings for initial setup
                 syncSettingsInternal(newUid)
             }
             Result.success(Unit)
@@ -641,10 +858,6 @@ class CloudSyncEngine(
     private suspend fun deserializeAndUpsertLocally(type: String, payload: String) {
         if (payload.isBlank()) return
         when (type) {
-            "TRANSACTION" -> {
-                val entity = json.decodeFromString<Transaction>(payload).toEntity()
-                database.transactionDao().insertTransaction(entity)
-            }
             "ACCOUNT" -> {
                 val entity = json.decodeFromString<Account>(payload).toEntity()
                 database.accountDao().insertAccount(entity)
@@ -652,6 +865,10 @@ class CloudSyncEngine(
             "CATEGORY" -> {
                 val entity = json.decodeFromString<Category>(payload).toEntity()
                 database.categoryDao().insertCategory(entity)
+            }
+            "TRANSACTION" -> {
+                val entity = json.decodeFromString<Transaction>(payload).toEntity()
+                database.transactionDao().insertTransaction(entity)
             }
             "BUDGET" -> {
                 val entity = json.decodeFromString<Budget>(payload).toEntity()

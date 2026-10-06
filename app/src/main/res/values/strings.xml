@@ -1041,6 +1041,8 @@
     <string name="account_status_waiting_network">Waiting for internet</string>
     <string name="account_status_error">Sync Error</string>
     <string name="account_status_idle">Idle</string>
+    <string name="account_status_offline">Offline</string>
+    <string name="account_status_pending_changes">Pending changes</string>
     <string name="account_unsynced_dialog_title">Unsynced Changes</string>
     <string name="account_unsynced_dialog_desc">You have %1$d changes that have not been uploaded to the cloud yet. Would you like to sync them now before signing out?</string>
     <string name="account_sync_and_sign_out">Sync &amp; Sign Out</string>

@@ -1057,6 +1057,8 @@
     <string name="account_status_waiting_network">Ожидание интернета</string>
     <string name="account_status_error">Ошибка синхронизации</string>
     <string name="account_status_idle">Ожидание</string>
+    <string name="account_status_offline">Офлайн</string>
+    <string name="account_status_pending_changes">Ожидающие изменения</string>
     <string name="account_unsynced_dialog_title">Несинхронизированные изменения</string>
     <string name="account_unsynced_dialog_desc">У вас есть %1$d изменений, которые еще не загружены в облако. Синхронизировать их перед выходом?</string>
     <string name="account_sync_and_sign_out">Синхронизировать и выйти</string>

@@ -129,6 +129,10 @@ class MainActivity : FragmentActivity() {
             )
             val policy = LockTimeoutPolicy.fromName(prefs.lockTimeout)
             container.appLockManager.onAppForegrounded(policy, isLockEnabled)
+
+            if (container.authRepository.isAuthenticated && container.networkMonitor.isCurrentlyOnline()) {
+                container.cloudSyncRepository.performFullSync()
+            }
         }
     }
 

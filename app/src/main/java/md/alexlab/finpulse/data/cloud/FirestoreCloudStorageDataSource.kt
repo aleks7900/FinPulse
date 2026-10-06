@@ -69,6 +69,7 @@ class FirestoreCloudStorageDataSource(
                     "collection" to record.collection,
                     "jsonPayload" to record.jsonPayload,
                     "updatedAt" to record.updatedAt,
+                    "serverUpdatedAt" to com.google.firebase.firestore.FieldValue.serverTimestamp(),
                     "isDeleted" to record.isDeleted,
                     "deletedAt" to record.deletedAt
                 )
@@ -122,7 +123,8 @@ class FirestoreCloudStorageDataSource(
             val id = doc.getString("id") ?: doc.id
             val col = doc.getString("collection") ?: collection
             val jsonPayload = doc.getString("jsonPayload") ?: ""
-            val updatedAt = doc.getLong("updatedAt") ?: 0L
+            val serverTimestamp = doc.getTimestamp("serverUpdatedAt")?.toDate()?.time
+            val updatedAt = serverTimestamp ?: doc.getLong("updatedAt") ?: 0L
             val isDeleted = doc.getBoolean("isDeleted") ?: false
             val deletedAt = doc.getLong("deletedAt")
 
@@ -167,6 +169,7 @@ class FirestoreCloudStorageDataSource(
             "collection" to collection,
             "jsonPayload" to "",
             "updatedAt" to deletedAt,
+            "serverUpdatedAt" to com.google.firebase.firestore.FieldValue.serverTimestamp(),
             "isDeleted" to true,
             "deletedAt" to deletedAt
         )

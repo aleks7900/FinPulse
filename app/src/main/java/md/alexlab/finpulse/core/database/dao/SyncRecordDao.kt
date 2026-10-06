@@ -52,3 +52,56 @@ interface SyncRecordDao {
     @Query("DELETE FROM sync_records")
     suspend fun deleteAllSyncRecords()
 }
+
+/**
+ * Records a pending upsert for [entityId] of [entityType] with clock-skew protection.
+ * Ensures the recorded localUpdatedAt is strictly greater than any previous local or cloud timestamp.
+ */
+suspend fun SyncRecordDao.recordPendingUpsert(
+    entityType: String,
+    entityId: String,
+    timestamp: Long = System.currentTimeMillis()
+): Long {
+    val existing = getSyncRecord(entityType, entityId)
+    val prevMax = maxOf(existing?.localUpdatedAt ?: 0L, existing?.cloudUpdatedAt ?: 0L)
+    val safeTimestamp = maxOf(timestamp, prevMax + 1L)
+    upsertSyncRecord(
+        SyncRecordEntity(
+            entityType = entityType,
+            entityId = entityId,
+            syncStatus = "PENDING_UPSERT",
+            localUpdatedAt = safeTimestamp,
+            cloudUpdatedAt = existing?.cloudUpdatedAt ?: 0L,
+            isDeleted = false,
+            deletedAt = null
+        )
+    )
+    return safeTimestamp
+}
+
+/**
+ * Records a pending delete (tombstone) for [entityId] of [entityType] with clock-skew protection.
+ * Ensures the deletion timestamp is strictly greater than any previous local or cloud timestamp.
+ */
+suspend fun SyncRecordDao.recordPendingDelete(
+    entityType: String,
+    entityId: String,
+    timestamp: Long = System.currentTimeMillis()
+): Long {
+    val existing = getSyncRecord(entityType, entityId)
+    val prevMax = maxOf(existing?.localUpdatedAt ?: 0L, existing?.cloudUpdatedAt ?: 0L)
+    val safeTimestamp = maxOf(timestamp, prevMax + 1L)
+    upsertSyncRecord(
+        SyncRecordEntity(
+            entityType = entityType,
+            entityId = entityId,
+            syncStatus = "PENDING_DELETE",
+            localUpdatedAt = safeTimestamp,
+            cloudUpdatedAt = existing?.cloudUpdatedAt ?: 0L,
+            isDeleted = true,
+            deletedAt = safeTimestamp
+        )
+    )
+    return safeTimestamp
+}
+

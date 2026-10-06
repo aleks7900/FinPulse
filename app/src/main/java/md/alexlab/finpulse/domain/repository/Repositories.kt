@@ -63,6 +63,7 @@ interface CategoryRepository {
     fun getCategoriesByTypeFlow(type: CategoryType): Flow<List<Category>>
     suspend fun getCategoryById(id: String): Category?
     suspend fun saveCategory(category: Category)
+    suspend fun deleteCategory(id: String) {}
     suspend fun seedDefaultCategoriesIfNeeded()
 }
 
