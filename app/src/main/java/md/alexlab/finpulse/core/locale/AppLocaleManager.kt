@@ -8,6 +8,8 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Build
 import android.os.LocaleList
+import androidx.activity.result.ActivityResultRegistry
+import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.FragmentActivity
@@ -155,7 +157,14 @@ object AppLocaleManager {
 class LocalizedContext(
     base: Context,
     val activity: Activity? = null
-) : ContextWrapper(base) {
+) : ContextWrapper(base), ActivityResultRegistryOwner {
+
+    override val activityResultRegistry: ActivityResultRegistry
+        get() = (activity as? ActivityResultRegistryOwner)?.activityResultRegistry
+            ?: (baseContext as? ActivityResultRegistryOwner)?.activityResultRegistry
+            ?: (baseContext.findActivity() as? ActivityResultRegistryOwner)?.activityResultRegistry
+            ?: error("No ActivityResultRegistryOwner available in LocalizedContext")
+
     override fun getSystemService(name: String): Any? {
         return activity?.getSystemService(name) ?: super.getSystemService(name)
     }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.fragment.app.FragmentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.CompositionLocalProvider
@@ -102,7 +103,8 @@ class MainActivity : FragmentActivity() {
 
             CompositionLocalProvider(
                 LocalContext provides localizedContext,
-                LocalConfiguration provides localizedContext.resources.configuration
+                LocalConfiguration provides localizedContext.resources.configuration,
+                LocalActivityResultRegistryOwner provides this@MainActivity
             ) {
                 FinPulseTheme(darkTheme = darkTheme) {
                     FinPulseApp(

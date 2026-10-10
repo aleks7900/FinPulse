@@ -1,4 +1,4 @@
-package md.alexlab.finpulse.data.repository
+﻿package md.alexlab.finpulse.data.repository
 
 import md.alexlab.finpulse.core.database.FinPulseDatabase
 import md.alexlab.finpulse.core.database.dao.CategoryDao
@@ -236,6 +236,12 @@ class TransactionRepositoryImpl(private val database: FinPulseDatabase) : Transa
                     }
                 }
             }
+        }
+
+        val now = System.currentTimeMillis()
+        database.syncRecordDao().recordPendingUpsert("ACCOUNT", tx.sourceAccountId, now)
+        if (tx.type == TransactionType.TRANSFER && tx.destinationAccountId != null) {
+            database.syncRecordDao().recordPendingUpsert("ACCOUNT", tx.destinationAccountId, now)
         }
     }
 }
