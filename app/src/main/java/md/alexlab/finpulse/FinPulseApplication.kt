@@ -55,14 +55,16 @@ class FinPulseApplication : Application() {
 
         // Connectivity restoration trigger via CloudSyncCoordinator
         applicationScope.launch {
-            container.networkMonitor.isOnline.collect { online ->
-                if (online && container.authRepository.isAuthenticated) {
-                    val prefs = container.userPreferencesDataStore.userPreferencesFlow.first()
-                    if (prefs.isAutoSyncEnabled) {
-                        container.cloudSyncCoordinator.sync(md.alexlab.finpulse.data.sync.SyncTrigger.CONNECTIVITY_RESTORED)
+            container.networkMonitor.isOnline
+                .drop(1)
+                .collect { online ->
+                    if (online && container.authRepository.isAuthenticated && !container.cloudSyncCoordinator.isSyncing.value) {
+                        val prefs = container.userPreferencesDataStore.userPreferencesFlow.first()
+                        if (prefs.isAutoSyncEnabled) {
+                            container.cloudSyncCoordinator.sync(md.alexlab.finpulse.data.sync.SyncTrigger.CONNECTIVITY_RESTORED)
+                        }
                     }
                 }
-            }
         }
 
         // Auto-push trigger after local modifications when online (debounced) via coordinator
@@ -70,12 +72,14 @@ class FinPulseApplication : Application() {
             @OptIn(kotlinx.coroutines.FlowPreview::class)
             container.cloudSyncCoordinator.pendingChangesCount
                 .drop(1)
+                .debounce(1500L)
                 .filter { it > 0 }
-                .debounce(1000L)
                 .collect {
-                    val prefs = container.userPreferencesDataStore.userPreferencesFlow.first()
-                    if (prefs.isAutoSyncEnabled && container.authRepository.isAuthenticated && container.networkMonitor.isCurrentlyOnline()) {
-                        container.cloudSyncCoordinator.sync(md.alexlab.finpulse.data.sync.SyncTrigger.LOCAL_CHANGE)
+                    if (!container.cloudSyncCoordinator.isSyncing.value) {
+                        val prefs = container.userPreferencesDataStore.userPreferencesFlow.first()
+                        if (prefs.isAutoSyncEnabled && container.authRepository.isAuthenticated && container.networkMonitor.isCurrentlyOnline()) {
+                            container.cloudSyncCoordinator.sync(md.alexlab.finpulse.data.sync.SyncTrigger.LOCAL_CHANGE)
+                        }
                     }
                 }
         }

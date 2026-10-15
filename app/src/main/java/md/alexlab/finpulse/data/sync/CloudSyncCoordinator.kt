@@ -37,7 +37,8 @@ enum class SyncTrigger {
     SCHEDULED,
     FOREGROUND,
     CONNECTIVITY_RESTORED,
-    LOCAL_CHANGE
+    LOCAL_CHANGE,
+    LOGIN
 }
 
 enum class GlobalSyncState {

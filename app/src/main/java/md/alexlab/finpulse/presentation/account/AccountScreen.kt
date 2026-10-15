@@ -397,7 +397,7 @@ private fun LoggedOutContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp)
-                    .bounceClick(onClick = onSignInClick),
+                    .bounceClick(),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -659,7 +659,7 @@ private fun LoggedInContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
-                    .bounceClick(onClick = onSyncClick),
+                    .bounceClick(),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = EmeraldPrimary,

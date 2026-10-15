@@ -134,14 +134,19 @@ class AccountViewModel(
     }
 
     fun signInWithGoogle(activityContext: Context, webClientId: String) {
+        if (_uiState.value.isLoading) return
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            _uiState.update { it.copy(isLoading = true, errorMessage = null, errorMessageRes = null) }
             try {
                 val tokenResult = googleAuthManager.signInWithGoogle(activityContext, webClientId).getOrThrow()
                 val user = authRepository.signInWithGoogleIdToken(tokenResult.idToken).getOrThrow()
 
-                // Trigger initial migration / sync for newly signed-in user
-                cloudSyncRepository.handleAccountSwitch(previousUid = null, newUid = user.uid)
+                // Trigger initial migration / sync for newly signed-in user via coordinator
+                if (cloudSyncCoordinator != null) {
+                    cloudSyncCoordinator.sync(md.alexlab.finpulse.data.sync.SyncTrigger.LOGIN)
+                } else {
+                    cloudSyncRepository.handleAccountSwitch(previousUid = null, newUid = user.uid)
+                }
 
                 val prefs = userPreferencesDataStore.userPreferencesFlow.first()
                 SyncWorker.schedulePeriodicSync(activityContext, prefs.syncIntervalMinutes)
@@ -166,6 +171,7 @@ class AccountViewModel(
     }
 
     fun performSync(context: Context? = null) {
+        if (_uiState.value.isLoading) return
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null, errorMessageRes = null) }
             val result = if (cloudSyncCoordinator != null) {
@@ -223,7 +229,11 @@ class AccountViewModel(
     fun confirmSignOutWithSync(context: Context? = null) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, showSignOutConfirmDialog = false) }
-            cloudSyncRepository.performFullSync()
+            if (cloudSyncCoordinator != null) {
+                cloudSyncCoordinator.sync(md.alexlab.finpulse.data.sync.SyncTrigger.MANUAL)
+            } else {
+                cloudSyncRepository.performFullSync()
+            }
             authRepository.signOut()
             _uiState.update {
                 it.copy(

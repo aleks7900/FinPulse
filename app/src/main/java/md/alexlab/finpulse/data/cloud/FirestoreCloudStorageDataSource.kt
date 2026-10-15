@@ -5,15 +5,29 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeout
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-suspend fun <T> Task<T>.awaitTask(): T =
-    suspendCancellableCoroutine { continuation ->
-        addOnSuccessListener { result -> continuation.resume(result) }
-        addOnFailureListener { exception -> continuation.resumeWithException(exception) }
-        addOnCanceledListener { continuation.cancel() }
+suspend fun <T> Task<T>.awaitTask(timeoutMs: Long = 15_000L): T =
+    withTimeout(timeoutMs) {
+        if (isComplete) {
+            if (isSuccessful) {
+                @Suppress("UNCHECKED_CAST")
+                return@withTimeout result as T
+            }
+            if (isCanceled) {
+                throw CancellationException("Task $this was cancelled.")
+            }
+            throw exception ?: IllegalStateException("Task $this failed with unknown error.")
+        }
+        suspendCancellableCoroutine { continuation ->
+            addOnSuccessListener { result -> continuation.resume(result) }
+            addOnFailureListener { exception -> continuation.resumeWithException(exception) }
+            addOnCanceledListener { continuation.cancel() }
+        }
     }
 
 class FirestoreCloudStorageDataSource(

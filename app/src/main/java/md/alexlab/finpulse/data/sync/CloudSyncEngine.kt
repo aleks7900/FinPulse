@@ -30,12 +30,16 @@ import md.alexlab.finpulse.domain.repository.AuthRepository
 import md.alexlab.finpulse.domain.repository.CloudSyncRepository
 import md.alexlab.finpulse.domain.repository.SettingsRepository
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -57,6 +61,17 @@ class CloudSyncEngine(
 
     private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
     private val syncDao = database.syncRecordDao()
+    private val engineScope = CoroutineScope(SupervisorJob() + dispatcher)
+
+    private fun setSuccessStatus() {
+        _syncStatus.value = SyncStatus.SUCCESS
+        engineScope.launch {
+            delay(3500L)
+            if (_syncStatus.value == SyncStatus.SUCCESS) {
+                _syncStatus.value = SyncStatus.IDLE
+            }
+        }
+    }
 
     private val _syncStatus = MutableStateFlow(SyncStatus.IDLE)
     override val syncStatus: StateFlow<SyncStatus> = _syncStatus.asStateFlow()
@@ -96,7 +111,7 @@ class CloudSyncEngine(
 
             val now = System.currentTimeMillis()
             _lastSyncTimestamp.value = now
-            _syncStatus.value = SyncStatus.SUCCESS
+            setSuccessStatus()
             userPreferencesDataStore.setSyncState("SUCCESS", now, null)
 
             Log.i(
@@ -132,7 +147,7 @@ class CloudSyncEngine(
         _syncStatus.value = SyncStatus.SYNCING
         try {
             val result = reconcileEntities(user.uid)
-            _syncStatus.value = SyncStatus.SUCCESS
+            setSuccessStatus()
             Result.success(result)
         } catch (t: Throwable) {
             errorReporter.recordException(
@@ -153,7 +168,7 @@ class CloudSyncEngine(
         _syncStatus.value = SyncStatus.SYNCING
         try {
             val result = reconcileEntities(user.uid)
-            _syncStatus.value = SyncStatus.SUCCESS
+            setSuccessStatus()
             Result.success(result)
         } catch (t: Throwable) {
             errorReporter.recordException(
@@ -641,7 +656,7 @@ class CloudSyncEngine(
 
             val now = System.currentTimeMillis()
             _lastSyncTimestamp.value = now
-            _syncStatus.value = SyncStatus.SUCCESS
+            setSuccessStatus()
             userPreferencesDataStore.setSyncState("SUCCESS", now, null)
 
             Result.success(SyncResult(isSuccess = true, uploadedCount = uploadedCount, syncedAt = now))
@@ -654,15 +669,25 @@ class CloudSyncEngine(
     override suspend fun restoreCloudDataToLocal(uid: String): Result<SyncResult> = withContext(dispatcher) {
         _syncStatus.value = SyncStatus.SYNCING
         try {
+            // Download all collections outside database transaction to prevent locking Room
+            val categories = cloudStorage.downloadRecords(uid, "categories", 0L).getOrDefault(emptyList())
+            val accounts = cloudStorage.downloadRecords(uid, "accounts", 0L).getOrDefault(emptyList())
+            val transactions = cloudStorage.downloadRecords(uid, "transactions", 0L).getOrDefault(emptyList())
+            val budgets = cloudStorage.downloadRecords(uid, "budgets", 0L).getOrDefault(emptyList())
+            val recurring = cloudStorage.downloadRecords(uid, "recurring_rules", 0L).getOrDefault(emptyList())
+            val goals = cloudStorage.downloadRecords(uid, "goals", 0L).getOrDefault(emptyList())
+            val assets = cloudStorage.downloadRecords(uid, "assets", 0L).getOrDefault(emptyList())
+            val debts = cloudStorage.downloadRecords(uid, "debts", 0L).getOrDefault(emptyList())
+            val rules = cloudStorage.downloadRecords(uid, "categorization_rules", 0L).getOrDefault(emptyList())
+            val filters = cloudStorage.downloadRecords(uid, "saved_filters", 0L).getOrDefault(emptyList())
+
             var restoredCount = 0
 
             database.withTransaction {
                 // Clear local data for clean restoration
                 clearLocalDatabaseTables()
 
-                // Download all collections in hierarchical order
                 // 1. Categories
-                val categories = cloudStorage.downloadRecords(uid, "categories", 0L).getOrDefault(emptyList())
                 categories.filter { !it.isDeleted }.forEach { rec ->
                     val cat = json.decodeFromString<Category>(rec.jsonPayload)
                     database.categoryDao().insertCategory(cat.toEntity())
@@ -671,7 +696,6 @@ class CloudSyncEngine(
                 }
 
                 // 2. Accounts
-                val accounts = cloudStorage.downloadRecords(uid, "accounts", 0L).getOrDefault(emptyList())
                 accounts.filter { !it.isDeleted }.forEach { rec ->
                     val acc = json.decodeFromString<Account>(rec.jsonPayload)
                     database.accountDao().insertAccount(acc.toEntity())
@@ -680,7 +704,6 @@ class CloudSyncEngine(
                 }
 
                 // 3. Transactions
-                val transactions = cloudStorage.downloadRecords(uid, "transactions", 0L).getOrDefault(emptyList())
                 transactions.filter { !it.isDeleted }.forEach { rec ->
                     val tx = json.decodeFromString<Transaction>(rec.jsonPayload)
                     database.transactionDao().insertTransaction(tx.toEntity())
@@ -689,7 +712,6 @@ class CloudSyncEngine(
                 }
 
                 // 4. Budgets
-                val budgets = cloudStorage.downloadRecords(uid, "budgets", 0L).getOrDefault(emptyList())
                 budgets.filter { !it.isDeleted }.forEach { rec ->
                     val b = json.decodeFromString<Budget>(rec.jsonPayload)
                     database.budgetDao().insertBudget(b.toEntity())
@@ -698,7 +720,6 @@ class CloudSyncEngine(
                 }
 
                 // 5. Recurring Rules
-                val recurring = cloudStorage.downloadRecords(uid, "recurring_rules", 0L).getOrDefault(emptyList())
                 recurring.filter { !it.isDeleted }.forEach { rec ->
                     val r = json.decodeFromString<RecurringTransaction>(rec.jsonPayload)
                     database.recurringTransactionDao().insertRecurring(r.toEntity())
@@ -707,7 +728,6 @@ class CloudSyncEngine(
                 }
 
                 // 6. Goals, Assets, Debts, Rules, Filters
-                val goals = cloudStorage.downloadRecords(uid, "goals", 0L).getOrDefault(emptyList())
                 goals.filter { !it.isDeleted }.forEach { rec ->
                     val g = json.decodeFromString<FinancialGoal>(rec.jsonPayload)
                     database.financialGoalDao().insertGoal(g.toEntity())
@@ -715,7 +735,6 @@ class CloudSyncEngine(
                     restoredCount++
                 }
 
-                val assets = cloudStorage.downloadRecords(uid, "assets", 0L).getOrDefault(emptyList())
                 assets.filter { !it.isDeleted }.forEach { rec ->
                     val a = json.decodeFromString<InvestmentAsset>(rec.jsonPayload)
                     database.assetDao().insertAsset(a.toEntity())
@@ -723,7 +742,6 @@ class CloudSyncEngine(
                     restoredCount++
                 }
 
-                val debts = cloudStorage.downloadRecords(uid, "debts", 0L).getOrDefault(emptyList())
                 debts.filter { !it.isDeleted }.forEach { rec ->
                     val d = json.decodeFromString<Debt>(rec.jsonPayload)
                     database.debtDao().insertDebt(d.toEntity())
@@ -731,7 +749,6 @@ class CloudSyncEngine(
                     restoredCount++
                 }
 
-                val rules = cloudStorage.downloadRecords(uid, "categorization_rules", 0L).getOrDefault(emptyList())
                 rules.filter { !it.isDeleted }.forEach { rec ->
                     val r = json.decodeFromString<CategorizationRule>(rec.jsonPayload)
                     database.categorizationRuleDao().insertRule(r.toEntity())
@@ -739,7 +756,6 @@ class CloudSyncEngine(
                     restoredCount++
                 }
 
-                val filters = cloudStorage.downloadRecords(uid, "saved_filters", 0L).getOrDefault(emptyList())
                 filters.filter { !it.isDeleted }.forEach { rec ->
                     val f = json.decodeFromString<SavedFilter>(rec.jsonPayload)
                     database.savedFilterDao().insertSavedFilter(f.toEntity())
@@ -753,7 +769,7 @@ class CloudSyncEngine(
 
             val now = System.currentTimeMillis()
             _lastSyncTimestamp.value = now
-            _syncStatus.value = SyncStatus.SUCCESS
+            setSuccessStatus()
             userPreferencesDataStore.setSyncState("SUCCESS", now, null)
 
             Result.success(SyncResult(isSuccess = true, downloadedCount = restoredCount, syncedAt = now))
@@ -769,19 +785,7 @@ class CloudSyncEngine(
                 clearLocalData()
             }
 
-            val summary = cloudStorage.getUserSummary(newUid).getOrDefault(null)
-            val hasRemoteData = summary != null && summary.totalRecords > 0
-            val localTxCount = database.transactionDao().getAllTransactions().size
-
-            if (hasRemoteData && localTxCount == 0) {
-                restoreCloudDataToLocal(newUid)
-            } else if (!hasRemoteData && localTxCount > 0) {
-                migrateLocalDataToCloud(newUid)
-            } else if (hasRemoteData && localTxCount > 0) {
-                performFullSync()
-            } else {
-                syncSettingsInternal(newUid)
-            }
+            performFullSync()
             Result.success(Unit)
         } catch (t: Throwable) {
             Result.failure(t)
