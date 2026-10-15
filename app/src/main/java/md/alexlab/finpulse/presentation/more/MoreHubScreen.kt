@@ -17,11 +17,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -66,10 +69,12 @@ import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.AmberWarning
 import md.alexlab.finpulse.core.designsystem.DebtOrange
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.FinPulseRadius
 import md.alexlab.finpulse.core.designsystem.InvestmentPurple
 import md.alexlab.finpulse.core.designsystem.PurpleAccent
 import md.alexlab.finpulse.core.designsystem.SapphireAccent
 import md.alexlab.finpulse.core.designsystem.TealSavings
+import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.core.locale.AppLanguage
 import md.alexlab.finpulse.presentation.navigation.Screen
 
@@ -130,24 +135,23 @@ fun MoreHubScreen(
         ) {
             // FinPulse Brand Header
             item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surface
+                md.alexlab.finpulse.core.ui.FinPulseCard(
+                    shape = RoundedCornerShape(md.alexlab.finpulse.core.designsystem.FinPulseRadius.xl),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(18.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
                             painter = painterResource(R.drawable.ic_app_logo),
                             contentDescription = stringResource(R.string.app_name),
                             modifier = Modifier
-                                .size(48.dp)
-                                .clip(RoundedCornerShape(12.dp))
+                                .size(50.dp)
+                                .clip(RoundedCornerShape(14.dp))
                         )
 
-                        Spacer(modifier = Modifier.width(14.dp))
+                        Spacer(modifier = Modifier.width(16.dp))
 
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
@@ -169,12 +173,10 @@ fun MoreHubScreen(
 
             // Profile & Currency Banner
             item {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onNavigate(Screen.Currencies) },
-                    shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surface
+                md.alexlab.finpulse.core.ui.FinPulseCard(
+                    shape = RoundedCornerShape(md.alexlab.finpulse.core.designsystem.FinPulseRadius.lg),
+                    onClick = { onNavigate(Screen.Currencies) },
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
                         modifier = Modifier.padding(16.dp),
@@ -304,7 +306,7 @@ fun MoreHubScreen(
                     HubItem(
                         title = stringResource(R.string.investments_title),
                         subtitle = stringResource(R.string.asset_empty_desc),
-                        icon = Icons.Default.TrendingUp,
+                        icon = Icons.AutoMirrored.Filled.TrendingUp,
                         tint = InvestmentPurple,
                         onClick = { onNavigate(Screen.Investments) }
                     )
@@ -626,30 +628,38 @@ fun HubItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val itemShape = RoundedCornerShape(FinPulseRadius.lg)
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface
+            .border(
+                0.75.dp,
+                MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                itemShape
+            )
+            .bounceClick(scaleDown = 0.98f, onClick = onClick),
+        shape = itemShape,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 2.dp
     ) {
         Row(
             modifier = Modifier.padding(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Surface(
-                modifier = Modifier.size(40.dp),
-                shape = RoundedCornerShape(12.dp),
-                color = tint.copy(alpha = 0.15f)
+            Box(
+                modifier = Modifier
+                    .size(42.dp)
+                    .clip(RoundedCornerShape(13.dp))
+                    .background(tint.copy(alpha = 0.16f))
+                    .border(0.75.dp, tint.copy(alpha = 0.30f), RoundedCornerShape(13.dp)),
+                contentAlignment = Alignment.Center
             ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = tint,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = tint,
+                    modifier = Modifier.size(20.dp)
+                )
             }
 
             Spacer(modifier = Modifier.width(14.dp))
@@ -658,7 +668,7 @@ fun HubItem(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(2.dp))

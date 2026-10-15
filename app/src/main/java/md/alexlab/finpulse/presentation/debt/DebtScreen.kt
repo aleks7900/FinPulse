@@ -55,6 +55,9 @@ import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.DebtOrange
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.ui.FinPulseCard
+import md.alexlab.finpulse.core.ui.FinPulseEmptyState
 import md.alexlab.finpulse.core.ui.BudgetProgressBar
 import md.alexlab.finpulse.core.ui.getLocalizedName
 import md.alexlab.finpulse.core.ui.getLocalizedSubtitle
@@ -105,7 +108,8 @@ fun DebtScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black
+                contentColor = Color.Black,
+                modifier = Modifier.bounceClick(onClick = { onShowAddEditDialog(true, null) })
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.debt_add_title))
             }
@@ -144,10 +148,8 @@ fun DebtScreen(
 
             // Payoff Plan Summary Card
             item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surface
+                FinPulseCard(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(18.dp)) {
                         Text(
@@ -192,27 +194,13 @@ fun DebtScreen(
             // Debts List
             if (uiState.payoffPlan.orderedDebts.isEmpty()) {
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 40.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = stringResource(R.string.debt_empty_title),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = stringResource(R.string.debt_empty_desc),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
+                    FinPulseEmptyState(
+                        icon = Icons.Default.CreditCard,
+                        title = stringResource(R.string.debt_empty_title),
+                        description = stringResource(R.string.debt_empty_desc),
+                        iconTint = DebtOrange,
+                        modifier = Modifier.padding(vertical = 40.dp)
+                    )
                 }
             } else {
                 items(uiState.payoffPlan.orderedDebts, key = { it.id }) { debt ->
@@ -262,7 +250,7 @@ fun StrategyChip(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier.clickable(onClick = onClick),
+        modifier = modifier.bounceClick(onClick = onClick),
         shape = RoundedCornerShape(14.dp),
         color = if (selected) EmeraldPrimary else MaterialTheme.colorScheme.surface,
         contentColor = if (selected) Color.Black else MaterialTheme.colorScheme.onSurface
@@ -283,12 +271,10 @@ fun DebtCard(
     onPay: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
+    FinPulseCard(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface
+            .bounceClick(onClick = onClick)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(

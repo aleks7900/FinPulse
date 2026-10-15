@@ -86,6 +86,8 @@ import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.InvestmentPurple
 import md.alexlab.finpulse.core.designsystem.SapphireAccent
 import md.alexlab.finpulse.core.designsystem.TealSavings
+import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.ui.FinPulseCard
 import md.alexlab.finpulse.domain.model.BudgetDigestItem
 import md.alexlab.finpulse.domain.model.DigestFrequency
 import md.alexlab.finpulse.domain.model.DigestInsight
@@ -234,11 +236,8 @@ fun DigestScreen(
                         )
                     }
                     item {
-                        Card(
-                            shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-                            )
+                        FinPulseCard(
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                                 digest.topExpenses.forEachIndexed { index, expense ->
@@ -262,11 +261,8 @@ fun DigestScreen(
                         )
                     }
                     item {
-                        Card(
-                            shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-                            )
+                        FinPulseCard(
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                                 digest.budgetItems.forEachIndexed { index, budget ->
@@ -290,11 +286,8 @@ fun DigestScreen(
                         )
                     }
                     item {
-                        Card(
-                            shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-                            )
+                        FinPulseCard(
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                                 digest.upcomingBills.forEachIndexed { index, bill ->
@@ -578,12 +571,8 @@ private fun DigestStatPill(
 
 @Composable
 private fun DigestNarrativeCard(digest: FinancialDigest) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)
-        )
+    FinPulseCard(
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier.padding(18.dp),
@@ -626,12 +615,8 @@ private fun DigestPriorityInsightCard(
     val accentColor = if (isCritical) MaterialTheme.colorScheme.error else AmberWarning
     val icon = if (isCritical) Icons.Default.Error else Icons.Default.Warning
 
-    Card(
+    FinPulseCard(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = accentColor.copy(alpha = 0.08f)
-        ),
         border = androidx.compose.foundation.BorderStroke(1.dp, accentColor.copy(alpha = 0.3f))
     ) {
         Row(
@@ -910,12 +895,10 @@ private fun ReviewQueueGlanceCard(
     count: Int,
     onCleanUpClick: () -> Unit
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = AmberWarning.copy(alpha = 0.08f)
-        ),
+    FinPulseCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .bounceClick(onClick = onCleanUpClick),
         border = androidx.compose.foundation.BorderStroke(1.dp, AmberWarning.copy(alpha = 0.25f))
     ) {
         Row(
@@ -983,12 +966,8 @@ private fun ReviewQueueGlanceCard(
 
 @Composable
 private fun GoalDigestCard(goal: GoalProgressDigestItem) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-        )
+    FinPulseCard(
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier.padding(16.dp),

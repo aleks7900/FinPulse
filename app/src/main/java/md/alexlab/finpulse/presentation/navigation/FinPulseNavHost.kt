@@ -54,6 +54,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.core.ui.getLocalizedName
 import md.alexlab.finpulse.presentation.quickadd.QuickAddBottomSheet
 import md.alexlab.finpulse.presentation.quickadd.QuickAddViewModel
@@ -187,7 +188,11 @@ fun FinPulseApp(
                     },
                     containerColor = EmeraldPrimary,
                     contentColor = Color.Black,
-                    shape = CircleShape
+                    shape = CircleShape,
+                    modifier = Modifier.bounceClick(scaleDown = 0.92f) {
+                        quickAddViewModel.reset()
+                        showQuickAddSheet = true
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -214,7 +219,11 @@ fun FinPulseApp(
         NavHost(
             navController = navController,
             startDestination = startDestination,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            enterTransition = { md.alexlab.finpulse.core.designsystem.FinPulseMotion.screenEnter },
+            exitTransition = { md.alexlab.finpulse.core.designsystem.FinPulseMotion.screenExit },
+            popEnterTransition = { md.alexlab.finpulse.core.designsystem.FinPulseMotion.screenPopEnter },
+            popExitTransition = { md.alexlab.finpulse.core.designsystem.FinPulseMotion.screenPopExit }
         ) {
             // Onboarding
             composable(Screen.Onboarding.route) {

@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
@@ -27,6 +28,9 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.ui.FinPulseCard
+import md.alexlab.finpulse.core.ui.FinPulseEmptyState
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -92,7 +96,8 @@ fun InvestmentsScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black
+                contentColor = Color.Black,
+                modifier = Modifier.bounceClick(onClick = { onShowAddEditDialog(true, null) })
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.investments_add_title))
             }
@@ -108,10 +113,8 @@ fun InvestmentsScreen(
         ) {
             // Portfolio Summary Card
             item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surface
+                FinPulseCard(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(18.dp)) {
                         Text(
@@ -157,27 +160,13 @@ fun InvestmentsScreen(
             // Asset list
             if (uiState.assets.isEmpty()) {
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 40.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = stringResource(R.string.asset_empty_title),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = stringResource(R.string.asset_empty_desc),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
+                    FinPulseEmptyState(
+                        icon = Icons.AutoMirrored.Filled.TrendingUp,
+                        title = stringResource(R.string.asset_empty_title),
+                        description = stringResource(R.string.asset_empty_desc),
+                        iconTint = EmeraldPrimary,
+                        modifier = Modifier.padding(vertical = 40.dp)
+                    )
                 }
             } else {
                 items(uiState.assets, key = { it.id }) { asset ->
@@ -217,12 +206,10 @@ fun AssetCard(
     val isPos = asset.profitLoss.isPositive
     val sign = if (isPos) "+" else ""
 
-    Surface(
+    FinPulseCard(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface
+            .bounceClick(onClick = onClick)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),

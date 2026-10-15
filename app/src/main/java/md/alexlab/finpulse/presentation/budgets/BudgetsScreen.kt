@@ -69,6 +69,8 @@ import md.alexlab.finpulse.core.designsystem.AmberWarning
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.SapphireAccent
+import androidx.compose.foundation.shape.CircleShape
+import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.core.model.Money
 import md.alexlab.finpulse.core.ui.BudgetProgressBar
 import md.alexlab.finpulse.core.ui.CategoryIconBadge
@@ -132,7 +134,11 @@ fun BudgetsScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black
+                contentColor = Color.Black,
+                shape = CircleShape,
+                modifier = Modifier.bounceClick(scaleDown = 0.92f) {
+                    onShowAddEditDialog(true, null)
+                }
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.budget_add_dialog_title))
             }
@@ -225,27 +231,13 @@ fun BudgetsScreen(
             // 4. Category Budget Cards
             if (uiState.categoryBudgetStatuses.isEmpty()) {
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = stringResource(R.string.budget_empty_title),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = stringResource(R.string.budget_empty_desc),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
+                    md.alexlab.finpulse.core.ui.FinPulseEmptyState(
+                        icon = Icons.Default.Add,
+                        title = stringResource(R.string.budget_empty_title),
+                        description = stringResource(R.string.budget_empty_desc),
+                        actionLabel = stringResource(R.string.budget_add_dialog_title),
+                        onActionClick = { onShowAddEditDialog(true, null) }
+                    )
                 }
             } else {
                 items(uiState.categoryBudgetStatuses, key = { it.budget.id }) { status ->

@@ -89,6 +89,8 @@ import md.alexlab.finpulse.core.designsystem.AmberWarning
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.SapphireAccent
+import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.ui.FinPulseCard
 import md.alexlab.finpulse.domain.model.sync.SyncStatus
 import java.time.Instant
 import java.time.ZoneId
@@ -335,12 +337,8 @@ private fun LoggedOutContent(
     isLoading: Boolean,
     onSignInClick: () -> Unit
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        )
+    FinPulseCard(
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier
@@ -398,7 +396,8 @@ private fun LoggedOutContent(
                 enabled = !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp),
+                    .height(52.dp)
+                    .bounceClick(onClick = onSignInClick),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -492,12 +491,8 @@ private fun LoggedInContent(
     val user = uiState.currentUser
 
     // 1. User Profile Card
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        )
+    FinPulseCard(
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier
@@ -575,13 +570,8 @@ private fun LoggedInContent(
 
 
     // 2. Sync Status Card
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    FinPulseCard(
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier
@@ -668,7 +658,8 @@ private fun LoggedInContent(
                 enabled = !isSyncing,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp),
+                    .height(48.dp)
+                    .bounceClick(onClick = onSyncClick),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = EmeraldPrimary,

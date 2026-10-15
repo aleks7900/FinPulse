@@ -61,6 +61,8 @@ import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.AmberWarning
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.SapphireAccent
+import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.ui.FinPulseCard
 import md.alexlab.finpulse.core.model.CurrencyConfig
 import md.alexlab.finpulse.core.ui.CurrencyPickerField
 import md.alexlab.finpulse.domain.model.ExchangeRate
@@ -128,10 +130,8 @@ fun CurrenciesScreen(
         ) {
             // 1. Base Currency Selector Card
             item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surface
+                FinPulseCard(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(18.dp)) {
                         Row(
@@ -186,10 +186,8 @@ fun CurrenciesScreen(
 
             // 2. Freshness & Offline Fallback Info Banner
             item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                FinPulseCard(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
                         modifier = Modifier.padding(16.dp),
@@ -278,12 +276,10 @@ fun ExchangeRateItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
+    FinPulseCard(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface
+            .bounceClick(onClick = onClick)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),

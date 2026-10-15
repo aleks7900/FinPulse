@@ -1,6 +1,8 @@
 package md.alexlab.finpulse.core.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -161,15 +163,29 @@ fun CategoryIconBadge(
     iconName: String,
     colorHex: Long,
     modifier: Modifier = Modifier,
-    size: Dp = 40.dp,
+    size: Dp = 42.dp,
     iconSize: Dp = 20.dp
 ) {
     val baseColor = Color(colorHex)
+    val badgeShape = RoundedCornerShape(14.dp)
+    
     Box(
         modifier = modifier
             .size(size)
-            .clip(RoundedCornerShape(12.dp))
-            .background(baseColor.copy(alpha = 0.15f)),
+            .clip(badgeShape)
+            .background(
+                Brush.linearGradient(
+                    listOf(
+                        baseColor.copy(alpha = 0.22f),
+                        baseColor.copy(alpha = 0.10f)
+                    )
+                )
+            )
+            .border(
+                width = 0.75.dp,
+                color = baseColor.copy(alpha = 0.30f),
+                shape = badgeShape
+            ),
         contentAlignment = Alignment.Center
     ) {
         Icon(

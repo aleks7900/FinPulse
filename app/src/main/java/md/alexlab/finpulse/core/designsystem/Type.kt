@@ -10,16 +10,18 @@ val FinPulseTypography = Typography(
     displayLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
-        fontSize = 34.sp,
-        lineHeight = 40.sp,
-        letterSpacing = (-0.5).sp
+        fontSize = 36.sp,
+        lineHeight = 42.sp,
+        letterSpacing = (-0.75).sp,
+        fontFeatureSettings = "tnum"
     ),
     displayMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
         fontSize = 28.sp,
         lineHeight = 34.sp,
-        letterSpacing = (-0.25).sp
+        letterSpacing = (-0.5).sp,
+        fontFeatureSettings = "tnum"
     ),
     headlineLarge = TextStyle(
         fontFamily = FontFamily.Default,

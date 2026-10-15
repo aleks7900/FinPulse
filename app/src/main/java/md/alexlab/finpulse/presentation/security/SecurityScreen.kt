@@ -65,6 +65,8 @@ import androidx.compose.ui.unit.sp
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.datastore.UserPreferencesDataStore
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.ui.FinPulseCard
 import md.alexlab.finpulse.core.security.AppLockManager
 import md.alexlab.finpulse.core.security.BiometricAuthManager
 import md.alexlab.finpulse.core.security.BiometricAvailability
@@ -146,9 +148,7 @@ fun SecurityScreen(
                 modifier = Modifier.padding(start = 4.dp)
             )
 
-            Surface(
-                shape = RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.surface,
+            FinPulseCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -240,9 +240,7 @@ fun SecurityScreen(
                 modifier = Modifier.padding(start = 4.dp)
             )
 
-            Surface(
-                shape = RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.surface,
+            FinPulseCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -285,7 +283,9 @@ fun SecurityScreen(
                             containerColor = MaterialTheme.colorScheme.surfaceVariant,
                             contentColor = MaterialTheme.colorScheme.onSurface
                         ),
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .bounceClick(onClick = { appLockManager.lockNow() }),
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Icon(
@@ -311,9 +311,7 @@ fun SecurityScreen(
                 modifier = Modifier.padding(start = 4.dp)
             )
 
-            Surface(
-                shape = RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.surface,
+            FinPulseCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {

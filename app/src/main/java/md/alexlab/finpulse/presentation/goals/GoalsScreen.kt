@@ -51,9 +51,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.CircleShape
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.FinPulseRadius
+import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.core.ui.BudgetProgressBar
 import md.alexlab.finpulse.core.ui.DateFormatterUtils
 import md.alexlab.finpulse.domain.model.FinancialGoal
@@ -99,7 +103,11 @@ fun GoalsScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black
+                contentColor = Color.Black,
+                shape = CircleShape,
+                modifier = Modifier.bounceClick(scaleDown = 0.92f) {
+                    onShowAddEditDialog(true, null)
+                }
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.goals_add_title))
             }
@@ -115,12 +123,11 @@ fun GoalsScreen(
         ) {
             // Aggregate Goals Progress Card
             item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surface
+                md.alexlab.finpulse.core.ui.FinPulseCard(
+                    shape = RoundedCornerShape(md.alexlab.finpulse.core.designsystem.FinPulseRadius.xl),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(modifier = Modifier.padding(18.dp)) {
+                    Column(modifier = Modifier.padding(20.dp)) {
                         Text(
                             text = stringResource(R.string.goals_total_saved).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
@@ -150,7 +157,7 @@ fun GoalsScreen(
                             uiState.totalSaved.amountMinor.toDouble() / uiState.totalTarget.amountMinor.toDouble()
                         } else 0.0
 
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
                         BudgetProgressBar(percentage = overallProgress)
                     }
                 }
@@ -159,27 +166,13 @@ fun GoalsScreen(
             // Goals list
             if (uiState.goals.isEmpty()) {
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 40.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = stringResource(R.string.goal_empty_title),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = stringResource(R.string.goal_empty_desc),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
+                    md.alexlab.finpulse.core.ui.FinPulseEmptyState(
+                        icon = Icons.Default.Savings,
+                        title = stringResource(R.string.goal_empty_title),
+                        description = stringResource(R.string.goal_empty_desc),
+                        actionLabel = stringResource(R.string.goals_add_title),
+                        onActionClick = { onShowAddEditDialog(true, null) }
+                    )
                 }
             } else {
                 items(uiState.goals, key = { it.id }) { goal ->
@@ -193,7 +186,7 @@ fun GoalsScreen(
             }
 
             item {
-                Spacer(modifier = Modifier.height(80.dp))
+                Spacer(modifier = Modifier.height(84.dp))
             }
         }
 
@@ -230,13 +223,20 @@ fun GoalCard(
 ) {
     val deadlineFormatted = DateFormatterUtils.formatMonthYear(goal.targetDate)
     val suggestedMonthly = goal.calculateSuggestedMonthlyContribution()
+    val cardShape = RoundedCornerShape(FinPulseRadius.lg)
 
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface
+            .border(
+                0.75.dp,
+                MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                cardShape
+            )
+            .bounceClick(scaleDown = 0.98f, onClick = onClick),
+        shape = cardShape,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 2.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(

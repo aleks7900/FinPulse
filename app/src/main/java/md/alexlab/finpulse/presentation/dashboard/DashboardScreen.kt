@@ -1,6 +1,10 @@
 package md.alexlab.finpulse.presentation.dashboard
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,9 +33,10 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.ReceiptLong
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SwapHoriz
-import androidx.compose.material.icons.filled.TrendingUp
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -44,25 +49,36 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import md.alexlab.finpulse.core.designsystem.AmberWarning
+import androidx.compose.ui.unit.sp
 import md.alexlab.finpulse.R
+import md.alexlab.finpulse.core.designsystem.AmberWarning
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.DebtOrange
+import md.alexlab.finpulse.core.designsystem.EmeraldDark
+import md.alexlab.finpulse.core.designsystem.EmeraldLight
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.FinPulseGradients
+import md.alexlab.finpulse.core.designsystem.FinPulseRadius
 import md.alexlab.finpulse.core.designsystem.InvestmentPurple
+import md.alexlab.finpulse.core.designsystem.SapphireAccent
 import md.alexlab.finpulse.core.designsystem.TealSavings
+import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.core.model.Money
 import md.alexlab.finpulse.core.model.TimePeriod
 import md.alexlab.finpulse.core.ui.BalanceCard
 import md.alexlab.finpulse.core.ui.BudgetProgressBar
+import md.alexlab.finpulse.core.ui.FinPulseCard
+import md.alexlab.finpulse.core.ui.FinPulseEmptyState
 import md.alexlab.finpulse.core.ui.TransactionItem
 import md.alexlab.finpulse.core.ui.getCategoryDisplayName
 import md.alexlab.finpulse.core.ui.getLocalizedName
@@ -101,33 +117,48 @@ fun DashboardScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
-                            .size(32.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(EmeraldPrimary),
+                            .size(36.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(Brush.linearGradient(FinPulseGradients.emeraldPrimary)),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = "F",
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 18.sp,
                             color = Color.Black
                         )
                     }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = "FinPulse",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
+                        Text(
+                            text = "FinPulse",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
             },
             actions = {
-                IconButton(onClick = onNavigateToSearch) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
+                Surface(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .bounceClick(scaleDown = 0.90f, onClick = onNavigateToSearch),
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search",
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
+                Spacer(modifier = Modifier.width(8.dp))
                 syncAction()
             },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -182,34 +213,31 @@ fun DashboardScreen(
 
             // Financial Calendar & Upcoming Cash Flow Banner
             item {
-                Surface(
-                    shape = RoundedCornerShape(18.dp),
-                    color = MaterialTheme.colorScheme.surface,
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(onClick = onNavigateToCalendar)
+                FinPulseCard(
+                    shape = RoundedCornerShape(FinPulseRadius.lg),
+                    onClick = onNavigateToCalendar,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
-                        modifier = Modifier.padding(14.dp),
+                        modifier = Modifier.padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Surface(
                             shape = RoundedCornerShape(12.dp),
                             color = EmeraldPrimary.copy(alpha = 0.15f),
-                            modifier = Modifier.size(40.dp)
+                            modifier = Modifier.size(42.dp)
                         ) {
                             Box(contentAlignment = Alignment.Center) {
                                 Icon(
                                     imageVector = Icons.Default.CalendarMonth,
                                     contentDescription = null,
                                     tint = EmeraldPrimary,
-                                    modifier = Modifier.size(20.dp)
+                                    modifier = Modifier.size(22.dp)
                                 )
                             }
                         }
 
-                        Spacer(modifier = Modifier.width(12.dp))
+                        Spacer(modifier = Modifier.width(14.dp))
 
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
@@ -230,7 +258,7 @@ fun DashboardScreen(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(18.dp)
                         )
                     }
                 }
@@ -272,16 +300,20 @@ fun DashboardScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.budgets_title),
+                            text = stringResource(R.string.budgets_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.action_view_all),
+                            text = stringResource(R.string.action_view_all),
                             style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.SemiBold,
                             color = EmeraldPrimary,
-                            modifier = Modifier.clickable(onClick = onNavigateToBudgets)
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(FinPulseRadius.sm))
+                                .bounceClick(scaleDown = 0.94f, onClick = onNavigateToBudgets)
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
                         )
                     }
                 }
@@ -302,23 +334,33 @@ fun DashboardScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.dashboard_recent_transactions),
+                        text = stringResource(R.string.dashboard_recent_transactions),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.nav_transactions),
+                        text = stringResource(R.string.nav_transactions),
                         style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.SemiBold,
                         color = EmeraldPrimary,
-                        modifier = Modifier.clickable(onClick = onNavigateToTransactions)
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(FinPulseRadius.sm))
+                            .bounceClick(scaleDown = 0.94f, onClick = onNavigateToTransactions)
+                            .padding(horizontal = 6.dp, vertical = 2.dp)
                     )
                 }
             }
 
             if (uiState.recentTransactions.isEmpty()) {
                 item {
-                    EmptyTransactionsPrompt(onAddTransaction = onNavigateToAddTransaction)
+                    FinPulseEmptyState(
+                        icon = Icons.Default.ReceiptLong,
+                        title = stringResource(R.string.dashboard_no_transactions),
+                        description = stringResource(R.string.tx_empty_desc),
+                        actionLabel = stringResource(R.string.shortcut_quick_add_short),
+                        onActionClick = onNavigateToAddTransaction
+                    )
                 }
             } else {
                 items(uiState.recentTransactions) { tx ->
@@ -335,7 +377,7 @@ fun DashboardScreen(
             }
 
             item {
-                Spacer(modifier = Modifier.height(80.dp))
+                Spacer(modifier = Modifier.height(84.dp))
             }
         }
     }
@@ -356,17 +398,30 @@ fun TimeRangeSelector(
     ) {
         TimePeriod.values().forEach { period ->
             val isSelected = period == selectedPeriod
+            val bgColor by animateColorAsState(
+                targetValue = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                animationSpec = tween(200),
+                label = "periodBg"
+            )
+            val textColor by animateColorAsState(
+                targetValue = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant,
+                animationSpec = tween(200),
+                label = "periodText"
+            )
+
             Surface(
-                modifier = Modifier.clickable { onPeriodSelected(period) },
-                shape = RoundedCornerShape(20.dp),
-                color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+                modifier = Modifier
+                    .clip(RoundedCornerShape(FinPulseRadius.full))
+                    .bounceClick(scaleDown = 0.94f) { onPeriodSelected(period) },
+                shape = RoundedCornerShape(FinPulseRadius.full),
+                color = bgColor,
+                contentColor = textColor
             ) {
                 Text(
                     text = period.getLocalizedName(),
                     style = MaterialTheme.typography.labelMedium,
-                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
         }
@@ -385,22 +440,22 @@ fun QuickActionBar(
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         QuickActionButton(
-            label = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.action_add),
+            label = stringResource(R.string.action_add),
             icon = Icons.Default.Add,
             accentColor = EmeraldPrimary,
             onClick = onAddTransaction,
             modifier = Modifier.weight(1f)
         )
         QuickActionButton(
-            label = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.dashboard_accounts_overview),
+            label = stringResource(R.string.dashboard_accounts_overview),
             icon = Icons.Default.SwapHoriz,
-            accentColor = MaterialTheme.colorScheme.secondary,
+            accentColor = SapphireAccent,
             onClick = onViewAccounts,
             modifier = Modifier.weight(1f)
         )
         QuickActionButton(
-            label = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.nav_budgets),
-            icon = Icons.Default.TrendingUp,
+            label = stringResource(R.string.nav_budgets),
+            icon = Icons.AutoMirrored.Filled.TrendingUp,
             accentColor = InvestmentPurple,
             onClick = onViewBudgets,
             modifier = Modifier.weight(1f)
@@ -417,26 +472,40 @@ fun QuickActionButton(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier.clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
+        modifier = modifier
+            .border(
+                width = 0.75.dp,
+                color = accentColor.copy(alpha = 0.25f),
+                shape = RoundedCornerShape(FinPulseRadius.lg)
+            )
+            .bounceClick(scaleDown = 0.94f, onClick = onClick),
+        shape = RoundedCornerShape(FinPulseRadius.lg),
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
     ) {
         Row(
-            modifier = Modifier.padding(vertical = 10.dp, horizontal = 8.dp),
+            modifier = Modifier.padding(vertical = 12.dp, horizontal = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = accentColor,
-                modifier = Modifier.size(18.dp)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
+            Box(
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(CircleShape)
+                    .background(accentColor.copy(alpha = 0.16f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = accentColor,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.SemiBold,
+                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
@@ -457,25 +526,25 @@ fun FinancialMetricsStrip(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         MetricTile(
-            title = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.goals_total_saved),
+            title = stringResource(R.string.goals_total_saved),
             value = if (hideBalances) "••••" else savings.formattedCompact(),
             color = TealSavings,
             modifier = Modifier.weight(1f)
         )
         MetricTile(
-            title = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.investments_title),
+            title = stringResource(R.string.investments_title),
             value = if (hideBalances) "••••" else investments.formattedCompact(),
             color = InvestmentPurple,
             modifier = Modifier.weight(1f)
         )
         MetricTile(
-            title = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.debt_title),
+            title = stringResource(R.string.debt_title),
             value = if (hideBalances) "••••" else debt.formattedCompact(),
             color = DebtOrange,
             modifier = Modifier.weight(1f)
         )
         MetricTile(
-            title = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.analytics_savings_rate, "%.0f".format(savingsRate)),
+            title = stringResource(R.string.analytics_savings_rate, "%.0f".format(savingsRate)),
             value = "${"%.0f".format(savingsRate)}%",
             color = EmeraldPrimary,
             modifier = Modifier.weight(1f)
@@ -491,9 +560,15 @@ fun MetricTile(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(14.dp),
-        color = MaterialTheme.colorScheme.surface
+        modifier = modifier
+            .border(
+                width = 0.75.dp,
+                color = color.copy(alpha = 0.20f),
+                shape = RoundedCornerShape(FinPulseRadius.md)
+            ),
+        shape = RoundedCornerShape(FinPulseRadius.md),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 2.dp
     ) {
         Column(
             modifier = Modifier.padding(10.dp),
@@ -502,7 +577,10 @@ fun MetricTile(
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                fontSize = 11.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
@@ -524,17 +602,17 @@ fun InsightBanner(
     val (borderColor, icon) = when (insight.type) {
         InsightType.DANGER -> CrimsonExpense to Icons.Default.Warning
         InsightType.WARNING -> AmberWarning to Icons.Default.Warning
-        InsightType.SUCCESS -> EmeraldPrimary to Icons.Default.TrendingUp
+        InsightType.SUCCESS -> EmeraldPrimary to Icons.AutoMirrored.Filled.TrendingUp
         InsightType.INFO -> MaterialTheme.colorScheme.secondary to Icons.Default.Info
     }
 
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .border(1.dp, borderColor.copy(alpha = 0.4f), RoundedCornerShape(16.dp)),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+            .border(1.dp, borderColor.copy(alpha = 0.35f), RoundedCornerShape(FinPulseRadius.lg))
+            .bounceClick(scaleDown = 0.98f, onClick = onClick),
+        shape = RoundedCornerShape(FinPulseRadius.lg),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
     ) {
         Row(
             modifier = Modifier.padding(14.dp),
@@ -542,9 +620,9 @@ fun InsightBanner(
         ) {
             Box(
                 modifier = Modifier
-                    .size(36.dp)
+                    .size(38.dp)
                     .clip(CircleShape)
-                    .background(borderColor.copy(alpha = 0.15f)),
+                    .background(borderColor.copy(alpha = 0.16f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -591,11 +669,18 @@ fun BudgetProgressCard(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface
+        modifier = modifier
+            .fillMaxWidth()
+            .border(
+                0.75.dp,
+                MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                RoundedCornerShape(FinPulseRadius.lg)
+            ),
+        shape = RoundedCornerShape(FinPulseRadius.lg),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 2.dp
     ) {
-        Column(modifier = Modifier.padding(14.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -604,7 +689,7 @@ fun BudgetProgressCard(
                 Text(
                     text = getCategoryDisplayName(status.budget.categoryId, status.categoryName),
                     style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
@@ -614,11 +699,11 @@ fun BudgetProgressCard(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             BudgetProgressBar(percentage = status.percentageConsumed)
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -630,51 +715,10 @@ fun BudgetProgressCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = if (hideBalances) "••••" else if (status.isExceeded) androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.budget_exceeded) else "${status.remainingAmount.formatted()} (${androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.budget_remaining)})",
+                    text = if (hideBalances) "••••" else if (status.isExceeded) stringResource(R.string.budget_exceeded) else "${status.remainingAmount.formatted()} (${stringResource(R.string.budget_remaining)})",
                     style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.SemiBold,
                     color = if (status.isExceeded) CrimsonExpense else EmeraldPrimary
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun EmptyTransactionsPrompt(
-    onAddTransaction: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-    ) {
-        Column(
-            modifier = Modifier.padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.dashboard_no_transactions),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.tx_empty_desc),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(14.dp))
-            Button(
-                onClick = onAddTransaction,
-                colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
-            ) {
-                Text(
-                    text = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.shortcut_quick_add_short),
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
                 )
             }
         }
@@ -690,10 +734,10 @@ fun ReviewQueueBannerCard(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
-        color = AmberWarning.copy(alpha = 0.12f),
-        border = androidx.compose.foundation.BorderStroke(1.dp, AmberWarning.copy(alpha = 0.4f))
+            .border(1.dp, AmberWarning.copy(alpha = 0.4f), RoundedCornerShape(FinPulseRadius.lg))
+            .bounceClick(scaleDown = 0.98f, onClick = onClick),
+        shape = RoundedCornerShape(FinPulseRadius.lg),
+        color = AmberWarning.copy(alpha = 0.12f)
     ) {
         Row(
             modifier = Modifier
@@ -703,9 +747,9 @@ fun ReviewQueueBannerCard(
         ) {
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(42.dp)
                     .clip(CircleShape)
-                    .background(AmberWarning.copy(alpha = 0.2f)),
+                    .background(AmberWarning.copy(alpha = 0.22f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -769,35 +813,35 @@ fun FinancialDigestBannerCard(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
             .border(
                 1.dp,
-                md.alexlab.finpulse.core.designsystem.SapphireAccent.copy(alpha = 0.4f),
-                RoundedCornerShape(16.dp)
-            ),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+                SapphireAccent.copy(alpha = 0.35f),
+                RoundedCornerShape(FinPulseRadius.lg)
+            )
+            .bounceClick(scaleDown = 0.98f, onClick = onClick),
+        shape = RoundedCornerShape(FinPulseRadius.lg),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
     ) {
         Row(
-            modifier = Modifier.padding(14.dp),
+            modifier = Modifier.padding(15.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(38.dp)
+                    .size(40.dp)
                     .clip(CircleShape)
-                    .background(md.alexlab.finpulse.core.designsystem.SapphireAccent.copy(alpha = 0.15f)),
+                    .background(SapphireAccent.copy(alpha = 0.16f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.AutoAwesome,
                     contentDescription = null,
-                    tint = md.alexlab.finpulse.core.designsystem.SapphireAccent,
+                    tint = SapphireAccent,
                     modifier = Modifier.size(20.dp)
                 )
             }
 
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(14.dp))
 
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -810,14 +854,14 @@ fun FinancialDigestBannerCard(
                     Spacer(modifier = Modifier.width(6.dp))
                     Surface(
                         shape = RoundedCornerShape(6.dp),
-                        color = md.alexlab.finpulse.core.designsystem.SapphireAccent.copy(alpha = 0.15f)
+                        color = SapphireAccent.copy(alpha = 0.15f)
                     ) {
                         Text(
                             text = stringResource(R.string.digest_badge_daily_weekly),
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
-                            color = md.alexlab.finpulse.core.designsystem.SapphireAccent
+                            color = SapphireAccent
                         )
                     }
                 }

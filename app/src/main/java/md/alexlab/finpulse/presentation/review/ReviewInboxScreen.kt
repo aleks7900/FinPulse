@@ -93,6 +93,9 @@ import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.InvestmentPurple
 import md.alexlab.finpulse.core.designsystem.SapphireAccent
 import md.alexlab.finpulse.core.designsystem.TealSavings
+import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.ui.FinPulseCard
+import md.alexlab.finpulse.core.ui.FinPulseEmptyState
 import md.alexlab.finpulse.core.ui.getCategoryDisplayName
 import md.alexlab.finpulse.core.ui.getLocalizedName
 import md.alexlab.finpulse.domain.model.Account
@@ -442,7 +445,7 @@ fun ReviewInboxTabRow(
 
             val isSelected = tab == selectedTab
             Surface(
-                modifier = Modifier.clickable { onTabSelected(tab) },
+                modifier = Modifier.bounceClick { onTabSelected(tab) },
                 shape = RoundedCornerShape(20.dp),
                 color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                 contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
@@ -562,17 +565,15 @@ fun ReviewItemCard(
         ReviewItemType.IMPORTED_CONFIRMATION -> TealSavings to Icons.Default.ReceiptLong
     }
 
-    Surface(
+    FinPulseCard(
         modifier = modifier
             .fillMaxWidth()
             .then(
-                if (isSelectionMode) Modifier.clickable(onClick = onToggleSelection) else Modifier
+                if (isSelectionMode) Modifier.bounceClick(onClick = onToggleSelection) else Modifier
             ),
-        shape = RoundedCornerShape(18.dp),
-        color = MaterialTheme.colorScheme.surface,
         border = BorderStroke(
             width = if (isSelected) 2.dp else 1.dp,
-            color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+            color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f)
         )
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
@@ -905,54 +906,15 @@ fun EmptyInboxState(
     onBackToDashboard: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(72.dp)
-                    .clip(CircleShape)
-                    .background(EmeraldPrimary.copy(alpha = 0.15f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.CheckCircle,
-                    contentDescription = null,
-                    tint = EmeraldPrimary,
-                    modifier = Modifier.size(40.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = if (selectedTab == ReviewInboxTab.ALL) stringResource(R.string.review_inbox_all_caught_up) else stringResource(R.string.review_inbox_no_items_tab, selectedTab.getLocalizedName()),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = stringResource(R.string.review_inbox_empty_detail),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            Button(
-                onClick = onBackToDashboard,
-                colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary),
-                shape = RoundedCornerShape(14.dp)
-            ) {
-                Text(stringResource(R.string.review_inbox_return_dashboard), color = Color.Black, fontWeight = FontWeight.Bold)
-            }
-        }
-    }
+    FinPulseEmptyState(
+        icon = Icons.Default.CheckCircle,
+        title = if (selectedTab == ReviewInboxTab.ALL) stringResource(R.string.review_inbox_all_caught_up) else stringResource(R.string.review_inbox_no_items_tab, selectedTab.getLocalizedName()),
+        description = stringResource(R.string.review_inbox_empty_detail),
+        iconTint = EmeraldPrimary,
+        actionText = stringResource(R.string.review_inbox_return_dashboard),
+        onAction = onBackToDashboard,
+        modifier = modifier.padding(vertical = 40.dp)
+    )
 }
 
 // -------------------------------------------------------------

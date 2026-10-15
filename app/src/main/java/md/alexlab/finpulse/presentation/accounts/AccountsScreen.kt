@@ -64,10 +64,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import md.alexlab.finpulse.R
+import androidx.compose.foundation.border
+import androidx.compose.ui.unit.sp
+import md.alexlab.finpulse.core.designsystem.AnimatedAmountText
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.FinPulseRadius
 import md.alexlab.finpulse.core.designsystem.TransferBlue
+import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.core.ui.CurrencyPickerField
+import md.alexlab.finpulse.core.ui.FinPulseCard
+import md.alexlab.finpulse.core.ui.FinPulseEmptyState
 import md.alexlab.finpulse.core.ui.getLocalizedName
 import md.alexlab.finpulse.domain.model.Account
 import md.alexlab.finpulse.domain.model.AccountType
@@ -117,7 +124,11 @@ fun AccountsScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black
+                contentColor = Color.Black,
+                shape = CircleShape,
+                modifier = Modifier.bounceClick(scaleDown = 0.92f) {
+                    onShowAddEditDialog(true, null)
+                }
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.account_add_dialog_title))
             }
@@ -133,26 +144,35 @@ fun AccountsScreen(
         ) {
             // Aggregate Net Worth Card
             item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surface
+                md.alexlab.finpulse.core.ui.FinPulseCard(
+                    shape = RoundedCornerShape(md.alexlab.finpulse.core.designsystem.FinPulseRadius.xl),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(modifier = Modifier.padding(18.dp)) {
-                        Text(
-                            text = stringResource(R.string.dashboard_total_balance).uppercase(),
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = if (uiState.hideBalances) "••••••••" else uiState.totalBalance.formatted(),
+                    Column(modifier = Modifier.padding(20.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(8.dp)
+                                    .clip(CircleShape)
+                                    .background(EmeraldPrimary)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.dashboard_total_balance).uppercase(),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        md.alexlab.finpulse.core.designsystem.AnimatedAmountText(
+                            amountText = if (uiState.hideBalances) "••••••••" else uiState.totalBalance.formatted(),
                             style = MaterialTheme.typography.displayMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
                         Text(
                             text = stringResource(R.string.accounts_active_tracked, uiState.accounts.count { !it.isArchived }),
                             style = MaterialTheme.typography.bodySmall,
@@ -163,17 +183,29 @@ fun AccountsScreen(
             }
 
             // Accounts List
-            items(uiState.accounts, key = { it.id }) { account ->
-                AccountCard(
-                    account = account,
-                    hideBalances = uiState.hideBalances,
-                    onClick = { onShowAddEditDialog(true, account) },
-                    onArchive = { onArchiveAccount(account.id, !account.isArchived) }
-                )
+            if (uiState.accounts.isEmpty()) {
+                item {
+                    FinPulseEmptyState(
+                        icon = Icons.Default.AccountBalance,
+                        title = stringResource(R.string.accounts_title),
+                        description = "",
+                        actionLabel = stringResource(R.string.account_add_dialog_title),
+                        onActionClick = { onShowAddEditDialog(true, null) }
+                    )
+                }
+            } else {
+                items(uiState.accounts, key = { it.id }) { account ->
+                    AccountCard(
+                        account = account,
+                        hideBalances = uiState.hideBalances,
+                        onClick = { onShowAddEditDialog(true, account) },
+                        onArchive = { onArchiveAccount(account.id, !account.isArchived) }
+                    )
+                }
             }
 
             item {
-                Spacer(modifier = Modifier.height(80.dp))
+                Spacer(modifier = Modifier.height(84.dp))
             }
         }
 
@@ -218,12 +250,19 @@ fun AccountCard(
         else -> Icons.Default.AccountBalance
     }
 
+    val cardShape = RoundedCornerShape(FinPulseRadius.lg)
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface
+            .border(
+                0.75.dp,
+                MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                cardShape
+            )
+            .bounceClick(scaleDown = 0.98f, onClick = onClick),
+        shape = cardShape,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 2.dp
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -231,9 +270,21 @@ fun AccountCard(
         ) {
             Box(
                 modifier = Modifier
-                    .size(44.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color(account.colorHex).copy(alpha = 0.15f)),
+                    .size(46.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(
+                        androidx.compose.ui.graphics.Brush.linearGradient(
+                            listOf(
+                                Color(account.colorHex).copy(alpha = 0.22f),
+                                Color(account.colorHex).copy(alpha = 0.10f)
+                            )
+                        )
+                    )
+                    .border(
+                        0.75.dp,
+                        Color(account.colorHex).copy(alpha = 0.35f),
+                        RoundedCornerShape(14.dp)
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -250,7 +301,7 @@ fun AccountCard(
                 Text(
                     text = account.name,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(2.dp))

@@ -104,6 +104,9 @@ import md.alexlab.finpulse.core.designsystem.PurpleAccent
 import md.alexlab.finpulse.core.designsystem.SapphireAccent
 import md.alexlab.finpulse.core.designsystem.TealSavings
 import md.alexlab.finpulse.core.designsystem.TransferBlue
+import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.ui.FinPulseCard
+import md.alexlab.finpulse.core.ui.FinPulseEmptyState
 import md.alexlab.finpulse.core.model.Money
 import md.alexlab.finpulse.core.ui.CategoryIconBadge
 import md.alexlab.finpulse.core.ui.getLocalizedName
@@ -481,9 +484,7 @@ private fun CashFlowSummaryCard(
     summary: CashFlowPeriodSummary,
     hideBalances: Boolean
 ) {
-    Card(
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+    FinPulseCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -637,9 +638,7 @@ private fun CashFlowSummaryCard(
 
 @Composable
 private fun ProjectedBalanceCard(summary: CashFlowPeriodSummary) {
-    Card(
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+    FinPulseCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -978,23 +977,15 @@ private fun CalendarEventItem(
     val isOverdue = event.status == CalendarEventStatus.OVERDUE
     val isSkipped = event.status == CalendarEventStatus.SKIPPED
 
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isCompleted) {
-                MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
-            } else {
-                MaterialTheme.colorScheme.surface
-            }
-        ),
+    FinPulseCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .bounceClick(onClick = onClick),
         border = when {
             isOverdue -> BorderStroke(1.dp, AmberWarning)
             isCompleted -> BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
-            else -> null
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
+            else -> BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+        }
     ) {
         Row(
             modifier = Modifier.padding(14.dp),
@@ -1147,30 +1138,12 @@ private fun StatusPill(status: CalendarEventStatus) {
 
 @Composable
 private fun EmptyEventsState(message: String) {
-    Surface(
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier.padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                imageVector = Icons.Default.CalendarMonth,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                modifier = Modifier.size(36.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = message,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
+    FinPulseEmptyState(
+        icon = Icons.Default.CalendarMonth,
+        title = message,
+        description = "",
+        modifier = Modifier.padding(vertical = 24.dp)
+    )
 }
 
 // -------------------------------------------------------------------------

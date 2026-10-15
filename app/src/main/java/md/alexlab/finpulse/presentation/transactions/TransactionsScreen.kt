@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bookmark
@@ -77,9 +79,12 @@ import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.AmberWarning
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.FinPulseRadius
 import md.alexlab.finpulse.core.designsystem.TransferBlue
+import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.core.ui.CategoryIconBadge
 import md.alexlab.finpulse.core.ui.CategoryPickerDialog
+import md.alexlab.finpulse.core.ui.FinPulseEmptyState
 import md.alexlab.finpulse.core.ui.TransactionItem
 import md.alexlab.finpulse.core.ui.getDisplayName
 import md.alexlab.finpulse.core.ui.getLocalizedName
@@ -198,7 +203,11 @@ fun TransactionsScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black
+                contentColor = Color.Black,
+                shape = CircleShape,
+                modifier = Modifier.bounceClick(scaleDown = 0.92f) {
+                    onShowAddEditDialog(true, null)
+                }
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.cd_add))
             }
@@ -229,16 +238,16 @@ fun TransactionsScreen(
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(md.alexlab.finpulse.core.designsystem.FinPulseRadius.xl),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = EmeraldPrimary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 6.dp)
+                    .padding(vertical = 8.dp)
             )
 
             // Presets and Saved Views Row
@@ -260,22 +269,22 @@ fun TransactionsScreen(
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable(onClick = onNavigateToReviewQueue),
-                    shape = RoundedCornerShape(10.dp),
+                        .bounceClick(scaleDown = 0.98f, onClick = onNavigateToReviewQueue),
+                    shape = RoundedCornerShape(FinPulseRadius.md),
                     color = AmberWarning.copy(alpha = 0.12f),
                     border = androidx.compose.foundation.BorderStroke(1.dp, AmberWarning.copy(alpha = 0.35f))
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
                             imageVector = Icons.Default.AutoAwesome,
                             contentDescription = null,
                             tint = AmberWarning,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(18.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(10.dp))
                         Text(
                             text = stringResource(R.string.tx_review_banner, uiState.unreviewedCount),
                             style = MaterialTheme.typography.labelSmall,
@@ -321,27 +330,13 @@ fun TransactionsScreen(
 
             // Transaction List
             if (uiState.transactions.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(32.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = stringResource(R.string.tx_empty_title),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text(
-                            text = stringResource(R.string.tx_empty_desc),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
+                FinPulseEmptyState(
+                    icon = Icons.AutoMirrored.Filled.ReceiptLong,
+                    title = stringResource(R.string.tx_empty_title),
+                    description = stringResource(R.string.tx_empty_desc),
+                    actionLabel = stringResource(R.string.shortcut_quick_add_short),
+                    onActionClick = { onShowAddEditDialog(true, null) }
+                )
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -360,7 +355,7 @@ fun TransactionsScreen(
                     }
 
                     item {
-                        Spacer(modifier = Modifier.height(80.dp))
+                        Spacer(modifier = Modifier.height(84.dp))
                     }
                 }
             }
@@ -441,8 +436,10 @@ fun PresetsAndSavedViewsRow(
         // "All" chip
         val isAllSelected = activePresetId == null && activeSavedFilterId == null && !hasActiveFilters
         Surface(
-            modifier = Modifier.clickable { onResetFilters() },
-            shape = RoundedCornerShape(14.dp),
+            modifier = Modifier
+                .clip(RoundedCornerShape(FinPulseRadius.full))
+                .bounceClick(scaleDown = 0.94f) { onResetFilters() },
+            shape = RoundedCornerShape(FinPulseRadius.full),
             color = if (isAllSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
             contentColor = if (isAllSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
         ) {
@@ -450,7 +447,7 @@ fun PresetsAndSavedViewsRow(
                 text = stringResource(R.string.tx_filter_all),
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = if (isAllSelected) FontWeight.Bold else FontWeight.Medium,
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
             )
         }
 
@@ -471,15 +468,17 @@ fun PresetsAndSavedViewsRow(
             }
 
             Surface(
-                modifier = Modifier.clickable { onSelectPreset(preset) },
-                shape = RoundedCornerShape(14.dp),
+                modifier = Modifier
+                    .clip(RoundedCornerShape(FinPulseRadius.full))
+                    .bounceClick(scaleDown = 0.94f) { onSelectPreset(preset) },
+                shape = RoundedCornerShape(FinPulseRadius.full),
                 color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                 contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant,
                 border = if (preset.id == TransactionPresets.UNCATEGORIZED.id && unreviewedCount > 0 && !isSelected)
                     androidx.compose.foundation.BorderStroke(1.dp, AmberWarning.copy(alpha = 0.5f)) else null
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (preset.id == TransactionPresets.UNCATEGORIZED.id && unreviewedCount > 0) {

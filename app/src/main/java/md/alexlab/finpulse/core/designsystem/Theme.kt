@@ -84,6 +84,7 @@ fun FinPulseTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = FinPulseTypography,
+        shapes = FinPulseShapes,
         content = content
     )
 }

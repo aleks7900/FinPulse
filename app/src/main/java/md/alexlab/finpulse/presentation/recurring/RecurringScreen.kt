@@ -75,6 +75,9 @@ import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.PurpleAccent
 import md.alexlab.finpulse.core.designsystem.TransferBlue
+import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.ui.FinPulseCard
+import md.alexlab.finpulse.core.ui.FinPulseEmptyState
 import md.alexlab.finpulse.core.model.Money
 import md.alexlab.finpulse.core.ui.CategoryIconBadge
 import md.alexlab.finpulse.domain.model.Account
@@ -163,7 +166,8 @@ fun RecurringScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black
+                contentColor = Color.Black,
+                modifier = Modifier.bounceClick(onClick = { onShowAddEditDialog(true, null) })
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.recurring_add_title))
             }
@@ -330,35 +334,13 @@ fun UpcomingSection(
         Spacer(modifier = Modifier.height(12.dp))
 
         if (occurrences.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 60.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        imageVector = Icons.Default.CalendarToday,
-                        contentDescription = null,
-                        tint = EmeraldPrimary,
-                        modifier = Modifier.size(48.dp)
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = stringResource(R.string.recurring_empty_title),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = stringResource(R.string.recurring_empty_desc),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
+            FinPulseEmptyState(
+                icon = Icons.Default.CalendarToday,
+                title = stringResource(R.string.recurring_empty_title),
+                description = stringResource(R.string.recurring_empty_desc),
+                iconTint = EmeraldPrimary,
+                modifier = Modifier.padding(top = 40.dp)
+            )
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -423,14 +405,11 @@ fun UpcomingOccurrenceCard(
 
     val borderStroke = if (occurrence.status == OccurrenceStatus.OVERDUE) {
         BorderStroke(1.5.dp, CrimsonExpense.copy(alpha = 0.8f))
-    } else null
+    } else BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
 
-    Surface(
+    FinPulseCard(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface,
-        border = borderStroke,
-        tonalElevation = 2.dp
+        border = borderStroke
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             // Top Row: Category icon, Title, Due text, Status pill
@@ -587,10 +566,8 @@ fun AllRulesSection(
     ) {
         // Summary Card
         item {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                color = MaterialTheme.colorScheme.surface
+            FinPulseCard(
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(18.dp)) {
                     Text(
@@ -630,14 +607,13 @@ fun AllRulesSection(
 
         if (rules.isEmpty()) {
             item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 40.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(stringResource(R.string.recurring_rules_empty), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
+                FinPulseEmptyState(
+                    icon = Icons.Default.CalendarToday,
+                    title = stringResource(R.string.recurring_rules_empty),
+                    description = "",
+                    iconTint = EmeraldPrimary,
+                    modifier = Modifier.padding(vertical = 32.dp)
+                )
             }
         } else {
             items(rules, key = { it.id }) { rule ->
@@ -672,12 +648,10 @@ fun RuleItemCard(
 ) {
     val nextDateFormatted = DateFormatterUtils.formatDate(rule.nextDueDate)
 
-    Surface(
+    FinPulseCard(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface
+            .bounceClick(onClick = onClick)
     ) {
         Row(
             modifier = Modifier.padding(14.dp),
@@ -761,10 +735,8 @@ fun SubscriptionsSection(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                color = MaterialTheme.colorScheme.surface
+            FinPulseCard(
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(18.dp)) {
                     Row(
@@ -821,14 +793,13 @@ fun SubscriptionsSection(
 
         if (subscriptions.isEmpty()) {
             item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 40.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(stringResource(R.string.recurring_subs_empty), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
+                FinPulseEmptyState(
+                    icon = Icons.Default.Subscriptions,
+                    title = stringResource(R.string.recurring_subs_empty),
+                    description = "",
+                    iconTint = PurpleAccent,
+                    modifier = Modifier.padding(vertical = 32.dp)
+                )
             }
         } else {
             items(subscriptions, key = { it.id }) { rule ->

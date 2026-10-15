@@ -46,7 +46,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.core.ui.CategoryIconBadge
+import md.alexlab.finpulse.core.ui.FinPulseCard
+import md.alexlab.finpulse.core.ui.FinPulseEmptyState
 import md.alexlab.finpulse.core.ui.getDisplayName
 import md.alexlab.finpulse.core.ui.getLocalizedName
 import md.alexlab.finpulse.domain.model.Category
@@ -95,7 +98,8 @@ fun CategoriesScreen(
             FloatingActionButton(
                 onClick = { isAddDialogVisible = true },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black
+                contentColor = Color.Black,
+                modifier = Modifier.bounceClick(onClick = { isAddDialogVisible = true })
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.category_add_title))
             }
@@ -110,10 +114,8 @@ fun CategoriesScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(categories, key = { it.id }) { cat ->
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(14.dp),
-                    color = MaterialTheme.colorScheme.surface
+                FinPulseCard(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
                         modifier = Modifier.padding(14.dp),

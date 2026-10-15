@@ -1,6 +1,7 @@
 package md.alexlab.finpulse.core.ui
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
@@ -29,15 +30,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
+import md.alexlab.finpulse.core.designsystem.EmeraldDark
+import md.alexlab.finpulse.core.designsystem.EmeraldLight
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.FinPulseMotion
+import md.alexlab.finpulse.core.designsystem.FinPulseRadius
+import md.alexlab.finpulse.core.designsystem.AnimatedAmountText
+import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.core.model.Money
 
 @Composable
@@ -50,84 +62,118 @@ fun BalanceCard(
     onToggleHideBalances: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val cardShape = RoundedCornerShape(FinPulseRadius.xxl)
+    val isDark = MaterialTheme.colorScheme.background.value == md.alexlab.finpulse.core.designsystem.DarkBackground.value ||
+            MaterialTheme.colorScheme.surface.value == md.alexlab.finpulse.core.designsystem.DarkSurface.value
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(24.dp))
+            .clip(cardShape)
             .border(
                 width = 1.dp,
                 brush = Brush.verticalGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
-                        MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
-                    )
+                    colors = if (isDark) {
+                        listOf(
+                            Color.White.copy(alpha = 0.14f),
+                            Color.White.copy(alpha = 0.04f)
+                        )
+                    } else {
+                        listOf(
+                            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.8f),
+                            MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+                        )
+                    }
                 ),
-                shape = RoundedCornerShape(24.dp)
+                shape = cardShape
             ),
-        shape = RoundedCornerShape(24.dp),
-        color = MaterialTheme.colorScheme.surface
+        shape = cardShape,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 4.dp
     ) {
         Box(
             modifier = Modifier
                 .background(
                     Brush.radialGradient(
                         colors = listOf(
-                            EmeraldPrimary.copy(alpha = 0.12f),
+                            EmeraldPrimary.copy(alpha = if (isDark) 0.16f else 0.08f),
                             Color.Transparent
                         ),
-                        radius = 600f
+                        radius = 750f
                     )
                 )
-                .padding(20.dp)
+                .padding(22.dp)
         ) {
             Column {
+                // Top Header Row: Label & Eye Toggle
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(8.dp)
+                                .clip(CircleShape)
+                                .background(EmeraldPrimary)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.dashboard_net_worth).uppercase(),
+                            text = stringResource(R.string.dashboard_net_worth).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = "${androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.account_available_balance)}: " + if (hideBalances) "••••••" else availableBalance.formatted(),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
-                        )
                     }
 
-                    IconButton(
-                        onClick = onToggleHideBalances,
-                        modifier = Modifier.size(36.dp)
-                    ) {
-                        Icon(
-                            imageVector = if (hideBalances) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = if (hideBalances) "Show balances" else "Hide balances",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                AnimatedContent(
-                    targetState = hideBalances,
-                    transitionSpec = { fadeIn() togetherWith fadeOut() },
-                    label = "BalanceAnimation"
-                ) { hidden ->
-                    Text(
-                        text = if (hidden) "••••••••" else totalBalance.formatted(),
-                        style = MaterialTheme.typography.displayMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                    val rotationAnim by animateFloatAsState(
+                        targetValue = if (hideBalances) 180f else 0f,
+                        animationSpec = FinPulseMotion.springGentle,
+                        label = "eyeRotation"
                     )
+
+                    Surface(
+                        modifier = Modifier
+                            .size(34.dp)
+                            .bounceClick(scaleDown = 0.90f, onClick = onToggleHideBalances),
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+                    ) {
+                        Box(
+                            modifier = Modifier.rotate(rotationAnim),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = if (hideBalances) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                contentDescription = if (hideBalances) "Show balances" else "Hide balances",
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                    }
                 }
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                // Hero Total Balance with Animated Rolling Numbers
+                AnimatedAmountText(
+                    amountText = if (hideBalances) "••••••••" else totalBalance.formatted(),
+                    style = MaterialTheme.typography.displayLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                // Available Balance subtitle
+                Text(
+                    text = "${stringResource(R.string.account_available_balance)} • " +
+                            if (hideBalances) "••••••" else availableBalance.formatted(),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.85f)
+                )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -136,18 +182,16 @@ fun BalanceCard(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // Income Pill
                     CashFlowPill(
-                        label = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.tx_type_income),
+                        label = stringResource(R.string.tx_type_income),
                         amount = monthlyIncome,
                         isIncome = true,
                         hideBalances = hideBalances,
                         modifier = Modifier.weight(1f)
                     )
 
-                    // Expense Pill
                     CashFlowPill(
-                        label = androidx.compose.ui.res.stringResource(md.alexlab.finpulse.R.string.tx_type_expense),
+                        label = stringResource(R.string.tx_type_expense),
                         amount = monthlyExpenses,
                         isIncome = false,
                         hideBalances = hideBalances,
@@ -169,19 +213,25 @@ fun CashFlowPill(
 ) {
     val accentColor = if (isIncome) EmeraldPrimary else CrimsonExpense
     val icon = if (isIncome) Icons.Default.ArrowDownward else Icons.Default.ArrowUpward
+    val prefix = if (isIncome) "+" else "-"
 
     Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+        modifier = modifier
+            .border(
+                width = 0.75.dp,
+                color = accentColor.copy(alpha = 0.20f),
+                shape = RoundedCornerShape(FinPulseRadius.lg)
+            ),
+        shape = RoundedCornerShape(FinPulseRadius.lg),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 11.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(28.dp)
+                    .size(30.dp)
                     .clip(CircleShape)
                     .background(accentColor.copy(alpha = 0.15f)),
                 contentAlignment = Alignment.Center
@@ -203,9 +253,9 @@ fun CashFlowPill(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = if (hideBalances) "••••••" else amount.formatted(),
+                    text = if (hideBalances) "••••••" else "$prefix${amount.formatted()}",
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }

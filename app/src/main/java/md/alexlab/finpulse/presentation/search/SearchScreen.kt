@@ -47,6 +47,8 @@ import androidx.compose.ui.unit.dp
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.AmberWarning
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.ui.FinPulseEmptyState
 import md.alexlab.finpulse.core.ui.TransactionItem
 import md.alexlab.finpulse.domain.model.TransactionFilterParams
 import md.alexlab.finpulse.domain.model.TransactionPreset
@@ -123,10 +125,10 @@ fun SearchScreen(
                     }
                 },
                 singleLine = true,
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(24.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = EmeraldPrimary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface
                 ),
@@ -146,7 +148,7 @@ fun SearchScreen(
                 // All Chip
                 val isAll = selectedPreset == null
                 Surface(
-                    modifier = Modifier.clickable { selectedPreset = null },
+                    modifier = Modifier.bounceClick { selectedPreset = null },
                     shape = RoundedCornerShape(14.dp),
                     color = if (isAll) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                     contentColor = if (isAll) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
@@ -172,7 +174,7 @@ fun SearchScreen(
                     }
 
                     Surface(
-                        modifier = Modifier.clickable {
+                        modifier = Modifier.bounceClick {
                             selectedPreset = if (isSelected) null else preset
                         },
                         shape = RoundedCornerShape(14.dp),
@@ -190,31 +192,21 @@ fun SearchScreen(
             }
 
             if (query.isBlank() && selectedPreset == null) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(32.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.search_empty_hint),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                FinPulseEmptyState(
+                    icon = Icons.Default.Search,
+                    title = stringResource(R.string.search_empty_hint),
+                    description = "",
+                    iconTint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                    modifier = Modifier.padding(top = 60.dp)
+                )
             } else if (transactions.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(32.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.search_no_results),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                FinPulseEmptyState(
+                    icon = Icons.Default.Search,
+                    title = stringResource(R.string.search_no_results),
+                    description = "",
+                    iconTint = EmeraldPrimary,
+                    modifier = Modifier.padding(top = 60.dp)
+                )
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),

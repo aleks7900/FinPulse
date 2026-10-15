@@ -58,6 +58,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import md.alexlab.finpulse.core.designsystem.FinPulseRadius
+import md.alexlab.finpulse.core.designsystem.bounceClick
 import androidx.compose.ui.unit.sp
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
@@ -655,21 +657,22 @@ fun NumericKeypad(
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         keys.forEach { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 row.forEach { key ->
+                    val keyShape = RoundedCornerShape(FinPulseRadius.md)
                     Surface(
                         modifier = Modifier
                             .weight(1f)
-                            .height(48.dp)
-                            .clickable { onDigitClick(key) },
-                        shape = RoundedCornerShape(12.dp),
-                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                            .height(52.dp)
+                            .bounceClick(scaleDown = 0.88f) { onDigitClick(key) },
+                        shape = keyShape,
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
                         tonalElevation = 2.dp
                     ) {
                         Box(contentAlignment = Alignment.Center) {
@@ -678,12 +681,12 @@ fun NumericKeypad(
                                     imageVector = Icons.Default.Backspace,
                                     contentDescription = "Backspace",
                                     tint = MaterialTheme.colorScheme.onSurface,
-                                    modifier = Modifier.size(18.dp)
+                                    modifier = Modifier.size(20.dp)
                                 )
                             } else {
                                 Text(
                                     text = key.toString(),
-                                    fontSize = 20.sp,
+                                    fontSize = 22.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )

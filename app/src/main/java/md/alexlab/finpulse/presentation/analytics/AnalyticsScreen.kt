@@ -1,6 +1,7 @@
 package md.alexlab.finpulse.presentation.analytics
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,13 +33,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.FinPulseRadius
+import md.alexlab.finpulse.core.designsystem.AnimatedAmountText
+import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.core.model.TimePeriod
 import md.alexlab.finpulse.core.ui.CategoryIconBadge
 import md.alexlab.finpulse.core.ui.DonutChart
 import md.alexlab.finpulse.core.ui.DonutSegment
+import md.alexlab.finpulse.core.ui.FinPulseCard
 import md.alexlab.finpulse.core.ui.getDisplayName
 import md.alexlab.finpulse.presentation.dashboard.TimeRangeSelector
 
@@ -88,39 +94,70 @@ fun AnalyticsScreen(
 
             // Cash Flow Summary Card
             item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surface
+                FinPulseCard(
+                    shape = RoundedCornerShape(FinPulseRadius.xl),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(modifier = Modifier.padding(18.dp)) {
-                        Text(
-                            text = stringResource(R.string.dashboard_monthly_net).uppercase(),
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = if (uiState.hideBalances) "••••••" else uiState.netCashFlow.formatted(),
+                    Column(modifier = Modifier.padding(20.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(8.dp)
+                                    .clip(CircleShape)
+                                    .background(EmeraldPrimary)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.dashboard_monthly_net).uppercase(),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        AnimatedAmountText(
+                            amountText = if (uiState.hideBalances) "••••••" else uiState.netCashFlow.formatted(),
                             style = MaterialTheme.typography.displayMedium,
                             fontWeight = FontWeight.Bold,
                             color = if (uiState.netCashFlow.isNegative) CrimsonExpense else EmeraldPrimary
                         )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(18.dp))
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column {
-                                Text(stringResource(R.string.total_income), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                Text(if (uiState.hideBalances) "••••" else uiState.totalIncome.formatted(), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = EmeraldPrimary)
+                                Text(
+                                    text = stringResource(R.string.total_income),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(
+                                    text = if (uiState.hideBalances) "••••" else uiState.totalIncome.formatted(),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = EmeraldPrimary
+                                )
                             }
                             Column(horizontalAlignment = Alignment.End) {
-                                Text(stringResource(R.string.total_expenses), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                Text(if (uiState.hideBalances) "••••" else uiState.totalExpenses.formatted(), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = CrimsonExpense)
+                                Text(
+                                    text = stringResource(R.string.total_expenses),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(
+                                    text = if (uiState.hideBalances) "••••" else uiState.totalExpenses.formatted(),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = CrimsonExpense
+                                )
                             }
                         }
                     }
@@ -130,10 +167,9 @@ fun AnalyticsScreen(
             // Category Donut Chart
             if (uiState.categoryBreakdown.isNotEmpty()) {
                 item {
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(20.dp),
-                        color = MaterialTheme.colorScheme.surface
+                    FinPulseCard(
+                        shape = RoundedCornerShape(FinPulseRadius.xl),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(
                             modifier = Modifier.padding(20.dp),
@@ -143,6 +179,7 @@ fun AnalyticsScreen(
                                 text = stringResource(R.string.analytics_spending_by_category).uppercase(),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.align(Alignment.Start)
                             )
@@ -160,13 +197,13 @@ fun AnalyticsScreen(
                                 segments = segments,
                                 centerTitle = stringResource(R.string.budget_total_spent),
                                 centerValue = if (uiState.hideBalances) "••••" else uiState.totalExpenses.formatted(),
-                                modifier = Modifier.size(200.dp)
+                                modifier = Modifier.size(210.dp)
                             )
 
-                            Spacer(modifier = Modifier.height(20.dp))
+                            Spacer(modifier = Modifier.height(22.dp))
 
                             // Category breakdown rows
-                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                                 uiState.categoryBreakdown.forEach { item ->
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
@@ -174,27 +211,29 @@ fun AnalyticsScreen(
                                     ) {
                                         Box(
                                             modifier = Modifier
-                                                .size(12.dp)
-                                                .clip(CircleShape)
+                                                .size(14.dp)
+                                                .clip(RoundedCornerShape(4.dp))
                                                 .background(Color(item.category.colorHex))
                                         )
                                         Spacer(modifier = Modifier.width(10.dp))
                                         Text(
                                             text = item.category.getDisplayName(),
                                             style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Medium,
                                             color = MaterialTheme.colorScheme.onSurface,
                                             modifier = Modifier.weight(1f)
                                         )
                                         Text(
                                             text = "${(item.percentageOfTotal * 100).toInt()}%",
                                             style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
-                                        Spacer(modifier = Modifier.width(10.dp))
+                                        Spacer(modifier = Modifier.width(12.dp))
                                         Text(
                                             text = if (uiState.hideBalances) "••••" else item.totalAmount.formatted(),
                                             style = MaterialTheme.typography.bodyMedium,
-                                            fontWeight = FontWeight.SemiBold,
+                                            fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurface
                                         )
                                     }
@@ -242,19 +281,44 @@ fun AnalyticsScreen(
 
                 items(uiState.topMerchants) { merchant ->
                     Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(14.dp),
-                        color = MaterialTheme.colorScheme.surface
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(
+                                0.75.dp,
+                                MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                                RoundedCornerShape(FinPulseRadius.lg)
+                            )
+                            .bounceClick(scaleDown = 0.98f),
+                        shape = RoundedCornerShape(FinPulseRadius.lg),
+                        color = MaterialTheme.colorScheme.surface,
+                        tonalElevation = 2.dp
                     ) {
                         Row(
                             modifier = Modifier.padding(14.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(38.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(EmeraldPrimary.copy(alpha = 0.14f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = merchant.merchant.take(1).uppercase(),
+                                    fontWeight = FontWeight.Bold,
+                                    color = EmeraldPrimary,
+                                    fontSize = 16.sp
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(12.dp))
+
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = merchant.merchant,
                                     style = MaterialTheme.typography.titleSmall,
-                                    fontWeight = FontWeight.SemiBold,
+                                    fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
@@ -276,7 +340,7 @@ fun AnalyticsScreen(
             }
 
             item {
-                Spacer(modifier = Modifier.height(80.dp))
+                Spacer(modifier = Modifier.height(84.dp))
             }
         }
     }
@@ -289,9 +353,15 @@ fun StatCard(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface
+        modifier = modifier
+            .border(
+                0.75.dp,
+                MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                RoundedCornerShape(FinPulseRadius.lg)
+            ),
+        shape = RoundedCornerShape(FinPulseRadius.lg),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 2.dp
     ) {
         Column(
             modifier = Modifier.padding(14.dp),
@@ -300,7 +370,8 @@ fun StatCard(
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(

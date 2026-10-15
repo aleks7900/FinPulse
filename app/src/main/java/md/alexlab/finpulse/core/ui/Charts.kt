@@ -2,9 +2,11 @@ package md.alexlab.finpulse.core.ui
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +26,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,12 +40,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import md.alexlab.finpulse.core.designsystem.AmberWarning
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.FinPulseMotion
+import md.alexlab.finpulse.core.designsystem.FinPulseRadius
+import kotlin.math.atan2
 
 data class DonutSegment(
     val label: String,
@@ -54,42 +63,80 @@ fun DonutChart(
     centerTitle: String,
     centerValue: String,
     modifier: Modifier = Modifier,
-    strokeWidth: Dp = 28.dp
+    strokeWidth: Dp = 26.dp
 ) {
     val total = segments.sumOf { it.value }.coerceAtLeast(1.0)
     val animationProgress = remember { Animatable(0f) }
+    var selectedIndex by remember { mutableStateOf<Int?>(null) }
 
     LaunchedEffect(segments) {
+        selectedIndex = null
         animationProgress.snapTo(0f)
         animationProgress.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing)
+            animationSpec = tween(durationMillis = 850, easing = FastOutSlowInEasing)
         )
     }
+
+    val displayTitle = selectedIndex?.let { segments.getOrNull(it)?.label } ?: centerTitle
+    val displayValue = selectedIndex?.let {
+        val seg = segments.getOrNull(it)
+        if (seg != null) {
+            val pct = (seg.value / total * 100).toInt()
+            "$pct%"
+        } else centerValue
+    } ?: centerValue
 
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(segments) {
+                    detectTapGestures { tapOffset ->
+                        val center = Offset(size.width / 2f, size.height / 2f)
+                        val dx = tapOffset.x - center.x
+                        val dy = tapOffset.y - center.y
+                        var angleDeg = Math.toDegrees(atan2(dy.toDouble(), dx.toDouble())).toFloat()
+                        // Normalize angle so -90 deg (top) is 0
+                        angleDeg = (angleDeg + 90f + 360f) % 360f
+
+                        var runningSweep = 0f
+                        var hitIndex: Int? = null
+                        for (i in segments.indices) {
+                            val sweep = ((segments[i].value / total) * 360f).toFloat()
+                            if (angleDeg >= runningSweep && angleDeg <= runningSweep + sweep) {
+                                hitIndex = i
+                                break
+                            }
+                            runningSweep += sweep
+                        }
+                        selectedIndex = if (selectedIndex == hitIndex) null else hitIndex
+                    }
+                }
+        ) {
             val strokePx = strokeWidth.toPx()
-            val diameter = size.minDimension - strokePx
+            val diameter = size.minDimension - strokePx - 16f
             val topLeft = Offset((size.width - diameter) / 2f, (size.height - diameter) / 2f)
             val arcSize = Size(diameter, diameter)
 
             var currentAngle = -90f
 
-            for (seg in segments) {
+            for ((index, seg) in segments.withIndex()) {
+                val isSelected = selectedIndex == index
                 val sweep = ((seg.value / total) * 360f * animationProgress.value).toFloat()
-                if (sweep > 0f) {
+                if (sweep > 0.5f) {
+                    val currentStroke = if (isSelected) strokePx + 8f else strokePx
                     drawArc(
                         color = seg.color,
                         startAngle = currentAngle,
-                        sweepAngle = sweep,
+                        sweepAngle = sweep - 1.5f,
                         useCenter = false,
                         topLeft = topLeft,
                         size = arcSize,
-                        style = Stroke(width = strokePx, cap = StrokeCap.Round)
+                        style = Stroke(width = currentStroke, cap = StrokeCap.Round)
                     )
                     currentAngle += sweep
                 }
@@ -101,13 +148,13 @@ fun DonutChart(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = centerTitle,
+                text = displayTitle,
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text = centerValue,
+                text = displayValue,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -116,6 +163,9 @@ fun DonutChart(
     }
 }
 
+/**
+ * Modern smooth sparkline chart with Bezier smoothing and soft gradient aura.
+ */
 @Composable
 fun SparklineChart(
     dataPoints: List<Double>,
@@ -131,7 +181,7 @@ fun SparklineChart(
     val animProgress = remember { Animatable(0f) }
     LaunchedEffect(dataPoints) {
         animProgress.snapTo(0f)
-        animProgress.animateTo(1f, tween(700, easing = FastOutSlowInEasing))
+        animProgress.animateTo(1f, tween(750, easing = FastOutSlowInEasing))
     }
 
     Canvas(modifier = modifier) {
@@ -139,43 +189,68 @@ fun SparklineChart(
         val height = size.height
         val stepX = width / (dataPoints.size - 1)
 
+        val points = dataPoints.mapIndexed { i, point ->
+            val normY = ((point - minVal) / range).toFloat()
+            val x = i * stepX
+            val y = height - (normY * (height - 12.dp.toPx()) * animProgress.value) - 6.dp.toPx()
+            Offset(x, y)
+        }
+
         val path = Path()
         val fillPath = Path()
 
-        dataPoints.forEachIndexed { i, point ->
-            val normY = ((point - minVal) / range).toFloat()
-            val x = i * stepX
-            val y = height - (normY * height * animProgress.value)
+        if (points.isNotEmpty()) {
+            path.moveTo(points[0].x, points[0].y)
+            fillPath.moveTo(points[0].x, height)
+            fillPath.lineTo(points[0].x, points[0].y)
 
-            if (i == 0) {
-                path.moveTo(x, y)
-                fillPath.moveTo(x, height)
-                fillPath.lineTo(x, y)
-            } else {
-                path.lineTo(x, y)
-                fillPath.lineTo(x, y)
+            for (i in 0 until points.size - 1) {
+                val p0 = points[i]
+                val p1 = points[i + 1]
+                val controlX = (p0.x + p1.x) / 2f
+                path.cubicTo(controlX, p0.y, controlX, p1.y, p1.x, p1.y)
+                fillPath.cubicTo(controlX, p0.y, controlX, p1.y, p1.x, p1.y)
             }
-        }
-        fillPath.lineTo(width, height)
-        fillPath.close()
 
-        drawPath(
-            path = fillPath,
-            brush = Brush.verticalGradient(
-                colors = listOf(lineColor.copy(alpha = 0.25f), Color.Transparent),
-                startY = 0f,
-                endY = height
+            fillPath.lineTo(points.last().x, height)
+            fillPath.close()
+
+            // Draw soft atmospheric fill
+            drawPath(
+                path = fillPath,
+                brush = Brush.verticalGradient(
+                    colors = listOf(lineColor.copy(alpha = 0.28f), Color.Transparent),
+                    startY = 0f,
+                    endY = height
+                )
             )
-        )
 
-        drawPath(
-            path = path,
-            color = lineColor,
-            style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round)
-        )
+            // Draw smooth line
+            drawPath(
+                path = path,
+                color = lineColor,
+                style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round)
+            )
+
+            // Draw final point dot with glow
+            val lastPoint = points.last()
+            drawCircle(
+                color = lineColor.copy(alpha = 0.35f),
+                radius = 7.dp.toPx(),
+                center = lastPoint
+            )
+            drawCircle(
+                color = lineColor,
+                radius = 3.5.dp.toPx(),
+                center = lastPoint
+            )
+        }
     }
 }
 
+/**
+ * Modern comparative income/expense bar chart.
+ */
 @Composable
 fun CashFlowBarChart(
     incomeValues: List<Double>,
@@ -186,6 +261,12 @@ fun CashFlowBarChart(
     val maxIncome = incomeValues.maxOrNull() ?: 1.0
     val maxExpense = expenseValues.maxOrNull() ?: 1.0
     val maxVal = maxOf(maxIncome, maxExpense, 1.0)
+
+    val animProgress = remember { Animatable(0f) }
+    LaunchedEffect(incomeValues, expenseValues) {
+        animProgress.snapTo(0f)
+        animProgress.animateTo(1f, tween(700, easing = FastOutSlowInEasing))
+    }
 
     Row(
         modifier = modifier,
@@ -204,27 +285,35 @@ fun CashFlowBarChart(
                 Row(
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.height(110.dp)
+                    modifier = Modifier.height(115.dp)
                 ) {
-                    val incHeightRatio = (inc / maxVal).toFloat().coerceIn(0.04f, 1f)
-                    val expHeightRatio = (exp / maxVal).toFloat().coerceIn(0.04f, 1f)
+                    val incHeightRatio = ((inc / maxVal).toFloat() * animProgress.value).coerceIn(0.04f, 1f)
+                    val expHeightRatio = ((exp / maxVal).toFloat() * animProgress.value).coerceIn(0.04f, 1f)
 
                     Box(
                         modifier = Modifier
-                            .width(10.dp)
+                            .width(11.dp)
                             .fillMaxHeight(incHeightRatio)
-                            .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
-                            .background(EmeraldPrimary)
+                            .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp))
+                            .background(
+                                Brush.verticalGradient(
+                                    listOf(EmeraldPrimary, EmeraldPrimary.copy(alpha = 0.7f))
+                                )
+                            )
                     )
                     Box(
                         modifier = Modifier
-                            .width(10.dp)
+                            .width(11.dp)
                             .fillMaxHeight(expHeightRatio)
-                            .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
-                            .background(CrimsonExpense)
+                            .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp))
+                            .background(
+                                Brush.verticalGradient(
+                                    listOf(CrimsonExpense, CrimsonExpense.copy(alpha = 0.7f))
+                                )
+                            )
                     )
                 }
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = label,
                     style = MaterialTheme.typography.labelSmall,
@@ -235,12 +324,21 @@ fun CashFlowBarChart(
     }
 }
 
+/**
+ * Modern animated budget progress bar with multi-threshold coloring.
+ */
 @Composable
 fun BudgetProgressBar(
     percentage: Double,
     modifier: Modifier = Modifier
 ) {
     val clamped = percentage.coerceIn(0.0, 1.0).toFloat()
+    val animatedProgress by animateFloatAsState(
+        targetValue = clamped,
+        animationSpec = FinPulseMotion.springGentle,
+        label = "budgetProgressAnim"
+    )
+
     val barColor = when {
         percentage >= 1.0 -> CrimsonExpense
         percentage >= 0.85 -> AmberWarning
@@ -251,14 +349,14 @@ fun BudgetProgressBar(
         modifier = modifier
             .fillMaxWidth()
             .height(8.dp),
-        shape = RoundedCornerShape(4.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant
+        shape = RoundedCornerShape(FinPulseRadius.full),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth(clamped)
+                .fillMaxWidth(animatedProgress)
                 .fillMaxHeight()
-                .clip(RoundedCornerShape(4.dp))
+                .clip(RoundedCornerShape(FinPulseRadius.full))
                 .background(barColor)
         )
     }
