@@ -1547,4 +1547,5 @@
     <string name="cd_backspace">Backspace</string>
     <string name="cd_logo">Logo FinPulse</string>
     <string name="action_clear">Wyczyść</string>
+    <string name="action_open">Otwórz</string>
 </resources>

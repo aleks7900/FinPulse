@@ -1150,7 +1150,7 @@
     <string name="review_inbox_paying_from">Оплата со счёта:</string>
     <string name="review_inbox_record_payment">Записать платёж</string>
     <string name="review_inbox_bulk_categorize_title">Категоризировать %1$d операций</string>
-    <string name="review_inbox_open">Открыть входящие на проверку</string>
+    <string name="review_inbox_open">Открыть входящие</string>
     <string name="review_inbox_actions">Действия</string>
     <string name="review_inbox_more_actions">Дополнительные действия</string>
     <string name="review_inbox_tab_all">Все</string>
@@ -1548,4 +1548,5 @@
     <string name="cd_backspace">Стереть</string>
     <string name="cd_logo">Логотип FinPulse</string>
     <string name="action_clear">Очистить</string>
+    <string name="action_open">Открыть</string>
 </resources>

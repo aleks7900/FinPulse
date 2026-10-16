@@ -1531,4 +1531,5 @@
     <string name="cd_backspace">Retroceso</string>
     <string name="cd_logo">Logo de FinPulse</string>
     <string name="action_clear">Limpiar</string>
+    <string name="action_open">Abrir</string>
 </resources>

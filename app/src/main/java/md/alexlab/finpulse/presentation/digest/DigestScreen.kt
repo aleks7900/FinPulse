@@ -694,14 +694,21 @@ private fun SectionHeader(
             text = title,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.weight(1f, fill = false),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
-        TextButton(onClick = onActionClick) {
+        TextButton(
+            onClick = onActionClick,
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+        ) {
             Text(
                 text = actionLabel,
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                maxLines = 1
             )
             Spacer(modifier = Modifier.width(4.dp))
             Icon(
@@ -908,58 +915,64 @@ private fun ReviewQueueGlanceCard(
                 .fillMaxWidth()
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(AmberWarning.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(AmberWarning.copy(alpha = 0.2f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Inbox,
-                        contentDescription = null,
-                        tint = AmberWarning,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.Inbox,
+                    contentDescription = null,
+                    tint = AmberWarning,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
 
-                Column {
-                    Text(
-                        text = stringResource(R.string.dashboard_review_queue_clean_up),
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = if (count == 1) {
-                            stringResource(R.string.dashboard_review_queue_pending_one)
-                        } else {
-                            stringResource(R.string.dashboard_review_queue_pending_many, count)
-                        },
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.dashboard_review_queue_clean_up),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = if (count == 1) {
+                        stringResource(R.string.dashboard_review_queue_pending_one)
+                    } else {
+                        stringResource(R.string.dashboard_review_queue_pending_many, count)
+                    },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
 
             Button(
                 onClick = onCleanUpClick,
-                colors = ButtonDefaults.buttonColors(containerColor = AmberWarning),
-                shape = RoundedCornerShape(12.dp),
-                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = AmberWarning,
+                    contentColor = Color.Black
+                ),
+                shape = RoundedCornerShape(10.dp),
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.review_inbox_open),
+                    text = stringResource(R.string.action_open),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    maxLines = 1
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = null,
+                    modifier = Modifier.size(14.dp)
                 )
             }
         }
@@ -1101,6 +1114,7 @@ private fun DigestSettingsBottomSheet(
                             onClick = { onFrequencyChange(freq) },
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(horizontal = 6.dp, vertical = 8.dp),
                             border = androidx.compose.foundation.BorderStroke(
                                 width = if (isSelected) 2.dp else 1.dp,
                                 color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
@@ -1113,7 +1127,9 @@ private fun DigestSettingsBottomSheet(
                                 text = stringResource(labelRes),
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                     }
@@ -1185,6 +1201,7 @@ private fun DigestSettingsBottomSheet(
                             onClick = { onDeliveryHourChange(hour) },
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp),
                             border = androidx.compose.foundation.BorderStroke(
                                 width = if (isSelected) 2.dp else 1.dp,
                                 color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant

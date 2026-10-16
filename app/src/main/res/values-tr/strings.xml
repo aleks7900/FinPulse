@@ -1531,4 +1531,5 @@
     <string name="cd_backspace">Geri</string>
     <string name="cd_logo">FinPulse Logosu</string>
     <string name="action_clear">Temizle</string>
+    <string name="action_open">Aç</string>
 </resources>

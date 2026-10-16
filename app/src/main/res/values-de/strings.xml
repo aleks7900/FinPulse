@@ -1531,4 +1531,5 @@
     <string name="cd_backspace">Rücktaste</string>
     <string name="cd_logo">FinPulse-Logo</string>
     <string name="action_clear">Löschen</string>
+    <string name="action_open">Öffnen</string>
 </resources>

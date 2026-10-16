@@ -1531,4 +1531,5 @@
     <string name="cd_backspace">Backspace</string>
     <string name="cd_logo">Logo FinPulse</string>
     <string name="action_clear">Cancella</string>
+    <string name="action_open">Apri</string>
 </resources>
