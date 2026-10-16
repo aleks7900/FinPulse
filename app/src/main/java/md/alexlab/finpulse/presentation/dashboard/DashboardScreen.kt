@@ -69,10 +69,15 @@ import md.alexlab.finpulse.core.designsystem.EmeraldLight
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.FinPulseGradients
 import md.alexlab.finpulse.core.designsystem.FinPulseRadius
+import md.alexlab.finpulse.core.designsystem.FinPulseMotion
+import md.alexlab.finpulse.core.designsystem.AnimatedAmountText
+import md.alexlab.finpulse.core.designsystem.staggeredEntrance
 import md.alexlab.finpulse.core.designsystem.InvestmentPurple
 import md.alexlab.finpulse.core.designsystem.SapphireAccent
 import md.alexlab.finpulse.core.designsystem.TealSavings
 import md.alexlab.finpulse.core.designsystem.bounceClick
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.ui.graphics.graphicsLayer
 import md.alexlab.finpulse.core.model.Money
 import md.alexlab.finpulse.core.model.TimePeriod
 import md.alexlab.finpulse.core.ui.BalanceCard
@@ -176,7 +181,8 @@ fun DashboardScreen(
             item {
                 TimeRangeSelector(
                     selectedPeriod = uiState.selectedPeriod,
-                    onPeriodSelected = onPeriodSelected
+                    onPeriodSelected = onPeriodSelected,
+                    modifier = Modifier.staggeredEntrance(index = 0)
                 )
             }
 
@@ -185,7 +191,8 @@ fun DashboardScreen(
                 item {
                     ReviewQueueBannerCard(
                         unreviewedCount = uiState.unreviewedCount,
-                        onClick = onNavigateToReviewQueue
+                        onClick = onNavigateToReviewQueue,
+                        modifier = Modifier.staggeredEntrance(index = 1)
                     )
                 }
             }
@@ -198,7 +205,8 @@ fun DashboardScreen(
                     monthlyIncome = uiState.summary.income,
                     monthlyExpenses = uiState.summary.expenses,
                     hideBalances = uiState.hideBalances,
-                    onToggleHideBalances = onToggleHideBalances
+                    onToggleHideBalances = onToggleHideBalances,
+                    modifier = Modifier.staggeredEntrance(index = 2)
                 )
             }
 
@@ -207,7 +215,8 @@ fun DashboardScreen(
                 QuickActionBar(
                     onAddTransaction = onNavigateToAddTransaction,
                     onViewAccounts = onNavigateToAccounts,
-                    onViewBudgets = onNavigateToBudgets
+                    onViewBudgets = onNavigateToBudgets,
+                    modifier = Modifier.staggeredEntrance(index = 3)
                 )
             }
 
@@ -216,7 +225,9 @@ fun DashboardScreen(
                 FinPulseCard(
                     shape = RoundedCornerShape(FinPulseRadius.lg),
                     onClick = onNavigateToCalendar,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .staggeredEntrance(index = 4)
                 ) {
                     Row(
                         modifier = Modifier.padding(16.dp),
@@ -271,13 +282,17 @@ fun DashboardScreen(
                     investments = uiState.summary.totalInvestments,
                     debt = uiState.summary.totalDebt,
                     savingsRate = uiState.summary.savingsRatePercentage,
-                    hideBalances = uiState.hideBalances
+                    hideBalances = uiState.hideBalances,
+                    modifier = Modifier.staggeredEntrance(index = 5)
                 )
             }
 
             // Financial Digest Glance Banner
             item {
-                FinancialDigestBannerCard(onClick = onNavigateToDigest)
+                FinancialDigestBannerCard(
+                    onClick = onNavigateToDigest,
+                    modifier = Modifier.staggeredEntrance(index = 6)
+                )
             }
 
             // 5. Smart Insights Feed Card (if available)
@@ -286,7 +301,8 @@ fun DashboardScreen(
                     val topInsight = uiState.insights.first()
                     InsightBanner(
                         insight = topInsight,
-                        onClick = onNavigateToInsights
+                        onClick = onNavigateToInsights,
+                        modifier = Modifier.staggeredEntrance(index = 7)
                     )
                 }
             }
@@ -295,7 +311,9 @@ fun DashboardScreen(
             if (uiState.budgetStatuses.isNotEmpty()) {
                 item {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .staggeredEntrance(index = 8),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -318,10 +336,11 @@ fun DashboardScreen(
                     }
                 }
 
-                items(uiState.budgetStatuses.take(2)) { status ->
+                items(uiState.budgetStatuses.take(2), key = { it.budget.id }) { status ->
                     BudgetProgressCard(
                         status = status,
-                        hideBalances = uiState.hideBalances
+                        hideBalances = uiState.hideBalances,
+                        modifier = Modifier.animateItem()
                     )
                 }
             }
@@ -329,7 +348,9 @@ fun DashboardScreen(
             // 7. Recent Transactions Header & List
             item {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .staggeredEntrance(index = 9),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -363,7 +384,7 @@ fun DashboardScreen(
                     )
                 }
             } else {
-                items(uiState.recentTransactions) { tx ->
+                items(uiState.recentTransactions, key = { it.id }) { tx ->
                     val cat = categoryMap[tx.categoryId]
                     val acc = accountMap[tx.sourceAccountId]?.name ?: "Account"
                     TransactionItem(
@@ -371,7 +392,8 @@ fun DashboardScreen(
                         category = cat,
                         accountName = acc,
                         hideBalances = uiState.hideBalances,
-                        onClick = onNavigateToTransactions
+                        onClick = onNavigateToTransactions,
+                        modifier = Modifier.animateItem()
                     )
                 }
             }
@@ -398,19 +420,28 @@ fun TimeRangeSelector(
     ) {
         TimePeriod.values().forEach { period ->
             val isSelected = period == selectedPeriod
+            val scaleAnim by animateFloatAsState(
+                targetValue = if (isSelected) 1.04f else 1.0f,
+                animationSpec = FinPulseMotion.springBouncy,
+                label = "periodScale"
+            )
             val bgColor by animateColorAsState(
                 targetValue = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                animationSpec = tween(200),
+                animationSpec = tween(220),
                 label = "periodBg"
             )
             val textColor by animateColorAsState(
                 targetValue = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant,
-                animationSpec = tween(200),
+                animationSpec = tween(220),
                 label = "periodText"
             )
 
             Surface(
                 modifier = Modifier
+                    .graphicsLayer {
+                        scaleX = scaleAnim
+                        scaleY = scaleAnim
+                    }
                     .clip(RoundedCornerShape(FinPulseRadius.full))
                     .bounceClick(scaleDown = 0.94f) { onPeriodSelected(period) },
                 shape = RoundedCornerShape(FinPulseRadius.full),
@@ -583,8 +614,8 @@ fun MetricTile(
                 overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = value,
+            AnimatedAmountText(
+                amountText = value,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
                 color = color

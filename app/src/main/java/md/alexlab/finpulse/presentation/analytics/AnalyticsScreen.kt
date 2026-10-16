@@ -39,6 +39,7 @@ import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.FinPulseRadius
 import md.alexlab.finpulse.core.designsystem.AnimatedAmountText
+import md.alexlab.finpulse.core.designsystem.staggeredEntrance
 import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.core.model.TimePeriod
 import md.alexlab.finpulse.core.ui.CategoryIconBadge
@@ -88,7 +89,8 @@ fun AnalyticsScreen(
             item {
                 TimeRangeSelector(
                     selectedPeriod = uiState.selectedPeriod,
-                    onPeriodSelected = onPeriodSelected
+                    onPeriodSelected = onPeriodSelected,
+                    modifier = Modifier.staggeredEntrance(index = 0)
                 )
             }
 
@@ -96,7 +98,9 @@ fun AnalyticsScreen(
             item {
                 FinPulseCard(
                     shape = RoundedCornerShape(FinPulseRadius.xl),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .staggeredEntrance(index = 1)
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -138,8 +142,8 @@ fun AnalyticsScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
-                                Text(
-                                    text = if (uiState.hideBalances) "••••" else uiState.totalIncome.formatted(),
+                                AnimatedAmountText(
+                                    amountText = if (uiState.hideBalances) "••••" else uiState.totalIncome.formatted(),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = EmeraldPrimary
@@ -152,8 +156,8 @@ fun AnalyticsScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
-                                Text(
-                                    text = if (uiState.hideBalances) "••••" else uiState.totalExpenses.formatted(),
+                                AnimatedAmountText(
+                                    amountText = if (uiState.hideBalances) "••••" else uiState.totalExpenses.formatted(),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = CrimsonExpense
@@ -169,7 +173,9 @@ fun AnalyticsScreen(
                 item {
                     FinPulseCard(
                         shape = RoundedCornerShape(FinPulseRadius.xl),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .staggeredEntrance(index = 2)
                     ) {
                         Column(
                             modifier = Modifier.padding(20.dp),
@@ -247,7 +253,9 @@ fun AnalyticsScreen(
             // Key Statistics Tiles
             item {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .staggeredEntrance(index = 3),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     StatCard(
@@ -283,6 +291,7 @@ fun AnalyticsScreen(
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .animateItem()
                             .border(
                                 0.75.dp,
                                 MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
@@ -358,7 +367,8 @@ fun StatCard(
                 0.75.dp,
                 MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
                 RoundedCornerShape(FinPulseRadius.lg)
-            ),
+            )
+            .bounceClick(scaleDown = 0.96f),
         shape = RoundedCornerShape(FinPulseRadius.lg),
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 2.dp
@@ -374,8 +384,8 @@ fun StatCard(
                 maxLines = 1
             )
             Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = value,
+            AnimatedAmountText(
+                amountText = value,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface

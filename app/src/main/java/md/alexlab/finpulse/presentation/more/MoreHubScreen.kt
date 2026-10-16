@@ -75,6 +75,7 @@ import md.alexlab.finpulse.core.designsystem.PurpleAccent
 import md.alexlab.finpulse.core.designsystem.SapphireAccent
 import md.alexlab.finpulse.core.designsystem.TealSavings
 import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.designsystem.AnimationPreference
 import md.alexlab.finpulse.core.locale.AppLanguage
 import md.alexlab.finpulse.presentation.navigation.Screen
 
@@ -83,13 +84,16 @@ import md.alexlab.finpulse.presentation.navigation.Screen
 fun MoreHubScreen(
     baseCurrency: String,
     selectedLanguageCode: String,
+    animationPreference: String = "SYSTEM",
     onLanguageSelected: (AppLanguage) -> Unit,
+    onAnimationPreferenceSelected: (String) -> Unit = {},
     onNavigate: (Screen) -> Unit,
     errorReporter: md.alexlab.finpulse.core.reporting.ErrorReporter = md.alexlab.finpulse.core.reporting.NoOpErrorReporter(),
     syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var showLanguageDialog by remember { mutableStateOf(false) }
+    var showAnimationDialog by remember { mutableStateOf(false) }
     val currentAppLanguage = remember(selectedLanguageCode) {
         AppLanguage.fromCode(selectedLanguageCode)
     }
@@ -102,6 +106,17 @@ fun MoreHubScreen(
                 showLanguageDialog = false
             },
             onDismiss = { showLanguageDialog = false }
+        )
+    }
+
+    if (showAnimationDialog) {
+        AnimationPreferenceSelectionDialog(
+            currentPreference = animationPreference,
+            onPreferenceSelected = { pref ->
+                onAnimationPreferenceSelected(pref)
+                showAnimationDialog = false
+            },
+            onDismiss = { showAnimationDialog = false }
         )
     }
 
@@ -254,6 +269,18 @@ fun MoreHubScreen(
                         icon = Icons.Default.Language,
                         tint = EmeraldPrimary,
                         onClick = { showLanguageDialog = true }
+                    )
+                    HubItem(
+                        title = stringResource(R.string.animation_preference_title),
+                        subtitle = when (AnimationPreference.fromKey(animationPreference)) {
+                            AnimationPreference.FULL -> stringResource(R.string.animation_pref_full)
+                            AnimationPreference.BALANCED -> stringResource(R.string.animation_pref_balanced)
+                            AnimationPreference.MINIMAL -> stringResource(R.string.animation_pref_minimal)
+                            AnimationPreference.SYSTEM_DEFAULT -> stringResource(R.string.animation_pref_system)
+                        },
+                        icon = Icons.Default.AutoAwesome,
+                        tint = PurpleAccent,
+                        onClick = { showAnimationDialog = true }
                     )
                 }
             }
@@ -450,6 +477,84 @@ fun LanguageSelectionDialog(
                                     imageVector = Icons.Default.Check,
                                     contentDescription = null,
                                     tint = EmeraldPrimary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.action_done), color = EmeraldPrimary)
+            }
+        }
+    )
+}
+
+@Composable
+fun AnimationPreferenceSelectionDialog(
+    currentPreference: String,
+    onPreferenceSelected: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val options = listOf(
+        Triple(AnimationPreference.SYSTEM_DEFAULT, R.string.animation_pref_system, R.string.animation_pref_system_desc),
+        Triple(AnimationPreference.FULL, R.string.animation_pref_full, R.string.animation_pref_full_desc),
+        Triple(AnimationPreference.BALANCED, R.string.animation_pref_balanced, R.string.animation_pref_balanced_desc),
+        Triple(AnimationPreference.MINIMAL, R.string.animation_pref_minimal, R.string.animation_pref_minimal_desc)
+    )
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = stringResource(R.string.animation_preference_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                options.forEach { (pref, titleRes, descRes) ->
+                    val isSelected = pref.key.equals(currentPreference, ignoreCase = true)
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = if (isSelected) PurpleAccent.copy(alpha = 0.12f) else Color.Transparent,
+                        border = if (isSelected) BorderStroke(1.5.dp, PurpleAccent) else null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onPreferenceSelected(pref.key) }
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp)
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = stringResource(titleRes),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (isSelected) PurpleAccent else MaterialTheme.colorScheme.onSurface
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(
+                                    text = stringResource(descRes),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            if (isSelected) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null,
+                                    tint = PurpleAccent,
                                     modifier = Modifier.size(20.dp)
                                 )
                             }

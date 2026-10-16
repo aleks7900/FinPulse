@@ -20,6 +20,18 @@
     <string name="select_language">选择语言</string>
     <string name="language_title">语言设置</string>
 
+    <!-- Animation & Motion Preferences -->
+    <string name="animation_preference_title">动效与动画</string>
+    <string name="animation_preference_desc">自定义转场物理效果、流畅度与视觉效果</string>
+    <string name="animation_pref_full">完全（旗舰体验）</string>
+    <string name="animation_pref_full_desc">丰富的弹性物理引擎、流光光晕、视差效果与微交互</string>
+    <string name="animation_pref_balanced">平衡</string>
+    <string name="animation_pref_balanced_desc">减少弹跳幅度的流畅转场</string>
+    <string name="animation_pref_minimal">最简（减弱动态效果）</string>
+    <string name="animation_pref_minimal_desc">即时转场，遵循无障碍辅助设置</string>
+    <string name="animation_pref_system">系统默认</string>
+    <string name="animation_pref_system_desc">遵循 Android 系统级动画与动画程序时长缩放设置</string>
+
     <!-- Navigation -->
     <string name="nav_dashboard">总览</string>
     <string name="nav_transactions">明细</string>

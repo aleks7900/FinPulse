@@ -20,6 +20,18 @@
     <string name="select_language">언어 선택</string>
     <string name="language_title">언어</string>
 
+    <!-- Animation & Motion Preferences -->
+    <string name="animation_preference_title">모션 및 애니메이션</string>
+    <string name="animation_preference_desc">전환 물리 효과, 유동성 및 시각 효과 맞춤설정</string>
+    <string name="animation_pref_full">전체 (플래그십 경험)</string>
+    <string name="animation_pref_full_desc">풍부한 스프링 물리, 지속적인 글로우, 패럴랙스 및 마이크로 인터랙션</string>
+    <string name="animation_pref_balanced">균형</string>
+    <string name="animation_pref_balanced_desc">스프링 반동이 줄어든 유동적인 전환</string>
+    <string name="animation_pref_minimal">최소 (모션 줄이기)</string>
+    <string name="animation_pref_minimal_desc">접근성 설정을 준수하는 즉각적인 전환</string>
+    <string name="animation_pref_system">시스템 기본값</string>
+    <string name="animation_pref_system_desc">Android 시스템 전역 애니메이션 시간 배율을 따름</string>
+
     <!-- Navigation -->
     <string name="nav_dashboard">홈</string>
     <string name="nav_transactions">거래내역</string>

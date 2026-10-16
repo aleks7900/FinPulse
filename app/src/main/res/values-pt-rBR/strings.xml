@@ -20,6 +20,18 @@
     <string name="select_language">Selecionar Idioma</string>
     <string name="language_title">Idioma</string>
 
+    <!-- Animation & Motion Preferences -->
+    <string name="animation_preference_title">Movimento e Animações</string>
+    <string name="animation_preference_desc">Personalize a física de transição, fluidez e efeitos visuais</string>
+    <string name="animation_pref_full">Completa (Experiência Principal)</string>
+    <string name="animation_pref_full_desc">Física elástica rica, brilho contínuo, paralaxe e microinterações</string>
+    <string name="animation_pref_balanced">Equilibrada</string>
+    <string name="animation_pref_balanced_desc">Transições fluidas com salto de mola reduzido</string>
+    <string name="animation_pref_minimal">Mínima (Movimento Reduzido)</string>
+    <string name="animation_pref_minimal_desc">Transições imediatas respeitando preferências de acessibilidade</string>
+    <string name="animation_pref_system">Padrão do Sistema</string>
+    <string name="animation_pref_system_desc">Seguir a escala de duração de animação do sistema Android</string>
+
     <!-- Navigation -->
     <string name="nav_dashboard">Visão Geral</string>
     <string name="nav_transactions">Lançamentos</string>

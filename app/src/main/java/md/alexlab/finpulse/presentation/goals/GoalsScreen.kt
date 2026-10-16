@@ -58,6 +58,9 @@ import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.FinPulseRadius
 import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.designsystem.AnimatedAmountText
+import md.alexlab.finpulse.core.designsystem.staggeredEntrance
+import md.alexlab.finpulse.core.designsystem.MilestoneCelebration
 import md.alexlab.finpulse.core.ui.BudgetProgressBar
 import md.alexlab.finpulse.core.ui.DateFormatterUtils
 import md.alexlab.finpulse.domain.model.FinancialGoal
@@ -125,7 +128,9 @@ fun GoalsScreen(
             item {
                 md.alexlab.finpulse.core.ui.FinPulseCard(
                     shape = RoundedCornerShape(md.alexlab.finpulse.core.designsystem.FinPulseRadius.xl),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .staggeredEntrance(index = 0)
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
                         Text(
@@ -140,8 +145,8 @@ fun GoalsScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.Bottom
                         ) {
-                            Text(
-                                text = if (uiState.hideBalances) "••••••" else uiState.totalSaved.formatted(),
+                            AnimatedAmountText(
+                                amountText = if (uiState.hideBalances) "••••••" else uiState.totalSaved.formatted(),
                                 style = MaterialTheme.typography.headlineLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
@@ -180,7 +185,8 @@ fun GoalsScreen(
                         goal = goal,
                         hideBalances = uiState.hideBalances,
                         onClick = { onShowAddEditDialog(true, goal) },
-                        onContribute = { onShowContributeDialog(true, goal) }
+                        onContribute = { onShowContributeDialog(true, goal) },
+                        modifier = Modifier.animateItem()
                     )
                 }
             }
@@ -268,8 +274,8 @@ fun GoalCard(
                 }
 
                 Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = if (hideBalances) "•••• / ••••" else "${goal.currentAmount.formatted()} / ${goal.targetAmount.formatted()}",
+                    AnimatedAmountText(
+                        amountText = if (hideBalances) "•••• / ••••" else "${goal.currentAmount.formatted()} / ${goal.targetAmount.formatted()}",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -282,6 +288,10 @@ fun GoalCard(
                         fontWeight = FontWeight.Medium
                     )
                 }
+            }
+
+            if (goal.isCompleted) {
+                MilestoneCelebration(trigger = true)
             }
 
             Spacer(modifier = Modifier.height(12.dp))

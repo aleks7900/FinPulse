@@ -51,6 +51,7 @@ data class UserPreferences(
     val digestPrivacyEnabled: Boolean = false,
     val digestDeliveryHour: Int = 20, // 8 PM default
     val lastDigestSentMillis: Long = 0L,
+    val animationPreference: String = "SYSTEM",
     val settingsUpdatedAt: Long = 0L
 )
 
@@ -93,6 +94,7 @@ class UserPreferencesDataStore(private val context: Context) {
         val DIGEST_PRIVACY_ENABLED = booleanPreferencesKey("digest_privacy_enabled")
         val DIGEST_DELIVERY_HOUR = androidx.datastore.preferences.core.intPreferencesKey("digest_delivery_hour")
         val LAST_DIGEST_SENT_MILLIS = longPreferencesKey("last_digest_sent_millis")
+        val ANIMATION_PREFERENCE = stringPreferencesKey("animation_preference")
         val SETTINGS_UPDATED_AT = longPreferencesKey("settings_updated_at")
     }
 
@@ -142,6 +144,7 @@ class UserPreferencesDataStore(private val context: Context) {
             digestPrivacyEnabled = preferences[PreferencesKeys.DIGEST_PRIVACY_ENABLED] ?: false,
             digestDeliveryHour = preferences[PreferencesKeys.DIGEST_DELIVERY_HOUR] ?: 20,
             lastDigestSentMillis = preferences[PreferencesKeys.LAST_DIGEST_SENT_MILLIS] ?: 0L,
+            animationPreference = preferences[PreferencesKeys.ANIMATION_PREFERENCE] ?: "SYSTEM",
             settingsUpdatedAt = preferences[PreferencesKeys.SETTINGS_UPDATED_AT] ?: 0L
         )
     }
@@ -236,6 +239,13 @@ class UserPreferencesDataStore(private val context: Context) {
     suspend fun setDarkMode(mode: String) { // "SYSTEM", "LIGHT", "DARK"
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.DARK_MODE] = mode
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
+        }
+    }
+
+    suspend fun setAnimationPreference(preference: String) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.ANIMATION_PREFERENCE] = preference
             preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }

@@ -20,6 +20,18 @@
     <string name="select_language">Sprache auswählen</string>
     <string name="language_title">Sprache</string>
 
+    <!-- Animation & Motion Preferences -->
+    <string name="animation_preference_title">Bewegung &amp; Animationen</string>
+    <string name="animation_preference_desc">Übergangsphysik, Flüssigkeit und visuelle Effekte anpassen</string>
+    <string name="animation_pref_full">Vollständig (Flaggschiff-Erlebnis)</string>
+    <string name="animation_pref_full_desc">Reichhaltige Federphysik, Glüheffekte, Parallaxe und Mikrointeraktionen</string>
+    <string name="animation_pref_balanced">Ausgewogen</string>
+    <string name="animation_pref_balanced_desc">Flüssige Übergänge mit reduzierter Federung</string>
+    <string name="animation_pref_minimal">Minimal (Reduzierte Bewegung)</string>
+    <string name="animation_pref_minimal_desc">Sofortige Übergänge unter Berücksichtigung der Barrierefreiheit</string>
+    <string name="animation_pref_system">Systemstandard</string>
+    <string name="animation_pref_system_desc">Der systemweiten Animationsdauer von Android folgen</string>
+
     <!-- Navigation -->
     <string name="nav_dashboard">Übersicht</string>
     <string name="nav_transactions">Umsätze</string>

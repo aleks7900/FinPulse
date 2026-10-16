@@ -20,6 +20,18 @@
     <string name="select_language">言語を選択</string>
     <string name="language_title">言語</string>
 
+    <!-- Animation & Motion Preferences -->
+    <string name="animation_preference_title">モーションとアニメーション</string>
+    <string name="animation_preference_desc">トランジションの物理演算、滑らかさ、視覚効果をカスタマイズ</string>
+    <string name="animation_pref_full">フル（フラッグシップ体験）</string>
+    <string name="animation_pref_full_desc">スプリング物理演算、継続的なグロー、視差、マイクロインタラクション</string>
+    <string name="animation_pref_balanced">バランス</string>
+    <string name="animation_pref_balanced_desc">控えめなスプリングバウンスによる滑らかなトランジション</string>
+    <string name="animation_pref_minimal">最小限（視覚効果を減らす）</string>
+    <string name="animation_pref_minimal_desc">アクセシビリティ設定を尊重した即時トランジション</string>
+    <string name="animation_pref_system">システムデフォルト</string>
+    <string name="animation_pref_system_desc">Androidシステム全体のアニメーションスケールに従う</string>
+
     <!-- Navigation -->
     <string name="nav_dashboard">ホーム</string>
     <string name="nav_transactions">取引明細</string>

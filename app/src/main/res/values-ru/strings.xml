@@ -20,6 +20,18 @@
     <string name="select_language">Выберите язык</string>
     <string name="language_title">Язык</string>
 
+    <!-- Animation & Motion Preferences -->
+    <string name="animation_preference_title">Анимация и эффекты</string>
+    <string name="animation_preference_desc">Настройка физики переходов, плавности и визуальных эффектов</string>
+    <string name="animation_pref_full">Полная (Максимальный опыт)</string>
+    <string name="animation_pref_full_desc">Пружинная физика, свечение, параллакс и микро-взаимодействия</string>
+    <string name="animation_pref_balanced">Сбалансированная</string>
+    <string name="animation_pref_balanced_desc">Плавные переходы с умеренной отдачей пружин</string>
+    <string name="animation_pref_minimal">Минимальная (Без лишних движений)</string>
+    <string name="animation_pref_minimal_desc">Мгновенные переходы для экономии энергии и доступности</string>
+    <string name="animation_pref_system">Системная</string>
+    <string name="animation_pref_system_desc">Следовать системным настройкам скорости анимаций Android</string>
+
     <!-- Navigation -->
     <string name="nav_dashboard">Обзор</string>
     <string name="nav_transactions">Операции</string>

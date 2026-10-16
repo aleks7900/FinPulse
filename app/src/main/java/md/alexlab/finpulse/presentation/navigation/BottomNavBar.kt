@@ -5,8 +5,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,21 +32,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import md.alexlab.finpulse.R
-import md.alexlab.finpulse.core.designsystem.EmeraldDark
-import md.alexlab.finpulse.core.designsystem.EmeraldLight
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.FinPulseMotion
 import md.alexlab.finpulse.core.designsystem.FinPulseRadius
@@ -87,9 +83,9 @@ fun FinPulseBottomBar(
                 width = 1.dp,
                 brush = Brush.verticalGradient(
                     colors = if (isDark) {
-                        listOf(Color.White.copy(alpha = 0.12f), Color.Transparent)
+                        listOf(Color.White.copy(alpha = 0.14f), Color.White.copy(alpha = 0.02f))
                     } else {
-                        listOf(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f), Color.Transparent)
+                        listOf(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.8f), Color.Transparent)
                     }
                 ),
                 shape = barShape
@@ -110,10 +106,22 @@ fun FinPulseBottomBar(
                 val selected = currentRoute == item.screen.route
                 val itemTitle = stringResource(item.titleRes)
 
-                val scaleAnim by animateFloatAsState(
-                    targetValue = if (selected) 1.06f else 1.0f,
+                val iconScale by animateFloatAsState(
+                    targetValue = if (selected) 1.12f else 1.0f,
                     animationSpec = FinPulseMotion.springBouncy,
-                    label = "navScale"
+                    label = "navIconScale"
+                )
+
+                val pillWidthAnim by animateFloatAsState(
+                    targetValue = if (selected) 54f else 40f,
+                    animationSpec = FinPulseMotion.springStandard,
+                    label = "pillWidth"
+                )
+
+                val iconOffsetY by animateFloatAsState(
+                    targetValue = if (selected) -2f else 0f,
+                    animationSpec = FinPulseMotion.springStandard,
+                    label = "iconOffsetY"
                 )
 
                 val iconColor by animateColorAsState(
@@ -124,22 +132,27 @@ fun FinPulseBottomBar(
 
                 val pillBgColor by animateColorAsState(
                     targetValue = if (selected) EmeraldPrimary.copy(alpha = 0.16f) else Color.Transparent,
-                    animationSpec = tween(200),
+                    animationSpec = tween(220),
                     label = "navPillColor"
+                )
+
+                val dotScale by animateFloatAsState(
+                    targetValue = if (selected) 1f else 0f,
+                    animationSpec = FinPulseMotion.springBouncy,
+                    label = "dotScale"
                 )
 
                 Column(
                     modifier = Modifier
-                        .scale(scaleAnim)
                         .clip(RoundedCornerShape(FinPulseRadius.lg))
-                        .bounceClick(scaleDown = 0.92f) { onNavigate(item.screen) }
-                        .padding(horizontal = 10.dp, vertical = 6.dp),
+                        .bounceClick(scaleDown = 0.90f) { onNavigate(item.screen) }
+                        .padding(horizontal = 6.dp, vertical = 4.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(height = 30.dp, width = 48.dp)
+                            .size(height = 30.dp, width = pillWidthAnim.dp)
                             .clip(RoundedCornerShape(15.dp))
                             .background(pillBgColor),
                         contentAlignment = Alignment.Center
@@ -148,11 +161,17 @@ fun FinPulseBottomBar(
                             imageVector = item.icon,
                             contentDescription = itemTitle,
                             tint = iconColor,
-                            modifier = Modifier.size(22.dp)
+                            modifier = Modifier
+                                .graphicsLayer {
+                                    scaleX = iconScale
+                                    scaleY = iconScale
+                                    translationY = iconOffsetY.dp.toPx()
+                                }
+                                .size(22.dp)
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(2.dp))
+                    Spacer(modifier = Modifier.height(3.dp))
 
                     Text(
                         text = itemTitle,
@@ -160,6 +179,21 @@ fun FinPulseBottomBar(
                         fontSize = 10.sp,
                         fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
                         color = iconColor
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    // Active dot indicator
+                    Box(
+                        modifier = Modifier
+                            .graphicsLayer {
+                                scaleX = dotScale
+                                scaleY = dotScale
+                                alpha = dotScale
+                            }
+                            .size(4.dp)
+                            .clip(CircleShape)
+                            .background(EmeraldPrimary)
                     )
                 }
             }

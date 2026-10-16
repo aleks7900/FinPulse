@@ -66,11 +66,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.AmberWarning
+import md.alexlab.finpulse.core.designsystem.AnimatedAmountText
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.SapphireAccent
-import androidx.compose.foundation.shape.CircleShape
 import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.designsystem.glowPulse
+import md.alexlab.finpulse.core.designsystem.staggeredEntrance
 import md.alexlab.finpulse.core.model.Money
 import md.alexlab.finpulse.core.ui.BudgetProgressBar
 import md.alexlab.finpulse.core.ui.CategoryIconBadge
@@ -189,7 +191,10 @@ fun BudgetsScreen(
 
             // 3. Category Budgets Header & Filter Row
             item {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(
+                    modifier = Modifier.staggeredEntrance(index = 2),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -244,7 +249,8 @@ fun BudgetsScreen(
                     CategoryBudgetCard(
                         status = status,
                         hideBalances = uiState.hideBalances,
-                        onClick = { onShowAddEditDialog(true, status.budget) }
+                        onClick = { onShowAddEditDialog(true, status.budget) },
+                        modifier = Modifier.animateItem()
                     )
                 }
             }
@@ -296,7 +302,9 @@ fun SafeToSpendCard(
     )
 
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .staggeredEntrance(index = 0),
         shape = RoundedCornerShape(24.dp),
         border = androidx.compose.foundation.BorderStroke(1.dp, EmeraldPrimary.copy(alpha = 0.3f))
     ) {
@@ -364,8 +372,8 @@ fun SafeToSpendCard(
                     breakdown.discretionarySafeToSpend.formatted()
                 }
 
-                Text(
-                    text = safeAmountFormatted,
+                AnimatedAmountText(
+                    amountText = safeAmountFormatted,
                     style = MaterialTheme.typography.displaySmall,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color.White
@@ -477,7 +485,8 @@ fun OverallBudgetSection(
         Surface(
             modifier = modifier
                 .fillMaxWidth()
-                .clickable { onEditOverallBudget(overallStatus.budget) },
+                .staggeredEntrance(index = 1)
+                .bounceClick(scaleDown = 0.98f) { onEditOverallBudget(overallStatus.budget) },
             shape = RoundedCornerShape(20.dp),
             color = MaterialTheme.colorScheme.surface,
             border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
@@ -525,8 +534,8 @@ fun OverallBudgetSection(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom
                 ) {
-                    Text(
-                        text = if (hideBalances) "••••••" else overallStatus.spentAmount.formatted(),
+                    AnimatedAmountText(
+                        amountText = if (hideBalances) "••••••" else overallStatus.spentAmount.formatted(),
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -636,13 +645,24 @@ fun CategoryBudgetCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val isExceeded = status.isExceeded
+    val borderModifier = if (isExceeded) {
+        Modifier.glowPulse(color = CrimsonExpense, minAlpha = 0.12f, maxAlpha = 0.38f)
+    } else {
+        Modifier
+    }
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .then(borderModifier)
+            .bounceClick(scaleDown = 0.98f, onClick = onClick),
         shape = RoundedCornerShape(18.dp),
         color = MaterialTheme.colorScheme.surface,
-        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f))
+        border = androidx.compose.foundation.BorderStroke(
+            1.dp,
+            if (isExceeded) CrimsonExpense.copy(alpha = 0.45f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)
+        )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             // Header Row: Category Badge, Name, Rollover chip & Spent/Limit

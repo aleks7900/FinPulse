@@ -72,6 +72,7 @@ import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.FinPulseRadius
 import md.alexlab.finpulse.core.designsystem.TransferBlue
 import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.designsystem.staggeredEntrance
 import md.alexlab.finpulse.core.ui.CurrencyPickerField
 import md.alexlab.finpulse.core.ui.FinPulseCard
 import md.alexlab.finpulse.core.ui.FinPulseEmptyState
@@ -146,7 +147,9 @@ fun AccountsScreen(
             item {
                 md.alexlab.finpulse.core.ui.FinPulseCard(
                     shape = RoundedCornerShape(md.alexlab.finpulse.core.designsystem.FinPulseRadius.xl),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .staggeredEntrance(index = 0)
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -199,7 +202,8 @@ fun AccountsScreen(
                         account = account,
                         hideBalances = uiState.hideBalances,
                         onClick = { onShowAddEditDialog(true, account) },
-                        onArchive = { onArchiveAccount(account.id, !account.isArchived) }
+                        onArchive = { onArchiveAccount(account.id, !account.isArchived) },
+                        modifier = Modifier.animateItem()
                     )
                 }
             }

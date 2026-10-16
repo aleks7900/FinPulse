@@ -60,6 +60,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import md.alexlab.finpulse.core.designsystem.FinPulseRadius
 import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.designsystem.AnimatedAmountText
+import md.alexlab.finpulse.core.designsystem.FinPulseMotion
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.sp
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
@@ -184,9 +188,9 @@ fun QuickAddBottomSheet(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = uiState.amountInput,
-                        fontSize = 44.sp,
+                    AnimatedAmountText(
+                        amountText = uiState.amountInput,
+                        style = MaterialTheme.typography.displayMedium,
                         fontWeight = FontWeight.Bold,
                         color = if (uiState.amountInput == "0") MaterialTheme.colorScheme.onSurfaceVariant else typeAccentColor
                     )
@@ -202,7 +206,7 @@ fun QuickAddBottomSheet(
                     Surface(
                         modifier = Modifier
                             .padding(horizontal = 4.dp)
-                            .clickable { onQuickAmountAdd(inc) },
+                            .bounceClick(scaleDown = 0.90f) { onQuickAmountAdd(inc) },
                         shape = RoundedCornerShape(12.dp),
                         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
                     ) {
@@ -496,6 +500,11 @@ fun QuickAddBottomSheet(
                         modifier = Modifier
                             .weight(1f)
                             .height(50.dp)
+                            .bounceClick(scaleDown = 0.94f) {
+                                onSave(true) { tx ->
+                                    onTransactionSaved(tx, true)
+                                }
+                            }
                     ) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp), tint = EmeraldPrimary)
                         Spacer(modifier = Modifier.width(6.dp))
@@ -515,6 +524,12 @@ fun QuickAddBottomSheet(
                     modifier = Modifier
                         .weight(1f)
                         .height(50.dp)
+                        .bounceClick(scaleDown = 0.94f) {
+                            onSave(false) { tx ->
+                                onTransactionSaved(tx, false)
+                                onDismiss()
+                            }
+                        }
                 ) {
                     Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = Color.Black, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(6.dp))
@@ -566,11 +581,32 @@ fun TypeSegmentedControl(
                     TransactionType.TRANSFER -> TransferBlue
                     else -> EmeraldPrimary
                 }
+                val scaleAnim by animateFloatAsState(
+                    targetValue = if (isSelected) 1.05f else 1.0f,
+                    animationSpec = FinPulseMotion.springBouncy,
+                    label = "typeScale"
+                )
+                val bgColor by androidx.compose.animation.animateColorAsState(
+                    targetValue = if (isSelected) selColor else Color.Transparent,
+                    animationSpec = tween(220),
+                    label = "typeBg"
+                )
+                val textColor by androidx.compose.animation.animateColorAsState(
+                    targetValue = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                    animationSpec = tween(220),
+                    label = "typeText"
+                )
                 Surface(
-                    modifier = Modifier.clickable { onTypeSelected(type) },
+                    modifier = Modifier
+                        .graphicsLayer {
+                            scaleX = scaleAnim
+                            scaleY = scaleAnim
+                        }
+                        .clip(RoundedCornerShape(10.dp))
+                        .bounceClick(scaleDown = 0.94f) { onTypeSelected(type) },
                     shape = RoundedCornerShape(10.dp),
-                    color = if (isSelected) selColor else Color.Transparent,
-                    contentColor = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = bgColor,
+                    contentColor = textColor
                 ) {
                     Text(
                         text = type.getLocalizedName(),

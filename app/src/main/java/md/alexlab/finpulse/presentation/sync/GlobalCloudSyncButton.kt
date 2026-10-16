@@ -1,11 +1,19 @@
 package md.alexlab.finpulse.presentation.sync
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cloud
@@ -37,6 +45,7 @@ import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.AmberWarning
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.data.sync.CloudSyncCoordinator
 import md.alexlab.finpulse.data.sync.GlobalSyncState
 import md.alexlab.finpulse.data.sync.SyncTrigger
@@ -110,6 +119,12 @@ fun GlobalCloudSyncButton(
     val feedbackAuthMsg = stringResource(R.string.sync_feedback_auth_required)
     val feedbackOfflineMsg = stringResource(R.string.sync_feedback_offline)
 
+    val animatedTint by animateColorAsState(
+        targetValue = tintColor,
+        animationSpec = tween(300),
+        label = "sync_tint"
+    )
+
     TooltipBox(
         positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
         tooltip = {
@@ -147,22 +162,31 @@ fun GlobalCloudSyncButton(
                     }
                 }
             },
-            modifier = modifier
+            modifier = modifier.bounceClick(scaleDown = 0.88f)
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = description,
-                tint = tintColor,
-                modifier = Modifier
-                    .size(24.dp)
-                    .then(
-                        if (syncState == GlobalSyncState.SYNCING || isSyncing) {
-                            Modifier.rotate(rotationAngle)
-                        } else {
-                            Modifier
-                        }
-                    )
-            )
+            AnimatedContent(
+                targetState = syncState,
+                transitionSpec = {
+                    (fadeIn(animationSpec = tween(220)) + scaleIn(initialScale = 0.82f, animationSpec = spring(dampingRatio = 0.7f, stiffness = 400f)))
+                        .togetherWith(fadeOut(animationSpec = tween(180)) + scaleOut(targetScale = 0.82f, animationSpec = tween(180)))
+                },
+                label = "sync_icon_crossfade"
+            ) { targetSyncState ->
+                Icon(
+                    imageVector = icon,
+                    contentDescription = description,
+                    tint = animatedTint,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .then(
+                            if (targetSyncState == GlobalSyncState.SYNCING || isSyncing) {
+                                Modifier.rotate(rotationAngle)
+                            } else {
+                                Modifier
+                            }
+                        )
+                )
+            }
         }
     }
 }

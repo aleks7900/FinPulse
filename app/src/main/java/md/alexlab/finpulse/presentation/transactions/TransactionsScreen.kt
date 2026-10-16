@@ -350,7 +350,8 @@ fun TransactionsScreen(
                             category = cat,
                             accountName = acc,
                             hideBalances = uiState.hideBalances,
-                            onClick = { onShowAddEditDialog(true, tx) }
+                            onClick = { onShowAddEditDialog(true, tx) },
+                            modifier = Modifier.animateItem()
                         )
                     }
 
@@ -467,12 +468,18 @@ fun PresetsAndSavedViewsRow(
                 else -> preset.name
             }
 
+            val chipBg by androidx.compose.animation.animateColorAsState(
+                targetValue = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                animationSpec = androidx.compose.animation.core.tween(200),
+                label = "presetBg"
+            )
+
             Surface(
                 modifier = Modifier
                     .clip(RoundedCornerShape(FinPulseRadius.full))
                     .bounceClick(scaleDown = 0.94f) { onSelectPreset(preset) },
                 shape = RoundedCornerShape(FinPulseRadius.full),
-                color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                color = chipBg,
                 contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant,
                 border = if (preset.id == TransactionPresets.UNCATEGORIZED.id && unreviewedCount > 0 && !isSelected)
                     androidx.compose.foundation.BorderStroke(1.dp, AmberWarning.copy(alpha = 0.5f)) else null

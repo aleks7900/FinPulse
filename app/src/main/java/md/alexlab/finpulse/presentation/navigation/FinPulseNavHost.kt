@@ -54,6 +54,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
+import md.alexlab.finpulse.core.designsystem.ProvideMotionConfig
 import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.core.ui.getLocalizedName
 import md.alexlab.finpulse.presentation.quickadd.QuickAddBottomSheet
@@ -175,9 +176,20 @@ fun FinPulseApp(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
+    md.alexlab.finpulse.core.designsystem.ProvideMotionConfig(preferenceKey = userPrefs.animationPreference) {
+        val topLevelRoutes = remember {
+            listOf(
+                Screen.Dashboard.route,
+                Screen.Transactions.route,
+                Screen.Budgets.route,
+                Screen.Analytics.route,
+                Screen.More.route
+            )
+        }
+
+        Box(modifier = modifier.fillMaxSize()) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         floatingActionButton = {
             if (isTopLevelRoute) {
@@ -220,10 +232,50 @@ fun FinPulseApp(
             navController = navController,
             startDestination = startDestination,
             modifier = Modifier.padding(innerPadding),
-            enterTransition = { md.alexlab.finpulse.core.designsystem.FinPulseMotion.screenEnter },
-            exitTransition = { md.alexlab.finpulse.core.designsystem.FinPulseMotion.screenExit },
-            popEnterTransition = { md.alexlab.finpulse.core.designsystem.FinPulseMotion.screenPopEnter },
-            popExitTransition = { md.alexlab.finpulse.core.designsystem.FinPulseMotion.screenPopExit }
+            enterTransition = {
+                val initialRoute = initialState.destination.route
+                val targetRoute = targetState.destination.route
+                val initialIdx = topLevelRoutes.indexOf(initialRoute)
+                val targetIdx = topLevelRoutes.indexOf(targetRoute)
+                if (initialIdx != -1 && targetIdx != -1 && initialIdx != targetIdx) {
+                    md.alexlab.finpulse.core.designsystem.FinPulseMotion.tabEnter(slideLeft = targetIdx > initialIdx)
+                } else {
+                    md.alexlab.finpulse.core.designsystem.FinPulseMotion.screenEnter
+                }
+            },
+            exitTransition = {
+                val initialRoute = initialState.destination.route
+                val targetRoute = targetState.destination.route
+                val initialIdx = topLevelRoutes.indexOf(initialRoute)
+                val targetIdx = topLevelRoutes.indexOf(targetRoute)
+                if (initialIdx != -1 && targetIdx != -1 && initialIdx != targetIdx) {
+                    md.alexlab.finpulse.core.designsystem.FinPulseMotion.tabExit(slideLeft = targetIdx > initialIdx)
+                } else {
+                    md.alexlab.finpulse.core.designsystem.FinPulseMotion.screenExit
+                }
+            },
+            popEnterTransition = {
+                val initialRoute = initialState.destination.route
+                val targetRoute = targetState.destination.route
+                val initialIdx = topLevelRoutes.indexOf(initialRoute)
+                val targetIdx = topLevelRoutes.indexOf(targetRoute)
+                if (initialIdx != -1 && targetIdx != -1 && initialIdx != targetIdx) {
+                    md.alexlab.finpulse.core.designsystem.FinPulseMotion.tabEnter(slideLeft = targetIdx > initialIdx)
+                } else {
+                    md.alexlab.finpulse.core.designsystem.FinPulseMotion.screenPopEnter
+                }
+            },
+            popExitTransition = {
+                val initialRoute = initialState.destination.route
+                val targetRoute = targetState.destination.route
+                val initialIdx = topLevelRoutes.indexOf(initialRoute)
+                val targetIdx = topLevelRoutes.indexOf(targetRoute)
+                if (initialIdx != -1 && targetIdx != -1 && initialIdx != targetIdx) {
+                    md.alexlab.finpulse.core.designsystem.FinPulseMotion.tabExit(slideLeft = targetIdx > initialIdx)
+                } else {
+                    md.alexlab.finpulse.core.designsystem.FinPulseMotion.screenPopExit
+                }
+            }
         ) {
             // Onboarding
             composable(Screen.Onboarding.route) {
@@ -374,6 +426,7 @@ fun FinPulseApp(
                 MoreHubScreen(
                     baseCurrency = userPrefs.baseCurrencyCode,
                     selectedLanguageCode = userPrefs.selectedLanguage,
+                    animationPreference = userPrefs.animationPreference,
                     onLanguageSelected = { lang ->
                         md.alexlab.finpulse.core.locale.AppLocaleManager.saveLanguageCode(context, lang.code)
                         app?.applicationScope?.launch {
@@ -382,6 +435,11 @@ fun FinPulseApp(
                         md.alexlab.finpulse.core.locale.AppLocaleManager.setLocale(context, lang)
                         val hostActivity = context.findActivity()
                         hostActivity?.recreate()
+                    },
+                    onAnimationPreferenceSelected = { pref ->
+                        app?.applicationScope?.launch {
+                            container.userPreferencesDataStore.setAnimationPreference(pref)
+                        }
                     },
                     onNavigate = { screen -> navController.navigate(screen.route) },
                     errorReporter = container.errorReporter,
@@ -858,5 +916,6 @@ fun FinPulseApp(
             }
         )
     }
+}
 }
 }

@@ -20,6 +20,18 @@
     <string name="select_language">Wybierz język</string>
     <string name="language_title">Język</string>
 
+    <!-- Animation & Motion Preferences -->
+    <string name="animation_preference_title">Ruch i Animacje</string>
+    <string name="animation_preference_desc">Dostosuj fizykę przejść, płynność i efekty wizualne</string>
+    <string name="animation_pref_full">Pełna (Doświadczenie flagowe)</string>
+    <string name="animation_pref_full_desc">Fizyka sprężyn, poświata, paralaksa i bogate mikrointerakcje</string>
+    <string name="animation_pref_balanced">Zrównoważona</string>
+    <string name="animation_pref_balanced_desc">Płynne przejścia ze zredukowanym odbiciem sprężyn</string>
+    <string name="animation_pref_minimal">Minimalna (Zredukowany ruch)</string>
+    <string name="animation_pref_minimal_desc">Natychmiastowe przejścia zgodne z ustawieniami dostępności</string>
+    <string name="animation_pref_system">Domyślne systemu</string>
+    <string name="animation_pref_system_desc">Dostosuj do systemowej skali czasu animacji systemu Android</string>
+
     <!-- Navigation -->
     <string name="nav_dashboard">Przegląd</string>
     <string name="nav_transactions">Transakcje</string>
