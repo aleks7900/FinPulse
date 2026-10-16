@@ -1532,4 +1532,8 @@
     <string name="cd_logo">Logo FinPulse</string>
     <string name="action_clear">Cancella</string>
     <string name="action_open">Apri</string>
+    <string name="digest_notif_sent_success">Notifica di prova inviata!</string>
+    <string name="digest_notif_send_failed">Impossibile inviare la notifica. Controlla i permessi.</string>
+    <string name="digest_notif_permission_denied">Il permesso di notifica è richiesto per ricevere i riepiloghi finanziari.</string>
+    <string name="digest_notif_error_generating">I dati del riepilogo sono in fase di caricamento. Riprova.</string>
 </resources>

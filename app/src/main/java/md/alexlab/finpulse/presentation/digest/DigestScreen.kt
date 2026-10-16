@@ -1,5 +1,16 @@
 package md.alexlab.finpulse.presentation.digest
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import md.alexlab.finpulse.core.util.DigestNotificationHelper
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -117,8 +128,66 @@ fun DigestScreen(
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(uiState.testNotificationMessage) {
-        uiState.testNotificationMessage?.let {
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            viewModel.sendTestNotification(context)
+        } else {
+            viewModel.notifyPermissionDenied()
+        }
+    }
+
+    val handleSendTestNotification = {
+        val notificationsEnabled = DigestNotificationHelper.areNotificationsEnabled(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val hasPermission = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (!hasPermission) {
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else if (!notificationsEnabled) {
+                viewModel.notifyPermissionDenied()
+                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                    putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                }
+                try {
+                    context.startActivity(intent)
+                } catch (_: Exception) {}
+            } else {
+                viewModel.sendTestNotification(context)
+            }
+        } else {
+            if (!notificationsEnabled) {
+                viewModel.notifyPermissionDenied()
+                val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                        putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                    }
+                } else {
+                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", context.packageName, null)
+                    }
+                }
+                try {
+                    context.startActivity(intent)
+                } catch (_: Exception) {}
+            } else {
+                viewModel.sendTestNotification(context)
+            }
+        }
+    }
+
+    LaunchedEffect(uiState.testNotificationMessage, uiState.testNotificationMessageRes) {
+        val message = when {
+            uiState.testNotificationMessageRes != null -> context.getString(uiState.testNotificationMessageRes!!)
+            uiState.testNotificationMessage != null -> uiState.testNotificationMessage
+            else -> null
+        }
+        message?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             snackbarHostState.showSnackbar(it)
             viewModel.clearTestNotificationMessage()
         }
@@ -343,7 +412,7 @@ fun DigestScreen(
                 onFrequencyChange = { viewModel.setFrequency(it) },
                 onPrivacyChange = { viewModel.setPrivacyEnabled(it) },
                 onDeliveryHourChange = { viewModel.setDeliveryHour(it) },
-                onSendTestNotification = { viewModel.sendTestNotification(context) },
+                onSendTestNotification = handleSendTestNotification,
                 onDismiss = { viewModel.toggleSettings(false) }
             )
         }

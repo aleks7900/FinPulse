@@ -1532,4 +1532,8 @@
     <string name="cd_logo">Logo FinPulse</string>
     <string name="action_clear">Effacer</string>
     <string name="action_open">Ouvrir</string>
+    <string name="digest_notif_sent_success">Notification de test envoyée !</string>
+    <string name="digest_notif_send_failed">Échec de l\'envoi de la notification. Veuillez vérifier les autorisations.</string>
+    <string name="digest_notif_permission_denied">L\'autorisation de notification est requise pour recevoir les récapitulatifs financiers.</string>
+    <string name="digest_notif_error_generating">Les données du récapitulatif se chargent. Veuillez réessayer.</string>
 </resources>

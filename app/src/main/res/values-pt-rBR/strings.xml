@@ -1532,4 +1532,8 @@
     <string name="cd_logo">Logo FinPulse</string>
     <string name="action_clear">Limpar</string>
     <string name="action_open">Abrir</string>
+    <string name="digest_notif_sent_success">Notificação de teste enviada!</string>
+    <string name="digest_notif_send_failed">Falha ao enviar notificação. Verifique as permissões.</string>
+    <string name="digest_notif_permission_denied">A permissão de notificação é necessária para receber resumos financeiros.</string>
+    <string name="digest_notif_error_generating">Os dados do resumo ainda estão carregando. Tente novamente.</string>
 </resources>

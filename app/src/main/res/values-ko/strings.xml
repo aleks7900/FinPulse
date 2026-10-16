@@ -1524,4 +1524,8 @@
     <string name="cd_logo">FinPulse 로고</string>
     <string name="action_clear">지우기</string>
     <string name="action_open">열기</string>
+    <string name="digest_notif_sent_success">테스트 알림이 전송되었습니다!</string>
+    <string name="digest_notif_send_failed">알림을 전송하지 못했습니다. 권한 설정을 확인하세요.</string>
+    <string name="digest_notif_permission_denied">금융 다이제스트를 받으려면 알림 권한이 필요합니다.</string>
+    <string name="digest_notif_error_generating">다이제스트 데이터를 로드 중입니다. 잠시 후 다시 시도하세요.</string>
 </resources>

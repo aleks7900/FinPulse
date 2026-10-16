@@ -1549,4 +1549,8 @@
     <string name="cd_logo">Логотип FinPulse</string>
     <string name="action_clear">Очистить</string>
     <string name="action_open">Открыть</string>
+    <string name="digest_notif_sent_success">Тестовое уведомление отправлено!</string>
+    <string name="digest_notif_send_failed">Не удалось отправить уведомление. Проверьте разрешения.</string>
+    <string name="digest_notif_permission_denied">Требуется разрешение на уведомления для получения финансового дайджеста.</string>
+    <string name="digest_notif_error_generating">Данные дайджеста загружаются. Пожалуйста, попробуйте еще раз.</string>
 </resources>

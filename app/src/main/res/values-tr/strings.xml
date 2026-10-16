@@ -1532,4 +1532,8 @@
     <string name="cd_logo">FinPulse Logosu</string>
     <string name="action_clear">Temizle</string>
     <string name="action_open">Aç</string>
+    <string name="digest_notif_sent_success">Test bildirimi gönderildi!</string>
+    <string name="digest_notif_send_failed">Bildirim gönderilemedi. Lütfen izinleri kontrol edin.</string>
+    <string name="digest_notif_permission_denied">Finansal özetleri almak için bildirim izni gereklidir.</string>
+    <string name="digest_notif_error_generating">Özet verileri yükleniyor. Lütfen tekrar deneyin.</string>
 </resources>

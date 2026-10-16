@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import md.alexlab.finpulse.MainActivity
@@ -15,7 +16,7 @@ import md.alexlab.finpulse.domain.model.FinancialDigest
 
 object DigestNotificationHelper {
 
-    const val CHANNEL_ID = "finpulse_digest_channel"
+    const val CHANNEL_ID = "finpulse_digest_channel_v2"
     private const val NOTIFICATION_ID_DAILY = 4001
     private const val NOTIFICATION_ID_WEEKLY = 4002
 
@@ -23,14 +24,28 @@ object DigestNotificationHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = context.getString(R.string.notif_channel_digest_name)
             val descriptionText = context.getString(R.string.notif_channel_digest_desc)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
                 setShowBadge(true)
+                enableVibration(true)
             }
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    fun areNotificationsEnabled(context: Context): Boolean {
+        val manager = NotificationManagerCompat.from(context)
+        if (!manager.areNotificationsEnabled()) return false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+            val channel = notificationManager?.getNotificationChannel(CHANNEL_ID)
+            if (channel != null && channel.importance == NotificationManager.IMPORTANCE_NONE) {
+                return false
+            }
+        }
+        return true
     }
 
     fun sendDigestNotification(
@@ -114,7 +129,8 @@ object DigestNotificationHelper {
                 .setContentTitle(title)
                 .setContentText(contentText)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .addAction(
@@ -126,9 +142,11 @@ object DigestNotificationHelper {
 
             NotificationManagerCompat.from(context).notify(notifId, notification)
             true
-        } catch (_: SecurityException) {
+        } catch (e: SecurityException) {
+            Log.e("DigestNotifHelper", "SecurityException posting notification", e)
             false
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.e("DigestNotifHelper", "Error posting notification", e)
             false
         }
     }

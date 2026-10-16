@@ -1524,4 +1524,8 @@
     <string name="cd_logo">FinPulse ロゴ</string>
     <string name="action_clear">クリア</string>
     <string name="action_open">開く</string>
+    <string name="digest_notif_sent_success">テスト通知を送信しました！</string>
+    <string name="digest_notif_send_failed">通知を送信できませんでした。権限を確認してください。</string>
+    <string name="digest_notif_permission_denied">財務ダイジェストを受信するには通知権限が必要です。</string>
+    <string name="digest_notif_error_generating">ダイジェスト データを読み込み中です。もう一度お試しください。</string>
 </resources>

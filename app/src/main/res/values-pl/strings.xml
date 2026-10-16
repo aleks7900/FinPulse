@@ -1548,4 +1548,8 @@
     <string name="cd_logo">Logo FinPulse</string>
     <string name="action_clear">Wyczyść</string>
     <string name="action_open">Otwórz</string>
+    <string name="digest_notif_sent_success">Wysłano powiadomienie testowe!</string>
+    <string name="digest_notif_send_failed">Nie udało się wysłać powiadomienia. Sprawdź uprawnienia.</string>
+    <string name="digest_notif_permission_denied">Wymagane jest zezwolenie na powiadomienia, aby otrzymywać podsumowania.</string>
+    <string name="digest_notif_error_generating">Dane podsumowania są ładowane. Spróbuj ponownie.</string>
 </resources>

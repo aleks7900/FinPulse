@@ -1524,4 +1524,8 @@
     <string name="cd_logo">FinPulse 标志</string>
     <string name="action_clear">清除</string>
     <string name="action_open">打开</string>
+    <string name="digest_notif_sent_success">测试通知已发送！</string>
+    <string name="digest_notif_send_failed">发送通知失败，请检查系统权限。</string>
+    <string name="digest_notif_permission_denied">需要通知权限才能接收财务简报。</string>
+    <string name="digest_notif_error_generating">简报数据加载中，请稍后再试。</string>
 </resources>

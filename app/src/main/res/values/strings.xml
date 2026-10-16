@@ -1533,4 +1533,8 @@
     <string name="cd_logo">FinPulse Logo</string>
     <string name="action_clear">Clear</string>
     <string name="action_open">Open</string>
+    <string name="digest_notif_sent_success">Test notification sent!</string>
+    <string name="digest_notif_send_failed">Failed to send notification. Please check system permissions.</string>
+    <string name="digest_notif_permission_denied">Notification permission is required to receive financial digests.</string>
+    <string name="digest_notif_error_generating">Financial digest data is still loading. Please try again.</string>
 </resources>

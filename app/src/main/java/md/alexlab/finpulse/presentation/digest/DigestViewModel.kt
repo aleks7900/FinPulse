@@ -1,8 +1,10 @@
 package md.alexlab.finpulse.presentation.digest
 
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.datastore.UserPreferencesDataStore
 import md.alexlab.finpulse.core.util.DigestNotificationHelper
 import md.alexlab.finpulse.domain.model.DigestFrequency
@@ -18,6 +20,11 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+data class DigestFeedback(
+    val message: String? = null,
+    @param:StringRes val messageRes: Int? = null
+)
+
 data class DigestUiState(
     val digest: FinancialDigest? = null,
     val selectedPeriod: DigestPeriod = DigestPeriod.DAILY,
@@ -26,6 +33,7 @@ data class DigestUiState(
     val deliveryHour: Int = 20,
     val isSettingsOpen: Boolean = false,
     val testNotificationMessage: String? = null,
+    @param:StringRes val testNotificationMessageRes: Int? = null,
     val isLoading: Boolean = true
 )
 
@@ -37,7 +45,7 @@ class DigestViewModel(
 
     private val _selectedPeriod = MutableStateFlow(DigestPeriod.DAILY)
     private val _isSettingsOpen = MutableStateFlow(false)
-    private val _testNotificationMessage = MutableStateFlow<String?>(null)
+    private val _feedback = MutableStateFlow<DigestFeedback?>(null)
 
     val uiState: StateFlow<DigestUiState> = combine(
         _selectedPeriod.flatMapLatest { period ->
@@ -46,8 +54,8 @@ class DigestViewModel(
         _selectedPeriod,
         userPreferencesDataStore.userPreferencesFlow,
         _isSettingsOpen,
-        _testNotificationMessage
-    ) { digest, period, prefs, isSettingsOpen, testMsg ->
+        _feedback
+    ) { digest, period, prefs, isSettingsOpen, feedback ->
         DigestUiState(
             digest = digest,
             selectedPeriod = period,
@@ -55,7 +63,8 @@ class DigestViewModel(
             privacyEnabled = prefs.digestPrivacyEnabled,
             deliveryHour = prefs.digestDeliveryHour,
             isSettingsOpen = isSettingsOpen,
-            testNotificationMessage = testMsg,
+            testNotificationMessage = feedback?.message,
+            testNotificationMessageRes = feedback?.messageRes,
             isLoading = false
         )
     }.stateIn(
@@ -91,13 +100,28 @@ class DigestViewModel(
     }
 
     fun sendTestNotification(context: Context) {
-        val currentDigest = uiState.value.digest ?: return
-        val privacy = uiState.value.privacyEnabled
-        val success = DigestNotificationHelper.sendDigestNotification(context, currentDigest, privacy)
-        _testNotificationMessage.value = if (success) "Notification dispatched!" else "Failed to post notification (check permissions)"
+        viewModelScope.launch {
+            try {
+                val currentDigest = uiState.value.digest
+                    ?: getFinancialDigestUseCase.getSnapshot(uiState.value.selectedPeriod)
+                val privacy = uiState.value.privacyEnabled
+                val success = DigestNotificationHelper.sendDigestNotification(context, currentDigest, privacy)
+                _feedback.value = if (success) {
+                    DigestFeedback(messageRes = R.string.digest_notif_sent_success)
+                } else {
+                    DigestFeedback(messageRes = R.string.digest_notif_send_failed)
+                }
+            } catch (_: Exception) {
+                _feedback.value = DigestFeedback(messageRes = R.string.digest_notif_error_generating)
+            }
+        }
+    }
+
+    fun notifyPermissionDenied() {
+        _feedback.value = DigestFeedback(messageRes = R.string.digest_notif_permission_denied)
     }
 
     fun clearTestNotificationMessage() {
-        _testNotificationMessage.value = null
+        _feedback.value = null
     }
 }

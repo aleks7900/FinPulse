@@ -1532,4 +1532,8 @@
     <string name="cd_logo">FinPulse-Logo</string>
     <string name="action_clear">Löschen</string>
     <string name="action_open">Öffnen</string>
+    <string name="digest_notif_sent_success">Testbenachrichtigung gesendet!</string>
+    <string name="digest_notif_send_failed">Benachrichtigung konnte nicht gesendet werden. Bitte Berechtigungen prüfen.</string>
+    <string name="digest_notif_permission_denied">Benachrichtigungsberechtigung ist erforderlich, um Finanzberichte zu erhalten.</string>
+    <string name="digest_notif_error_generating">Finanzdaten werden noch geladen. Bitte versuchen Sie es erneut.</string>
 </resources>
