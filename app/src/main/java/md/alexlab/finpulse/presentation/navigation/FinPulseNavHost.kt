@@ -192,7 +192,7 @@ fun FinPulseApp(
                 modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         floatingActionButton = {
-            if (isTopLevelRoute) {
+            if (currentRoute == Screen.Dashboard.route) {
                 FloatingActionButton(
                     onClick = {
                         quickAddViewModel.reset()
