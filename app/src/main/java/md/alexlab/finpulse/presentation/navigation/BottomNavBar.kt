@@ -5,6 +5,9 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +19,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,6 +34,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,13 +44,13 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.FinPulseMotion
 import md.alexlab.finpulse.core.designsystem.FinPulseRadius
-import md.alexlab.finpulse.core.designsystem.bounceClick
 
 sealed class BottomNavItem(
     val screen: Screen,
@@ -98,13 +101,21 @@ fun FinPulseBottomBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .windowInsetsPadding(WindowInsets.navigationBars)
-                .padding(horizontal = 8.dp, vertical = 6.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
+                .padding(horizontal = 4.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
             BottomNavItem.items.forEach { item ->
                 val selected = currentRoute == item.screen.route
                 val itemTitle = stringResource(item.titleRes)
+
+                val interactionSource = remember { MutableInteractionSource() }
+                val isPressed by interactionSource.collectIsPressedAsState()
+                val pressScale by animateFloatAsState(
+                    targetValue = if (isPressed) 0.90f else 1.0f,
+                    animationSpec = if (isPressed) FinPulseMotion.springTactile else FinPulseMotion.springBouncy,
+                    label = "navItemPressScale"
+                )
 
                 val iconScale by animateFloatAsState(
                     targetValue = if (selected) 1.12f else 1.0f,
@@ -142,59 +153,76 @@ fun FinPulseBottomBar(
                     label = "dotScale"
                 )
 
-                Column(
+                Box(
                     modifier = Modifier
+                        .weight(1f)
                         .clip(RoundedCornerShape(FinPulseRadius.lg))
-                        .bounceClick(scaleDown = 0.90f) { onNavigate(item.screen) }
-                        .padding(horizontal = 6.dp, vertical = 4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null
+                        ) {
+                            onNavigate(item.screen)
+                        }
+                        .padding(vertical = 4.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(height = 30.dp, width = pillWidthAnim.dp)
-                            .clip(RoundedCornerShape(15.dp))
-                            .background(pillBgColor),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = itemTitle,
-                            tint = iconColor,
-                            modifier = Modifier
-                                .graphicsLayer {
-                                    scaleX = iconScale
-                                    scaleY = iconScale
-                                    translationY = iconOffsetY.dp.toPx()
-                                }
-                                .size(22.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(3.dp))
-
-                    Text(
-                        text = itemTitle,
-                        style = MaterialTheme.typography.labelSmall,
-                        fontSize = 10.sp,
-                        fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-                        color = iconColor
-                    )
-
-                    Spacer(modifier = Modifier.height(2.dp))
-
-                    // Active dot indicator
-                    Box(
+                    Column(
                         modifier = Modifier
                             .graphicsLayer {
-                                scaleX = dotScale
-                                scaleY = dotScale
-                                alpha = dotScale
-                            }
-                            .size(4.dp)
-                            .clip(CircleShape)
-                            .background(EmeraldPrimary)
-                    )
+                                scaleX = pressScale
+                                scaleY = pressScale
+                            },
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(height = 30.dp, width = pillWidthAnim.dp)
+                                .clip(RoundedCornerShape(15.dp))
+                                .background(pillBgColor),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = itemTitle,
+                                tint = iconColor,
+                                modifier = Modifier
+                                    .graphicsLayer {
+                                        scaleX = iconScale
+                                        scaleY = iconScale
+                                        translationY = iconOffsetY.dp.toPx()
+                                    }
+                                    .size(22.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(3.dp))
+
+                        Text(
+                            text = itemTitle,
+                            style = MaterialTheme.typography.labelSmall,
+                            fontSize = 10.sp,
+                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+                            color = iconColor,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                        Spacer(modifier = Modifier.height(2.dp))
+
+                        // Active dot indicator
+                        Box(
+                            modifier = Modifier
+                                .graphicsLayer {
+                                    scaleX = dotScale
+                                    scaleY = dotScale
+                                    alpha = dotScale
+                                }
+                                .size(4.dp)
+                                .clip(CircleShape)
+                                .background(EmeraldPrimary)
+                        )
+                    }
                 }
             }
         }

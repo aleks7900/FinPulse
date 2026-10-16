@@ -140,9 +140,7 @@ fun BudgetsScreen(
                 containerColor = EmeraldPrimary,
                 contentColor = Color.Black,
                 shape = CircleShape,
-                modifier = Modifier.bounceClick(scaleDown = 0.92f) {
-                    onShowAddEditDialog(true, null)
-                }
+                modifier = Modifier.bounceClick(scaleDown = 0.92f)
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.budget_add_dialog_title))
             }

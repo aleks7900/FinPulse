@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -219,8 +220,11 @@ fun FinPulseApp(
                 FinPulseBottomBar(
                     currentRoute = currentRoute,
                     onNavigate = { screen ->
+                        if (currentRoute == screen.route) return@FinPulseBottomBar
                         navController.navigate(screen.route) {
-                            popUpTo(Screen.Dashboard.route) { saveState = true }
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -319,9 +323,21 @@ fun FinPulseApp(
                         quickAddViewModel.reset()
                         showQuickAddSheet = true
                     },
-                    onNavigateToTransactions = { navController.navigate(Screen.Transactions.route) },
+                    onNavigateToTransactions = {
+                        navController.navigate(Screen.Transactions.route) {
+                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
                     onNavigateToAccounts = { navController.navigate(Screen.Accounts.route) },
-                    onNavigateToBudgets = { navController.navigate(Screen.Budgets.route) },
+                    onNavigateToBudgets = {
+                        navController.navigate(Screen.Budgets.route) {
+                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
                     onNavigateToSearch = { navController.navigate(Screen.Search.route) },
                     onNavigateToInsights = { navController.navigate(Screen.Insights.route) },
                     onNavigateToReviewQueue = { navController.navigate(Screen.ReviewInbox.route) },
