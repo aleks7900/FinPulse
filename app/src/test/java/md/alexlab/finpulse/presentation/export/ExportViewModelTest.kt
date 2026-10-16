@@ -276,4 +276,78 @@ class ExportViewModelTest {
 
         collectJob.cancel()
     }
+
+    @Test
+    fun `exportCsv triggers onReady callback on success`() = runTest(testDispatcher) {
+        val collectJob = launch { viewModel.uiState.collect {} }
+        val dummyCsv = "ID,Date,Time,Type,Amount\n1,2026-01-01,12:00:00,EXPENSE,10.00"
+        coEvery { exportTransactionsUseCase.exportCsv(any()) } returns dummyCsv
+
+        var receivedCsv: String? = null
+        viewModel.exportCsv { csv ->
+            receivedCsv = csv
+        }
+        advanceUntilIdle()
+
+        assertEquals(dummyCsv, receivedCsv)
+        assertEquals("CSV exported successfully", viewModel.uiState.value.successMessage)
+        assertFalse(viewModel.uiState.value.isLoading)
+
+        collectJob.cancel()
+    }
+
+    @Test
+    fun `exportCsv sets error message when usecase throws exception`() = runTest(testDispatcher) {
+        val collectJob = launch { viewModel.uiState.collect {} }
+        coEvery { exportTransactionsUseCase.exportCsv(any()) } throws RuntimeException("DB query failed")
+
+        var callbackCalled = false
+        viewModel.exportCsv {
+            callbackCalled = true
+        }
+        advanceUntilIdle()
+
+        assertFalse(callbackCalled)
+        assertEquals("Failed to export CSV: DB query failed", viewModel.uiState.value.errorMessage)
+        assertFalse(viewModel.uiState.value.isLoading)
+
+        collectJob.cancel()
+    }
+
+    @Test
+    fun `exportCsv isolates callback exceptions from generation error state`() = runTest(testDispatcher) {
+        val collectJob = launch { viewModel.uiState.collect {} }
+        val dummyCsv = "ID,Date\n1,2026-01-01"
+        coEvery { exportTransactionsUseCase.exportCsv(any()) } returns dummyCsv
+
+        viewModel.exportCsv {
+            throw RuntimeException("Intent chooser crashed")
+        }
+        advanceUntilIdle()
+
+        // The CSV generation itself succeeded, so errorMessage is not set to generation failure
+        assertEquals("CSV exported successfully", viewModel.uiState.value.successMessage)
+        assertFalse(viewModel.uiState.value.isLoading)
+
+        collectJob.cancel()
+    }
+
+    @Test
+    fun `exportFilteredJson triggers onReady callback on success`() = runTest(testDispatcher) {
+        val collectJob = launch { viewModel.uiState.collect {} }
+        val dummyJson = "{\"count\":1,\"transactions\":[]}"
+        coEvery { exportTransactionsUseCase.exportJson(any()) } returns dummyJson
+
+        var receivedJson: String? = null
+        viewModel.exportFilteredJson { jsonStr ->
+            receivedJson = jsonStr
+        }
+        advanceUntilIdle()
+
+        assertEquals(dummyJson, receivedJson)
+        assertEquals("JSON exported successfully", viewModel.uiState.value.successMessage)
+        assertFalse(viewModel.uiState.value.isLoading)
+
+        collectJob.cancel()
+    }
 }

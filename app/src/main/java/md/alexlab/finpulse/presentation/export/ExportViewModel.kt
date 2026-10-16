@@ -154,12 +154,12 @@ class ExportViewModel(
             _isLoading.value = true
             _errorMessage.value = null
             _errorMessageRes.value = null
-            try {
-                val payload = createBackupUseCase(password)
+            val payload = try {
+                val p = createBackupUseCase(password)
                 _successMessageRes.value = R.string.export_toast_backup_success
                 _successMessage.value = "Backup created successfully"
                 errorReporter.log("Backup archive created successfully")
-                onReady(payload)
+                p
             } catch (e: Exception) {
                 errorReporter.recordException(
                     throwable = e,
@@ -169,8 +169,23 @@ class ExportViewModel(
                     )
                 )
                 _errorMessage.value = "Failed to create backup: ${e.message}"
+                null
             } finally {
                 _isLoading.value = false
+            }
+
+            if (payload != null) {
+                try {
+                    onReady(payload)
+                } catch (e: Exception) {
+                    errorReporter.recordException(
+                        throwable = e,
+                        context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                            feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_BACKUP_EXPORT,
+                            operation = "SHARE_BACKUP"
+                        )
+                    )
+                }
             }
         }
     }
@@ -180,12 +195,12 @@ class ExportViewModel(
             _isLoading.value = true
             _errorMessage.value = null
             _errorMessageRes.value = null
-            try {
-                val csv = exportTransactionsUseCase.exportCsv(_filterParams.value)
+            val csv = try {
+                val result = exportTransactionsUseCase.exportCsv(_filterParams.value)
                 _successMessageRes.value = R.string.export_toast_csv_success
                 _successMessage.value = "CSV exported successfully"
                 errorReporter.log("CSV transactions exported successfully")
-                onReady(csv)
+                result
             } catch (e: Exception) {
                 errorReporter.recordException(
                     throwable = e,
@@ -195,8 +210,23 @@ class ExportViewModel(
                     )
                 )
                 _errorMessage.value = "Failed to export CSV: ${e.message}"
+                null
             } finally {
                 _isLoading.value = false
+            }
+
+            if (csv != null) {
+                try {
+                    onReady(csv)
+                } catch (e: Exception) {
+                    errorReporter.recordException(
+                        throwable = e,
+                        context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                            feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_BACKUP_EXPORT,
+                            operation = "SHARE_CSV"
+                        )
+                    )
+                }
             }
         }
     }
@@ -206,12 +236,12 @@ class ExportViewModel(
             _isLoading.value = true
             _errorMessage.value = null
             _errorMessageRes.value = null
-            try {
-                val jsonStr = exportTransactionsUseCase.exportJson(_filterParams.value)
+            val jsonStr = try {
+                val result = exportTransactionsUseCase.exportJson(_filterParams.value)
                 _successMessageRes.value = R.string.export_toast_json_success
                 _successMessage.value = "JSON exported successfully"
                 errorReporter.log("JSON transactions exported successfully")
-                onReady(jsonStr)
+                result
             } catch (e: Exception) {
                 errorReporter.recordException(
                     throwable = e,
@@ -221,8 +251,23 @@ class ExportViewModel(
                     )
                 )
                 _errorMessage.value = "Failed to export JSON: ${e.message}"
+                null
             } finally {
                 _isLoading.value = false
+            }
+
+            if (jsonStr != null) {
+                try {
+                    onReady(jsonStr)
+                } catch (e: Exception) {
+                    errorReporter.recordException(
+                        throwable = e,
+                        context = md.alexlab.finpulse.core.reporting.DiagnosticContext.build(
+                            feature = md.alexlab.finpulse.core.reporting.DiagnosticContext.FEATURE_BACKUP_EXPORT,
+                            operation = "SHARE_JSON"
+                        )
+                    )
+                }
             }
         }
     }

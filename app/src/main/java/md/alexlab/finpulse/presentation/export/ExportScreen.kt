@@ -1,5 +1,7 @@
 package md.alexlab.finpulse.presentation.export
 
+import android.app.Activity
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -674,7 +676,8 @@ fun ExportScreen(
 
 private fun shareTextFile(context: Context, filename: String, content: String, mimeType: String) {
     try {
-        val file = File(context.cacheDir, filename)
+        val exportDir = File(context.cacheDir, "exports").apply { mkdirs() }
+        val file = File(exportDir, filename)
         file.writeText(content, Charsets.UTF_8)
         val uri = FileProvider.getUriForFile(
             context,
@@ -685,16 +688,34 @@ private fun shareTextFile(context: Context, filename: String, content: String, m
             type = mimeType
             putExtra(Intent.EXTRA_STREAM, uri)
             putExtra(Intent.EXTRA_SUBJECT, filename)
+            clipData = ClipData.newRawUri(filename, uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        context.startActivity(Intent.createChooser(sendIntent, context.getString(R.string.export_share_dialog_title)))
-    } catch (_: Exception) {
-        // Fallback to text extra if file sharing fails
-        val sendIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, content)
-            putExtra(Intent.EXTRA_SUBJECT, filename)
+        val chooserIntent = Intent.createChooser(sendIntent, context.getString(R.string.export_share_dialog_title)).apply {
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            if (context !is Activity) {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
         }
-        context.startActivity(Intent.createChooser(sendIntent, context.getString(R.string.export_share_dialog_title)))
+        context.startActivity(chooserIntent)
+    } catch (_: Exception) {
+        // Fallback to text extra if file sharing fails (only if content size is safe for Binder transaction)
+        try {
+            val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                if (content.length < 100_000) {
+                    putExtra(Intent.EXTRA_TEXT, content)
+                }
+                putExtra(Intent.EXTRA_SUBJECT, filename)
+            }
+            val chooserIntent = Intent.createChooser(sendIntent, context.getString(R.string.export_share_dialog_title)).apply {
+                if (context !is Activity) {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+            }
+            context.startActivity(chooserIntent)
+        } catch (_: Exception) {
+            // Silently suppress so UI state does not crash
+        }
     }
 }
