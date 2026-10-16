@@ -982,6 +982,8 @@
     <string name="export_format_json_tx">JSON 数据 (.json)</string>
     <string name="export_transactions_btn">导出筛选后的交易</string>
     <string name="export_share_dialog_title">分享或保存文件</string>
+    <string name="backup_share_btn">分享</string>
+    <string name="backup_restore_latest_local">恢复本地备份 (%1$s)</string>
 
     <!-- App Lock &amp; Biometrics -->
     <string name="security_biometric_title">解锁 FinPulse</string>

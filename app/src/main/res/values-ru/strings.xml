@@ -1006,6 +1006,8 @@
     <string name="export_format_json_tx">JSON (.json)</string>
     <string name="export_transactions_btn">Экспортировать отфильтрованные операции</string>
     <string name="export_share_dialog_title">Поделиться или сохранить файл</string>
+    <string name="backup_share_btn">Поделиться</string>
+    <string name="backup_restore_latest_local">Восстановить локальную копию (%1$s)</string>
 
     <!-- App Lock &amp; Biometrics -->
     <string name="security_biometric_title">Разблокировка FinPulse</string>

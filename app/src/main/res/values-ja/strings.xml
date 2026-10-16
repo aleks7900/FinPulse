@@ -982,6 +982,8 @@
     <string name="export_format_json_tx">JSON (.json)</string>
     <string name="export_transactions_btn">絞り込んだ取引をエクスポート</string>
     <string name="export_share_dialog_title">ファイルを共有または保存</string>
+    <string name="backup_share_btn">共有</string>
+    <string name="backup_restore_latest_local">ローカルバックアップを復元 (%1$s)</string>
 
     <!-- App Lock &amp; Biometrics -->
     <string name="security_biometric_title">FinPulseのロック解除</string>

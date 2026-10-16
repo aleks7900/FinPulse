@@ -990,6 +990,8 @@
     <string name="export_format_json_tx">JSON (.json)</string>
     <string name="export_transactions_btn">Esporta transazioni filtrate</string>
     <string name="export_share_dialog_title">Condividi o salva file</string>
+    <string name="backup_share_btn">Condividi</string>
+    <string name="backup_restore_latest_local">Ripristina backup locale (%1$s)</string>
 
     <!-- App Lock &amp; Biometrics -->
     <string name="security_biometric_title">Sblocca FinPulse</string>

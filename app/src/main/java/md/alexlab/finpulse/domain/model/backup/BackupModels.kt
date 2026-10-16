@@ -15,7 +15,7 @@ import md.alexlab.finpulse.domain.model.Transaction
 import kotlinx.serialization.Serializable
 
 const val CURRENT_BACKUP_VERSION = 1
-const val CURRENT_DATABASE_SCHEMA_VERSION = 6
+const val CURRENT_DATABASE_SCHEMA_VERSION = 8
 const val BACKUP_ENCRYPTED_FORMAT_ID = "FINPULSE_ENCRYPTED_BACKUP"
 
 @Serializable

@@ -19,6 +19,22 @@ import md.alexlab.finpulse.domain.model.backup.RestoreSummary
 import md.alexlab.finpulse.domain.repository.BackupRepository
 import md.alexlab.finpulse.domain.usecase.backup.CreateBackupUseCase
 import md.alexlab.finpulse.domain.usecase.backup.RestoreBackupUseCase
+import md.alexlab.finpulse.domain.model.Budget
+import md.alexlab.finpulse.domain.model.BudgetPeriod
+import md.alexlab.finpulse.domain.model.RecurringTransaction
+import md.alexlab.finpulse.domain.model.PaymentFrequency
+import md.alexlab.finpulse.domain.model.CustomIntervalUnit
+import md.alexlab.finpulse.domain.model.RecurringOccurrence
+import md.alexlab.finpulse.domain.model.OccurrenceStatus
+import md.alexlab.finpulse.domain.model.FinancialGoal
+import md.alexlab.finpulse.domain.model.InvestmentAsset
+import md.alexlab.finpulse.domain.model.AssetClass
+import md.alexlab.finpulse.domain.model.Debt
+import md.alexlab.finpulse.domain.model.DebtType
+import md.alexlab.finpulse.domain.model.CategorizationRule
+import md.alexlab.finpulse.domain.model.MatchType
+import md.alexlab.finpulse.domain.model.SavedFilter
+import md.alexlab.finpulse.domain.model.TransactionFilterParams
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -136,6 +152,29 @@ class BackupLifecycleTest {
         assertEquals(3, summary.totalRestoredRecords)
         assertEquals(sampleBackup.metadata, summary.metadata)
         assertEquals(sampleBackup, backupRepository.lastRestoredBackup)
+    }
+
+    @Test
+    fun `serialization of complete FinPulseFullBackup with all entity types`() {
+        val full = FinPulseFullBackup(
+            metadata = BackupMetadata(),
+            accounts = listOf(Account("a1", "A", AccountType.CASH, Money(100), Money(100))),
+            categories = listOf(Category("c1", "C", CategoryType.EXPENSE)),
+            transactions = listOf(Transaction("t1", Money(100), TransactionType.EXPENSE, "a1", null, "c1")),
+            budgets = listOf(Budget("b1", "c1", "B", Money(100), BudgetPeriod.MONTHLY, 0L, 1000L)),
+            recurringRules = listOf(RecurringTransaction("r1", "R", Money(100), TransactionType.EXPENSE, "a1", null, "c1", PaymentFrequency.MONTHLY, 1, CustomIntervalUnit.MONTHS, 1, 0L)),
+            recurringOccurrences = listOf(RecurringOccurrence("o1", "r1", "R", Money(100), TransactionType.EXPENSE, "a1", null, "c1", 0L, OccurrenceStatus.EXPECTED)),
+            financialGoals = listOf(FinancialGoal("g1", "G", Money(1000), Money(100), 10000L)),
+            assets = listOf(InvestmentAsset("ast1", "Stock", "AAPL", AssetClass.STOCK, 1.0, Money(150), Money(160))),
+            debts = listOf(Debt("d1", "Debt", DebtType.CREDIT_CARD, Money(1000), Money(500), 12.0, Money(50), 10000L)),
+            categorizationRules = listOf(CategorizationRule("cr1", "Rule", "c1", 1, "test", MatchType.CONTAINS)),
+            savedFilters = listOf(SavedFilter("sf1", "Filter", TransactionFilterParams()))
+        )
+        val encoded = json.encodeToString(FinPulseFullBackup.serializer(), full)
+        val decoded = json.decodeFromString<FinPulseFullBackup>(encoded)
+        assertEquals(full.budgets.size, decoded.budgets.size)
+        assertEquals(full.debts.size, decoded.debts.size)
+        assertEquals(full.categorizationRules.size, decoded.categorizationRules.size)
     }
 
     private class FakeLifecycleBackupRepository(

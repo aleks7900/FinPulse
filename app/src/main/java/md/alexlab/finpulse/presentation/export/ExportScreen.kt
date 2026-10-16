@@ -3,6 +3,7 @@ package md.alexlab.finpulse.presentation.export
 import android.app.Activity
 import android.content.ClipData
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -31,9 +32,12 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.DataObject
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.NotificationsActive
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material.icons.filled.Visibility
@@ -68,7 +72,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -78,6 +84,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import md.alexlab.finpulse.R
@@ -101,6 +108,7 @@ fun ExportScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     var isEncryptChecked by remember { mutableStateOf(false) }
     var backupPassword by remember { mutableStateOf("") }
@@ -109,6 +117,62 @@ fun ExportScreen(
 
     var restoreDecryptPassword by remember { mutableStateOf("") }
     var isRestorePasswordVisible by remember { mutableStateOf(false) }
+
+    var pendingSaveFile by remember { mutableStateOf<PendingSaveFile?>(null) }
+
+    // Launcher for saving a backup file to device via SAF
+    val saveBackupLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("application/json")
+    ) { uri: Uri? ->
+        val fileToSave = pendingSaveFile
+        if (uri != null && fileToSave != null) {
+            try {
+                context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                    outputStream.bufferedWriter(Charsets.UTF_8).use { writer ->
+                        writer.write(fileToSave.content)
+                    }
+                }
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(context.getString(R.string.export_success))
+                }
+            } catch (e: Exception) {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(e.localizedMessage ?: "Error saving backup")
+                }
+            } finally {
+                pendingSaveFile = null
+            }
+        } else {
+            pendingSaveFile = null
+        }
+    }
+
+    // Launcher for saving a CSV file to device via SAF
+    val saveCsvLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("text/csv")
+    ) { uri: Uri? ->
+        val fileToSave = pendingSaveFile
+        if (uri != null && fileToSave != null) {
+            try {
+                context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                    outputStream.bufferedWriter(Charsets.UTF_8).use { writer ->
+                        writer.write(fileToSave.content)
+                    }
+                }
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(context.getString(R.string.export_success))
+                }
+            } catch (e: Exception) {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(e.localizedMessage ?: "Error saving CSV")
+                }
+            } finally {
+                pendingSaveFile = null
+            }
+        } else {
+            pendingSaveFile = null
+        }
+    }
 
     // Launcher for selecting a backup file to restore
     val filePickerLauncher = rememberLauncherForActivityResult(
@@ -208,10 +272,11 @@ fun ExportScreen(
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             Button(
                                 onClick = {
-                                    viewModel.createBackup(
-                                        password = if (isEncryptChecked && backupPassword.isNotBlank()) backupPassword else null
-                                    ) { payload ->
-                                        shareTextFile(context, payload.filename, payload.content, "application/json")
+                                    val pass = if (isEncryptChecked && backupPassword.isNotBlank()) backupPassword else null
+                                    viewModel.createBackup(password = pass) { payload ->
+                                        saveToLocalBackupDir(context, payload.filename, payload.content)
+                                        pendingSaveFile = PendingSaveFile(payload.filename, payload.content)
+                                        saveBackupLauncher.launch(payload.filename)
                                     }
                                 },
                                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
@@ -336,30 +401,61 @@ fun ExportScreen(
                                         )
                                     }
                                 },
+                                isError = isEncryptChecked && backupPassword.isBlank(),
                                 modifier = Modifier.fillMaxWidth()
                             )
+                            if (isEncryptChecked && backupPassword.isBlank()) {
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = stringResource(R.string.backup_password_required),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
                         }
                     }
 
                     Spacer(modifier = Modifier.height(14.dp))
-                    Button(
-                        onClick = {
-                            val pass = if (isEncryptChecked && backupPassword.isNotBlank()) backupPassword else null
-                            viewModel.createBackup(password = pass) { payload ->
-                                shareTextFile(context, payload.filename, payload.content, "application/json")
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary),
-                        enabled = !uiState.isLoading && (!isEncryptChecked || backupPassword.isNotBlank())
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        if (uiState.isLoading) {
-                            CircularProgressIndicator(modifier = Modifier.size(18.dp), color = Color.Black, strokeWidth = 2.dp)
-                            Spacer(modifier = Modifier.width(8.dp))
-                        } else {
-                            Icon(imageVector = Icons.Default.Download, contentDescription = null, tint = Color.Black)
-                            Spacer(modifier = Modifier.width(6.dp))
+                        Button(
+                            onClick = {
+                                val pass = if (isEncryptChecked && backupPassword.isNotBlank()) backupPassword else null
+                                viewModel.createBackup(password = pass) { payload ->
+                                    saveToLocalBackupDir(context, payload.filename, payload.content)
+                                    pendingSaveFile = PendingSaveFile(payload.filename, payload.content)
+                                    saveBackupLauncher.launch(payload.filename)
+                                }
+                            },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary),
+                            enabled = !uiState.isLoading && (!isEncryptChecked || backupPassword.isNotBlank())
+                        ) {
+                            if (uiState.isLoading) {
+                                CircularProgressIndicator(modifier = Modifier.size(18.dp), color = Color.Black, strokeWidth = 2.dp)
+                                Spacer(modifier = Modifier.width(8.dp))
+                            } else {
+                                Icon(imageVector = Icons.Default.Save, contentDescription = null, tint = Color.Black)
+                                Spacer(modifier = Modifier.width(6.dp))
+                            }
+                            Text(stringResource(R.string.backup_create_btn), color = Color.Black, fontWeight = FontWeight.Bold)
                         }
-                        Text(stringResource(R.string.backup_create_btn), color = Color.Black, fontWeight = FontWeight.Bold)
+                        OutlinedButton(
+                            onClick = {
+                                val pass = if (isEncryptChecked && backupPassword.isNotBlank()) backupPassword else null
+                                viewModel.createBackup(password = pass) { payload ->
+                                    saveToLocalBackupDir(context, payload.filename, payload.content)
+                                    shareTextFile(context, payload.filename, payload.content, "application/json")
+                                }
+                            },
+                            enabled = !uiState.isLoading && (!isEncryptChecked || backupPassword.isNotBlank())
+                        ) {
+                            Icon(imageVector = Icons.Default.Share, contentDescription = null, tint = EmeraldPrimary)
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(stringResource(R.string.backup_share_btn), color = MaterialTheme.colorScheme.onSurface)
+                        }
                     }
                 }
             }
@@ -386,11 +482,37 @@ fun ExportScreen(
                     Button(
                         onClick = { filePickerLauncher.launch(arrayOf("application/json", "text/*", "*/*")) },
                         colors = ButtonDefaults.buttonColors(containerColor = SapphireAccent),
-                        enabled = !uiState.isLoading
+                        enabled = !uiState.isLoading,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(imageVector = Icons.Default.CloudDownload, contentDescription = null, tint = Color.White)
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(stringResource(R.string.backup_restore_select_btn), color = Color.White, fontWeight = FontWeight.Bold)
+                    }
+
+                    val latestLocal = remember(uiState.lastBackupTimestamp) {
+                        getLatestLocalBackup(context)
+                    }
+                    if (latestLocal != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedButton(
+                            onClick = {
+                                try {
+                                    val content = latestLocal.readText(Charsets.UTF_8)
+                                    viewModel.onFileContentSelectedForRestore(content)
+                                } catch (_: Exception) {}
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = !uiState.isLoading
+                        ) {
+                            Icon(imageVector = Icons.Default.History, contentDescription = null, tint = SapphireAccent)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = stringResource(R.string.backup_restore_latest_local, latestLocal.name),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
                     }
                 }
             }
@@ -495,25 +617,54 @@ fun ExportScreen(
                     }
 
                     Spacer(modifier = Modifier.height(14.dp))
-                    Button(
-                        onClick = {
-                            val timestamp = System.currentTimeMillis()
-                            if (exportFormatIsCsv) {
-                                viewModel.exportCsv { csvData ->
-                                    shareTextFile(context, "finpulse_transactions_${timestamp}.csv", csvData, "text/csv")
-                                }
-                            } else {
-                                viewModel.exportFilteredJson { jsonData ->
-                                    shareTextFile(context, "finpulse_transactions_${timestamp}.json", jsonData, "application/json")
-                                }
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary),
-                        enabled = !uiState.isLoading
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(imageVector = Icons.Default.Download, contentDescription = null, tint = Color.Black)
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(stringResource(R.string.export_transactions_btn), color = Color.Black, fontWeight = FontWeight.Bold)
+                        Button(
+                            onClick = {
+                                val timestamp = System.currentTimeMillis()
+                                if (exportFormatIsCsv) {
+                                    viewModel.exportCsv { csvData ->
+                                        val filename = "finpulse_transactions_${timestamp}.csv"
+                                        pendingSaveFile = PendingSaveFile(filename, csvData)
+                                        saveCsvLauncher.launch(filename)
+                                    }
+                                } else {
+                                    viewModel.exportFilteredJson { jsonData ->
+                                        val filename = "finpulse_transactions_${timestamp}.json"
+                                        pendingSaveFile = PendingSaveFile(filename, jsonData)
+                                        saveBackupLauncher.launch(filename)
+                                    }
+                                }
+                            },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary),
+                            enabled = !uiState.isLoading
+                        ) {
+                            Icon(imageVector = Icons.Default.Save, contentDescription = null, tint = Color.Black)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(stringResource(R.string.export_transactions_btn), color = Color.Black, fontWeight = FontWeight.Bold)
+                        }
+                        OutlinedButton(
+                            onClick = {
+                                val timestamp = System.currentTimeMillis()
+                                if (exportFormatIsCsv) {
+                                    viewModel.exportCsv { csvData ->
+                                        shareTextFile(context, "finpulse_transactions_${timestamp}.csv", csvData, "text/csv")
+                                    }
+                                } else {
+                                    viewModel.exportFilteredJson { jsonData ->
+                                        shareTextFile(context, "finpulse_transactions_${timestamp}.json", jsonData, "application/json")
+                                    }
+                                }
+                            },
+                            enabled = !uiState.isLoading
+                        ) {
+                            Icon(imageVector = Icons.Default.Share, contentDescription = null, tint = EmeraldPrimary)
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(stringResource(R.string.backup_share_btn), color = MaterialTheme.colorScheme.onSurface)
+                        }
                     }
                 }
             }
@@ -674,6 +825,57 @@ fun ExportScreen(
     }
 }
 
+private data class PendingSaveFile(
+    val filename: String,
+    val content: String
+)
+
+private fun saveToLocalBackupDir(context: Context, filename: String, content: String): File? {
+    return try {
+        val internalDir = File(context.filesDir, "backups").apply { mkdirs() }
+        val internalFile = File(internalDir, filename)
+        internalFile.writeText(content, Charsets.UTF_8)
+
+        try {
+            val externalDir = context.getExternalFilesDir("backups")
+            if (externalDir != null) {
+                externalDir.mkdirs()
+                File(externalDir, filename).writeText(content, Charsets.UTF_8)
+            }
+        } catch (_: Exception) {}
+
+        internalFile
+    } catch (_: Exception) {
+        null
+    }
+}
+
+private fun getLatestLocalBackup(context: Context): File? {
+    return try {
+        val candidates = mutableListOf<File>()
+        val internalDir = File(context.filesDir, "backups")
+        if (internalDir.exists()) {
+            candidates.addAll(internalDir.listFiles { f -> f.isFile && f.name.endsWith(".json") }.orEmpty())
+        }
+        val externalDir = context.getExternalFilesDir("backups")
+        if (externalDir != null && externalDir.exists()) {
+            candidates.addAll(externalDir.listFiles { f -> f.isFile && f.name.endsWith(".json") }.orEmpty())
+        }
+        candidates.maxByOrNull { it.lastModified() }
+    } catch (_: Exception) {
+        null
+    }
+}
+
+private fun Context.findActivity(): Activity? {
+    var ctx: Context? = this
+    while (ctx is ContextWrapper) {
+        if (ctx is Activity) return ctx
+        ctx = ctx.baseContext
+    }
+    return null
+}
+
 private fun shareTextFile(context: Context, filename: String, content: String, mimeType: String) {
     try {
         val exportDir = File(context.cacheDir, "exports").apply { mkdirs() }
@@ -693,29 +895,43 @@ private fun shareTextFile(context: Context, filename: String, content: String, m
         }
         val chooserIntent = Intent.createChooser(sendIntent, context.getString(R.string.export_share_dialog_title)).apply {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            if (context !is Activity) {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
         }
-        context.startActivity(chooserIntent)
+        val activity = context.findActivity()
+        if (activity != null) {
+            activity.startActivity(chooserIntent)
+        } else {
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(chooserIntent)
+        }
     } catch (_: Exception) {
-        // Fallback to text extra if file sharing fails (only if content size is safe for Binder transaction)
+        // Fallback: try sharing with generic */*
         try {
+            val exportDir = File(context.cacheDir, "exports").apply { mkdirs() }
+            val file = File(exportDir, filename)
+            val uri = FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                file
+            )
             val sendIntent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                if (content.length < 100_000) {
-                    putExtra(Intent.EXTRA_TEXT, content)
-                }
+                type = "*/*"
+                putExtra(Intent.EXTRA_STREAM, uri)
                 putExtra(Intent.EXTRA_SUBJECT, filename)
+                clipData = ClipData.newRawUri(filename, uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
             val chooserIntent = Intent.createChooser(sendIntent, context.getString(R.string.export_share_dialog_title)).apply {
-                if (context !is Activity) {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            context.startActivity(chooserIntent)
-        } catch (_: Exception) {
-            // Silently suppress so UI state does not crash
+            val activity = context.findActivity()
+            if (activity != null) {
+                activity.startActivity(chooserIntent)
+            } else {
+                chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(chooserIntent)
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("ExportScreen", "Failed to share file: ${e.message}", e)
         }
     }
 }
