@@ -490,7 +490,7 @@ fun TransferFundsDialog(
                         value = "${sourceAccount.name} (${sourceAccount.balance.formatted()})",
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("From Account") },
+                        label = { Text(stringResource(R.string.accounts_transfer_from)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = sourceDropdownExpanded) },
                         modifier = Modifier.menuAnchor().fillMaxWidth()
                     )
@@ -524,7 +524,7 @@ fun TransferFundsDialog(
                         value = "${destAccount.name} (${destAccount.balance.formatted()})",
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("To Account") },
+                        label = { Text(stringResource(R.string.accounts_transfer_to)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = destDropdownExpanded) },
                         modifier = Modifier.menuAnchor().fillMaxWidth()
                     )
@@ -564,14 +564,18 @@ fun TransferFundsDialog(
                     ) {
                         Column(modifier = Modifier.padding(10.dp)) {
                             Text(
-                                text = "Cross-Currency Transfer (${sourceAccount.balance.currencyCode} → ${destAccount.balance.currencyCode})",
+                                text = stringResource(
+                                    R.string.accounts_transfer_cross_currency_title,
+                                    sourceAccount.balance.currencyCode,
+                                    destAccount.balance.currencyCode
+                                ),
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = EmeraldPrimary
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "Optionally specify the exact destination amount received after bank fee or conversion spread.",
+                                text = stringResource(R.string.accounts_transfer_cross_currency_note),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -579,7 +583,14 @@ fun TransferFundsDialog(
                             OutlinedTextField(
                                 value = customDestAmountText,
                                 onValueChange = { customDestAmountText = it },
-                                label = { Text("Received Amount (${destAccount.balance.currencyCode}) [Optional]") },
+                                label = {
+                                    Text(
+                                        stringResource(
+                                            R.string.accounts_transfer_received_amount_label,
+                                            destAccount.balance.currencyCode
+                                        )
+                                    )
+                                },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                 singleLine = true,
                                 modifier = Modifier.fillMaxWidth()

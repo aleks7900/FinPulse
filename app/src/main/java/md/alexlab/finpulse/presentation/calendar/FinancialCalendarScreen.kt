@@ -233,7 +233,7 @@ fun FinancialCalendarScreen(
                 // Agenda View
                 item {
                     Text(
-                        text = "UPCOMING CASH FLOW AGENDA",
+                        text = stringResource(R.string.calendar_upcoming_agenda_header).uppercase(),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -243,7 +243,7 @@ fun FinancialCalendarScreen(
                 val events = uiState.filteredEvents
                 if (events.isEmpty()) {
                     item {
-                        EmptyEventsState(message = "No obligations found for the selected filter.")
+                        EmptyEventsState(message = stringResource(R.string.calendar_no_events))
                     }
                 } else {
                     val grouped = events.groupBy {
@@ -325,7 +325,7 @@ private fun FinancialCalendarTopBar(
         title = {
             Column {
                 Text(
-                    text = "Financial Calendar",
+                    text = stringResource(R.string.calendar_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -343,7 +343,7 @@ private fun FinancialCalendarTopBar(
             IconButton(onClick = onNavigateBack) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
+                    contentDescription = stringResource(R.string.action_back)
                 )
             }
         },
@@ -506,7 +506,7 @@ private fun CashFlowSummaryCard(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Deterministic Projection: strictly based on scheduled events.",
+                        text = stringResource(R.string.calendar_deterministic_disclaimer),
                         style = MaterialTheme.typography.labelSmall,
                         color = SapphireAccent,
                         maxLines = 1,
@@ -533,7 +533,7 @@ private fun CashFlowSummaryCard(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Expected Inflow",
+                            text = stringResource(R.string.calendar_expected_inflow),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -563,7 +563,7 @@ private fun CashFlowSummaryCard(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Expected Outflow",
+                            text = stringResource(R.string.calendar_expected_outflow),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -614,7 +614,7 @@ private fun CashFlowSummaryCard(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Net Cash Flow",
+                            text = stringResource(R.string.calendar_net_cash_flow),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -648,7 +648,7 @@ private fun ProjectedBalanceCard(summary: CashFlowPeriodSummary) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "PROJECTED BALANCE TIMELINE",
+                    text = stringResource(R.string.calendar_timeline_header).uppercase(),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -671,7 +671,7 @@ private fun ProjectedBalanceCard(summary: CashFlowPeriodSummary) {
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "Deficit Risk",
+                                text = stringResource(R.string.calendar_deficit_risk),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = CrimsonExpense
@@ -904,7 +904,7 @@ private fun SelectedDayEventsSection(
         }
 
         if (events.isEmpty()) {
-            EmptyEventsState(message = "No obligations or scheduled events on this day.")
+            EmptyEventsState(message = stringResource(R.string.calendar_empty_day_obligations))
         } else {
             events.forEach { event ->
                 CalendarEventItem(
@@ -922,9 +922,9 @@ private fun AgendaDateHeader(date: LocalDate) {
     val daysUntil = ChronoUnit.DAYS.between(today, date)
 
     val relativeText = when {
-        daysUntil == 0L -> "Today"
-        daysUntil == 1L -> "Tomorrow"
-        daysUntil == -1L -> "Yesterday"
+        daysUntil == 0L -> stringResource(R.string.calendar_date_today)
+        daysUntil == 1L -> stringResource(R.string.calendar_date_tomorrow)
+        daysUntil == -1L -> stringResource(R.string.calendar_date_yesterday)
         daysUntil > 1L -> "In $daysUntil days"
         else -> "Past due (${-daysUntil}d ago)"
     }

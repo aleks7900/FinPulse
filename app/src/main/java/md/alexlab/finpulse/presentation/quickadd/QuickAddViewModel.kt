@@ -18,6 +18,10 @@ import md.alexlab.finpulse.domain.model.CategorizationCandidate
 import md.alexlab.finpulse.domain.model.CategorizationConfidence
 import md.alexlab.finpulse.domain.usecase.categorization.CategorizeTransactionUseCase
 import md.alexlab.finpulse.domain.usecase.categorization.RecordCategoryCorrectionUseCase
+import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import md.alexlab.finpulse.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -51,6 +55,7 @@ data class QuickAddUiState(
     val accounts: List<Account> = emptyList(),
     val categories: List<Category> = emptyList(),
     val errorMessage: String? = null,
+    @param:StringRes val errorMessageRes: Int? = null,
     val isSaving: Boolean = false,
     val lastSavedTransaction: Transaction? = null,
     val isEditing: Boolean = false,
@@ -58,9 +63,20 @@ data class QuickAddUiState(
     val suggestedCategory: Category? = null,
     val suggestedConfidence: CategorizationConfidence = CategorizationConfidence.NONE,
     val suggestionExplanation: String? = null,
+    @param:StringRes val suggestionExplanationRes: Int? = null,
     val matchedRuleId: String? = null,
     val isCategoryUserLocked: Boolean = false
-)
+) {
+    @Composable
+    fun getLocalizedErrorMessage(): String? {
+        return errorMessageRes?.let { stringResource(it) } ?: errorMessage
+    }
+
+    @Composable
+    fun getLocalizedSuggestionExplanation(): String? {
+        return suggestionExplanationRes?.let { stringResource(it) } ?: suggestionExplanation
+    }
+}
 
 class QuickAddViewModel(
     private val createTransactionUseCase: CreateTransactionUseCase,
@@ -83,6 +99,7 @@ class QuickAddViewModel(
     private val _dateChoice = MutableStateFlow(QuickAddDateChoice.TODAY)
     private val _selectedTimestamp = MutableStateFlow(System.currentTimeMillis())
     private val _errorMessage = MutableStateFlow<String?>(null)
+    private val _errorMessageRes = MutableStateFlow<Int?>(null)
     private val _isSaving = MutableStateFlow(false)
     private val _lastSavedTransaction = MutableStateFlow<Transaction?>(null)
     private val _editingTransactionId = MutableStateFlow<String?>(null)
@@ -92,6 +109,7 @@ class QuickAddViewModel(
     private val _suggestedConfidence = MutableStateFlow(CategorizationConfidence.NONE)
     private val _suggestedConfidenceScore = MutableStateFlow(0.0f)
     private val _suggestionExplanation = MutableStateFlow<String?>(null)
+    private val _suggestionExplanationRes = MutableStateFlow<Int?>(null)
     private val _matchedRuleId = MutableStateFlow<String?>(null)
     private val _isCategoryUserLocked = MutableStateFlow(false)
 
@@ -142,17 +160,17 @@ class QuickAddViewModel(
     ) { ac, suggestions -> Pair(ac, suggestions) }
 
     private val group3 = combine(
-        combine(_errorMessage, _isSaving, _lastSavedTransaction, _editingTransactionId) { err, saving, lastTx, editId ->
-            StatusAndFeedback(err, saving, lastTx, editId)
+        combine(_errorMessage, _errorMessageRes, _isSaving, combine(_lastSavedTransaction, _editingTransactionId) { lastTx, editId -> Pair(lastTx, editId) }) { err, errRes, saving, (lastTx, editId) ->
+            StatusAndFeedback(err, errRes, saving, lastTx, editId)
         },
         combine(
             _suggestedCategoryId,
             _suggestedConfidence,
             _suggestedConfidenceScore,
-            _suggestionExplanation,
+            combine(_suggestionExplanation, _suggestionExplanationRes) { exp, expRes -> Pair(exp, expRes) },
             combine(_matchedRuleId, _isCategoryUserLocked) { ruleId, locked -> Pair(ruleId, locked) }
-        ) { catId, conf, score, exp, (ruleId, locked) ->
-            SmartCatState(catId, conf, score, exp, ruleId, locked)
+        ) { catId, conf, score, (exp, expRes), (ruleId, locked) ->
+            SmartCatState(catId, conf, score, exp, expRes, ruleId, locked)
         }
     ) { status, smartCat -> Pair(status, smartCat) }
 
@@ -186,6 +204,7 @@ class QuickAddViewModel(
             accounts = ac.accounts,
             categories = relevantCategories,
             errorMessage = status.errorMessage,
+            errorMessageRes = status.errorMessageRes,
             isSaving = status.isSaving,
             lastSavedTransaction = status.lastSavedTransaction,
             isEditing = status.editingTransactionId != null,
@@ -193,6 +212,7 @@ class QuickAddViewModel(
             suggestedCategory = suggestedCategoryObj,
             suggestedConfidence = smartCat.suggestedConfidence,
             suggestionExplanation = smartCat.suggestionExplanation,
+            suggestionExplanationRes = smartCat.suggestionExplanationRes,
             matchedRuleId = smartCat.matchedRuleId,
             isCategoryUserLocked = smartCat.isCategoryUserLocked
         )
@@ -202,9 +222,14 @@ class QuickAddViewModel(
         initialValue = QuickAddUiState()
     )
 
+    private fun clearError() {
+        _errorMessage.value = null
+        _errorMessageRes.value = null
+    }
+
     fun onNumpadDigit(digit: Char) {
         val current = _amountInput.value
-        _errorMessage.value = null
+        clearError()
 
         val updated = when (digit) {
             '⌫' -> {
@@ -236,12 +261,12 @@ class QuickAddViewModel(
         val newMinor = currentMinor + (majorAmount * 100L)
         val bigDecimal = Money(newMinor).amountBigDecimal
         _amountInput.value = bigDecimal.toPlainString()
-        _errorMessage.value = null
+        clearError()
     }
 
     fun onTypeSelected(type: TransactionType) {
         _selectedType.value = type
-        _errorMessage.value = null
+        clearError()
         _selectedCategoryId.value = null
         _isCategoryUserLocked.value = false
         evaluateSmartCategorization()
@@ -249,30 +274,30 @@ class QuickAddViewModel(
 
     fun onAccountSelected(accountId: String) {
         _selectedAccountId.value = accountId
-        _errorMessage.value = null
+        clearError()
         evaluateSmartCategorization()
     }
 
     fun onDestinationAccountSelected(accountId: String) {
         _selectedDestinationAccountId.value = accountId
-        _errorMessage.value = null
+        clearError()
     }
 
     fun onCategorySelected(categoryId: String) {
         _selectedCategoryId.value = categoryId
         _isCategoryUserLocked.value = true
-        _errorMessage.value = null
+        clearError()
     }
 
     fun onMerchantSelected(merchant: String) {
         _merchant.value = merchant
-        _errorMessage.value = null
+        clearError()
         evaluateSmartCategorization()
     }
 
     fun onMerchantTextChange(merchant: String) {
         _merchant.value = merchant
-        _errorMessage.value = null
+        clearError()
         evaluateSmartCategorization()
     }
 
@@ -293,6 +318,7 @@ class QuickAddViewModel(
             _suggestedConfidence.value = CategorizationConfidence.NONE
             _suggestedConfidenceScore.value = 0.0f
             _suggestionExplanation.value = null
+            _suggestionExplanationRes.value = null
             _matchedRuleId.value = null
             return
         }
@@ -312,6 +338,7 @@ class QuickAddViewModel(
                     _suggestedConfidence.value = result.confidence
                     _suggestedConfidenceScore.value = result.confidenceScore
                     _suggestionExplanation.value = result.explanation
+                    _suggestionExplanationRes.value = null
                     _matchedRuleId.value = result.matchedRuleId
 
                     // Only auto-assign if user has not explicitly locked in a manual category
@@ -330,6 +357,7 @@ class QuickAddViewModel(
                     _suggestedConfidence.value = CategorizationConfidence.HIGH
                     _suggestedConfidenceScore.value = 0.85f
                     _suggestionExplanation.value = "Historical transaction match"
+                    _suggestionExplanationRes.value = R.string.quick_add_historical_match
                     _matchedRuleId.value = null
 
                     if (!_isCategoryUserLocked.value) {
@@ -343,6 +371,7 @@ class QuickAddViewModel(
             _suggestedConfidence.value = CategorizationConfidence.NONE
             _suggestedConfidenceScore.value = 0.0f
             _suggestionExplanation.value = null
+            _suggestionExplanationRes.value = null
             _matchedRuleId.value = null
         }
     }
@@ -382,7 +411,7 @@ class QuickAddViewModel(
         _tags.value = transaction.tags
         _selectedTimestamp.value = transaction.timestamp
         _dateChoice.value = QuickAddDateChoice.CUSTOM
-        _errorMessage.value = null
+        clearError()
         _isCategoryUserLocked.value = true
     }
 
@@ -392,7 +421,7 @@ class QuickAddViewModel(
         _merchant.value = ""
         _description.value = ""
         _tags.value = emptyList()
-        _errorMessage.value = null
+        clearError()
         _dateChoice.value = QuickAddDateChoice.TODAY
         _selectedTimestamp.value = System.currentTimeMillis()
         _isCategoryUserLocked.value = false
@@ -400,6 +429,7 @@ class QuickAddViewModel(
         _suggestedConfidence.value = CategorizationConfidence.NONE
         _suggestedConfidenceScore.value = 0.0f
         _suggestionExplanation.value = null
+        _suggestionExplanationRes.value = null
         _matchedRuleId.value = null
     }
 
@@ -407,21 +437,24 @@ class QuickAddViewModel(
         val state = uiState.value
         if (state.amountMinor <= 0L) {
             _errorMessage.value = "Enter an amount greater than zero"
+            _errorMessageRes.value = R.string.quick_add_err_amount_positive
             return
         }
         val sourceAccId = state.selectedAccountId
         if (sourceAccId.isNullOrBlank()) {
             _errorMessage.value = "Select an account"
+            _errorMessageRes.value = R.string.quick_add_err_select_account
             return
         }
         val catId = state.selectedCategoryId
         if (catId.isNullOrBlank()) {
             _errorMessage.value = "Select a category"
+            _errorMessageRes.value = R.string.quick_add_err_select_category
             return
         }
 
         _isSaving.value = true
-        _errorMessage.value = null
+        clearError()
 
         val editId = _editingTransactionId.value
         val isConfirmed = true
@@ -484,11 +517,13 @@ class QuickAddViewModel(
                         _suggestedConfidence.value = CategorizationConfidence.NONE
                         _suggestedConfidenceScore.value = 0.0f
                         _suggestionExplanation.value = null
+                        _suggestionExplanationRes.value = null
                         _matchedRuleId.value = null
                     }
                 }
                 is CreateTransactionResult.Error -> {
                     _errorMessage.value = result.message
+                    _errorMessageRes.value = null
                 }
             }
         }
@@ -525,6 +560,7 @@ private data class AccountsAndCategories(
 
 private data class StatusAndFeedback(
     val errorMessage: String?,
+    val errorMessageRes: Int?,
     val isSaving: Boolean,
     val lastSavedTransaction: Transaction?,
     val editingTransactionId: String?
@@ -535,6 +571,7 @@ private data class SmartCatState(
     val suggestedConfidence: CategorizationConfidence,
     val suggestedConfidenceScore: Float,
     val suggestionExplanation: String?,
+    val suggestionExplanationRes: Int?,
     val matchedRuleId: String?,
     val isCategoryUserLocked: Boolean
 )

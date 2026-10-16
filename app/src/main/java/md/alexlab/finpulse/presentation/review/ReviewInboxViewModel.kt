@@ -18,6 +18,8 @@ import md.alexlab.finpulse.domain.usecase.review.BulkCategorizeTransactionsUseCa
 import md.alexlab.finpulse.domain.usecase.review.GetReviewInboxUseCase
 import md.alexlab.finpulse.domain.usecase.review.ResolveDuplicateTransactionUseCase
 import md.alexlab.finpulse.domain.usecase.review.UpdateTransactionDetailsUseCase
+import androidx.annotation.StringRes
+import md.alexlab.finpulse.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -61,6 +63,7 @@ data class ReviewInboxUiState(
     val isBulkCategoryPickerVisible: Boolean = false,
 
     val message: String? = null,
+    @param:StringRes val messageRes: Int? = null,
     val isLoading: Boolean = true
 )
 
@@ -98,6 +101,7 @@ class ReviewInboxViewModel(
 
     private val _isBulkCategoryPickerVisible = MutableStateFlow(false)
     private val _message = MutableStateFlow<String?>(null)
+    private val _messageRes = MutableStateFlow<Int?>(null)
 
     val uiState: StateFlow<ReviewInboxUiState> = combine(
         combine(
@@ -130,9 +134,9 @@ class ReviewInboxViewModel(
             _isPayBillDialogVisible,
             _payingBillItem,
             _isBulkCategoryPickerVisible,
-            _message
-        ) { isPayBill, payBillItem, isBulkCat, msg ->
-            DialogsTwo(isPayBill, payBillItem, isBulkCat, msg)
+            combine(_message, _messageRes) { msg, msgRes -> Pair(msg, msgRes) }
+        ) { isPayBill, payBillItem, isBulkCat, (msg, msgRes) ->
+            DialogsTwo(isPayBill, payBillItem, isBulkCat, msg, msgRes)
         }
     ) { md, sp, d1, d2 ->
         val filtered = when (md.tab) {
@@ -171,6 +175,7 @@ class ReviewInboxViewModel(
             payingBillItem = d2.payBillItem,
             isBulkCategoryPickerVisible = d2.isBulkCat,
             message = d2.msg,
+            messageRes = d2.msgRes,
             isLoading = false
         )
     }.stateIn(
@@ -228,7 +233,7 @@ class ReviewInboxViewModel(
                 _message.value = "Confirmed ${item.title}"
             } else {
                 userPreferencesDataStore.dismissInboxItem(item.id)
-                _message.value = "Confirmed"
+                showToast("Confirmed", R.string.review_inbox_toast_confirmed)
             }
         }
     }
@@ -270,7 +275,7 @@ class ReviewInboxViewModel(
             updateTransactionDetailsUseCase.changeAccount(tx.id, newAccountId)
             _isAccountPickerDialogVisible.value = false
             _changingAccountItem.value = null
-            _message.value = "Account updated"
+            showToast("Account updated", R.string.review_inbox_toast_account_updated)
         }
     }
 
@@ -290,6 +295,7 @@ class ReviewInboxViewModel(
             _isEditMerchantDialogVisible.value = false
             _editingMerchantItem.value = null
             _message.value = "Merchant updated to '$newMerchant'"
+            _messageRes.value = null
         }
     }
 
@@ -312,7 +318,7 @@ class ReviewInboxViewModel(
             )
             _isResolveDuplicateDialogVisible.value = false
             _resolvingDuplicateItem.value = null
-            _message.value = "Duplicate removed, original kept"
+            showToast("Duplicate removed, original kept", R.string.review_inbox_toast_dup_removed)
         }
     }
 
@@ -327,7 +333,7 @@ class ReviewInboxViewModel(
             )
             _isResolveDuplicateDialogVisible.value = false
             _resolvingDuplicateItem.value = null
-            _message.value = "Original removed, candidate kept"
+            showToast("Original removed, candidate kept", R.string.review_inbox_toast_orig_removed)
         }
     }
 
@@ -336,7 +342,7 @@ class ReviewInboxViewModel(
             resolveDuplicateTransactionUseCase.dismissDuplicateWarning(item.id)
             _isResolveDuplicateDialogVisible.value = false
             _resolvingDuplicateItem.value = null
-            _message.value = "Marked as not a duplicate"
+            showToast("Marked as not a duplicate", R.string.review_inbox_toast_not_dup)
         }
     }
 
@@ -363,9 +369,11 @@ class ReviewInboxViewModel(
                     _isPayBillDialogVisible.value = false
                     _payingBillItem.value = null
                     _message.value = "Recorded payment for ${occ.ruleTitle}"
+                    _messageRes.value = null
                 }
                 is MarkPaidResult.Error -> {
                     _message.value = result.message
+                    _messageRes.value = null
                 }
             }
         }
@@ -377,7 +385,7 @@ class ReviewInboxViewModel(
     fun onDismissItem(item: ReviewInboxItem) {
         viewModelScope.launch {
             userPreferencesDataStore.dismissInboxItem(item.id)
-            _message.value = "Dismissed"
+            showToast("Dismissed", R.string.review_inbox_toast_dismissed)
         }
     }
 
@@ -449,6 +457,12 @@ class ReviewInboxViewModel(
 
     fun onClearMessage() {
         _message.value = null
+        _messageRes.value = null
+    }
+
+    private fun showToast(msg: String, @StringRes resId: Int? = null) {
+        _message.value = msg
+        _messageRes.value = resId
     }
 }
 
@@ -479,5 +493,6 @@ private data class DialogsTwo(
     val isPayBill: Boolean,
     val payBillItem: ReviewInboxItem?,
     val isBulkCat: Boolean,
-    val msg: String?
+    val msg: String?,
+    val msgRes: Int?
 )

@@ -124,16 +124,18 @@ fun ExportScreen(
         }
     }
 
-    LaunchedEffect(uiState.errorMessage) {
-        uiState.errorMessage?.let {
-            snackbarHostState.showSnackbar(it)
+    LaunchedEffect(uiState.errorMessage, uiState.errorMessageRes) {
+        val error = uiState.errorMessageRes?.let { context.getString(it) } ?: uiState.errorMessage
+        if (error != null) {
+            snackbarHostState.showSnackbar(error)
             viewModel.clearMessages()
         }
     }
 
-    LaunchedEffect(uiState.successMessage) {
-        uiState.successMessage?.let {
-            snackbarHostState.showSnackbar(it)
+    LaunchedEffect(uiState.successMessage, uiState.successMessageRes) {
+        val success = uiState.successMessageRes?.let { context.getString(it) } ?: uiState.successMessage
+        if (success != null) {
+            snackbarHostState.showSnackbar(success)
             viewModel.clearMessages()
         }
     }

@@ -81,6 +81,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -101,6 +102,8 @@ import md.alexlab.finpulse.core.ui.getLocalizedName
 import md.alexlab.finpulse.domain.model.Account
 import md.alexlab.finpulse.domain.model.Category
 import md.alexlab.finpulse.domain.model.ReviewInboxItem
+import md.alexlab.finpulse.domain.model.getLocalizedTitle
+import md.alexlab.finpulse.domain.model.getLocalizedReason
 import md.alexlab.finpulse.domain.model.ReviewInboxSummary
 import md.alexlab.finpulse.domain.model.ReviewItemPriority
 import md.alexlab.finpulse.domain.model.ReviewItemType
@@ -141,11 +144,13 @@ fun ReviewInboxScreen(
     onClearMessage: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     var showOverflowMenu by remember { mutableStateOf(false) }
 
-    LaunchedEffect(uiState.message) {
-        uiState.message?.let {
+    LaunchedEffect(uiState.message, uiState.messageRes) {
+        val msg = uiState.messageRes?.let { context.getString(it) } ?: uiState.message
+        msg?.let {
             snackbarHostState.showSnackbar(it)
             onClearMessage()
         }
@@ -679,7 +684,7 @@ fun ReviewItemCard(
 
             // Title & Subtitle
             Text(
-                text = item.title,
+                text = item.getLocalizedTitle(),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -710,7 +715,7 @@ fun ReviewItemCard(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = item.reason,
+                        text = item.getLocalizedReason(),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

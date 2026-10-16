@@ -17,6 +17,8 @@ import md.alexlab.finpulse.domain.usecase.backup.CreateBackupUseCase
 import md.alexlab.finpulse.domain.usecase.backup.ExportTransactionsUseCase
 import md.alexlab.finpulse.domain.usecase.backup.RestoreBackupUseCase
 import md.alexlab.finpulse.domain.usecase.backup.ValidateBackupUseCase
+import androidx.annotation.StringRes
+import md.alexlab.finpulse.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -37,7 +39,9 @@ data class ExportUiState(
     val isPasswordPromptVisible: Boolean = false,
     val restoreSummary: RestoreSummary? = null,
     val errorMessage: String? = null,
-    val successMessage: String? = null
+    @param:StringRes val errorMessageRes: Int? = null,
+    val successMessage: String? = null,
+    @param:StringRes val successMessageRes: Int? = null
 )
 
 class ExportViewModel(
@@ -59,7 +63,9 @@ class ExportViewModel(
     private val _pendingContentForRestore = MutableStateFlow<String?>(null)
     private val _restoreSummary = MutableStateFlow<RestoreSummary?>(null)
     private val _errorMessage = MutableStateFlow<String?>(null)
+    private val _errorMessageRes = MutableStateFlow<Int?>(null)
     private val _successMessage = MutableStateFlow<String?>(null)
+    private val _successMessageRes = MutableStateFlow<Int?>(null)
 
     val uiState: StateFlow<ExportUiState> = combine(
         userPreferencesDataStore.userPreferencesFlow,
@@ -75,7 +81,9 @@ class ExportViewModel(
         ) { loading, valRes, confirmVis, passVis, summary ->
             DialogState(loading, valRes, confirmVis, passVis, summary)
         },
-        combine(_errorMessage, _successMessage) { err, succ -> Pair(err, succ) }
+        combine(_errorMessage, _errorMessageRes, _successMessage, _successMessageRes) { err, errRes, succ, succRes ->
+            MessageState(err, errRes, succ, succRes)
+        }
     ) { args: Array<Any?> ->
         val prefs = args[0] as UserPreferences
         @Suppress("UNCHECKED_CAST")
@@ -84,8 +92,7 @@ class ExportViewModel(
         val categories = args[2] as List<Category>
         val filter = args[3] as ExportFilterParams
         val dialogs = args[4] as DialogState
-        @Suppress("UNCHECKED_CAST")
-        val messages = args[5] as Pair<String?, String?>
+        val messages = args[5] as MessageState
 
         val now = System.currentTimeMillis()
         val lastBackup = prefs.lastBackupTimestamp
@@ -116,8 +123,10 @@ class ExportViewModel(
             isRestoreConfirmDialogVisible = dialogs.isRestoreConfirmDialogVisible,
             isPasswordPromptVisible = dialogs.isPasswordPromptVisible,
             restoreSummary = dialogs.restoreSummary,
-            errorMessage = messages.first,
-            successMessage = messages.second
+            errorMessage = messages.errorMessage,
+            errorMessageRes = messages.errorMessageRes,
+            successMessage = messages.successMessage,
+            successMessageRes = messages.successMessageRes
         )
     }.stateIn(
         scope = viewModelScope,
@@ -133,12 +142,21 @@ class ExportViewModel(
         val restoreSummary: RestoreSummary?
     )
 
+    private data class MessageState(
+        val errorMessage: String?,
+        val errorMessageRes: Int?,
+        val successMessage: String?,
+        val successMessageRes: Int?
+    )
+
     fun createBackup(password: String? = null, onReady: (BackupExportPayload) -> Unit) {
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
+            _errorMessageRes.value = null
             try {
                 val payload = createBackupUseCase(password)
+                _successMessageRes.value = R.string.export_toast_backup_success
                 _successMessage.value = "Backup created successfully"
                 errorReporter.log("Backup archive created successfully")
                 onReady(payload)
@@ -161,8 +179,10 @@ class ExportViewModel(
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
+            _errorMessageRes.value = null
             try {
                 val csv = exportTransactionsUseCase.exportCsv(_filterParams.value)
+                _successMessageRes.value = R.string.export_toast_csv_success
                 _successMessage.value = "CSV exported successfully"
                 errorReporter.log("CSV transactions exported successfully")
                 onReady(csv)
@@ -185,8 +205,10 @@ class ExportViewModel(
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
+            _errorMessageRes.value = null
             try {
                 val jsonStr = exportTransactionsUseCase.exportJson(_filterParams.value)
+                _successMessageRes.value = R.string.export_toast_json_success
                 _successMessage.value = "JSON exported successfully"
                 errorReporter.log("JSON transactions exported successfully")
                 onReady(jsonStr)
@@ -293,6 +315,8 @@ class ExportViewModel(
 
     fun clearMessages() {
         _errorMessage.value = null
+        _errorMessageRes.value = null
         _successMessage.value = null
+        _successMessageRes.value = null
     }
 }

@@ -828,7 +828,7 @@ fun FilterBottomSheet(
                             modifier = Modifier.weight(1f)
                         )
                         IconButton(onClick = { onCategorySelected(null) }, modifier = Modifier.size(24.dp)) {
-                            Icon(Icons.Default.Close, contentDescription = "Clear", modifier = Modifier.size(16.dp))
+                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.action_clear), modifier = Modifier.size(16.dp))
                         }
                     } else {
                         Text(

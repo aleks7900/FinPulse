@@ -37,8 +37,10 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.AmberWarning
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
@@ -83,7 +85,7 @@ fun ProjectedBalanceTimelineChart(
         ) {
             Column {
                 Text(
-                    text = "Starting Liquid",
+                    text = stringResource(R.string.calendar_starting_liquid),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -107,7 +109,7 @@ fun ProjectedBalanceTimelineChart(
                         Spacer(modifier = Modifier.width(4.dp))
                     }
                     Text(
-                        text = "Lowest Projected",
+                        text = stringResource(R.string.calendar_lowest_projected),
                         style = MaterialTheme.typography.labelSmall,
                         color = if (isDeficitProjected) CrimsonExpense else AmberWarning
                     )
@@ -122,7 +124,7 @@ fun ProjectedBalanceTimelineChart(
 
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = "Projected End",
+                    text = stringResource(R.string.calendar_projected_end),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -276,7 +278,7 @@ fun ProjectedBalanceTimelineChart(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "${dailyProjections.size} days projected",
+                text = stringResource(R.string.calendar_days_projected, dailyProjections.size),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

@@ -278,8 +278,9 @@ fun CsvImportScreen(
                                 verticalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
                                 CircularProgressIndicator(color = EmeraldPrimary)
+                                val loadingMsg = uiState.getLocalizedLoadingMessage()
                                 Text(
-                                    text = uiState.loadingMessage.ifEmpty { "Processing statement..." },
+                                    text = loadingMsg.ifEmpty { stringResource(R.string.csv_processing_statement) },
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.Medium
                                 )
@@ -290,7 +291,8 @@ fun CsvImportScreen(
             }
 
             // Error banner
-            uiState.errorMessage?.let { error ->
+            val localizedError = uiState.getLocalizedErrorMessage()
+            if (localizedError != null) {
                 Snackbar(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
@@ -302,7 +304,7 @@ fun CsvImportScreen(
                     },
                     containerColor = CrimsonExpense
                 ) {
-                    Text(text = error, color = Color.White)
+                    Text(text = localizedError, color = Color.White)
                 }
             }
 
@@ -753,7 +755,7 @@ private fun MappingConfigView(
                     onExpandedChange = { accountExpanded = !accountExpanded }
                 ) {
                     OutlinedTextField(
-                        value = selectedAcc?.name ?: "Select Destination Account",
+                        value = selectedAcc?.name ?: stringResource(R.string.csv_select_destination_account),
                         onValueChange = {},
                         readOnly = true,
                         leadingIcon = {
@@ -1380,7 +1382,7 @@ private fun ParsedRowCard(
                     ) {
                         Icon(imageVector = Icons.Default.Close, contentDescription = null, tint = CrimsonExpense, modifier = Modifier.size(12.dp))
                         Text(
-                            text = row.errorReason ?: "Invalid row",
+                            text = row.errorReason ?: stringResource(R.string.csv_invalid_row),
                             style = MaterialTheme.typography.labelSmall,
                             color = CrimsonExpense,
                             fontWeight = FontWeight.Medium

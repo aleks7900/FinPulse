@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.domain.engine
 
+import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.model.Money
 import md.alexlab.finpulse.domain.model.Account
 import md.alexlab.finpulse.domain.model.CategorizationCandidate
@@ -100,7 +101,8 @@ object ReviewInboxEngine {
                             suggestedCategoryConfidence = suggestion.confidenceScore,
                             reason = "Imported statement transaction assigned to $catName. Confirm or adjust details.",
                             accountName = accountMap[tx.sourceAccountId]?.name,
-                            categoryName = catName
+                            categoryName = catName,
+                            titleRes = if (tx.merchant.isNullOrBlank() && tx.description.isBlank()) R.string.review_inbox_item_imported else null
                         )
                     )
                 } else {
@@ -127,7 +129,9 @@ object ReviewInboxEngine {
                             suggestedCategoryConfidence = suggestion.confidenceScore,
                             reason = reason,
                             accountName = accountMap[tx.sourceAccountId]?.name,
-                            categoryName = categoryMap[tx.categoryId]?.name ?: "Uncategorized"
+                            categoryName = categoryMap[tx.categoryId]?.name ?: "Uncategorized",
+                            titleRes = if (tx.merchant.isNullOrBlank() && tx.description.isBlank()) R.string.review_inbox_item_uncategorized else null,
+                            reasonRes = if (suggestedCategory == null) R.string.review_inbox_reason_uncategorized else null
                         )
                     )
                 }
@@ -186,7 +190,9 @@ object ReviewInboxEngine {
                             duplicateCandidate = txB,
                             reason = reason,
                             accountName = accountMap[txA.sourceAccountId]?.name,
-                            categoryName = categoryMap[txA.categoryId]?.name
+                            categoryName = categoryMap[txA.categoryId]?.name,
+                            titleRes = R.string.review_inbox_item_duplicate_title,
+                            titleArgs = listOf(txA.amount.formatted())
                         )
                     )
                 }
@@ -212,7 +218,9 @@ object ReviewInboxEngine {
                         transaction = tx,
                         reason = "Merchant name missing. Adding a merchant improves search and auto-categorization.",
                         accountName = accountMap[tx.sourceAccountId]?.name,
-                        categoryName = categoryMap[tx.categoryId]?.name
+                        categoryName = categoryMap[tx.categoryId]?.name,
+                        titleRes = if (tx.description.isBlank()) R.string.review_inbox_item_missing_merchant else null,
+                        reasonRes = R.string.review_inbox_reason_missing_merchant
                     )
                 )
             }
@@ -242,7 +250,9 @@ object ReviewInboxEngine {
                         transaction = tx,
                         reason = "Transaction has an amount of $0.00. Check if this is an incomplete entry or hold.",
                         accountName = accountMap[tx.sourceAccountId]?.name,
-                        categoryName = categoryMap[tx.categoryId]?.name
+                        categoryName = categoryMap[tx.categoryId]?.name,
+                        titleRes = R.string.review_inbox_item_zero_amount,
+                        titleArgs = listOf(tx.merchant ?: tx.description.ifEmpty { "Transaction" })
                     )
                 )
             } else if (tx.type == TransactionType.EXPENSE) {
@@ -267,7 +277,9 @@ object ReviewInboxEngine {
                             transaction = tx,
                             reason = "This ${tx.amount.formatted()} expense is ${ratio}x higher than your average $catName spend (${Money(peerAvgMinor, tx.amount.currencyCode).formatted()}).",
                             accountName = accountMap[tx.sourceAccountId]?.name,
-                            categoryName = catName
+                            categoryName = catName,
+                            titleRes = R.string.review_inbox_item_high_outlier,
+                            titleArgs = listOf(tx.amount.formatted())
                         )
                     )
                 } else if (amountMinor >= LARGE_AMOUNT_THRESHOLD_MINOR) {
@@ -284,7 +296,9 @@ object ReviewInboxEngine {
                             transaction = tx,
                             reason = "Single transaction of ${tx.amount.formatted()} exceeds the large expense threshold.",
                             accountName = accountMap[tx.sourceAccountId]?.name,
-                            categoryName = categoryMap[tx.categoryId]?.name
+                            categoryName = categoryMap[tx.categoryId]?.name,
+                            titleRes = R.string.review_inbox_item_large_expense,
+                            titleArgs = listOf(tx.amount.formatted())
                         )
                     )
                 }
@@ -312,7 +326,9 @@ object ReviewInboxEngine {
                         recurringOccurrence = occ,
                         reason = "Payment of ${occ.amount.formatted()} was due on ${formatDate(occ.dueDate)} and is currently unpaid.",
                         accountName = accountMap[occ.accountId]?.name,
-                        categoryName = categoryMap[occ.categoryId]?.name
+                        categoryName = categoryMap[occ.categoryId]?.name,
+                        titleRes = R.string.review_inbox_item_overdue_bill,
+                        titleArgs = listOf(occ.ruleTitle)
                     )
                 )
             }
@@ -340,7 +356,10 @@ object ReviewInboxEngine {
                         recurringRule = rule,
                         reason = "Source account is missing or archived. Scheduled generation cannot proceed until account is updated.",
                         accountName = accountMap[rule.accountId]?.name ?: "Unknown Account",
-                        categoryName = categoryMap[rule.categoryId]?.name
+                        categoryName = categoryMap[rule.categoryId]?.name,
+                        titleRes = R.string.review_inbox_item_recurring_issue,
+                        titleArgs = listOf(rule.title),
+                        reasonRes = R.string.review_inbox_reason_account_unavailable
                     )
                 )
             } else if (isNextDuePassedWithoutTx) {
@@ -358,7 +377,10 @@ object ReviewInboxEngine {
                         recurringRule = rule,
                         reason = "Recurring rule schedule was missed or stalled. Trigger generation now or mark paid.",
                         accountName = accountMap[rule.accountId]?.name,
-                        categoryName = categoryMap[rule.categoryId]?.name
+                        categoryName = categoryMap[rule.categoryId]?.name,
+                        titleRes = R.string.review_inbox_item_missed_generation,
+                        titleArgs = listOf(rule.title),
+                        reasonRes = R.string.review_inbox_reason_recurring_missed
                     )
                 )
             }

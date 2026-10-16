@@ -19,6 +19,8 @@ import md.alexlab.finpulse.domain.usecase.categorization.ManageCategorizationRul
 import md.alexlab.finpulse.domain.usecase.categorization.RecordCategoryCorrectionUseCase
 import md.alexlab.finpulse.domain.usecase.categorization.ReviewQueueItem
 import md.alexlab.finpulse.domain.usecase.categorization.SaveRuleResult
+import androidx.annotation.StringRes
+import md.alexlab.finpulse.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -47,7 +49,8 @@ data class CategorizationRulesUiState(
     val isChangeCategoryDialogVisible: Boolean = false,
     val changingTransaction: Transaction? = null,
     val errorMessage: String? = null,
-    val successMessage: String? = null
+    val successMessage: String? = null,
+    @param:StringRes val successMessageRes: Int? = null
 )
 
 class CategorizationRulesViewModel(
@@ -73,6 +76,7 @@ class CategorizationRulesViewModel(
     private val _changingTransaction = MutableStateFlow<Transaction?>(null)
     private val _errorMessage = MutableStateFlow<String?>(null)
     private val _successMessage = MutableStateFlow<String?>(null)
+    private val _successMessageRes = MutableStateFlow<Int?>(null)
 
     val uiState: StateFlow<CategorizationRulesUiState> = combine(
         combine(
@@ -102,8 +106,8 @@ class CategorizationRulesViewModel(
         ) { preview, overrideManual, isChangeCat, changeTx, err ->
             ApplyAndChangeDialog(preview, overrideManual, isChangeCat, changeTx, err)
         },
-        _successMessage
-    ) { qr, ad, ac, succ ->
+        combine(_successMessage, _successMessageRes) { succ, succRes -> Pair(succ, succRes) }
+    ) { qr, ad, ac, succPair ->
         CategorizationRulesUiState(
             selectedTab = qr.tab,
             reviewQueue = qr.queue,
@@ -120,7 +124,8 @@ class CategorizationRulesViewModel(
             isChangeCategoryDialogVisible = ac.isChangeCat,
             changingTransaction = ac.changeTx,
             errorMessage = ac.err,
-            successMessage = succ
+            successMessage = succPair.first,
+            successMessageRes = succPair.second
         )
     }.stateIn(
         scope = viewModelScope,
@@ -141,6 +146,7 @@ class CategorizationRulesViewModel(
                 matchedRuleId = item.suggestion.matchedRuleId,
                 confidence = item.suggestion.confidenceScore
             )
+            _successMessageRes.value = R.string.rules_toast_category_confirmed
             _successMessage.value = "Category confirmed"
         }
     }
@@ -217,6 +223,7 @@ class CategorizationRulesViewModel(
                     _prefilledMerchant.value = null
                     _prefilledCategoryId.value = null
                     _errorMessage.value = null
+                    _successMessageRes.value = R.string.rules_toast_rule_saved
                     _successMessage.value = "Rule saved"
                 }
                 is SaveRuleResult.Error -> {
@@ -241,8 +248,15 @@ class CategorizationRulesViewModel(
     fun deleteRule(ruleId: String) {
         viewModelScope.launch {
             manageRuleUseCase.deleteRule(ruleId)
+            _successMessageRes.value = R.string.rules_toast_rule_deleted
             _successMessage.value = "Rule deleted"
         }
+    }
+
+    fun clearMessages() {
+        _errorMessage.value = null
+        _successMessage.value = null
+        _successMessageRes.value = null
     }
 
     fun openApplyRuleDialog(ruleId: String) {

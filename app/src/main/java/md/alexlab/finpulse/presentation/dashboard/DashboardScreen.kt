@@ -88,6 +88,8 @@ import md.alexlab.finpulse.core.ui.TransactionItem
 import md.alexlab.finpulse.core.ui.getCategoryDisplayName
 import md.alexlab.finpulse.core.ui.getLocalizedName
 import md.alexlab.finpulse.domain.model.FinancialInsight
+import md.alexlab.finpulse.domain.model.getLocalizedTitle
+import md.alexlab.finpulse.domain.model.getLocalizedDescription
 import md.alexlab.finpulse.domain.model.InsightType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -157,7 +159,7 @@ fun DashboardScreen(
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = "Search",
+                            contentDescription = stringResource(R.string.action_search),
                             tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(20.dp)
                         )
@@ -252,14 +254,14 @@ fun DashboardScreen(
 
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Financial Calendar",
+                                text = stringResource(R.string.calendar_title),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
-                                text = "Forecast upcoming bills, income & cash flow timeline",
+                                text = stringResource(R.string.more_calendar_desc),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -386,7 +388,7 @@ fun DashboardScreen(
             } else {
                 items(uiState.recentTransactions, key = { it.id }) { tx ->
                     val cat = categoryMap[tx.categoryId]
-                    val acc = accountMap[tx.sourceAccountId]?.name ?: "Account"
+                    val acc = accountMap[tx.sourceAccountId]?.name ?: stringResource(R.string.tx_account)
                     TransactionItem(
                         transaction = tx,
                         category = cat,
@@ -668,14 +670,14 @@ fun InsightBanner(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = insight.title,
+                    text = insight.getLocalizedTitle(),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = insight.description,
+                    text = insight.getLocalizedDescription(),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

@@ -52,6 +52,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
 import md.alexlab.finpulse.core.designsystem.ProvideMotionConfig
@@ -208,7 +209,7 @@ fun FinPulseApp(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = "Quick Add Transaction"
+                        contentDescription = stringResource(R.string.quick_add_title)
                     )
                 }
             }

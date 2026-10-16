@@ -275,7 +275,7 @@ fun QuickAddBottomSheet(
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
-                            uiState.suggestionExplanation?.let { exp ->
+                            uiState.getLocalizedSuggestionExplanation()?.let { exp ->
                                 Text(
                                     text = exp,
                                     style = MaterialTheme.typography.labelSmall,
@@ -502,7 +502,7 @@ fun QuickAddBottomSheet(
             }
 
             // Error display
-            uiState.errorMessage?.let { err ->
+            uiState.getLocalizedErrorMessage()?.let { err ->
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(text = err, color = CrimsonExpense, style = MaterialTheme.typography.labelSmall)
             }
@@ -782,7 +782,7 @@ fun NumericKeypad(
                             if (key == '⌫') {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.Backspace,
-                                    contentDescription = "Backspace",
+                                    contentDescription = stringResource(R.string.cd_backspace),
                                     tint = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.size(20.dp)
                                 )

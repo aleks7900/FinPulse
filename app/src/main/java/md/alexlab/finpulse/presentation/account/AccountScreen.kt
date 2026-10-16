@@ -287,7 +287,7 @@ fun AccountScreen(
                 title = { Text(stringResource(R.string.account_title), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 actions = {
@@ -348,7 +348,7 @@ private fun LoggedOutContent(
         ) {
             Image(
                 painter = painterResource(R.drawable.ic_app_logo),
-                contentDescription = "FinPulse Logo",
+                contentDescription = stringResource(R.string.cd_logo),
                 modifier = Modifier
                     .size(80.dp)
                     .clip(RoundedCornerShape(20.dp))

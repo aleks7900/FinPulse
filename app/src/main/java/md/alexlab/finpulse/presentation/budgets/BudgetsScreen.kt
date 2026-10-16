@@ -113,6 +113,8 @@ fun BudgetsScreen(
     syncAction: @Composable () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val defaultOverallName = stringResource(R.string.budget_overall_monthly_default)
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -174,7 +176,7 @@ fun BudgetsScreen(
                         val placeholderOverall = Budget(
                             id = "",
                             categoryId = "overall",
-                            name = "Overall Monthly Budget",
+                            name = defaultOverallName,
                             limitAmount = Money(200000L, uiState.baseCurrency),
                             periodType = BudgetPeriod.MONTHLY,
                             startDate = 0L,
@@ -201,7 +203,7 @@ fun BudgetsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Category Budgets",
+                            text = stringResource(R.string.budget_category_budgets_header),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -353,7 +355,7 @@ fun SafeToSpendCard(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "Formula",
+                                text = stringResource(R.string.budget_formula_label),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = Color.White,
                                 fontWeight = FontWeight.SemiBold
@@ -447,7 +449,7 @@ fun SafeToSpendCard(
                         ) {
                             Column(modifier = Modifier.padding(10.dp)) {
                                 Text(
-                                    text = "CYCLE",
+                                    text = stringResource(R.string.budget_cycle_label).uppercase(),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = Color.White.copy(alpha = 0.6f),
                                     fontWeight = FontWeight.Bold
@@ -517,7 +519,7 @@ fun OverallBudgetSection(
                             color = SapphireAccent.copy(alpha = 0.15f)
                         ) {
                             Text(
-                                text = "Rollover active",
+                                text = stringResource(R.string.budget_rollover_active),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = SapphireAccent,
                                 fontWeight = FontWeight.Bold,
@@ -559,9 +561,15 @@ fun OverallBudgetSection(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     val statusText = if (overallStatus.isExceeded) {
-                        "Over limit by " + (overallStatus.spentAmount - overallStatus.budget.effectiveLimit).formatted()
+                        stringResource(
+                            R.string.budget_over_limit_by,
+                            (overallStatus.spentAmount - overallStatus.budget.effectiveLimit).formatted()
+                        )
                     } else {
-                        "${overallStatus.remainingAmount.formatted()} remaining"
+                        stringResource(
+                            R.string.budget_status_warning_desc,
+                            overallStatus.remainingAmount.formatted()
+                        )
                     }
 
                     Text(
@@ -573,9 +581,9 @@ fun OverallBudgetSection(
 
                     overallStatus.pacingMetrics?.let { pacing ->
                         val (pacingLabel, pacingColor) = when (pacing.pacingStatus) {
-                            PacingStatus.ON_TRACK -> "On Track" to EmeraldPrimary
-                            PacingStatus.AHEAD_OF_PACE -> "Ahead of Pace" to AmberWarning
-                            PacingStatus.UNDER_PACE -> "Under Pace" to SapphireAccent
+                            PacingStatus.ON_TRACK -> stringResource(R.string.budget_pacing_on_track_simple) to EmeraldPrimary
+                            PacingStatus.AHEAD_OF_PACE -> stringResource(R.string.budget_pacing_ahead_simple) to AmberWarning
+                            PacingStatus.UNDER_PACE -> stringResource(R.string.budget_pacing_under_simple) to SapphireAccent
                         }
                         Surface(
                             shape = RoundedCornerShape(6.dp),
@@ -619,7 +627,7 @@ fun OverallBudgetSection(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "Cap discretionary money across all categories",
+                        text = stringResource(R.string.budget_cap_discretionary),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -723,7 +731,7 @@ fun CategoryBudgetCard(
                         text = if (hideBalances) "••••" else {
                             if (status.isExceeded) {
                                 val overspent = (status.spentAmount - status.budget.effectiveLimit).formatted()
-                                "Over by $overspent"
+                                stringResource(R.string.budget_over_limit_by, overspent)
                             } else {
                                 stringResource(R.string.debt_card_balance_left, status.remainingAmount.formatted())
                             }
@@ -916,6 +924,9 @@ fun AddEditBudgetDialog(
     }
 
     var isError by remember { mutableStateOf(false) }
+
+    val defaultOverallName = stringResource(R.string.budget_overall_monthly_default)
+    val defaultBudgetName = stringResource(R.string.budget_default_name)
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -1131,9 +1142,9 @@ fun AddEditBudgetDialog(
                         md.alexlab.finpulse.core.model.CurrencyConfig.fromMajor(it, selectedCurrency).amountMinor
                     })
                     val catName = if (isOverall) {
-                        nameText.ifBlank { "Overall Monthly Budget" }
+                        nameText.ifBlank { defaultOverallName }
                     } else {
-                        selectedCategory?.name ?: categories.find { it.id == categoryId }?.name ?: "Budget"
+                        selectedCategory?.name ?: categories.find { it.id == categoryId }?.name ?: defaultBudgetName
                     }
 
                     val budgetId = editingBudget?.id?.takeIf { it.isNotBlank() }

@@ -36,8 +36,29 @@ data class ReviewInboxItem(
     val reason: String = "",
     val accountName: String? = null,
     val categoryName: String? = null,
-    val isDismissible: Boolean = true
+    val isDismissible: Boolean = true,
+    val titleRes: Int? = null,
+    val titleArgs: List<String> = emptyList(),
+    val reasonRes: Int? = null
 )
+
+@androidx.compose.runtime.Composable
+fun ReviewInboxItem.getLocalizedTitle(): String {
+    return if (titleRes != null) {
+        androidx.compose.ui.res.stringResource(titleRes, *titleArgs.toTypedArray())
+    } else {
+        title
+    }
+}
+
+@androidx.compose.runtime.Composable
+fun ReviewInboxItem.getLocalizedReason(): String {
+    return if (reasonRes != null) {
+        androidx.compose.ui.res.stringResource(reasonRes)
+    } else {
+        reason
+    }
+}
 
 data class SafeBulkSuggestion(
     val id: String,

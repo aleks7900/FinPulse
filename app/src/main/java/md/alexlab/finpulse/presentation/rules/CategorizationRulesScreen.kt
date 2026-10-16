@@ -80,6 +80,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.AmberWarning
 import md.alexlab.finpulse.core.designsystem.CrimsonExpense
@@ -141,8 +142,11 @@ fun CategorizationRulesScreen(
     val accountMap = uiState.accounts.associateBy { it.id }
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(uiState.successMessage) {
-        uiState.successMessage?.let {
+    val context = LocalContext.current
+
+    LaunchedEffect(uiState.successMessage, uiState.successMessageRes) {
+        val msg = uiState.successMessageRes?.let { context.getString(it) } ?: uiState.successMessage
+        msg?.let {
             snackbarHostState.showSnackbar(it)
         }
     }

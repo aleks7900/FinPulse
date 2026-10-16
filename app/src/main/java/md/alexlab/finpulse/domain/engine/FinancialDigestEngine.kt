@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.domain.engine
 
+import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.model.Money
 import md.alexlab.finpulse.domain.model.Budget
 import md.alexlab.finpulse.domain.model.BudgetDigestItem
@@ -299,7 +300,10 @@ class FinancialDigestEngine {
                         summary = "$name of ${outlier.amount.formatted()} is ${ratio}x higher than your 30-day average transaction.",
                         metricValue = outlier.amount.formatted(),
                         actionRoute = "transactions",
-                        metadata = mapOf("txId" to outlier.id)
+                        metadata = mapOf("txId" to outlier.id),
+                        titleRes = R.string.digest_unusual_expense_title,
+                        summaryRes = R.string.digest_unusual_expense_summary,
+                        summaryArgs = listOf(name, outlier.amount.formatted(), ratio)
                     )
                 )
             }
@@ -314,7 +318,10 @@ class FinancialDigestEngine {
                     title = "Noticeable Spending Surge",
                     summary = "Your spending this period is +${"%.0f".format(changePercentage)}% above the previous period.",
                     metricValue = "+${"%.0f".format(changePercentage)}%",
-                    actionRoute = "analytics"
+                    actionRoute = "analytics",
+                    titleRes = R.string.digest_spending_surge_title,
+                    summaryRes = R.string.digest_spending_surge_summary,
+                    summaryArgs = listOf("%.0f".format(changePercentage))
                 )
             )
         }
@@ -353,7 +360,11 @@ class FinancialDigestEngine {
                     title = "Budget Exceeded: ${exceeded.categoryName}",
                     summary = "You have surpassed your limit by ${overage.formatted()} (${exceeded.percentageConsumed.toInt()}% consumed).",
                     metricValue = exceeded.spentAmount.formatted(),
-                    actionRoute = "budgets"
+                    actionRoute = "budgets",
+                    titleRes = R.string.digest_budget_exceeded_title,
+                    titleArgs = listOf(exceeded.categoryName),
+                    summaryRes = R.string.digest_budget_exceeded_summary,
+                    summaryArgs = listOf(overage.formatted(), exceeded.percentageConsumed.toInt().toString())
                 )
             )
         }
@@ -366,7 +377,11 @@ class FinancialDigestEngine {
                     title = "Approaching Limit: ${warning.categoryName}",
                     summary = "${warning.percentageConsumed.toInt()}% used. Only ${warning.remainingAmount.formatted()} remaining.",
                     metricValue = "${warning.percentageConsumed.toInt()}%",
-                    actionRoute = "budgets"
+                    actionRoute = "budgets",
+                    titleRes = R.string.digest_budget_approaching_title,
+                    titleArgs = listOf(warning.categoryName),
+                    summaryRes = R.string.digest_budget_approaching_summary,
+                    summaryArgs = listOf(warning.percentageConsumed.toInt().toString(), warning.remainingAmount.formatted())
                 )
             )
         }
@@ -412,7 +427,8 @@ class FinancialDigestEngine {
                     title = "$unreviewedCount Items Need Review",
                     summary = "Keep your financial ledger clean: categorize pending transactions and resolve duplicates.",
                     metricValue = unreviewedCount.toString(),
-                    actionRoute = "review_inbox"
+                    actionRoute = "review_inbox",
+                    summaryRes = R.string.digest_unreviewed_inbox_summary
                 )
             )
         }
@@ -430,7 +446,9 @@ class FinancialDigestEngine {
                         summary = "Great pacing! You spent ${totalSpend.formatted()}, down from ${prevSpend.formatted()} $periodWord.",
                         metricValue = "-${"%.0f".format(-changePercentage)}%",
                         changePercentage = changePercentage,
-                        actionRoute = "analytics"
+                        actionRoute = "analytics",
+                        titleRes = R.string.digest_spending_down_title,
+                        titleArgs = listOf("%.0f".format(-changePercentage))
                     )
                 )
             } else if (changePercentage in -10.0..10.0) {
@@ -442,7 +460,8 @@ class FinancialDigestEngine {
                         summary = "Your spending is on par with $periodWord (${totalSpend.formatted()} vs ${prevSpend.formatted()}).",
                         metricValue = "±0%",
                         changePercentage = changePercentage,
-                        actionRoute = "analytics"
+                        actionRoute = "analytics",
+                        titleRes = R.string.digest_consistent_spending_title
                     )
                 )
             } else if (changePercentage > 10.0 && changePercentage < 50.0) {
@@ -454,7 +473,9 @@ class FinancialDigestEngine {
                         summary = "You spent ${totalSpend.formatted()} vs ${prevSpend.formatted()} $periodWord.",
                         metricValue = "+${"%.0f".format(changePercentage)}%",
                         changePercentage = changePercentage,
-                        actionRoute = "analytics"
+                        actionRoute = "analytics",
+                        titleRes = R.string.digest_spending_up_title,
+                        titleArgs = listOf("%.0f".format(changePercentage))
                     )
                 )
             }
@@ -470,7 +491,9 @@ class FinancialDigestEngine {
                     title = "Largest Expense: ${top.title}",
                     summary = "${top.amount.formatted()} (${top.percentageOfPeriodSpend.toInt()}% of period spending) in ${top.categoryName}.",
                     metricValue = top.amount.formatted(),
-                    actionRoute = "transactions"
+                    actionRoute = "transactions",
+                    titleRes = R.string.digest_largest_expense_title,
+                    titleArgs = listOf(top.title)
                 )
             )
         }
@@ -485,7 +508,9 @@ class FinancialDigestEngine {
                     title = "Goal In Reach: ${closeGoal.title}",
                     summary = "You're at ${closeGoal.progressPercentage.toInt()}% of your ${closeGoal.targetAmount.formatted()} goal. Keep the momentum going!",
                     metricValue = "${closeGoal.progressPercentage.toInt()}%",
-                    actionRoute = "goals"
+                    actionRoute = "goals",
+                    titleRes = R.string.digest_goal_in_reach_title,
+                    titleArgs = listOf(closeGoal.title)
                 )
             )
         }

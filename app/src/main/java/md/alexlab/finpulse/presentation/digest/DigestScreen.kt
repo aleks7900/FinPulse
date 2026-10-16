@@ -91,6 +91,8 @@ import md.alexlab.finpulse.core.ui.FinPulseCard
 import md.alexlab.finpulse.domain.model.BudgetDigestItem
 import md.alexlab.finpulse.domain.model.DigestFrequency
 import md.alexlab.finpulse.domain.model.DigestInsight
+import md.alexlab.finpulse.domain.model.getLocalizedTitle
+import md.alexlab.finpulse.domain.model.getLocalizedSummary
 import md.alexlab.finpulse.domain.model.DigestPeriod
 import md.alexlab.finpulse.domain.model.DigestPriority
 import md.alexlab.finpulse.domain.model.FinancialDigest
@@ -640,13 +642,13 @@ private fun DigestPriorityInsightCard(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = insight.title,
+                    text = insight.getLocalizedTitle(),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = insight.summary,
+                    text = insight.getLocalizedSummary(),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

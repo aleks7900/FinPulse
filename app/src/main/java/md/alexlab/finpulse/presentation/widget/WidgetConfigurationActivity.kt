@@ -128,37 +128,37 @@ class WidgetConfigurationActivity : ComponentActivity() {
                         ) {
                             // 1. Widget Type Selection
                             item {
-                                SectionHeader("Display Mode")
+                                SectionHeader(stringResource(R.string.widget_config_display_mode))
                             }
                             item {
                                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                     WidgetTypeOption(
                                         title = stringResource(R.string.widget_label_current_balance),
-                                        subtitle = "Show net liquid cash across accounts",
+                                        subtitle = stringResource(R.string.widget_sub_current_balance),
                                         isSelected = selectedType == WidgetDisplayType.BALANCE,
                                         onClick = { selectedType = WidgetDisplayType.BALANCE }
                                     )
                                     WidgetTypeOption(
                                         title = stringResource(R.string.widget_label_monthly_spending),
-                                        subtitle = "Track this month's expense totals",
+                                        subtitle = stringResource(R.string.widget_sub_monthly_spending),
                                         isSelected = selectedType == WidgetDisplayType.SPENDING,
                                         onClick = { selectedType = WidgetDisplayType.SPENDING }
                                     )
                                     WidgetTypeOption(
                                         title = stringResource(R.string.widget_label_budget_remaining),
-                                        subtitle = "View active budget limits and remaining funds",
+                                        subtitle = stringResource(R.string.widget_sub_budget_remaining),
                                         isSelected = selectedType == WidgetDisplayType.BUDGET,
                                         onClick = { selectedType = WidgetDisplayType.BUDGET }
                                     )
                                     WidgetTypeOption(
                                         title = stringResource(R.string.widget_label_upcoming_bills),
-                                        subtitle = "View obligations due in next 14 days",
+                                        subtitle = stringResource(R.string.widget_sub_upcoming_bills),
                                         isSelected = selectedType == WidgetDisplayType.BILLS,
                                         onClick = { selectedType = WidgetDisplayType.BILLS }
                                     )
                                     WidgetTypeOption(
-                                        title = "Dashboard Overview",
-                                        subtitle = "Balance + Quick Actions + Key Metrics",
+                                        title = stringResource(R.string.widget_title_dashboard_overview),
+                                        subtitle = stringResource(R.string.widget_sub_dashboard_overview),
                                         isSelected = selectedType == WidgetDisplayType.DASHBOARD,
                                         onClick = { selectedType = WidgetDisplayType.DASHBOARD }
                                     )
@@ -173,7 +173,7 @@ class WidgetConfigurationActivity : ComponentActivity() {
                                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                     WidgetTypeOption(
                                         title = stringResource(R.string.widget_config_privacy_system),
-                                        subtitle = "Follow in-app privacy and app lock settings",
+                                        subtitle = stringResource(R.string.widget_sub_privacy_system),
                                         isSelected = selectedPrivacy == WidgetPrivacySetting.FOLLOW_APP,
                                         onClick = { selectedPrivacy = WidgetPrivacySetting.FOLLOW_APP }
                                     )
@@ -185,7 +185,7 @@ class WidgetConfigurationActivity : ComponentActivity() {
                                     )
                                     WidgetTypeOption(
                                         title = stringResource(R.string.widget_config_privacy_show),
-                                        subtitle = "Always show exact financial amounts",
+                                        subtitle = stringResource(R.string.widget_sub_privacy_show),
                                         isSelected = selectedPrivacy == WidgetPrivacySetting.ALWAYS_SHOW,
                                         onClick = { selectedPrivacy = WidgetPrivacySetting.ALWAYS_SHOW }
                                     )
@@ -199,7 +199,7 @@ class WidgetConfigurationActivity : ComponentActivity() {
                             item {
                                 WidgetTypeOption(
                                     title = stringResource(R.string.widget_config_all_accounts),
-                                    subtitle = "Include all active accounts",
+                                    subtitle = stringResource(R.string.widget_sub_all_accounts),
                                     isSelected = selectedAccountId == null,
                                     onClick = { selectedAccountId = null }
                                 )

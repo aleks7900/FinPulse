@@ -441,7 +441,7 @@ fun UpcomingOccurrenceCard(
                                 color = MaterialTheme.colorScheme.surfaceVariant
                             ) {
                                 Text(
-                                    text = "Est.",
+                                    text = stringResource(R.string.recurring_est_prefix),
                                     style = MaterialTheme.typography.labelSmall,
                                     fontSize = 10.sp,
                                     modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
@@ -571,7 +571,7 @@ fun AllRulesSection(
             ) {
                 Column(modifier = Modifier.padding(18.dp)) {
                     Text(
-                        text = "TOTAL RECURRING COMMITMENTS",
+                        text = stringResource(R.string.recurring_total_commitments_header).uppercase(),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -745,7 +745,7 @@ fun SubscriptionsSection(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "ACTIVE SUBSCRIPTIONS",
+                            text = stringResource(R.string.recurring_active_subs_header).uppercase(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -1036,12 +1036,15 @@ fun ConfirmPaymentDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = "Confirm Payment: ${occurrence.ruleTitle}", fontWeight = FontWeight.Bold)
+            Text(
+                text = stringResource(R.string.recurring_confirm_payment_dialog_title, occurrence.ruleTitle),
+                fontWeight = FontWeight.Bold
+            )
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    text = "Confirm payment and record transaction in ledger.",
+                    text = stringResource(R.string.recurring_confirm_payment_dialog_desc),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

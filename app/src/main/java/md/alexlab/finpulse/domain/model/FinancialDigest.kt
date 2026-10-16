@@ -61,8 +61,30 @@ data class DigestInsight(
     val secondaryMetric: String? = null,
     val changePercentage: Double? = null,
     val actionRoute: String? = null,
-    val metadata: Map<String, String> = emptyMap()
+    val metadata: Map<String, String> = emptyMap(),
+    val titleRes: Int? = null,
+    val titleArgs: List<String> = emptyList(),
+    val summaryRes: Int? = null,
+    val summaryArgs: List<String> = emptyList()
 )
+
+@androidx.compose.runtime.Composable
+fun DigestInsight.getLocalizedTitle(): String {
+    return if (titleRes != null) {
+        androidx.compose.ui.res.stringResource(titleRes, *titleArgs.toTypedArray())
+    } else {
+        title
+    }
+}
+
+@androidx.compose.runtime.Composable
+fun DigestInsight.getLocalizedSummary(): String {
+    return if (summaryRes != null) {
+        androidx.compose.ui.res.stringResource(summaryRes, *summaryArgs.toTypedArray())
+    } else {
+        summary
+    }
+}
 
 data class TopExpenseItem(
     val title: String,

@@ -229,7 +229,7 @@ fun CategoryPickerDialog(
                             IconButton(onClick = { searchQuery = "" }) {
                                 Icon(
                                     imageVector = Icons.Default.Clear,
-                                    contentDescription = "Clear",
+                                    contentDescription = stringResource(R.string.action_clear),
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }

@@ -16,6 +16,10 @@ import md.alexlab.finpulse.domain.usecase.csv.AutoDetectCsvConfigUseCase
 import md.alexlab.finpulse.domain.usecase.csv.ExecuteCsvImportUseCase
 import md.alexlab.finpulse.domain.usecase.csv.ManageImportProfilesUseCase
 import md.alexlab.finpulse.domain.usecase.csv.ParseCsvStatementUseCase
+import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import md.alexlab.finpulse.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -57,9 +61,21 @@ data class CsvImportUiState(
     val isSaveProfileDialogOpen: Boolean = false,
     val isLoading: Boolean = false,
     val loadingMessage: String = "",
+    @param:StringRes val loadingMessageRes: Int? = null,
     val errorMessage: String? = null,
+    @param:StringRes val errorMessageRes: Int? = null,
     val importSummary: ImportSummary? = null
 ) {
+    @Composable
+    fun getLocalizedErrorMessage(): String? {
+        return errorMessageRes?.let { stringResource(it) } ?: errorMessage
+    }
+
+    @Composable
+    fun getLocalizedLoadingMessage(): String {
+        return loadingMessageRes?.let { stringResource(it) } ?: loadingMessage
+    }
+
     val totalValidRows: Int get() = parsedRows.count { it.isValid }
     val newRowsCount: Int get() = parsedRows.count { it.isValid && it.duplicateStatus == DuplicateStatus.NEW }
     val duplicatesCount: Int get() = parsedRows.count { it.isValid && it.duplicateStatus != DuplicateStatus.NEW }
@@ -103,7 +119,12 @@ class CsvImportViewModel(
 
     fun onFileLoaded(fileName: String, content: String) {
         if (content.isBlank()) {
-            _uiState.update { it.copy(errorMessage = "Selected file is empty") }
+            _uiState.update {
+                it.copy(
+                    errorMessage = "Selected file is empty",
+                    errorMessageRes = R.string.csv_err_file_empty
+                )
+            }
             return
         }
 
@@ -112,7 +133,9 @@ class CsvImportViewModel(
                 it.copy(
                     isLoading = true,
                     loadingMessage = "Analyzing CSV statement format...",
-                    errorMessage = null
+                    loadingMessageRes = R.string.csv_analyzing_format,
+                    errorMessage = null,
+                    errorMessageRes = null
                 )
             }
 
@@ -215,12 +238,22 @@ class CsvImportViewModel(
         val state = _uiState.value
         val accountId = state.selectedAccountId
         if (accountId.isNullOrBlank()) {
-            _uiState.update { it.copy(errorMessage = "Please select a destination account") }
+            _uiState.update {
+                it.copy(
+                    errorMessage = "Please select a destination account",
+                    errorMessageRes = R.string.csv_err_select_destination_account
+                )
+            }
             return
         }
 
         if (!state.columnMapping.isValid(state.formatConfig.amountMode)) {
-            _uiState.update { it.copy(errorMessage = "Please map required Date, Amount, and Description columns") }
+            _uiState.update {
+                it.copy(
+                    errorMessage = "Please map required Date, Amount, and Description columns",
+                    errorMessageRes = R.string.csv_err_map_required_columns
+                )
+            }
             return
         }
 
@@ -338,13 +371,23 @@ class CsvImportViewModel(
         val state = _uiState.value
         val accountId = state.selectedAccountId
         if (accountId.isNullOrBlank()) {
-            _uiState.update { it.copy(errorMessage = "Missing destination account") }
+            _uiState.update {
+                it.copy(
+                    errorMessage = "Missing destination account",
+                    errorMessageRes = R.string.csv_err_missing_destination_account
+                )
+            }
             return
         }
 
         val rowsToImport = state.parsedRows.filter { it.isValid && !it.isExcluded }
         if (rowsToImport.isEmpty()) {
-            _uiState.update { it.copy(errorMessage = "No valid, un-excluded rows selected for import") }
+            _uiState.update {
+                it.copy(
+                    errorMessage = "No valid, un-excluded rows selected for import",
+                    errorMessageRes = R.string.csv_err_no_valid_rows
+                )
+            }
             return
         }
 

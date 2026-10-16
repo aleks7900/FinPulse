@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.domain.engine
 
+import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.model.Money
 import md.alexlab.finpulse.domain.model.BudgetStatus
 import md.alexlab.finpulse.domain.model.Category
@@ -26,6 +27,7 @@ class InsightsEngine {
 
         // 1. Budget Warnings
         for (status in budgetStatuses) {
+            val catId = status.budget.categoryId
             if (status.isExceeded) {
                 val overage = status.spentAmount - status.budget.limitAmount
                 insights.add(
@@ -34,7 +36,12 @@ class InsightsEngine {
                         type = InsightType.DANGER,
                         title = "Budget Exceeded: ${status.categoryName}",
                         description = "You have exceeded your ${status.categoryName} budget by ${overage.formatted()}.",
-                        actionType = InsightAction.VIEW_BUDGET
+                        actionType = InsightAction.VIEW_BUDGET,
+                        titleRes = R.string.insight_budget_exceeded_title,
+                        titleArgs = listOf(status.categoryName),
+                        descriptionRes = R.string.insight_budget_exceeded_desc,
+                        descriptionArgs = listOf(status.categoryName, overage.formatted()),
+                        categoryId = catId
                     )
                 )
             } else if (status.isWarning) {
@@ -45,7 +52,12 @@ class InsightsEngine {
                         type = InsightType.WARNING,
                         title = "Approaching Limit: ${status.categoryName}",
                         description = "You have used $percentInt% of your ${status.categoryName} budget. ${status.remainingAmount.formatted()} remaining.",
-                        actionType = InsightAction.VIEW_BUDGET
+                        actionType = InsightAction.VIEW_BUDGET,
+                        titleRes = R.string.insight_approaching_limit_title,
+                        titleArgs = listOf(status.categoryName),
+                        descriptionRes = R.string.insight_approaching_limit_desc,
+                        descriptionArgs = listOf(percentInt.toString(), status.categoryName, status.remainingAmount.formatted()),
+                        categoryId = catId
                     )
                 )
             } else if (status.projectedSpend > status.budget.limitAmount) {
@@ -55,7 +67,12 @@ class InsightsEngine {
                         type = InsightType.WARNING,
                         title = "Budget Projection Risk: ${status.categoryName}",
                         description = "At your current spending rate, you are projected to spend ${status.projectedSpend.formatted()}, exceeding your budget limit.",
-                        actionType = InsightAction.VIEW_BUDGET
+                        actionType = InsightAction.VIEW_BUDGET,
+                        titleRes = R.string.insight_budget_projection_risk_title,
+                        titleArgs = listOf(status.categoryName),
+                        descriptionRes = R.string.insight_budget_projection_risk_desc,
+                        descriptionArgs = listOf(status.projectedSpend.formatted()),
+                        categoryId = catId
                     )
                 )
             }
@@ -81,7 +98,11 @@ class InsightsEngine {
                     type = InsightType.INFO,
                     title = "Largest Spending Category",
                     description = "$topCategory accounts for $percentOfTotal% of your total expenses this period (${Money(categorySpend.value, summary.expenses.currencyCode).formatted()}).",
-                    actionType = InsightAction.VIEW_TRANSACTIONS
+                    actionType = InsightAction.VIEW_TRANSACTIONS,
+                    titleRes = R.string.insight_largest_spending_category_title,
+                    descriptionRes = R.string.insight_largest_spending_category_desc,
+                    descriptionArgs = listOf(topCategory, percentOfTotal.toString(), Money(categorySpend.value, summary.expenses.currencyCode).formatted()),
+                    categoryId = categorySpend.key
                 )
             )
         }
@@ -97,7 +118,10 @@ class InsightsEngine {
                     type = InsightType.INFO,
                     title = "Subscription Impact",
                     description = "You have ${activeSubs.size} active subscriptions totaling ${Money(totalMonthlyMinor, summary.expenses.currencyCode).formatted()}/month (${Money(totalAnnualMinor, summary.expenses.currencyCode).formatted()}/year).",
-                    actionType = InsightAction.VIEW_SUBSCRIPTIONS
+                    actionType = InsightAction.VIEW_SUBSCRIPTIONS,
+                    titleRes = R.string.insight_subscription_impact_title,
+                    descriptionRes = R.string.insight_subscription_impact_desc,
+                    descriptionArgs = listOf(activeSubs.size.toString(), Money(totalMonthlyMinor, summary.expenses.currencyCode).formatted(), Money(totalAnnualMinor, summary.expenses.currencyCode).formatted())
                 )
             )
         }
@@ -113,7 +137,10 @@ class InsightsEngine {
                             type = InsightType.SUCCESS,
                             title = "Strong Savings Rate: ${"%.1f".format(savingsRate)}%",
                             description = "Excellent discipline! Your savings rate is in the top tier (>20%). Keep building your net worth.",
-                            actionType = InsightAction.VIEW_SAVINGS
+                            actionType = InsightAction.VIEW_SAVINGS,
+                            titleRes = R.string.insight_strong_savings_rate_title,
+                            titleArgs = listOf("%.1f".format(savingsRate)),
+                            descriptionRes = R.string.insight_strong_savings_rate_desc
                         )
                     )
                 }
@@ -124,7 +151,10 @@ class InsightsEngine {
                             type = InsightType.WARNING,
                             title = "Low Savings Margin: ${"%.1f".format(savingsRate)}%",
                             description = "Your current savings rate is below 5%. Consider reviewing non-essential subscriptions and discretionary shopping.",
-                            actionType = InsightAction.VIEW_SAVINGS
+                            actionType = InsightAction.VIEW_SAVINGS,
+                            titleRes = R.string.insight_low_savings_margin_title,
+                            titleArgs = listOf("%.1f".format(savingsRate)),
+                            descriptionRes = R.string.insight_low_savings_margin_desc
                         )
                     )
                 }
@@ -139,7 +169,10 @@ class InsightsEngine {
                     type = InsightType.SUCCESS,
                     title = "Positive Net Cash Flow",
                     description = "You have a surplus cash flow of ${summary.netCashFlow.formatted()} this period.",
-                    actionType = InsightAction.NONE
+                    actionType = InsightAction.NONE,
+                    titleRes = R.string.insight_positive_net_cash_flow_title,
+                    descriptionRes = R.string.insight_positive_net_cash_flow_desc,
+                    descriptionArgs = listOf(summary.netCashFlow.formatted())
                 )
             )
         }
