@@ -878,6 +878,7 @@ fun FinPulseApp(
             onMerchantTextChange = quickAddViewModel::onMerchantTextChange,
             onDescriptionTextChange = quickAddViewModel::onDescriptionTextChange,
             onDateChoiceSelected = quickAddViewModel::onDateChoiceSelected,
+            onCustomDateEpoch = quickAddViewModel::onCustomDateEpoch,
             onSave = quickAddViewModel::save,
             onDismiss = {
                 showQuickAddSheet = false

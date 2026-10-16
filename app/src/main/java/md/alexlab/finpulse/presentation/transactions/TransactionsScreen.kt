@@ -26,9 +26,11 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
+import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
@@ -42,10 +44,15 @@ import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.rememberDatePickerState
+
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -84,12 +91,18 @@ import md.alexlab.finpulse.core.designsystem.TransferBlue
 import md.alexlab.finpulse.core.designsystem.bounceClick
 import md.alexlab.finpulse.core.ui.CategoryIconBadge
 import md.alexlab.finpulse.core.ui.CategoryPickerDialog
+import md.alexlab.finpulse.core.ui.DateFormatterUtils
 import md.alexlab.finpulse.core.ui.FinPulseEmptyState
 import md.alexlab.finpulse.core.ui.TransactionItem
 import md.alexlab.finpulse.core.ui.getDisplayName
 import md.alexlab.finpulse.core.ui.getLocalizedName
 import md.alexlab.finpulse.domain.model.Account
 import md.alexlab.finpulse.domain.model.Category
+import java.time.Instant
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZoneOffset
+
 import md.alexlab.finpulse.domain.model.CategoryType
 import md.alexlab.finpulse.domain.model.DateRangePreset
 import md.alexlab.finpulse.domain.model.SavedFilter
@@ -975,8 +988,15 @@ fun AddEditTransactionDialog(
     var categoryId by remember {
         mutableStateOf(editingTransaction?.categoryId ?: categories.firstOrNull()?.id ?: "")
     }
+    var selectedTimestamp by remember {
+        mutableStateOf(editingTransaction?.timestamp ?: System.currentTimeMillis())
+    }
+    var showDatePicker by remember { mutableStateOf(false) }
+    var showSourceAccountMenu by remember { mutableStateOf(false) }
+    var showDestAccountMenu by remember { mutableStateOf(false) }
 
     val relevantCategories = remember(categories, selectedType) {
+
         val catType = when (selectedType) {
             TransactionType.INCOME, TransactionType.REFUND -> CategoryType.INCOME
             else -> CategoryType.EXPENSE
@@ -1027,6 +1047,7 @@ fun AddEditTransactionDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
                     .padding(vertical = 4.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
@@ -1061,8 +1082,171 @@ fun AddEditTransactionDialog(
                     }
                 }
 
+                // Account Selector
+                if (accounts.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        // Source Account
+                        Box(modifier = Modifier.weight(1f)) {
+                            val currentSource = accounts.find { it.id == sourceAccountId } ?: accounts.firstOrNull()
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .clickable { showSourceAccountMenu = true },
+                                shape = RoundedCornerShape(12.dp),
+                                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.AccountBalance,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = currentSource?.name ?: stringResource(R.string.quick_add_select_account),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        maxLines = 1,
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    Icon(
+                                        imageVector = Icons.Default.KeyboardArrowDown,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                            DropdownMenu(
+                                expanded = showSourceAccountMenu,
+                                onDismissRequest = { showSourceAccountMenu = false }
+                            ) {
+                                accounts.forEach { acc ->
+                                    DropdownMenuItem(
+                                        text = { Text(acc.name) },
+                                        onClick = {
+                                            sourceAccountId = acc.id
+                                            showSourceAccountMenu = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+
+                        // Destination Account for Transfer
+                        if (selectedType == TransactionType.TRANSFER) {
+                            Box(modifier = Modifier.weight(1f)) {
+                                val currentDest = accounts.find { it.id == destinationAccountId }
+                                Surface(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .clickable { showDestAccountMenu = true },
+                                    shape = RoundedCornerShape(12.dp),
+                                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.AccountBalance,
+                                            contentDescription = null,
+                                            tint = TransferBlue,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = currentDest?.name ?: stringResource(R.string.quick_add_transfer_to),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            maxLines = 1,
+                                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                        Icon(
+                                            imageVector = Icons.Default.KeyboardArrowDown,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                                DropdownMenu(
+                                    expanded = showDestAccountMenu,
+                                    onDismissRequest = { showDestAccountMenu = false }
+                                ) {
+                                    accounts.filter { it.id != sourceAccountId }.forEach { acc ->
+                                        DropdownMenuItem(
+                                            text = { Text(acc.name) },
+                                            onClick = {
+                                                destinationAccountId = acc.id
+                                                showDestAccountMenu = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Date Selector
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .clickable { showDatePicker = true },
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CalendarToday,
+                            contentDescription = null,
+                            tint = EmeraldPrimary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(R.string.tx_date),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = DateFormatterUtils.formatDate(selectedTimestamp),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
                 // Category Selector Surface for non-transfers
                 if (selectedType != TransactionType.TRANSFER) {
+
                     val currentCategory = categories.find { it.id == categoryId }
                     Surface(
                         modifier = Modifier
@@ -1173,7 +1357,7 @@ fun AddEditTransactionDialog(
                         description,
                         tagList,
                         notes,
-                        editingTransaction?.timestamp ?: System.currentTimeMillis()
+                        selectedTimestamp
                     )
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
@@ -1213,4 +1397,40 @@ fun AddEditTransactionDialog(
             onDismissRequest = { showCategoryPicker = false }
         )
     }
+
+    if (showDatePicker) {
+        val initialUtcMillis = remember(selectedTimestamp) {
+            val zone = ZoneId.systemDefault()
+            val localDate = Instant.ofEpochMilli(selectedTimestamp).atZone(zone).toLocalDate()
+            localDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+        }
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = initialUtcMillis
+        )
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let { utcMillis ->
+                            val pickedDate = Instant.ofEpochMilli(utcMillis).atZone(ZoneOffset.UTC).toLocalDate()
+                            val zone = ZoneId.systemDefault()
+                            selectedTimestamp = pickedDate.atTime(LocalTime.now()).atZone(zone).toInstant().toEpochMilli()
+                        }
+                        showDatePicker = false
+                    }
+                ) {
+                    Text(stringResource(R.string.action_confirm), color = EmeraldPrimary, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
 }
+

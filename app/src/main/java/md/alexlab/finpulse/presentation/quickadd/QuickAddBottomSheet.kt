@@ -22,15 +22,18 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalance
+import androidx.compose.material.icons.automirrored.filled.Backspace
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Backspace
+
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Notes
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,7 +46,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -74,11 +80,17 @@ import md.alexlab.finpulse.core.ui.CategoryIconBadge
 import md.alexlab.finpulse.core.ui.CategoryPickerDialog
 import md.alexlab.finpulse.core.ui.getDisplayName
 import md.alexlab.finpulse.core.ui.getLocalizedName
+import md.alexlab.finpulse.core.ui.DateFormatterUtils
 import md.alexlab.finpulse.domain.model.Account
 import md.alexlab.finpulse.domain.model.Category
 import md.alexlab.finpulse.domain.model.CategoryType
 import md.alexlab.finpulse.domain.model.Transaction
 import md.alexlab.finpulse.domain.model.TransactionType
+import java.time.Instant
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZoneOffset
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,6 +106,7 @@ fun QuickAddBottomSheet(
     onMerchantTextChange: (String) -> Unit,
     onDescriptionTextChange: (String) -> Unit,
     onDateChoiceSelected: (QuickAddDateChoice) -> Unit,
+    onCustomDateEpoch: (Long) -> Unit = {},
     onSave: (andAddAnother: Boolean, onSaved: (Transaction) -> Unit) -> Unit,
     onDismiss: () -> Unit,
     onTransactionSaved: (Transaction, Boolean) -> Unit,
@@ -102,6 +115,8 @@ fun QuickAddBottomSheet(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showDetails by remember { mutableStateOf(false) }
     var showCategoryPickerDialog by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
+
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -407,12 +422,24 @@ fun QuickAddBottomSheet(
                     val dateLabel = when (choice) {
                         QuickAddDateChoice.TODAY -> stringResource(R.string.quick_add_date_today)
                         QuickAddDateChoice.YESTERDAY -> stringResource(R.string.quick_add_date_yesterday)
-                        QuickAddDateChoice.CUSTOM -> stringResource(R.string.quick_add_date_custom)
+                        QuickAddDateChoice.CUSTOM -> {
+                            if (isSelected) {
+                                DateFormatterUtils.formatDate(uiState.selectedTimestamp)
+                            } else {
+                                stringResource(R.string.quick_add_date_custom)
+                            }
+                        }
                     }
                     Surface(
                         modifier = Modifier
                             .weight(1f)
-                            .clickable { onDateChoiceSelected(choice) },
+                            .clickable {
+                                if (choice == QuickAddDateChoice.CUSTOM) {
+                                    showDatePicker = true
+                                } else {
+                                    onDateChoiceSelected(choice)
+                                }
+                            },
                         shape = RoundedCornerShape(10.dp),
                         color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                         contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
@@ -422,11 +449,14 @@ fun QuickAddBottomSheet(
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(vertical = 6.dp)
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 6.dp)
                         )
                     }
                 }
             }
+
 
             Spacer(modifier = Modifier.height(6.dp))
 
@@ -559,7 +589,44 @@ fun QuickAddBottomSheet(
             onDismissRequest = { showCategoryPickerDialog = false }
         )
     }
+
+    if (showDatePicker) {
+        val initialUtcMillis = remember(uiState.selectedTimestamp) {
+            val zone = ZoneId.systemDefault()
+            val localDate = Instant.ofEpochMilli(uiState.selectedTimestamp).atZone(zone).toLocalDate()
+            localDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+        }
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = initialUtcMillis
+        )
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let { utcMillis ->
+                            val pickedDate = Instant.ofEpochMilli(utcMillis).atZone(ZoneOffset.UTC).toLocalDate()
+                            val zone = ZoneId.systemDefault()
+                            val targetMillis = pickedDate.atTime(LocalTime.now()).atZone(zone).toInstant().toEpochMilli()
+                            onCustomDateEpoch(targetMillis)
+                        }
+                        showDatePicker = false
+                    }
+                ) {
+                    Text(stringResource(R.string.action_confirm), color = EmeraldPrimary, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
 }
+
 
 @Composable
 fun TypeSegmentedControl(
@@ -714,7 +781,7 @@ fun NumericKeypad(
                         Box(contentAlignment = Alignment.Center) {
                             if (key == '⌫') {
                                 Icon(
-                                    imageVector = Icons.Default.Backspace,
+                                    imageVector = Icons.AutoMirrored.Filled.Backspace,
                                     contentDescription = "Backspace",
                                     tint = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.size(20.dp)

@@ -351,4 +351,33 @@ class TransactionsViewModelTest {
         assertTrue(viewModel.uiState.value.isAddEditDialogVisible)
         assertEquals(sampleTransactions.first(), viewModel.uiState.value.editingTransaction)
     }
+
+    @Test
+    fun testSaveTransactionWithCustomTimestamp() = runTest(testDispatcher) {
+        val capturedSlot = slot<Transaction>()
+        coEvery { transactionRepository.createTransaction(capture(capturedSlot)) } returns Unit
+
+        val customTime = 1729000000000L
+        viewModel.saveTransaction(
+            id = null,
+            amountMinor = 3500L,
+            type = TransactionType.EXPENSE,
+            sourceAccountId = "acc_bank",
+            destinationAccountId = null,
+            categoryId = "cat_groceries",
+            merchant = "Coffee Shop",
+            description = "Latte",
+            tags = listOf("coffee"),
+            notes = "Morning",
+            timestamp = customTime
+        )
+        advanceUntilIdle()
+
+        coVerify { transactionRepository.createTransaction(any()) }
+        assertTrue(capturedSlot.isCaptured)
+        assertEquals(customTime, capturedSlot.captured.timestamp)
+        assertEquals(3500L, capturedSlot.captured.amount.amountMinor)
+        assertEquals("Coffee Shop", capturedSlot.captured.merchant)
+    }
 }
+
