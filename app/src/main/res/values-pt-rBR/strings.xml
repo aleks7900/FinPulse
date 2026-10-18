@@ -33,10 +33,10 @@
     <string name="animation_pref_system_desc">Seguir a escala de duração de animação do sistema Android</string>
 
     <!-- Navigation -->
-    <string name="nav_dashboard">Visão Geral</string>
-    <string name="nav_transactions">Lançamentos</string>
+    <string name="nav_dashboard">Início</string>
+    <string name="nav_transactions">Extrato</string>
     <string name="nav_budgets">Orçamentos</string>
-    <string name="nav_analytics">Relatórios</string>
+    <string name="nav_analytics">Análises</string>
     <string name="nav_more">Mais</string>
 
     <!-- Common Actions &amp; Buttons -->

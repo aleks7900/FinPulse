@@ -35,8 +35,8 @@
     <!-- Navigation -->
     <string name="nav_dashboard">ホーム</string>
     <string name="nav_transactions">取引明細</string>
-    <string name="nav_budgets">予算管理</string>
-    <string name="nav_analytics">分析レポート</string>
+    <string name="nav_budgets">予算</string>
+    <string name="nav_analytics">分析</string>
     <string name="nav_more">その他</string>
 
     <!-- Common Actions &amp; Buttons -->

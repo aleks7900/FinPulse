@@ -33,7 +33,7 @@
     <string name="animation_pref_system_desc">Suivre l’échelle de durée d’animation du système Android</string>
 
     <!-- Navigation -->
-    <string name="nav_dashboard">Tableau de bord</string>
+    <string name="nav_dashboard">Accueil</string>
     <string name="nav_transactions">Opérations</string>
     <string name="nav_budgets">Budgets</string>
     <string name="nav_analytics">Analyses</string>

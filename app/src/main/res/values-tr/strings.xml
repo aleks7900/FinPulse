@@ -33,11 +33,11 @@
     <string name="animation_pref_system_desc">Android cihaz çapındaki animasyon süresi ölçeğini takip edin</string>
 
     <!-- Navigation -->
-    <string name="nav_dashboard">Genel Bakış</string>
+    <string name="nav_dashboard">Özet</string>
     <string name="nav_transactions">İşlemler</string>
     <string name="nav_budgets">Bütçeler</string>
     <string name="nav_analytics">Analiz</string>
-    <string name="nav_more">Daha Fazla</string>
+    <string name="nav_more">Daha</string>
 
     <!-- Common Actions &amp; Buttons -->
     <string name="action_save">Kaydet</string>
