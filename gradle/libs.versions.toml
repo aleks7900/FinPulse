@@ -1,30 +1,30 @@
 [versions]
-agp = "8.7.2"
-kotlin = "2.0.21"
-ksp = "2.0.21-1.0.28"
-coreKtx = "1.15.0"
-appcompat = "1.7.0"
-lifecycle = "2.8.7"
-activityCompose = "1.9.3"
-composeBom = "2024.10.01"
-navigationCompose = "2.8.5"
-room = "2.6.1"
-datastore = "1.1.1"
-coroutines = "1.9.0"
-serialization = "1.7.3"
-workManager = "2.10.0"
-biometric = "1.2.0-alpha05"
-materialIconsExtended = "1.7.5"
+agp = "9.5.1"
+kotlin = "2.4.21"
+ksp = "2.3.13"
+coreKtx = "1.19.1"
+appcompat = "1.8.0"
+lifecycle = "2.11.0"
+activityCompose = "1.13.0"
+composeBom = "2026.09.00"
+navigationCompose = "2.10.2"
+room = "2.8.5"
+datastore = "1.3.0"
+coroutines = "1.11.0"
+serialization = "1.12.0"
+workManager = "2.12.0"
+biometric = "1.4.0-beta01"
+materialIconsExtended = "1.7.8"
 junit = "4.13.2"
-mockk = "1.13.13"
-turbine = "1.2.0"
-extJunit = "1.2.1"
-espresso = "3.6.1"
-credentials = "1.3.0"
-googleid = "1.1.1"
-firebaseBom = "33.7.0"
-googleServices = "4.4.2"
-crashlyticsGradle = "3.0.2"
+mockk = "1.14.12"
+turbine = "1.2.1"
+extJunit = "1.3.0"
+espresso = "3.7.0"
+credentials = "1.6.0"
+googleid = "1.2.1"
+firebaseBom = "35.2.0"
+googleServices = "4.6.0"
+crashlyticsGradle = "3.0.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,15 +54,15 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
 work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager" }
-androidx-biometric = { group = "androidx.biometric", name = "biometric-ktx", version.ref = "biometric" }
+androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
 
 androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
 androidx-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
 google-identity-googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
-firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -73,7 +73,6 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
