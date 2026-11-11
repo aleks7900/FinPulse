@@ -1539,4 +1539,14 @@
     <string name="digest_notif_send_failed">Failed to send notification. Please check system permissions.</string>
     <string name="digest_notif_permission_denied">Notification permission is required to receive financial digests.</string>
     <string name="digest_notif_error_generating">Financial digest data is still loading. Please try again.</string>
+
+    <!-- Appearance (theme + dynamic color) -->
+    <string name="appearance_title">Appearance</string>
+    <string name="appearance_theme_label">Theme</string>
+    <string name="appearance_theme_system">System</string>
+    <string name="appearance_theme_light">Light</string>
+    <string name="appearance_theme_dark">Dark</string>
+    <string name="appearance_dynamic_color_title">Dynamic color</string>
+    <string name="appearance_dynamic_color_desc">Match app colors to your wallpaper</string>
+    <string name="appearance_dynamic_color_unsupported">Requires Android 12 or newer</string>
 </resources>

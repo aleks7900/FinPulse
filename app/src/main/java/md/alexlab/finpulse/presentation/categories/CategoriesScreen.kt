@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.categories
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -98,7 +99,7 @@ fun CategoriesScreen(
             FloatingActionButton(
                 onClick = { isAddDialogVisible = true },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black,
+                contentColor = OnEmerald,
                 modifier = Modifier.bounceClick(onClick = { isAddDialogVisible = true })
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.category_add_title))
@@ -202,8 +203,8 @@ fun AddCategoryDialog(
                                 .weight(1f)
                                 .clickable { selectedType = t },
                             shape = RoundedCornerShape(10.dp),
-                            color = if (isSel) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant,
-                            contentColor = if (isSel) Color.Black else MaterialTheme.colorScheme.onSurface
+                            color = if (isSel) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh,
+                            contentColor = if (isSel) OnEmerald else MaterialTheme.colorScheme.onSurface
                         ) {
                             Text(
                                 text = t.getLocalizedName(),
@@ -228,7 +229,7 @@ fun AddCategoryDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.action_create), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_create), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {

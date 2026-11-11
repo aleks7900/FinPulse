@@ -75,6 +75,7 @@ fun ProjectedBalanceTimelineChart(
 
     val isDeficitProjected = lowestBalance.amountMinor < 0L
     val primaryChartColor = if (isDeficitProjected) CrimsonExpense else EmeraldPrimary
+    val lowPointHighlightColor = if (isDeficitProjected) CrimsonExpense else AmberWarning
 
     Column(modifier = modifier) {
         // Timeline Header: Key Milestones
@@ -247,7 +248,7 @@ fun ProjectedBalanceTimelineChart(
                 // Draw Lowest Point Highlight Dot
                 lowestPointOffset?.let { pt ->
                     if (animProgress.value > 0.8f) {
-                        val highlightColor = if (isDeficitProjected) CrimsonExpense else AmberWarning
+                        val highlightColor = lowPointHighlightColor
                         drawCircle(
                             color = highlightColor.copy(alpha = 0.35f),
                             radius = 8.dp.toPx(),

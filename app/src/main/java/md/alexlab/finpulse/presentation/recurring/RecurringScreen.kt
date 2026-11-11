@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.recurring
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -166,7 +167,7 @@ fun RecurringScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black,
+                contentColor = OnEmerald,
                 modifier = Modifier.bounceClick(onClick = { onShowAddEditDialog(true, null) })
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.recurring_add_title))
@@ -317,8 +318,8 @@ fun UpcomingSection(
                         .weight(1f)
                         .clickable { onWindowDaysChanged(days) },
                     shape = RoundedCornerShape(12.dp),
-                    color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                    contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
+                    contentColor = if (isSelected) OnEmerald else MaterialTheme.colorScheme.onSurfaceVariant
                 ) {
                     Text(
                         text = if (days == 7) stringResource(R.string.recurring_window_7d) else stringResource(R.string.recurring_window_30d),
@@ -438,7 +439,7 @@ fun UpcomingOccurrenceCard(
                             Spacer(modifier = Modifier.width(4.dp))
                             Surface(
                                 shape = RoundedCornerShape(6.dp),
-                                color = MaterialTheme.colorScheme.surfaceVariant
+                                color = MaterialTheme.colorScheme.surfaceContainerHigh
                             ) {
                                 Text(
                                     text = stringResource(R.string.recurring_est_prefix),
@@ -533,9 +534,9 @@ fun UpcomingOccurrenceCard(
                         shape = RoundedCornerShape(10.dp),
                         modifier = Modifier.height(34.dp)
                     ) {
-                        Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = Color.Black, modifier = Modifier.size(14.dp))
+                        Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = OnEmerald, modifier = Modifier.size(14.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(stringResource(R.string.recurring_mark_paid), color = Color.Black, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.recurring_mark_paid), color = OnEmerald, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -892,8 +893,8 @@ fun AddEditRecurringRuleDialog(
                                 .weight(1f)
                                 .clickable { type = t },
                             shape = RoundedCornerShape(10.dp),
-                            color = if (isSel) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant,
-                            contentColor = if (isSel) Color.Black else MaterialTheme.colorScheme.onSurface
+                            color = if (isSel) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh,
+                            contentColor = if (isSel) OnEmerald else MaterialTheme.colorScheme.onSurface
                         ) {
                             Text(
                                 text = t.getLocalizedName(),
@@ -950,8 +951,8 @@ fun AddEditRecurringRuleDialog(
                         Surface(
                             modifier = Modifier.clickable { frequency = f },
                             shape = RoundedCornerShape(10.dp),
-                            color = if (isSel) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant,
-                            contentColor = if (isSel) Color.Black else MaterialTheme.colorScheme.onSurface
+                            color = if (isSel) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh,
+                            contentColor = if (isSel) OnEmerald else MaterialTheme.colorScheme.onSurface
                         ) {
                             Text(
                                 text = f.getLocalizedName(),
@@ -1004,7 +1005,7 @@ fun AddEditRecurringRuleDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
@@ -1068,7 +1069,7 @@ fun ConfirmPaymentDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.debt_record_payment), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.debt_record_payment), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
@@ -1129,7 +1130,7 @@ fun EditOccurrenceDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.quick_add_update), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.quick_add_update), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {

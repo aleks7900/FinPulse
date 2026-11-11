@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.currencies
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -419,7 +420,7 @@ fun EditRateDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {

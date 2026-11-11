@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.review
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -177,7 +178,7 @@ fun ReviewInboxScreen(
                                     text = uiState.summary.totalCount.toString(),
                                     style = MaterialTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.Black,
+                                    color = OnEmerald,
                                     modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
                                 )
                             }
@@ -255,7 +256,7 @@ fun ReviewInboxScreen(
                         .fillMaxWidth()
                         .padding(16.dp),
                     shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = BorderStroke(1.dp, EmeraldPrimary.copy(alpha = 0.5f)),
                     shadowElevation = 8.dp
                 ) {
@@ -285,11 +286,11 @@ fun ReviewInboxScreen(
                                 Icon(
                                     imageVector = Icons.Default.Category,
                                     contentDescription = null,
-                                    tint = Color.Black,
+                                    tint = OnEmerald,
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
-                                Text(stringResource(R.string.review_inbox_bulk_categorize), color = Color.Black, fontWeight = FontWeight.Bold)
+                                Text(stringResource(R.string.review_inbox_bulk_categorize), color = OnEmerald, fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -452,8 +453,8 @@ fun ReviewInboxTabRow(
             Surface(
                 modifier = Modifier.bounceClick { onTabSelected(tab) },
                 shape = RoundedCornerShape(20.dp),
-                color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+                color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
+                contentColor = if (isSelected) OnEmerald else MaterialTheme.colorScheme.onSurfaceVariant
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
@@ -468,13 +469,13 @@ fun ReviewInboxTabRow(
                         Spacer(modifier = Modifier.width(6.dp))
                         Surface(
                             shape = CircleShape,
-                            color = if (isSelected) Color.Black.copy(alpha = 0.2f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f)
+                            color = if (isSelected) OnEmerald.copy(alpha = 0.2f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f)
                         ) {
                             Text(
                                 text = count.toString(),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
-                                color = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurface,
+                                color = if (isSelected) OnEmerald else MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.dp)
                             )
                         }
@@ -538,7 +539,7 @@ fun SafeBulkBannerCard(
                 shape = RoundedCornerShape(12.dp),
                 contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 12.dp, vertical = 6.dp)
             ) {
-                Text(stringResource(R.string.review_inbox_categorize_all, suggestion.count), color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                Text(stringResource(R.string.review_inbox_categorize_all, suggestion.count), color = OnEmerald, fontWeight = FontWeight.Bold, fontSize = 12.sp)
             }
         }
     }
@@ -701,7 +702,7 @@ fun ReviewItemCard(
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+                color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.4f)
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
@@ -748,12 +749,12 @@ fun ReviewItemCard(
                                 shape = RoundedCornerShape(12.dp),
                                 modifier = Modifier.weight(1f)
                             ) {
-                                Icon(Icons.Default.Check, contentDescription = null, tint = Color.Black, modifier = Modifier.size(16.dp))
+                                Icon(Icons.Default.Check, contentDescription = null, tint = OnEmerald, modifier = Modifier.size(16.dp))
                                 Spacer(modifier = Modifier.width(6.dp))
                                 val targetCategoryName = getCategoryDisplayName(item.suggestedCategoryId, item.suggestedCategoryName ?: stringResource(R.string.review_inbox_confirm_category_fallback))
                                 Text(
                                     text = stringResource(R.string.review_inbox_confirm_category, targetCategoryName),
-                                    color = Color.Black,
+                                    color = OnEmerald,
                                     fontWeight = FontWeight.Bold,
                                     maxLines = 1
                                 )
@@ -776,9 +777,9 @@ fun ReviewItemCard(
                             shape = RoundedCornerShape(12.dp),
                             modifier = Modifier.weight(1f)
                         ) {
-                            Icon(Icons.Default.ContentCopy, contentDescription = null, tint = Color.Black, modifier = Modifier.size(16.dp))
+                            Icon(Icons.Default.ContentCopy, contentDescription = null, tint = OnEmerald, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text(stringResource(R.string.review_inbox_resolve_duplicate), color = Color.Black, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.review_inbox_resolve_duplicate), color = OnEmerald, fontWeight = FontWeight.Bold)
                         }
                         OutlinedButton(
                             onClick = onDismiss,
@@ -842,7 +843,7 @@ fun ReviewItemCard(
                     ReviewItemType.UNUSUAL_AMOUNT -> {
                         Button(
                             onClick = onDismiss,
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
                             shape = RoundedCornerShape(12.dp),
                             modifier = Modifier.weight(1f)
                         ) {
@@ -1019,7 +1020,7 @@ fun AccountPickerDialog(
                             .fillMaxWidth()
                             .clickable { onAccountSelected(acc.id) },
                         shape = RoundedCornerShape(12.dp),
-                        color = if (isCurrent) EmeraldPrimary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        color = if (isCurrent) EmeraldPrimary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
                         border = if (isCurrent) BorderStroke(1.5.dp, EmeraldPrimary) else null
                     ) {
                         Row(
@@ -1077,7 +1078,7 @@ fun EditMerchantDialog(
                 onClick = { onSave(merchantText) },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
@@ -1155,7 +1156,7 @@ fun ResolveDuplicateDialog(
                         .fillMaxWidth()
                         .clickable(onClick = onNotDuplicate),
                     shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.4f)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
                         Text(stringResource(R.string.review_inbox_both_legitimate), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
@@ -1206,7 +1207,7 @@ fun PayBillDialog(
                             .clickable { selectedAccountId = acc.id },
                         shape = RoundedCornerShape(10.dp),
                         color = if (isSelected) EmeraldPrimary.copy(alpha = 0.15f) else Color.Transparent,
-                        border = if (isSelected) BorderStroke(1.dp, EmeraldPrimary) else BorderStroke(0.5.dp, MaterialTheme.colorScheme.surfaceVariant)
+                        border = if (isSelected) BorderStroke(1.dp, EmeraldPrimary) else BorderStroke(0.5.dp, MaterialTheme.colorScheme.surfaceContainerHigh)
                     ) {
                         Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
                             Text(acc.name, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium, modifier = Modifier.weight(1f))
@@ -1221,7 +1222,7 @@ fun PayBillDialog(
                 onClick = { onConfirmPay(null, selectedAccountId) },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.review_inbox_record_payment), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.review_inbox_record_payment), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {

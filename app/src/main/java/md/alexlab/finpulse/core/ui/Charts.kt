@@ -220,7 +220,7 @@ fun DonutChart(
                 segments.forEachIndexed { idx, seg ->
                     val isSelected = selectedIndex == idx
                     val pillBg by animateColorAsState(
-                        targetValue = if (isSelected) seg.color.copy(alpha = 0.22f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f),
+                        targetValue = if (isSelected) seg.color.copy(alpha = 0.22f) else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.35f),
                         animationSpec = tween(200),
                         label = "legendPillBg"
                     )
@@ -425,7 +425,7 @@ fun SparklineChart(
             ) {
                 Surface(
                     shape = RoundedCornerShape(FinPulseRadius.sm),
-                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = androidx.compose.foundation.BorderStroke(1.dp, lineColor.copy(alpha = 0.4f)),
                     tonalElevation = 4.dp
                 ) {
@@ -595,19 +595,19 @@ fun BudgetProgressBar(
         label = "budgetColorAnim"
     )
 
-    Surface(
+    // Material 3 Expressive wavy indicator: the wave signals "healthy, in progress" and
+    // flattens once the budget enters the warning zone so the state reads at a glance.
+    val healthy = percentage < 0.85
+    val motion = md.alexlab.finpulse.core.designsystem.LocalMotionConfig.current
+    val waveEnabled = healthy && !motion.isReducedMotion
+    androidx.compose.material3.LinearWavyProgressIndicator(
+        progress = { animatedProgress },
         modifier = modifier
             .fillMaxWidth()
-            .height(8.dp),
-        shape = RoundedCornerShape(FinPulseRadius.full),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(animatedProgress)
-                .fillMaxHeight()
-                .clip(RoundedCornerShape(FinPulseRadius.full))
-                .background(animatedBarColor)
-        )
-    }
+            .height(12.dp),
+        color = animatedBarColor,
+        trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        amplitude = { if (waveEnabled) 1f else 0f },
+        wavelength = 28.dp
+    )
 }

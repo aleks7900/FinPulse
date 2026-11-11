@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.search
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -129,8 +130,8 @@ fun SearchScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = EmeraldPrimary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                    focusedContainerColor = MaterialTheme.colorScheme.surface,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surface
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -150,8 +151,8 @@ fun SearchScreen(
                 Surface(
                     modifier = Modifier.bounceClick { selectedPreset = null },
                     shape = RoundedCornerShape(14.dp),
-                    color = if (isAll) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                    contentColor = if (isAll) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (isAll) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
+                    contentColor = if (isAll) OnEmerald else MaterialTheme.colorScheme.onSurfaceVariant
                 ) {
                     Text(
                         text = stringResource(R.string.tx_filter_all),
@@ -178,8 +179,8 @@ fun SearchScreen(
                             selectedPreset = if (isSelected) null else preset
                         },
                         shape = RoundedCornerShape(14.dp),
-                        color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                        contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+                        color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
+                        contentColor = if (isSelected) OnEmerald else MaterialTheme.colorScheme.onSurfaceVariant
                     ) {
                         Text(
                             text = presetName,

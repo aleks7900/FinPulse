@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.csvimport
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
@@ -45,6 +46,8 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.ExposedDropdownMenu
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -269,7 +272,7 @@ fun CsvImportScreen(
                     Box(contentAlignment = Alignment.Center) {
                         Surface(
                             shape = RoundedCornerShape(16.dp),
-                            color = MaterialTheme.colorScheme.surface,
+                            color = MaterialTheme.colorScheme.surfaceContainerLow,
                             modifier = Modifier.padding(32.dp)
                         ) {
                             Column(
@@ -277,7 +280,7 @@ fun CsvImportScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
-                                CircularProgressIndicator(color = EmeraldPrimary)
+                                androidx.compose.material3.LoadingIndicator(color = EmeraldPrimary)
                                 val loadingMsg = uiState.getLocalizedLoadingMessage()
                                 Text(
                                     text = loadingMsg.ifEmpty { stringResource(R.string.csv_processing_statement) },
@@ -350,7 +353,7 @@ private fun ImportStepperHeader(currentStep: ImportStep) {
                     color = when {
                         isCurrent -> EmeraldPrimary
                         isPast -> EmeraldPrimary.copy(alpha = 0.2f)
-                        else -> MaterialTheme.colorScheme.surfaceVariant
+                        else -> MaterialTheme.colorScheme.surfaceContainerHigh
                     },
                     modifier = Modifier.size(24.dp)
                 ) {
@@ -416,7 +419,7 @@ private fun SelectFileView(
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(24.dp),
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.surfaceContainerLow,
             border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
         ) {
             Column(
@@ -497,7 +500,7 @@ private fun SelectFileView(
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(20.dp),
-            color = MaterialTheme.colorScheme.surface
+            color = MaterialTheme.colorScheme.surfaceContainerLow
         ) {
             Column(
                 modifier = Modifier.padding(20.dp),
@@ -565,7 +568,7 @@ private fun DemoButton(
             .fillMaxWidth()
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
         border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
     ) {
         Row(
@@ -621,7 +624,7 @@ private fun MappingConfigView(
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surface
+            color = MaterialTheme.colorScheme.surfaceContainerLow
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
@@ -662,7 +665,7 @@ private fun MappingConfigView(
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surface
+            color = MaterialTheme.colorScheme.surfaceContainerLow
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -702,7 +705,7 @@ private fun MappingConfigView(
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = profileExpanded) },
                         modifier = Modifier
-                            .menuAnchor()
+                            .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -735,7 +738,7 @@ private fun MappingConfigView(
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surface
+            color = MaterialTheme.colorScheme.surfaceContainerLow
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -763,7 +766,7 @@ private fun MappingConfigView(
                         },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = accountExpanded) },
                         modifier = Modifier
-                            .menuAnchor()
+                            .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -797,7 +800,7 @@ private fun MappingConfigView(
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surface
+            color = MaterialTheme.colorScheme.surfaceContainerLow
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -883,7 +886,7 @@ private fun MappingConfigView(
                         listOf("yyyy-MM-dd", "MM/dd/yyyy", "dd/MM/yyyy", "dd.MM.yyyy", "yyyy/MM/dd").forEach { fmt ->
                             Surface(
                                 shape = RoundedCornerShape(8.dp),
-                                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                                color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
                                 modifier = Modifier.clickable { onFormatConfigChange(formatConfig.copy(dateFormat = fmt)) }
                             ) {
                                 Text(
@@ -948,7 +951,7 @@ private fun MappingConfigView(
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surface
+            color = MaterialTheme.colorScheme.surfaceContainerLow
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -1084,7 +1087,7 @@ private fun ColumnDropdownField(
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
-                    .menuAnchor()
+                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp)
             )
@@ -1140,7 +1143,7 @@ private fun PreviewReviewView(
         // Summary & Quick actions Header
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.surfaceContainerLow,
             tonalElevation = 2.dp
         ) {
             Column(
@@ -1213,7 +1216,7 @@ private fun PreviewReviewView(
         // Tabs
         TabRow(
             selectedTabIndex = uiState.currentPreviewTab.ordinal,
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
             indicator = { tabPositions ->
                 TabRowDefaults.SecondaryIndicator(
                     modifier = Modifier.tabIndicatorOffset(tabPositions[uiState.currentPreviewTab.ordinal]),
@@ -1284,8 +1287,8 @@ private fun ParsedRowCard(
         !row.isValid -> CrimsonExpense.copy(alpha = 0.08f)
         row.duplicateStatus == DuplicateStatus.EXACT_DUPLICATE -> AmberWarning.copy(alpha = 0.08f)
         row.duplicateStatus == DuplicateStatus.POTENTIAL_DUPLICATE -> AmberWarning.copy(alpha = 0.05f)
-        row.isExcluded -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-        else -> MaterialTheme.colorScheme.surface
+        row.isExcluded -> MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.4f)
+        else -> MaterialTheme.colorScheme.surfaceContainerLow
     }
 
     Surface(
@@ -1416,7 +1419,7 @@ private fun ParsedRowCard(
             if (row.isValid && !row.predictedCategoryId.isNullOrBlank()) {
                 Surface(
                     shape = RoundedCornerShape(6.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f)
                 ) {
                     val categoryName = getCategoryDisplayName(row.predictedCategoryId)
                     Text(
@@ -1482,7 +1485,7 @@ private fun ImportSummaryView(
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(20.dp),
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.surfaceContainerLow,
             border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
         ) {
             Column(

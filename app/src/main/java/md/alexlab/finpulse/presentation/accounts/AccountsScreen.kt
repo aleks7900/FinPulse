@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.accounts
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,8 @@ import androidx.compose.material.icons.filled.Savings
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material.icons.filled.Unarchive
 import androidx.compose.material.icons.filled.Wallet
+import androidx.compose.material3.ExposedDropdownMenu
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -125,7 +128,7 @@ fun AccountsScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black,
+                contentColor = OnEmerald,
                 shape = CircleShape,
                 modifier = Modifier.bounceClick(scaleDown = 0.92f) {
                     onShowAddEditDialog(true, null)
@@ -265,7 +268,7 @@ fun AccountCard(
             )
             .bounceClick(scaleDown = 0.98f, onClick = onClick),
         shape = cardShape,
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
         tonalElevation = 2.dp
     ) {
         Row(
@@ -425,7 +428,7 @@ fun AddEditAccountDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
@@ -492,7 +495,7 @@ fun TransferFundsDialog(
                         readOnly = true,
                         label = { Text(stringResource(R.string.accounts_transfer_from)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = sourceDropdownExpanded) },
-                        modifier = Modifier.menuAnchor().fillMaxWidth()
+                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable).fillMaxWidth()
                     )
                     ExposedDropdownMenu(
                         expanded = sourceDropdownExpanded,
@@ -526,7 +529,7 @@ fun TransferFundsDialog(
                         readOnly = true,
                         label = { Text(stringResource(R.string.accounts_transfer_to)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = destDropdownExpanded) },
-                        modifier = Modifier.menuAnchor().fillMaxWidth()
+                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable).fillMaxWidth()
                     )
                     ExposedDropdownMenu(
                         expanded = destDropdownExpanded,
@@ -560,7 +563,7 @@ fun TransferFundsDialog(
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp),
-                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f)
                     ) {
                         Column(modifier = Modifier.padding(10.dp)) {
                             Text(
@@ -639,7 +642,7 @@ fun TransferFundsDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.accounts_transfer_action), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.accounts_transfer_action), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {

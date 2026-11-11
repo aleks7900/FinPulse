@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.digest
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -232,7 +233,7 @@ fun DigestScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         },
@@ -245,7 +246,7 @@ fun DigestScreen(
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = EmeraldPrimary)
+                androidx.compose.material3.LoadingIndicator(color = EmeraldPrimary)
             }
         } else {
             val digest = uiState.digest!!
@@ -426,7 +427,7 @@ private fun DigestPeriodSelector(
 ) {
     Surface(
         shape = RoundedCornerShape(24.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -496,8 +497,8 @@ private fun DigestPeriodSelector(
 private fun DigestPulseHeroCard(digest: FinancialDigest) {
     val gradient = Brush.linearGradient(
         colors = listOf(
-            MaterialTheme.colorScheme.surfaceVariant,
-            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
+            MaterialTheme.colorScheme.surfaceContainerHigh,
+            MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.7f)
         )
     )
 
@@ -904,7 +905,7 @@ private fun BudgetDigestRow(budget: BudgetDigestItem) {
                 .height(6.dp)
                 .clip(RoundedCornerShape(3.dp)),
             color = progressColor,
-            trackColor = MaterialTheme.colorScheme.surfaceVariant
+            trackColor = MaterialTheme.colorScheme.surfaceContainerHigh
         )
     }
 }
@@ -1026,7 +1027,7 @@ private fun ReviewQueueGlanceCard(
                 onClick = onCleanUpClick,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = AmberWarning,
-                    contentColor = Color.Black
+                    contentColor = OnEmerald
                 ),
                 shape = RoundedCornerShape(10.dp),
                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
@@ -1095,7 +1096,7 @@ private fun GoalDigestCard(goal: GoalProgressDigestItem) {
                     .height(6.dp)
                     .clip(RoundedCornerShape(3.dp)),
                 color = TealSavings,
-                trackColor = MaterialTheme.colorScheme.surfaceVariant
+                trackColor = MaterialTheme.colorScheme.surfaceContainerHigh
             )
 
             Row(
@@ -1135,7 +1136,7 @@ private fun DigestSettingsBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-        containerColor = MaterialTheme.colorScheme.surface
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         Column(
             modifier = Modifier

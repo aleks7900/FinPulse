@@ -132,7 +132,7 @@ fun CategoryPickerDialog(
                 .fillMaxWidth(0.95f)
                 .fillMaxHeight(0.85f),
             shape = RoundedCornerShape(24.dp),
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.surfaceContainerLow,
             tonalElevation = 6.dp
         ) {
             Column(
@@ -172,7 +172,7 @@ fun CategoryPickerDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(12.dp))
-                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                            .background(MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f))
                             .padding(4.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
@@ -282,7 +282,7 @@ fun CategoryPickerDialog(
                                         color = if (isSelected) {
                                             Color(cat.colorHex).copy(alpha = 0.2f)
                                         } else {
-                                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                                            MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f)
                                         },
                                         border = if (isSelected) {
                                             androidx.compose.foundation.BorderStroke(1.5.dp, Color(cat.colorHex))
@@ -362,7 +362,7 @@ fun CategoryPickerDialog(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clip(RoundedCornerShape(14.dp))
-                                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f))
+                                    .background(MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.25f))
                                     .padding(vertical = 2.dp)
                             ) {
                                 // Parent Row Header

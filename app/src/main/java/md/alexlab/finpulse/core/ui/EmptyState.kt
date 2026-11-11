@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.core.ui
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.toShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -62,16 +64,16 @@ fun FinPulseEmptyState(
         ) {
             Box(
                 modifier = Modifier
-                    .size(72.dp)
-                    .clip(CircleShape)
+                    .size(88.dp)
+                    .clip(androidx.compose.material3.MaterialShapes.Cookie12Sided.toShape())
                     .background(iconTint.copy(alpha = 0.12f)),
                 contentAlignment = Alignment.Center
             ) {
                 Box(
                     modifier = Modifier
-                        .size(54.dp)
+                        .size(56.dp)
                         .clip(CircleShape)
-                        .background(iconTint.copy(alpha = 0.20f)),
+                        .background(iconTint.copy(alpha = 0.18f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -107,12 +109,8 @@ fun FinPulseEmptyState(
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
                     onClick = finalOnAction,
-                    shape = RoundedCornerShape(FinPulseRadius.lg),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = EmeraldPrimary,
-                        contentColor = Color.Black
-                    ),
-                    modifier = Modifier.bounceClick(onClick = finalOnAction)
+                    shapes = ButtonDefaults.shapes(),
+                    contentPadding = ButtonDefaults.MediumContentPadding
                 ) {
                     Text(
                         text = finalActionLabel,

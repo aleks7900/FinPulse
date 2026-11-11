@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#19C674</color>
+    <!-- Mirrors LightTokens in core/designsystem/Color.kt -->
+    <color name="finpulse_window_background">#F8F9FC</color>
+    <color name="finpulse_primary">#006C4E</color>
 </resources>

@@ -1538,4 +1538,14 @@
     <string name="digest_notif_send_failed">Impossibile inviare la notifica. Controlla i permessi.</string>
     <string name="digest_notif_permission_denied">Il permesso di notifica è richiesto per ricevere i riepiloghi finanziari.</string>
     <string name="digest_notif_error_generating">I dati del riepilogo sono in fase di caricamento. Riprova.</string>
+
+    <!-- Appearance (theme + dynamic color) -->
+    <string name="appearance_title">Aspetto</string>
+    <string name="appearance_theme_label">Tema</string>
+    <string name="appearance_theme_system">Sistema</string>
+    <string name="appearance_theme_light">Chiaro</string>
+    <string name="appearance_theme_dark">Scuro</string>
+    <string name="appearance_dynamic_color_title">Colori dinamici</string>
+    <string name="appearance_dynamic_color_desc">Adatta i colori dell\'app allo sfondo</string>
+    <string name="appearance_dynamic_color_unsupported">Richiede Android 12 o versioni successive</string>
 </resources>

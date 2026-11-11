@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.export
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import android.app.Activity
 import android.content.ClipData
 import android.content.Context
@@ -295,7 +296,7 @@ fun ExportScreen(
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.surface
+                color = MaterialTheme.colorScheme.surfaceContainerLow
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -352,7 +353,7 @@ fun ExportScreen(
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.surface
+                color = MaterialTheme.colorScheme.surfaceContainerLow
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -434,13 +435,13 @@ fun ExportScreen(
                             enabled = !uiState.isLoading && (!isEncryptChecked || backupPassword.isNotBlank())
                         ) {
                             if (uiState.isLoading) {
-                                CircularProgressIndicator(modifier = Modifier.size(18.dp), color = Color.Black, strokeWidth = 2.dp)
+                                CircularProgressIndicator(modifier = Modifier.size(18.dp), color = OnEmerald, strokeWidth = 2.dp)
                                 Spacer(modifier = Modifier.width(8.dp))
                             } else {
-                                Icon(imageVector = Icons.Default.Save, contentDescription = null, tint = Color.Black)
+                                Icon(imageVector = Icons.Default.Save, contentDescription = null, tint = OnEmerald)
                                 Spacer(modifier = Modifier.width(6.dp))
                             }
-                            Text(stringResource(R.string.backup_create_btn), color = Color.Black, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.backup_create_btn), color = OnEmerald, fontWeight = FontWeight.Bold)
                         }
                         OutlinedButton(
                             onClick = {
@@ -464,7 +465,7 @@ fun ExportScreen(
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.surface
+                color = MaterialTheme.colorScheme.surfaceContainerLow
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -521,7 +522,7 @@ fun ExportScreen(
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.surface
+                color = MaterialTheme.colorScheme.surfaceContainerLow
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -642,9 +643,9 @@ fun ExportScreen(
                             colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary),
                             enabled = !uiState.isLoading
                         ) {
-                            Icon(imageVector = Icons.Default.Save, contentDescription = null, tint = Color.Black)
+                            Icon(imageVector = Icons.Default.Save, contentDescription = null, tint = OnEmerald)
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text(stringResource(R.string.export_transactions_btn), color = Color.Black, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.export_transactions_btn), color = OnEmerald, fontWeight = FontWeight.Bold)
                         }
                         OutlinedButton(
                             onClick = {
@@ -818,7 +819,7 @@ fun ExportScreen(
                     onClick = { viewModel.dismissRestoreSummary() },
                     colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
                 ) {
-                    Text(stringResource(R.string.action_done), color = Color.Black)
+                    Text(stringResource(R.string.action_done), color = OnEmerald)
                 }
             }
         )

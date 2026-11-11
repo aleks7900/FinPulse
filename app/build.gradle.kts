@@ -102,6 +102,11 @@ kotlin {
     compilerOptions {
         // Android bytecode target; the build itself runs on JDK 27.
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        // Material 3 Expressive components (theme, motion scheme, wavy progress, loading indicator).
+        optIn.addAll(
+            "androidx.compose.material3.ExperimentalMaterial3Api",
+            "androidx.compose.material3.ExperimentalMaterial3ExpressiveApi"
+        )
     }
 }
 

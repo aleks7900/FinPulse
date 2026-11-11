@@ -1,5 +1,13 @@
 package md.alexlab.finpulse.presentation.dashboard
 
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.runtime.key
+import androidx.compose.material3.toShape
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.MaterialShapes
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.FilledTonalIconButton
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -112,11 +120,13 @@ fun DashboardScreen(
 ) {
     val categoryMap = uiState.categories.associateBy { it.id }
     val accountMap = uiState.accounts.associateBy { it.id }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
         // Executive Top Bar
         TopAppBar(
@@ -124,53 +134,46 @@ fun DashboardScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
-                            .size(36.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(Brush.linearGradient(FinPulseGradients.emeraldPrimary)),
+                            .size(38.dp)
+                            .clip(MaterialShapes.Cookie9Sided.toShape())
+                            .background(MaterialTheme.colorScheme.primary),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = "F",
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 18.sp,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
                             text = "FinPulse",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleLargeEmphasized,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
             },
             actions = {
-                Surface(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .bounceClick(scaleDown = 0.90f, onClick = onNavigateToSearch),
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                FilledTonalIconButton(
+                    onClick = onNavigateToSearch,
+                    shapes = IconButtonDefaults.shapes()
                 ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = stringResource(R.string.action_search),
-                            tint = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = stringResource(R.string.action_search)
+                    )
                 }
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(4.dp))
                 syncAction()
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background
-            )
+                containerColor = MaterialTheme.colorScheme.background,
+                scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
+            ),
+            scrollBehavior = scrollBehavior
         )
 
         LazyColumn(
@@ -236,15 +239,15 @@ fun DashboardScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Surface(
-                            shape = RoundedCornerShape(12.dp),
-                            color = EmeraldPrimary.copy(alpha = 0.15f),
-                            modifier = Modifier.size(42.dp)
+                            shape = MaterialShapes.Pill.toShape(),
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.size(44.dp)
                         ) {
                             Box(contentAlignment = Alignment.Center) {
                                 Icon(
                                     imageVector = Icons.Default.CalendarMonth,
                                     contentDescription = null,
-                                    tint = EmeraldPrimary,
                                     modifier = Modifier.size(22.dp)
                                 )
                             }
@@ -325,16 +328,12 @@ fun DashboardScreen(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        Text(
-                            text = stringResource(R.string.action_view_all),
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = EmeraldPrimary,
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(FinPulseRadius.sm))
-                                .bounceClick(scaleDown = 0.94f, onClick = onNavigateToBudgets)
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
-                        )
+                        TextButton(onClick = onNavigateToBudgets) {
+                            Text(
+                                text = stringResource(R.string.action_view_all),
+                                style = MaterialTheme.typography.labelLargeEmphasized
+                            )
+                        }
                     }
                 }
 
@@ -362,16 +361,12 @@ fun DashboardScreen(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    Text(
-                        text = stringResource(R.string.nav_transactions),
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = EmeraldPrimary,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(FinPulseRadius.sm))
-                            .bounceClick(scaleDown = 0.94f, onClick = onNavigateToTransactions)
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
-                    )
+                    TextButton(onClick = onNavigateToTransactions) {
+                        Text(
+                            text = stringResource(R.string.action_view_all),
+                            style = MaterialTheme.typography.labelLargeEmphasized
+                        )
+                    }
                 }
             }
 
@@ -386,17 +381,31 @@ fun DashboardScreen(
                     )
                 }
             } else {
-                items(uiState.recentTransactions, key = { it.id }) { tx ->
-                    val cat = categoryMap[tx.categoryId]
-                    val acc = accountMap[tx.sourceAccountId]?.name ?: stringResource(R.string.tx_account)
-                    TransactionItem(
-                        transaction = tx,
-                        category = cat,
-                        accountName = acc,
-                        hideBalances = uiState.hideBalances,
-                        onClick = onNavigateToTransactions,
-                        modifier = Modifier.animateItem()
-                    )
+                item(key = "recent_transactions_group") {
+                    val fallbackAccount = stringResource(R.string.tx_account)
+                    val lastIndex = uiState.recentTransactions.lastIndex
+                    Column(
+                        modifier = Modifier.animateItem(),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        uiState.recentTransactions.forEachIndexed { index, tx ->
+                            key(tx.id) {
+                                Surface(
+                                    shape = segmentedShape(index, lastIndex),
+                                    color = MaterialTheme.colorScheme.surfaceContainerLow
+                                ) {
+                                    TransactionItem(
+                                        transaction = tx,
+                                        category = categoryMap[tx.categoryId],
+                                        accountName = accountMap[tx.sourceAccountId]?.name ?: fallbackAccount,
+                                        hideBalances = uiState.hideBalances,
+                                        onClick = onNavigateToTransactions,
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -428,12 +437,12 @@ fun TimeRangeSelector(
                 label = "periodScale"
             )
             val bgColor by animateColorAsState(
-                targetValue = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                targetValue = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
                 animationSpec = tween(220),
                 label = "periodBg"
             )
             val textColor by animateColorAsState(
-                targetValue = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant,
+                targetValue = if (isSelected) OnEmerald else MaterialTheme.colorScheme.onSurfaceVariant,
                 animationSpec = tween(220),
                 label = "periodText"
             )
@@ -505,15 +514,9 @@ fun QuickActionButton(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier
-            .border(
-                width = 0.75.dp,
-                color = accentColor.copy(alpha = 0.25f),
-                shape = RoundedCornerShape(FinPulseRadius.lg)
-            )
-            .bounceClick(scaleDown = 0.94f, onClick = onClick),
-        shape = RoundedCornerShape(FinPulseRadius.lg),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        modifier = modifier.bounceClick(scaleDown = 0.94f, onClick = onClick),
+        shape = MaterialTheme.shapes.extraLarge,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
         Row(
             modifier = Modifier.padding(vertical = 12.dp, horizontal = 10.dp),
@@ -593,15 +596,9 @@ fun MetricTile(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier
-            .border(
-                width = 0.75.dp,
-                color = color.copy(alpha = 0.20f),
-                shape = RoundedCornerShape(FinPulseRadius.md)
-            ),
-        shape = RoundedCornerShape(FinPulseRadius.md),
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 2.dp
+        modifier = modifier,
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         Column(
             modifier = Modifier.padding(10.dp),
@@ -642,10 +639,13 @@ fun InsightBanner(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, borderColor.copy(alpha = 0.35f), RoundedCornerShape(FinPulseRadius.lg))
             .bounceClick(scaleDown = 0.98f, onClick = onClick),
-        shape = RoundedCornerShape(FinPulseRadius.lg),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
+        shape = MaterialTheme.shapes.large,
+        color = androidx.compose.ui.graphics.lerp(
+            MaterialTheme.colorScheme.surfaceContainerLow,
+            borderColor,
+            0.10f
+        )
     ) {
         Row(
             modifier = Modifier.padding(14.dp),
@@ -703,15 +703,9 @@ fun BudgetProgressCard(
 ) {
     Surface(
         modifier = modifier
-            .fillMaxWidth()
-            .border(
-                0.75.dp,
-                MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
-                RoundedCornerShape(FinPulseRadius.lg)
-            ),
-        shape = RoundedCornerShape(FinPulseRadius.lg),
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 2.dp
+            .fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -810,7 +804,7 @@ fun ReviewQueueBannerCard(
                             text = unreviewedCount.toString(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
-                            color = Color.Black,
+                            color = OnEmerald,
                             modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
                         )
                     }
@@ -853,7 +847,7 @@ fun FinancialDigestBannerCard(
             )
             .bounceClick(scaleDown = 0.98f, onClick = onClick),
         shape = RoundedCornerShape(FinPulseRadius.lg),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.45f)
     ) {
         Row(
             modifier = Modifier.padding(15.dp),
@@ -916,4 +910,16 @@ fun FinancialDigestBannerCard(
             )
         }
     }
+}
+
+/** Shape for item [index] in a segmented (grouped) list ending at [lastIndex]. */
+private fun segmentedShape(index: Int, lastIndex: Int): RoundedCornerShape {
+    val outer = 24.dp
+    val inner = 6.dp
+    return RoundedCornerShape(
+        topStart = if (index == 0) outer else inner,
+        topEnd = if (index == 0) outer else inner,
+        bottomStart = if (index == lastIndex) outer else inner,
+        bottomEnd = if (index == lastIndex) outer else inner
+    )
 }

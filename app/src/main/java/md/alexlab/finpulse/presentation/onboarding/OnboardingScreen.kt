@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.onboarding
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -189,7 +190,7 @@ fun OnboardingScreen(
             ) {
                 Text(
                     text = if (step == 3) stringResource(R.string.onboarding_finish_btn) else stringResource(R.string.action_continue),
-                    color = Color.Black,
+                    color = OnEmerald,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -209,7 +210,7 @@ fun WelcomeStep() {
                 .background(EmeraldPrimary, RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Text("FP", style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold, color = Color.Black)
+            Text("FP", style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold, color = OnEmerald)
         }
         Spacer(modifier = Modifier.height(24.dp))
         Text(
@@ -254,7 +255,7 @@ fun CurrencyStep(
                         .fillMaxWidth()
                         .clickable { onSelect(curr.code) },
                     shape = RoundedCornerShape(14.dp),
-                    color = if (isSel) EmeraldPrimary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surface
+                    color = if (isSel) EmeraldPrimary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceContainerLow
                 ) {
                     Row(
                         modifier = Modifier.padding(14.dp),

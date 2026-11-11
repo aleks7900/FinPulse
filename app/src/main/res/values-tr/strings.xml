@@ -1538,4 +1538,14 @@
     <string name="digest_notif_send_failed">Bildirim gönderilemedi. Lütfen izinleri kontrol edin.</string>
     <string name="digest_notif_permission_denied">Finansal özetleri almak için bildirim izni gereklidir.</string>
     <string name="digest_notif_error_generating">Özet verileri yükleniyor. Lütfen tekrar deneyin.</string>
+
+    <!-- Appearance (theme + dynamic color) -->
+    <string name="appearance_title">Görünüm</string>
+    <string name="appearance_theme_label">Tema</string>
+    <string name="appearance_theme_system">Sistem</string>
+    <string name="appearance_theme_light">Açık</string>
+    <string name="appearance_theme_dark">Koyu</string>
+    <string name="appearance_dynamic_color_title">Dinamik renk</string>
+    <string name="appearance_dynamic_color_desc">Uygulama renklerini duvar kağıdınıza uyarlayın</string>
+    <string name="appearance_dynamic_color_unsupported">Android 12 veya üzeri gerekir</string>
 </resources>

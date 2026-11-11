@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.security
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -280,7 +281,7 @@ fun SecurityScreen(
                     Button(
                         onClick = { appLockManager.lockNow() },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                             contentColor = MaterialTheme.colorScheme.onSurface
                         ),
                         modifier = Modifier
@@ -508,7 +509,7 @@ fun SetPinDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.security_pin_save_btn), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.security_pin_save_btn), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
@@ -597,7 +598,7 @@ fun ChangePinDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.security_pin_save_btn), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.security_pin_save_btn), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
@@ -652,7 +653,7 @@ fun DisablePinDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.action_confirm), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_confirm), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {

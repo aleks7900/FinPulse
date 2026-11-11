@@ -1538,4 +1538,14 @@
     <string name="digest_notif_send_failed">No se pudo enviar la notificación. Compruebe los permisos.</string>
     <string name="digest_notif_permission_denied">Se requiere permiso de notificación para recibir resúmenes financieros.</string>
     <string name="digest_notif_error_generating">Los datos del resumen aún se están cargando. Inténtelo de nuevo.</string>
+
+    <!-- Appearance (theme + dynamic color) -->
+    <string name="appearance_title">Apariencia</string>
+    <string name="appearance_theme_label">Tema</string>
+    <string name="appearance_theme_system">Sistema</string>
+    <string name="appearance_theme_light">Claro</string>
+    <string name="appearance_theme_dark">Oscuro</string>
+    <string name="appearance_dynamic_color_title">Color dinámico</string>
+    <string name="appearance_dynamic_color_desc">Adapta los colores de la app a tu fondo de pantalla</string>
+    <string name="appearance_dynamic_color_unsupported">Requiere Android 12 o posterior</string>
 </resources>

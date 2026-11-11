@@ -1538,4 +1538,14 @@
     <string name="digest_notif_send_failed">Échec de l\'envoi de la notification. Veuillez vérifier les autorisations.</string>
     <string name="digest_notif_permission_denied">L\'autorisation de notification est requise pour recevoir les récapitulatifs financiers.</string>
     <string name="digest_notif_error_generating">Les données du récapitulatif se chargent. Veuillez réessayer.</string>
+
+    <!-- Appearance (theme + dynamic color) -->
+    <string name="appearance_title">Apparence</string>
+    <string name="appearance_theme_label">Thème</string>
+    <string name="appearance_theme_system">Système</string>
+    <string name="appearance_theme_light">Clair</string>
+    <string name="appearance_theme_dark">Sombre</string>
+    <string name="appearance_dynamic_color_title">Couleurs dynamiques</string>
+    <string name="appearance_dynamic_color_desc">Adapter les couleurs de l\'app à votre fond d\'écran</string>
+    <string name="appearance_dynamic_color_unsupported">Nécessite Android 12 ou version ultérieure</string>
 </resources>

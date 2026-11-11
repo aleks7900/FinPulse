@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.calendar
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -351,7 +352,7 @@ private fun FinancialCalendarTopBar(
             // View Mode Toggle (Month / Agenda)
             Surface(
                 shape = RoundedCornerShape(20.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
                 modifier = Modifier.padding(end = 6.dp)
             ) {
                 Row(modifier = Modifier.padding(3.dp)) {
@@ -407,7 +408,7 @@ private fun ViewModeChip(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = if (selected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant,
+                tint = if (selected) OnEmerald else MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
@@ -415,7 +416,7 @@ private fun ViewModeChip(
                 text = label,
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                color = if (selected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+                color = if (selected) OnEmerald else MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -441,7 +442,7 @@ private fun PeriodAndFilterSection(
                 val isSelected = preset == selectedPreset
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = if (isSelected) EmeraldPrimary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surface,
+                    color = if (isSelected) EmeraldPrimary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceContainerLow,
                     border = BorderStroke(1.dp, if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.outlineVariant),
                     modifier = Modifier.clickable { onPresetSelected(preset) }
                 ) {
@@ -702,7 +703,7 @@ private fun CalendarMonthGrid(
 ) {
     Card(
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
@@ -812,7 +813,7 @@ private fun CalendarDayCell(
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = if (isSelected || isToday) FontWeight.Bold else FontWeight.Normal,
                 color = when {
-                    isSelected -> Color.Black
+                    isSelected -> OnEmerald
                     isToday -> EmeraldPrimary
                     else -> MaterialTheme.colorScheme.onSurface
                 }
@@ -830,7 +831,7 @@ private fun CalendarDayCell(
                             modifier = Modifier
                                 .size(4.dp)
                                 .clip(CircleShape)
-                                .background(if (isSelected) Color.Black else IncomeGreen)
+                                .background(if (isSelected) OnEmerald else IncomeGreen)
                         )
                     } else {
                         if (hasIncome) {
@@ -838,7 +839,7 @@ private fun CalendarDayCell(
                                 modifier = Modifier
                                     .size(3.5.dp)
                                     .clip(CircleShape)
-                                    .background(if (isSelected) Color.Black else IncomeGreen)
+                                    .background(if (isSelected) OnEmerald else IncomeGreen)
                             )
                             Spacer(modifier = Modifier.width(1.5.dp))
                         }
@@ -847,7 +848,7 @@ private fun CalendarDayCell(
                                 modifier = Modifier
                                     .size(3.5.dp)
                                     .clip(CircleShape)
-                                    .background(if (isSelected) Color.Black else ExpenseRed)
+                                    .background(if (isSelected) OnEmerald else ExpenseRed)
                             )
                             Spacer(modifier = Modifier.width(1.5.dp))
                         }
@@ -856,7 +857,7 @@ private fun CalendarDayCell(
                                 modifier = Modifier
                                     .size(3.5.dp)
                                     .clip(CircleShape)
-                                    .background(if (isSelected) Color.Black else DebtOrange)
+                                    .background(if (isSelected) OnEmerald else DebtOrange)
                             )
                         }
                         if (hasGoals) {
@@ -864,7 +865,7 @@ private fun CalendarDayCell(
                                 modifier = Modifier
                                     .size(3.5.dp)
                                     .clip(CircleShape)
-                                    .background(if (isSelected) Color.Black else TealSavings)
+                                    .background(if (isSelected) OnEmerald else TealSavings)
                             )
                         }
                     }
@@ -950,7 +951,7 @@ private fun AgendaDateHeader(date: LocalDate) {
             color = when {
                 daysUntil == 0L -> EmeraldPrimary.copy(alpha = 0.15f)
                 daysUntil < 0L -> CrimsonExpense.copy(alpha = 0.15f)
-                else -> MaterialTheme.colorScheme.surfaceVariant
+                else -> MaterialTheme.colorScheme.surfaceContainerHigh
             }
         ) {
             Text(
@@ -1171,7 +1172,7 @@ private fun EventDetailBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surface
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         Column(
             modifier = Modifier
@@ -1229,7 +1230,7 @@ private fun EventDetailBottomSheet(
             // Details List
             Surface(
                 shape = RoundedCornerShape(14.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.4f),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
@@ -1254,7 +1255,7 @@ private fun EventDetailBottomSheet(
             // Reminders Section
             Surface(
                 shape = RoundedCornerShape(14.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.4f),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
@@ -1335,9 +1336,9 @@ private fun EventDetailBottomSheet(
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
                     ) {
-                        Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = Color.Black)
+                        Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = OnEmerald)
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(stringResource(R.string.cal_mark_paid), color = Color.Black, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.cal_mark_paid), color = OnEmerald, fontWeight = FontWeight.Bold)
                     }
 
                     OutlinedButton(
@@ -1442,7 +1443,7 @@ private fun ConfirmPayDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.cal_confirm_paid), color = Color.Black)
+                Text(stringResource(R.string.cal_confirm_paid), color = OnEmerald)
             }
         },
         dismissButton = {
@@ -1500,7 +1501,7 @@ private fun EditOccurrenceDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.cal_save_changes), color = Color.Black)
+                Text(stringResource(R.string.cal_save_changes), color = OnEmerald)
             }
         },
         dismissButton = {

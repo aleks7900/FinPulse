@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.investments
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -96,7 +97,7 @@ fun InvestmentsScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black,
+                contentColor = OnEmerald,
                 modifier = Modifier.bounceClick(onClick = { onShowAddEditDialog(true, null) })
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.investments_add_title))
@@ -337,7 +338,7 @@ fun AddEditAssetDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {

@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.transactions
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -185,7 +186,7 @@ fun TransactionsScreen(
                                 badge = {
                                     Badge(
                                         containerColor = EmeraldPrimary,
-                                        contentColor = Color.Black
+                                        contentColor = OnEmerald
                                     ) {
                                         Text(uiState.activeFilterCount.toString(), fontWeight = FontWeight.Bold)
                                     }
@@ -216,7 +217,7 @@ fun TransactionsScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black,
+                contentColor = OnEmerald,
                 shape = CircleShape,
                 modifier = Modifier.bounceClick(scaleDown = 0.92f) {
                     onShowAddEditDialog(true, null)
@@ -255,8 +256,8 @@ fun TransactionsScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = EmeraldPrimary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
-                    focusedContainerColor = MaterialTheme.colorScheme.surface,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surface
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -454,8 +455,8 @@ fun PresetsAndSavedViewsRow(
                 .clip(RoundedCornerShape(FinPulseRadius.full))
                 .bounceClick(scaleDown = 0.94f) { onResetFilters() },
             shape = RoundedCornerShape(FinPulseRadius.full),
-            color = if (isAllSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-            contentColor = if (isAllSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+            color = if (isAllSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
+            contentColor = if (isAllSelected) OnEmerald else MaterialTheme.colorScheme.onSurfaceVariant
         ) {
             Text(
                 text = stringResource(R.string.tx_filter_all),
@@ -482,7 +483,7 @@ fun PresetsAndSavedViewsRow(
             }
 
             val chipBg by androidx.compose.animation.animateColorAsState(
-                targetValue = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                targetValue = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
                 animationSpec = androidx.compose.animation.core.tween(200),
                 label = "presetBg"
             )
@@ -493,7 +494,7 @@ fun PresetsAndSavedViewsRow(
                     .bounceClick(scaleDown = 0.94f) { onSelectPreset(preset) },
                 shape = RoundedCornerShape(FinPulseRadius.full),
                 color = chipBg,
-                contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant,
+                contentColor = if (isSelected) OnEmerald else MaterialTheme.colorScheme.onSurfaceVariant,
                 border = if (preset.id == TransactionPresets.UNCATEGORIZED.id && unreviewedCount > 0 && !isSelected)
                     androidx.compose.foundation.BorderStroke(1.dp, AmberWarning.copy(alpha = 0.5f)) else null
             ) {
@@ -505,7 +506,7 @@ fun PresetsAndSavedViewsRow(
                         Icon(
                             imageVector = Icons.Default.AutoAwesome,
                             contentDescription = null,
-                            tint = if (isSelected) Color.Black else AmberWarning,
+                            tint = if (isSelected) OnEmerald else AmberWarning,
                             modifier = Modifier.size(12.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
@@ -525,7 +526,7 @@ fun PresetsAndSavedViewsRow(
             Surface(
                 modifier = Modifier.clickable { onSelectSavedFilter(savedFilter) },
                 shape = RoundedCornerShape(14.dp),
-                color = if (isSelected) TransferBlue else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                color = if (isSelected) TransferBlue else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
                 contentColor = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
                 border = androidx.compose.foundation.BorderStroke(1.dp, TransferBlue.copy(alpha = 0.4f))
             ) {
@@ -625,7 +626,7 @@ fun SaveFilterViewDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
@@ -664,7 +665,7 @@ fun FilterBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surface
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         Column(
             modifier = Modifier
@@ -811,7 +812,7 @@ fun FilterBottomSheet(
                     .clip(RoundedCornerShape(12.dp))
                     .clickable { showCategoryPicker = true },
                 shape = RoundedCornerShape(12.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
                 border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
             ) {
                 Row(
@@ -923,7 +924,7 @@ fun FilterBottomSheet(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(stringResource(R.string.action_apply), color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.action_apply), color = OnEmerald, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -935,8 +936,8 @@ fun SortChip(label: String, selected: Boolean, onClick: () -> Unit) {
     Surface(
         modifier = Modifier.clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
-        color = if (selected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant,
-        contentColor = if (selected) Color.Black else MaterialTheme.colorScheme.onSurface
+        color = if (selected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh,
+        contentColor = if (selected) OnEmerald else MaterialTheme.colorScheme.onSurface
     ) {
         Text(
             text = label,
@@ -1068,7 +1069,7 @@ fun AddEditTransactionDialog(
                                 TransactionType.INCOME -> EmeraldPrimary
                                 TransactionType.TRANSFER -> TransferBlue
                                 else -> EmeraldPrimary
-                            } else MaterialTheme.colorScheme.surfaceVariant,
+                            } else MaterialTheme.colorScheme.surfaceContainerHigh,
                             contentColor = if (isSel) Color.White else MaterialTheme.colorScheme.onSurface
                         ) {
                             Text(
@@ -1097,7 +1098,7 @@ fun AddEditTransactionDialog(
                                     .clip(RoundedCornerShape(12.dp))
                                     .clickable { showSourceAccountMenu = true },
                                 shape = RoundedCornerShape(12.dp),
-                                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
                                 border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
                             ) {
                                 Row(
@@ -1153,7 +1154,7 @@ fun AddEditTransactionDialog(
                                         .clip(RoundedCornerShape(12.dp))
                                         .clickable { showDestAccountMenu = true },
                                     shape = RoundedCornerShape(12.dp),
-                                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
                                     border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
                                 ) {
                                     Row(
@@ -1209,7 +1210,7 @@ fun AddEditTransactionDialog(
                         .clip(RoundedCornerShape(12.dp))
                         .clickable { showDatePicker = true },
                     shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
                     border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
                 ) {
                     Row(
@@ -1254,7 +1255,7 @@ fun AddEditTransactionDialog(
                             .clip(RoundedCornerShape(12.dp))
                             .clickable { showCategoryPicker = true },
                         shape = RoundedCornerShape(12.dp),
-                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
                         border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
                     ) {
                         Row(
@@ -1362,7 +1363,7 @@ fun AddEditTransactionDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {

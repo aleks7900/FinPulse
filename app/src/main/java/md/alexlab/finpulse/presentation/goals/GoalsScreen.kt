@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.goals
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -106,7 +107,7 @@ fun GoalsScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black,
+                contentColor = OnEmerald,
                 shape = CircleShape,
                 modifier = Modifier.bounceClick(scaleDown = 0.92f) {
                     onShowAddEditDialog(true, null)
@@ -241,7 +242,7 @@ fun GoalCard(
             )
             .bounceClick(scaleDown = 0.98f, onClick = onClick),
         shape = cardShape,
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
         tonalElevation = 2.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -384,7 +385,7 @@ fun AddEditGoalDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
@@ -439,7 +440,7 @@ fun ContributeGoalDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.goals_contribute_btn), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.goals_contribute_btn), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {

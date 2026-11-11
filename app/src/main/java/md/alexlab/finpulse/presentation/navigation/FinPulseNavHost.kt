@@ -1,8 +1,10 @@
 package md.alexlab.finpulse.presentation.navigation
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -195,22 +197,18 @@ fun FinPulseApp(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         floatingActionButton = {
             if (currentRoute == Screen.Dashboard.route) {
-                FloatingActionButton(
+                androidx.compose.material3.MediumFloatingActionButton(
                     onClick = {
                         quickAddViewModel.reset()
                         showQuickAddSheet = true
                     },
-                    containerColor = EmeraldPrimary,
-                    contentColor = Color.Black,
-                    shape = CircleShape,
-                    modifier = Modifier.bounceClick(scaleDown = 0.92f) {
-                        quickAddViewModel.reset()
-                        showQuickAddSheet = true
-                    }
+                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimaryContainer
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.quick_add_title)
+                        contentDescription = stringResource(R.string.quick_add_title),
+                        modifier = Modifier.size(androidx.compose.material3.FloatingActionButtonDefaults.MediumIconSize)
                     )
                 }
             }
@@ -444,6 +442,18 @@ fun FinPulseApp(
                     baseCurrency = userPrefs.baseCurrencyCode,
                     selectedLanguageCode = userPrefs.selectedLanguage,
                     animationPreference = userPrefs.animationPreference,
+                    themeMode = md.alexlab.finpulse.presentation.more.ThemeMode.fromDarkFlag(userPrefs.isDarkMode),
+                    useDynamicColor = userPrefs.useDynamicColor,
+                    onThemeModeSelected = { mode ->
+                        app?.applicationScope?.launch {
+                            container.userPreferencesDataStore.setDarkMode(mode.key)
+                        }
+                    },
+                    onDynamicColorChanged = { enabled ->
+                        app?.applicationScope?.launch {
+                            container.userPreferencesDataStore.setDynamicColor(enabled)
+                        }
+                    },
                     onLanguageSelected = { lang ->
                         md.alexlab.finpulse.core.locale.AppLocaleManager.saveLanguageCode(context, lang.code)
                         app?.applicationScope?.launch {

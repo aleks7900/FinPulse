@@ -368,7 +368,7 @@ private fun LoggedOutContent(
 
             Surface(
                 shape = RoundedCornerShape(8.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
             ) {
                 Text(
                     text = stringResource(R.string.account_not_signed_in),
@@ -689,7 +689,7 @@ private fun LoggedInContent(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -794,7 +794,7 @@ private fun LoggedInContent(
 
                 Surface(
                     shape = RoundedCornerShape(8.dp),
-                    color = if (uiState.isAutoSyncEnabled) EmeraldPrimary.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceVariant
+                    color = if (uiState.isAutoSyncEnabled) EmeraldPrimary.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceContainerHigh
                 ) {
                     Text(
                         text = intervalText,
@@ -813,7 +813,7 @@ private fun LoggedInContent(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.35f)
         )
     ) {
         Row(

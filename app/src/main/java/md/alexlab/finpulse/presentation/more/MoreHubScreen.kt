@@ -23,6 +23,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AccountBalance
@@ -85,8 +86,12 @@ fun MoreHubScreen(
     baseCurrency: String,
     selectedLanguageCode: String,
     animationPreference: String = "SYSTEM",
+    themeMode: ThemeMode = ThemeMode.SYSTEM,
+    useDynamicColor: Boolean = false,
     onLanguageSelected: (AppLanguage) -> Unit,
     onAnimationPreferenceSelected: (String) -> Unit = {},
+    onThemeModeSelected: (ThemeMode) -> Unit = {},
+    onDynamicColorChanged: (Boolean) -> Unit = {},
     onNavigate: (Screen) -> Unit,
     errorReporter: md.alexlab.finpulse.core.reporting.ErrorReporter = md.alexlab.finpulse.core.reporting.NoOpErrorReporter(),
     syncAction: @Composable () -> Unit = {},
@@ -94,6 +99,7 @@ fun MoreHubScreen(
 ) {
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showAnimationDialog by remember { mutableStateOf(false) }
+    var showAppearanceDialog by remember { mutableStateOf(false) }
     val currentAppLanguage = remember(selectedLanguageCode) {
         AppLanguage.fromCode(selectedLanguageCode)
     }
@@ -106,6 +112,16 @@ fun MoreHubScreen(
                 showLanguageDialog = false
             },
             onDismiss = { showLanguageDialog = false }
+        )
+    }
+
+    if (showAppearanceDialog) {
+        AppearanceDialog(
+            themeMode = themeMode,
+            useDynamicColor = useDynamicColor,
+            onThemeModeSelected = onThemeModeSelected,
+            onDynamicColorChanged = onDynamicColorChanged,
+            onDismiss = { showAppearanceDialog = false }
         )
     }
 
@@ -269,6 +285,19 @@ fun MoreHubScreen(
                         icon = Icons.Default.Language,
                         tint = EmeraldPrimary,
                         onClick = { showLanguageDialog = true }
+                    )
+                    HubItem(
+                        title = stringResource(R.string.appearance_title),
+                        subtitle = buildString {
+                            append(themeModeLabel(themeMode))
+                            if (useDynamicColor && md.alexlab.finpulse.core.designsystem.isDynamicColorSupported) {
+                                append(" · ")
+                                append(stringResource(R.string.appearance_dynamic_color_title))
+                            }
+                        },
+                        icon = Icons.Default.Palette,
+                        tint = EmeraldPrimary,
+                        onClick = { showAppearanceDialog = true }
                     )
                     HubItem(
                         title = stringResource(R.string.animation_preference_title),
@@ -584,7 +613,7 @@ fun HubItem(
             )
             .bounceClick(scaleDown = 0.98f, onClick = onClick),
         shape = itemShape,
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
         tonalElevation = 2.dp
     ) {
         Row(

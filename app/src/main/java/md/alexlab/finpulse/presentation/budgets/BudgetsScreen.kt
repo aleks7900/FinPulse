@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.budgets
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -138,7 +139,7 @@ fun BudgetsScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black,
+                contentColor = OnEmerald,
                 shape = CircleShape,
                 modifier = Modifier.bounceClick(scaleDown = 0.92f)
             ) {
@@ -488,7 +489,7 @@ fun OverallBudgetSection(
                 .staggeredEntrance(index = 1)
                 .bounceClick(scaleDown = 0.98f) { onEditOverallBudget(overallStatus.budget) },
             shape = RoundedCornerShape(20.dp),
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.surfaceContainerLow,
             border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         ) {
             Column(modifier = Modifier.padding(18.dp)) {
@@ -606,7 +607,7 @@ fun OverallBudgetSection(
                 .fillMaxWidth()
                 .clickable { onAddOverallBudget() },
             shape = RoundedCornerShape(20.dp),
-            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+            color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
             border = androidx.compose.foundation.BorderStroke(
                 1.dp,
                 MaterialTheme.colorScheme.outlineVariant
@@ -634,7 +635,7 @@ fun OverallBudgetSection(
                     onClick = onAddOverallBudget,
                     colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
                 ) {
-                    Text(stringResource(R.string.budget_set_limit), color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.budget_set_limit), color = OnEmerald, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -664,7 +665,7 @@ fun CategoryBudgetCard(
             .then(borderModifier)
             .bounceClick(scaleDown = 0.98f, onClick = onClick),
         shape = RoundedCornerShape(18.dp),
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
         border = androidx.compose.foundation.BorderStroke(
             1.dp,
             if (isExceeded) CrimsonExpense.copy(alpha = 0.45f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)
@@ -950,8 +951,8 @@ fun AddEditBudgetDialog(
                             .weight(1f)
                             .clickable { isOverall = false },
                         shape = RoundedCornerShape(10.dp),
-                        color = if (!isOverall) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant,
-                        contentColor = if (!isOverall) Color.Black else MaterialTheme.colorScheme.onSurface
+                        color = if (!isOverall) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh,
+                        contentColor = if (!isOverall) OnEmerald else MaterialTheme.colorScheme.onSurface
                     ) {
                         Text(
                             text = stringResource(R.string.budget_type_category),
@@ -967,8 +968,8 @@ fun AddEditBudgetDialog(
                             .weight(1f)
                             .clickable { isOverall = true },
                         shape = RoundedCornerShape(10.dp),
-                        color = if (isOverall) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant,
-                        contentColor = if (isOverall) Color.Black else MaterialTheme.colorScheme.onSurface
+                        color = if (isOverall) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh,
+                        contentColor = if (isOverall) OnEmerald else MaterialTheme.colorScheme.onSurface
                     ) {
                         Text(
                             text = stringResource(R.string.budget_type_overall),
@@ -988,7 +989,7 @@ fun AddEditBudgetDialog(
                             .clip(RoundedCornerShape(12.dp))
                             .clickable { showCategoryPicker = true },
                         shape = RoundedCornerShape(12.dp),
-                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
                         border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
                     ) {
                         Row(
@@ -1050,7 +1051,7 @@ fun AddEditBudgetDialog(
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.4f)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
                         Row(
@@ -1111,8 +1112,8 @@ fun AddEditBudgetDialog(
                                     .weight(1f)
                                     .clickable { alertThreshold = thresh },
                                 shape = RoundedCornerShape(8.dp),
-                                color = if (isSel) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant,
-                                contentColor = if (isSel) Color.Black else MaterialTheme.colorScheme.onSurface
+                                color = if (isSel) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh,
+                                contentColor = if (isSel) OnEmerald else MaterialTheme.colorScheme.onSurface
                             ) {
                                 Text(
                                     text = "$thresh%",
@@ -1162,7 +1163,7 @@ fun AddEditBudgetDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
@@ -1227,7 +1228,7 @@ fun SafeToSpendAssumptionsDialog(
                 // Formula breakdown steps
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -1337,7 +1338,7 @@ fun SafeToSpendAssumptionsDialog(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.action_got_it), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_got_it), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         }
     )

@@ -106,7 +106,16 @@ class MainActivity : FragmentActivity() {
                 LocalConfiguration provides localizedContext.resources.configuration,
                 LocalActivityResultRegistryOwner provides this@MainActivity
             ) {
-                FinPulseTheme(darkTheme = darkTheme) {
+                val reducedMotion = remember(userPrefs.animationPreference) {
+                    val pref = md.alexlab.finpulse.core.designsystem.AnimationPreference.fromKey(userPrefs.animationPreference)
+                    pref == md.alexlab.finpulse.core.designsystem.AnimationPreference.MINIMAL ||
+                        md.alexlab.finpulse.core.designsystem.isSystemReducedMotion(this@MainActivity)
+                }
+                FinPulseTheme(
+                    darkTheme = darkTheme,
+                    dynamicColor = userPrefs.useDynamicColor,
+                    reducedMotion = reducedMotion
+                ) {
                     FinPulseApp(
                         container = container,
                         openQuickAddTypeTrigger = openQuickAddTypeFlow,

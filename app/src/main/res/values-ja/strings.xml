@@ -1530,4 +1530,14 @@
     <string name="digest_notif_send_failed">通知を送信できませんでした。権限を確認してください。</string>
     <string name="digest_notif_permission_denied">財務ダイジェストを受信するには通知権限が必要です。</string>
     <string name="digest_notif_error_generating">ダイジェスト データを読み込み中です。もう一度お試しください。</string>
+
+    <!-- Appearance (theme + dynamic color) -->
+    <string name="appearance_title">外観</string>
+    <string name="appearance_theme_label">テーマ</string>
+    <string name="appearance_theme_system">システム</string>
+    <string name="appearance_theme_light">ライト</string>
+    <string name="appearance_theme_dark">ダーク</string>
+    <string name="appearance_dynamic_color_title">ダイナミックカラー</string>
+    <string name="appearance_dynamic_color_desc">アプリの色を壁紙に合わせる</string>
+    <string name="appearance_dynamic_color_unsupported">Android 12 以降が必要です</string>
 </resources>

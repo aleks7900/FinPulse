@@ -319,8 +319,7 @@ fun Modifier.staggeredEntrance(
 fun Modifier.shimmerEffect(
     shape: Shape? = null
 ): Modifier = composed {
-    val isDark = MaterialTheme.colorScheme.background.value == DarkBackground.value ||
-            MaterialTheme.colorScheme.surface.value == DarkSurface.value
+    val isDark = md.alexlab.finpulse.core.designsystem.isFinPulseDark
 
     val shimmerColors = if (isDark) {
         listOf(
@@ -361,7 +360,7 @@ fun Modifier.shimmerEffect(
  * Soft ambient glow / breathing lighting effect modifier for important cards and buttons.
  */
 fun Modifier.glowPulse(
-    color: Color = EmeraldPrimary,
+    color: Color = FinPulseBrand.Emerald,
     enabled: Boolean = true,
     minAlpha: Float = 0.12f,
     maxAlpha: Float = 0.38f,
@@ -400,15 +399,20 @@ fun AnimatedAmountText(
     style: TextStyle = MaterialTheme.typography.displayMedium,
     color: Color = MaterialTheme.colorScheme.onSurface,
     fontWeight: FontWeight = FontWeight.Bold,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    autoSize: androidx.compose.foundation.text.TextAutoSize? = null
 ) {
     val motion = LocalMotionConfig.current
+    val singleLine = autoSize != null
     if (motion.isReducedMotion) {
         Text(
             text = amountText,
             style = style,
             fontWeight = fontWeight,
             color = color,
+            maxLines = if (singleLine) 1 else Int.MAX_VALUE,
+            softWrap = !singleLine,
+            autoSize = autoSize,
             modifier = modifier
         )
         return
@@ -435,7 +439,10 @@ fun AnimatedAmountText(
             text = targetText,
             style = style,
             fontWeight = fontWeight,
-            color = color
+            color = color,
+            maxLines = if (singleLine) 1 else Int.MAX_VALUE,
+            softWrap = !singleLine,
+            autoSize = autoSize
         )
     }
 }

@@ -52,6 +52,7 @@ data class UserPreferences(
     val digestDeliveryHour: Int = 20, // 8 PM default
     val lastDigestSentMillis: Long = 0L,
     val animationPreference: String = "SYSTEM",
+    val useDynamicColor: Boolean = false,
     val settingsUpdatedAt: Long = 0L
 )
 
@@ -95,6 +96,7 @@ class UserPreferencesDataStore(private val context: Context) {
         val DIGEST_DELIVERY_HOUR = androidx.datastore.preferences.core.intPreferencesKey("digest_delivery_hour")
         val LAST_DIGEST_SENT_MILLIS = longPreferencesKey("last_digest_sent_millis")
         val ANIMATION_PREFERENCE = stringPreferencesKey("animation_preference")
+        val DYNAMIC_COLOR = booleanPreferencesKey("dynamic_color")
         val SETTINGS_UPDATED_AT = longPreferencesKey("settings_updated_at")
     }
 
@@ -145,6 +147,7 @@ class UserPreferencesDataStore(private val context: Context) {
             digestDeliveryHour = preferences[PreferencesKeys.DIGEST_DELIVERY_HOUR] ?: 20,
             lastDigestSentMillis = preferences[PreferencesKeys.LAST_DIGEST_SENT_MILLIS] ?: 0L,
             animationPreference = preferences[PreferencesKeys.ANIMATION_PREFERENCE] ?: "SYSTEM",
+            useDynamicColor = preferences[PreferencesKeys.DYNAMIC_COLOR] ?: false,
             settingsUpdatedAt = preferences[PreferencesKeys.SETTINGS_UPDATED_AT] ?: 0L
         )
     }
@@ -239,6 +242,13 @@ class UserPreferencesDataStore(private val context: Context) {
     suspend fun setDarkMode(mode: String) { // "SYSTEM", "LIGHT", "DARK"
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.DARK_MODE] = mode
+            preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
+        }
+    }
+
+    suspend fun setDynamicColor(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.DYNAMIC_COLOR] = enabled
             preferences[PreferencesKeys.SETTINGS_UPDATED_AT] = System.currentTimeMillis()
         }
     }

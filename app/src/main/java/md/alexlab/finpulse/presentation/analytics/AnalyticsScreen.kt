@@ -299,7 +299,7 @@ fun AnalyticsScreen(
                             )
                             .bounceClick(scaleDown = 0.98f),
                         shape = RoundedCornerShape(FinPulseRadius.lg),
-                        color = MaterialTheme.colorScheme.surface,
+                        color = MaterialTheme.colorScheme.surfaceContainerLow,
                         tonalElevation = 2.dp
                     ) {
                         Row(
@@ -370,7 +370,7 @@ fun StatCard(
             )
             .bounceClick(scaleDown = 0.96f),
         shape = RoundedCornerShape(FinPulseRadius.lg),
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
         tonalElevation = 2.dp
     ) {
         Column(

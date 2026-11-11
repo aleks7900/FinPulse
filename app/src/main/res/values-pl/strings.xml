@@ -1554,4 +1554,14 @@
     <string name="digest_notif_send_failed">Nie udało się wysłać powiadomienia. Sprawdź uprawnienia.</string>
     <string name="digest_notif_permission_denied">Wymagane jest zezwolenie na powiadomienia, aby otrzymywać podsumowania.</string>
     <string name="digest_notif_error_generating">Dane podsumowania są ładowane. Spróbuj ponownie.</string>
+
+    <!-- Appearance (theme + dynamic color) -->
+    <string name="appearance_title">Wygląd</string>
+    <string name="appearance_theme_label">Motyw</string>
+    <string name="appearance_theme_system">Systemowy</string>
+    <string name="appearance_theme_light">Jasny</string>
+    <string name="appearance_theme_dark">Ciemny</string>
+    <string name="appearance_dynamic_color_title">Kolory dynamiczne</string>
+    <string name="appearance_dynamic_color_desc">Dopasuj kolory aplikacji do tapety</string>
+    <string name="appearance_dynamic_color_unsupported">Wymaga Androida 12 lub nowszego</string>
 </resources>

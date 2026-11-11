@@ -1,19 +1,13 @@
 package md.alexlab.finpulse.core.ui
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,40 +19,48 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.automirrored.filled.TrendingDown
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
+import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import md.alexlab.finpulse.R
 import md.alexlab.finpulse.core.designsystem.AnimatedAmountText
-import md.alexlab.finpulse.core.designsystem.CrimsonExpense
-import md.alexlab.finpulse.core.designsystem.EmeraldPrimary
-import md.alexlab.finpulse.core.designsystem.FinPulseMotion
-import md.alexlab.finpulse.core.designsystem.FinPulseRadius
 import md.alexlab.finpulse.core.designsystem.LocalMotionConfig
 import md.alexlab.finpulse.core.designsystem.bounceClick
+import md.alexlab.finpulse.core.designsystem.finColors
 import md.alexlab.finpulse.core.model.Money
 
+/**
+ * Dashboard hero: net worth with available balance and this month's cash flow.
+ *
+ * Expressive styling: an extra-large rounded primaryContainer surface with a slow ambient
+ * glow, emphasized display numerals that auto-shrink for long amounts, and tonal cash-flow
+ * tiles. Works with dynamic color because every tone comes from the theme.
+ */
 @Composable
 fun BalanceCard(
     totalBalance: Money,
@@ -69,153 +71,126 @@ fun BalanceCard(
     onToggleHideBalances: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val cardShape = RoundedCornerShape(FinPulseRadius.xxl)
-    val isDark = MaterialTheme.colorScheme.background.value == md.alexlab.finpulse.core.designsystem.DarkBackground.value ||
-            MaterialTheme.colorScheme.surface.value == md.alexlab.finpulse.core.designsystem.DarkSurface.value
+    val scheme = MaterialTheme.colorScheme
     val motion = LocalMotionConfig.current
+    val heroShape = MaterialTheme.shapes.extraLargeIncreased
 
-    // Subtle living aurora breathing animation when continuous effects are allowed
-    val infiniteTransition = rememberInfiniteTransition(label = "balanceCardAurora")
-    val gradientShift by if (!motion.isReducedMotion && motion.enableContinuousEffects) {
-        infiniteTransition.animateFloat(
+    val animateGlow = !motion.isReducedMotion && motion.enableContinuousEffects
+    val shift by if (animateGlow) {
+        rememberInfiniteTransition(label = "heroGlow").animateFloat(
             initialValue = 0f,
             targetValue = 1f,
             animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = 6500, easing = FastOutSlowInEasing),
+                animation = tween(durationMillis = 7000, easing = FastOutSlowInEasing),
                 repeatMode = RepeatMode.Reverse
             ),
-            label = "gradientShift"
+            label = "heroGlowShift"
         )
     } else {
-        androidx.compose.runtime.remember { androidx.compose.runtime.mutableFloatStateOf(0.5f) }
+        remember { mutableFloatStateOf(0.5f) }
     }
 
-    val glowAlpha = if (isDark) (0.12f + gradientShift * 0.08f) else (0.06f + gradientShift * 0.04f)
-    val glowRadius = 650f + gradientShift * 180f
+    val glow = scheme.primary
+    val glowSecondary = scheme.tertiary
+    val hiddenLabel = stringResource(R.string.dashboard_net_worth)
 
     Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(cardShape)
-            .border(
-                width = 1.dp,
-                brush = Brush.verticalGradient(
-                    colors = if (isDark) {
-                        listOf(
-                            Color.White.copy(alpha = 0.16f),
-                            Color.White.copy(alpha = 0.03f)
-                        )
-                    } else {
-                        listOf(
-                            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.85f),
-                            MaterialTheme.colorScheme.outline.copy(alpha = 0.25f)
-                        )
-                    }
-                ),
-                shape = cardShape
-            ),
-        shape = cardShape,
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 6.dp
+        modifier = modifier.fillMaxWidth(),
+        shape = heroShape,
+        color = scheme.primaryContainer,
+        contentColor = scheme.onPrimaryContainer
     ) {
         Box(
             modifier = Modifier
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(
-                            EmeraldPrimary.copy(alpha = glowAlpha),
-                            Color.Transparent
-                        ),
-                        center = Offset(240f + gradientShift * 80f, 160f + gradientShift * 40f),
-                        radius = glowRadius
+                .clip(heroShape)
+                .drawBehind {
+                    drawRect(
+                        Brush.radialGradient(
+                            colors = listOf(glow.copy(alpha = 0.28f), Color.Transparent),
+                            center = Offset(size.width * (0.85f - shift * 0.15f), size.height * 0.05f),
+                            radius = size.maxDimension * (0.75f + shift * 0.1f)
+                        )
                     )
-                )
-                .padding(22.dp)
+                    drawRect(
+                        Brush.radialGradient(
+                            colors = listOf(glowSecondary.copy(alpha = 0.14f), Color.Transparent),
+                            center = Offset(size.width * (0.05f + shift * 0.1f), size.height),
+                            radius = size.maxDimension * 0.6f
+                        )
+                    )
+                }
+                .padding(start = 24.dp, end = 16.dp, top = 20.dp, bottom = 16.dp)
         ) {
             Column {
-                // Top Header Row: Label & Eye Toggle
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            modifier = Modifier
-                                .size(8.dp)
-                                .clip(CircleShape)
-                                .background(EmeraldPrimary)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(R.string.dashboard_net_worth).uppercase(),
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-
-                    val rotationAnim by animateFloatAsState(
-                        targetValue = if (hideBalances) 180f else 0f,
-                        animationSpec = FinPulseMotion.springGentle,
-                        label = "eyeRotation"
+                    Text(
+                        text = stringResource(R.string.dashboard_net_worth),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = scheme.onPrimaryContainer.copy(alpha = 0.8f),
+                        modifier = Modifier.weight(1f)
                     )
-
-                    Surface(
-                        modifier = Modifier
-                            .size(34.dp)
-                            .bounceClick(scaleDown = 0.88f, onClick = onToggleHideBalances),
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+                    FilledTonalIconToggleButton(
+                        checked = hideBalances,
+                        onCheckedChange = { onToggleHideBalances() },
+                        shapes = IconButtonDefaults.toggleableShapes(),
+                        colors = IconButtonDefaults.filledTonalIconToggleButtonColors(
+                            containerColor = scheme.onPrimaryContainer.copy(alpha = 0.08f),
+                            contentColor = scheme.onPrimaryContainer,
+                            checkedContainerColor = scheme.onPrimaryContainer,
+                            checkedContentColor = scheme.primaryContainer
+                        )
                     ) {
-                        Box(
-                            modifier = Modifier.rotate(rotationAnim),
-                            contentAlignment = Alignment.Center
-                        ) {
+                        Crossfade(targetState = hideBalances, label = "eye") { hidden ->
                             Icon(
-                                imageVector = if (hideBalances) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                contentDescription = if (hideBalances) "Show balances" else "Hide balances",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.size(18.dp)
+                                imageVector = if (hidden) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
+                                contentDescription = if (hidden) "Show balances" else "Hide balances",
+                                modifier = Modifier.size(20.dp)
                             )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(Modifier.height(4.dp))
 
-                // Hero Total Balance with Animated Rolling Numbers
                 AnimatedAmountText(
-                    amountText = if (hideBalances) "••••••••" else totalBalance.formatted(),
-                    style = MaterialTheme.typography.displayLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    amountText = if (hideBalances) "••••••" else totalBalance.formatted(),
+                    style = MaterialTheme.typography.displayLargeEmphasized,
+                    fontWeight = MaterialTheme.typography.displayLargeEmphasized.fontWeight
+                        ?: androidx.compose.ui.text.font.FontWeight.Bold,
+                    color = scheme.onPrimaryContainer,
+                    autoSize = TextAutoSize.StepBased(minFontSize = 26.sp, maxFontSize = 44.sp, stepSize = 1.sp),
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .semantics { if (hideBalances) contentDescription = hiddenLabel }
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(Modifier.height(6.dp))
 
-                // Available Balance subtitle with animated rolling transition
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "${stringResource(R.string.account_available_balance)} • ",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.85f)
+                        text = stringResource(R.string.account_available_balance),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = scheme.onPrimaryContainer.copy(alpha = 0.75f)
                     )
+                    Spacer(Modifier.width(6.dp))
                     AnimatedAmountText(
-                        amountText = if (hideBalances) "••••••" else availableBalance.formatted(),
-                        style = MaterialTheme.typography.bodySmall,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        amountText = if (hideBalances) "••••" else availableBalance.formatted(),
+                        style = MaterialTheme.typography.labelLargeEmphasized,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                        color = scheme.onPrimaryContainer
                     )
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(Modifier.height(20.dp))
 
-                // Income & Expenses Summary Row with rolling values
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     CashFlowPill(
                         label = stringResource(R.string.tx_type_income),
@@ -224,7 +199,6 @@ fun BalanceCard(
                         hideBalances = hideBalances,
                         modifier = Modifier.weight(1f)
                     )
-
                     CashFlowPill(
                         label = stringResource(R.string.tx_type_expense),
                         amount = monthlyExpenses,
@@ -238,6 +212,7 @@ fun BalanceCard(
     }
 }
 
+/** Tonal cash-flow tile used inside the hero card. */
 @Composable
 fun CashFlowPill(
     label: String,
@@ -246,64 +221,44 @@ fun CashFlowPill(
     hideBalances: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val accentColor = if (isIncome) EmeraldPrimary else CrimsonExpense
-    val icon = if (isIncome) Icons.Default.ArrowDownward else Icons.Default.ArrowUpward
-    val prefix = if (isIncome) "+" else "-"
-
-    val arrowScale by animateFloatAsState(
-        targetValue = 1f,
-        animationSpec = FinPulseMotion.springBouncy,
-        label = "arrowScale"
-    )
+    val fin = MaterialTheme.finColors
+    val accent = if (isIncome) fin.income else fin.expense
+    val icon = if (isIncome) Icons.AutoMirrored.Filled.TrendingUp else Icons.AutoMirrored.Filled.TrendingDown
+    val prefix = if (isIncome) "+" else "−"
 
     Surface(
-        modifier = modifier
-            .border(
-                width = 0.75.dp,
-                color = accentColor.copy(alpha = 0.22f),
-                shape = RoundedCornerShape(FinPulseRadius.lg)
-            )
-            .bounceClick(scaleDown = 0.96f),
-        shape = RoundedCornerShape(FinPulseRadius.lg),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        modifier = modifier.bounceClick(scaleDown = 0.97f),
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = if (fin.isDark) 0.35f else 0.7f),
+        contentColor = MaterialTheme.colorScheme.onSurface
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 11.dp),
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(30.dp)
+                    .size(32.dp)
                     .clip(CircleShape)
-                    .background(accentColor.copy(alpha = 0.15f)),
+                    .background(accent.copy(alpha = 0.16f)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = accentColor,
-                    modifier = Modifier
-                        .graphicsLayer {
-                            scaleX = arrowScale
-                            scaleY = arrowScale
-                        }
-                        .size(16.dp)
-                )
+                Icon(imageVector = icon, contentDescription = null, tint = accent, modifier = Modifier.size(18.dp))
             }
-
-            Spacer(modifier = Modifier.width(10.dp))
-
+            Spacer(Modifier.width(10.dp))
             Column {
                 Text(
                     text = label,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1
                 )
                 AnimatedAmountText(
-                    amountText = if (hideBalances) "••••••" else "$prefix${amount.formatted()}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    amountText = if (hideBalances) "••••" else "$prefix${amount.formatted()}",
+                    style = MaterialTheme.typography.titleSmallEmphasized,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 14.sp, stepSize = 0.5.sp)
                 )
             }
         }

@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.quickadd
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -121,7 +122,7 @@ fun QuickAddBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         modifier = modifier
     ) {
         Column(
@@ -223,7 +224,7 @@ fun QuickAddBottomSheet(
                             .padding(horizontal = 4.dp)
                             .bounceClick(scaleDown = 0.90f) { onQuickAmountAdd(inc) },
                         shape = RoundedCornerShape(12.dp),
-                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f)
                     ) {
                         Text(
                             text = "+$inc",
@@ -355,7 +356,7 @@ fun QuickAddBottomSheet(
                         Surface(
                             modifier = Modifier.clickable { onCategorySelected(category.id) },
                             shape = RoundedCornerShape(16.dp),
-                            color = if (isSelected) Color(category.colorHex).copy(alpha = 0.25f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                            color = if (isSelected) Color(category.colorHex).copy(alpha = 0.25f) else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.4f),
                             border = if (isSelected) androidx.compose.foundation.BorderStroke(1.5.dp, Color(category.colorHex)) else null
                         ) {
                             Row(
@@ -396,7 +397,7 @@ fun QuickAddBottomSheet(
                         Surface(
                             modifier = Modifier.clickable { onMerchantSelected(m) },
                             shape = RoundedCornerShape(12.dp),
-                            color = if (isSelected) EmeraldPrimary.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                            color = if (isSelected) EmeraldPrimary.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.3f),
                             border = if (isSelected) androidx.compose.foundation.BorderStroke(1.dp, EmeraldPrimary) else null
                         ) {
                             Text(
@@ -441,8 +442,8 @@ fun QuickAddBottomSheet(
                                 }
                             },
                         shape = RoundedCornerShape(10.dp),
-                        color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                        contentColor = if (isSelected) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+                        color = if (isSelected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
+                        contentColor = if (isSelected) OnEmerald else MaterialTheme.colorScheme.onSurfaceVariant
                     ) {
                         Text(
                             text = dateLabel,
@@ -561,11 +562,11 @@ fun QuickAddBottomSheet(
                             }
                         }
                 ) {
-                    Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = Color.Black, modifier = Modifier.size(18.dp))
+                    Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = OnEmerald, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = if (uiState.isEditing) stringResource(R.string.quick_add_update) else stringResource(R.string.action_save),
-                        color = Color.Black,
+                        color = OnEmerald,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -637,7 +638,7 @@ fun TypeSegmentedControl(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f)
     ) {
         Row(modifier = Modifier.padding(3.dp)) {
             listOf(TransactionType.EXPENSE, TransactionType.INCOME, TransactionType.TRANSFER).forEach { type ->
@@ -701,7 +702,7 @@ fun AccountPickerPill(
         Surface(
             modifier = Modifier.clickable { expanded = true },
             shape = RoundedCornerShape(12.dp),
-            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+            color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f)
         ) {
             Row(
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
@@ -775,7 +776,7 @@ fun NumericKeypad(
                             .height(52.dp)
                             .bounceClick(scaleDown = 0.88f) { onDigitClick(key) },
                         shape = keyShape,
-                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
                         tonalElevation = 2.dp
                     ) {
                         Box(contentAlignment = Alignment.Center) {

@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.rules
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -174,7 +175,7 @@ fun CategorizationRulesScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         },
@@ -200,7 +201,7 @@ fun CategorizationRulesScreen(
             // Secondary Tab Row with Badge on Review Queue
             SecondaryTabRow(
                 selectedTabIndex = uiState.selectedTab.ordinal,
-                containerColor = MaterialTheme.colorScheme.surface,
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                 contentColor = EmeraldPrimary
             ) {
                 CategorizationTab.entries.forEach { tab ->
@@ -217,14 +218,14 @@ fun CategorizationRulesScreen(
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Badge(
                                         containerColor = AmberWarning,
-                                        contentColor = Color.Black
+                                        contentColor = OnEmerald
                                     ) {
                                         Text(text = "${uiState.reviewQueue.size}")
                                     }
                                 } else if (tab == CategorizationTab.RULES && uiState.rules.isNotEmpty()) {
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Badge(
-                                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                                     ) {
                                         Text(text = "${uiState.rules.size}")
@@ -429,7 +430,7 @@ private fun ReviewQueueItemCard(
 
     Surface(
         shape = RoundedCornerShape(14.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -479,7 +480,7 @@ private fun ReviewQueueItemCard(
             // Suggestion Pill Row
             Surface(
                 shape = RoundedCornerShape(10.dp),
-                color = MaterialTheme.colorScheme.surface,
+                color = MaterialTheme.colorScheme.surfaceContainerLow,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
@@ -682,7 +683,7 @@ private fun RuleCard(
 ) {
     Surface(
         shape = RoundedCornerShape(14.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = if (rule.isActive) 0.5f else 0.25f),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = if (rule.isActive) 0.5f else 0.25f),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -762,7 +763,7 @@ private fun RuleCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
+                        MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.7f),
                         RoundedCornerShape(8.dp)
                     )
                     .padding(8.dp),
@@ -1106,7 +1107,7 @@ private fun ApplyRuleConfirmationDialog(
                 // Match breakdown
                 Surface(
                     shape = RoundedCornerShape(8.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {

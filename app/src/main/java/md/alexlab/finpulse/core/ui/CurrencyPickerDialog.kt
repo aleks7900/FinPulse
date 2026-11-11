@@ -92,7 +92,7 @@ fun CurrencyPickerDialog(
                 .fillMaxWidth(0.92f)
                 .fillMaxHeight(0.82f),
             shape = RoundedCornerShape(24.dp),
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.surfaceContainerLow,
             tonalElevation = 6.dp
         ) {
             Column(
@@ -223,7 +223,7 @@ private fun CurrencyPickerRow(
             // Flag Box
             Surface(
                 shape = RoundedCornerShape(10.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
                 modifier = Modifier.size(40.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
@@ -311,9 +311,9 @@ fun CurrencyPickerField(
                 .clickable(enabled = enabled) { showDialog = true },
             shape = RoundedCornerShape(12.dp),
             color = if (enabled) {
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
+                MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.45f)
             } else {
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f)
+                MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.25f)
             },
             border = androidx.compose.foundation.BorderStroke(
                 1.dp,

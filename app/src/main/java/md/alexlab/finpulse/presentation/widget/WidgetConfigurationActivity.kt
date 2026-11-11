@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.widget
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Intent
@@ -238,7 +239,7 @@ class WidgetConfigurationActivity : ComponentActivity() {
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = EmeraldPrimary,
-                                contentColor = Color.Black
+                                contentColor = OnEmerald
                             )
                         ) {
                             Text(
@@ -314,7 +315,7 @@ private fun WidgetTypeOption(
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = "Selected",
-                        tint = Color.Black,
+                        tint = OnEmerald,
                         modifier = Modifier.size(16.dp)
                     )
                 }

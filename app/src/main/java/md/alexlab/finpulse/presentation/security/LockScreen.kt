@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.security
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -268,7 +269,7 @@ fun LockScreen(
                                     .size(16.dp)
                                     .clip(CircleShape)
                                     .background(
-                                        if (isFilled) EmeraldPrimary else MaterialTheme.colorScheme.surfaceVariant
+                                        if (isFilled) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerHigh
                                     )
                             )
                         }
@@ -372,12 +373,12 @@ fun LockScreen(
                             Icon(
                                 imageVector = Icons.Default.Fingerprint,
                                 contentDescription = null,
-                                tint = Color.Black
+                                tint = OnEmerald
                             )
                             Spacer(modifier = Modifier.size(8.dp))
                             Text(
                                 text = stringResource(R.string.security_unlock_biometric),
-                                color = Color.Black,
+                                color = OnEmerald,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
                             )
@@ -413,7 +414,7 @@ private fun KeypadButton(
     Surface(
         onClick = onClick,
         shape = CircleShape,
-        color = MaterialTheme.colorScheme.surfaceVariant,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
         modifier = Modifier.size(72.dp)
     ) {
         Box(contentAlignment = Alignment.Center) {

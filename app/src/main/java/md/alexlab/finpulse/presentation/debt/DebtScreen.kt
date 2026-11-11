@@ -1,5 +1,6 @@
 package md.alexlab.finpulse.presentation.debt
 
+import md.alexlab.finpulse.core.designsystem.OnEmerald
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -108,7 +109,7 @@ fun DebtScreen(
             FloatingActionButton(
                 onClick = { onShowAddEditDialog(true, null) },
                 containerColor = EmeraldPrimary,
-                contentColor = Color.Black,
+                contentColor = OnEmerald,
                 modifier = Modifier.bounceClick(onClick = { onShowAddEditDialog(true, null) })
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.debt_add_title))
@@ -252,13 +253,13 @@ fun StrategyChip(
     Surface(
         modifier = modifier.bounceClick(onClick = onClick),
         shape = RoundedCornerShape(14.dp),
-        color = if (selected) EmeraldPrimary else MaterialTheme.colorScheme.surface,
-        contentColor = if (selected) Color.Black else MaterialTheme.colorScheme.onSurface
+        color = if (selected) EmeraldPrimary else MaterialTheme.colorScheme.surfaceContainerLow,
+        contentColor = if (selected) OnEmerald else MaterialTheme.colorScheme.onSurface
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Text(text = title, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(2.dp))
-            Text(text = subtitle, style = MaterialTheme.typography.labelSmall, color = if (selected) Color.Black.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(text = subtitle, style = MaterialTheme.typography.labelSmall, color = if (selected) OnEmerald.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -440,7 +441,7 @@ fun AddEditDebtDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.action_save), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.action_save), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
@@ -495,7 +496,7 @@ fun MakePaymentDialog(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldPrimary)
             ) {
-                Text(stringResource(R.string.debt_confirm_payment_btn), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.debt_confirm_payment_btn), color = OnEmerald, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {

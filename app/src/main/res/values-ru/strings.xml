@@ -1555,4 +1555,14 @@
     <string name="digest_notif_send_failed">Не удалось отправить уведомление. Проверьте разрешения.</string>
     <string name="digest_notif_permission_denied">Требуется разрешение на уведомления для получения финансового дайджеста.</string>
     <string name="digest_notif_error_generating">Данные дайджеста загружаются. Пожалуйста, попробуйте еще раз.</string>
+
+    <!-- Appearance (theme + dynamic color) -->
+    <string name="appearance_title">Оформление</string>
+    <string name="appearance_theme_label">Тема</string>
+    <string name="appearance_theme_system">Системная</string>
+    <string name="appearance_theme_light">Светлая</string>
+    <string name="appearance_theme_dark">Тёмная</string>
+    <string name="appearance_dynamic_color_title">Динамические цвета</string>
+    <string name="appearance_dynamic_color_desc">Подбирать цвета приложения под обои</string>
+    <string name="appearance_dynamic_color_unsupported">Требуется Android 12 или новее</string>
 </resources>
