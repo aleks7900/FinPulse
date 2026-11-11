@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
@@ -70,7 +71,11 @@ class FinPulseApplication : Application() {
         // Auto-push trigger after local modifications when online (debounced) via coordinator
         applicationScope.launch {
             @OptIn(kotlinx.coroutines.FlowPreview::class)
+            // distinctUntilChanged: Room re-emits on every sync_records write (including the
+            // sync's own writes), which otherwise re-triggers sync in an endless loop whenever
+            // a record stays pending.
             container.cloudSyncCoordinator.pendingChangesCount
+                .distinctUntilChanged()
                 .drop(1)
                 .debounce(1500L)
                 .filter { it > 0 }

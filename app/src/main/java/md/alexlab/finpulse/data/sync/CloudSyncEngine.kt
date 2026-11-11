@@ -260,7 +260,7 @@ class CloudSyncEngine(
                                         isConflict = isLocalPending
                                     )
                                 )
-                            } else {
+                            } else if (local.syncStatus != "SYNCED" || local.cloudUpdatedAt != remote.updatedAt) {
                                 syncDao.markAsSynced(type, id, remote.updatedAt)
                             }
                         }
@@ -386,7 +386,7 @@ class CloudSyncEngine(
                                     pushLocalTombstone = local.deletedAt ?: local.localUpdatedAt
                                 )
                             )
-                        } else {
+                        } else if (local.syncStatus != "SYNCED" || local.cloudUpdatedAt != local.localUpdatedAt) {
                             syncDao.markAsSynced(type, id, local.localUpdatedAt)
                         }
                     } else {
@@ -476,6 +476,11 @@ class CloudSyncEngine(
                             )
                         )
                         validActions.add(act)
+                    } else {
+                        // Entity no longer exists locally (e.g. removed by FK cascade without a
+                        // tombstone). Drop the orphaned sync record so it doesn't stay pending forever.
+                        Log.w(TAG, "Reconcile [$type ${act.id}]: entity missing locally, dropping orphaned sync record")
+                        syncDao.deleteSyncRecord(type, act.id)
                     }
                 }
 
